@@ -1,0 +1,2831 @@
+{
+  "version": 8,
+  "name": "NLS Basemap",
+  "metadata": { "maputnik:renderer": "mbgljs" },
+  "center": [21.645, 63.101],
+  "zoom": 11.35,
+  "sources": {
+    "taustakartta": {
+      "type": "vector",
+      "url": "https://avoin-karttakuva.maanmittauslaitos.fi/vectortiles/tilejson/taustakartta/1.0.0/taustakartta/default/v20/WGS84_Pseudo-Mercator/tilejson.json?api-key={api-key}"
+    }
+  },
+  "glyphs": "https://avoin-karttakuva.maanmittauslaitos.fi/vectortiles/glyphs/{fontstack}/{range}.pbf?api-key={api-key}",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "layout": { "visibility": "visible" },
+      "paint": { "background-color": "rgba(238, 238, 238, 1)" }
+    },
+    {
+      "id": "maasto_alue",
+      "type": "fill",
+      "source": "taustakartta",
+      "source-layer": "maasto_alue",
+      "filter": [
+        "match",
+        ["get", "kohdeluokka"],
+        [
+          35300, 35411, 35412, 35421, 35422, 38300, 38700, 39110, 39120, 39130,
+          33000, 38400, 38600, 35401, 35402
+        ],
+        true,
+        false
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": { "fill-color": "rgba(227, 232, 227, 1)" }
+    },
+    {
+      "id": "maankaytto",
+      "type": "fill",
+      "source": "taustakartta",
+      "source-layer": "maankaytto",
+      "filter": [
+        "match",
+        ["get", "kohdeluokka"],
+        [32611, 32612, 32800, 32900, 33100],
+        true,
+        false
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "fill-color": [
+          "match",
+          ["get", "kohdeluokka"],
+          32611,
+          "#f3f3e2",
+          32612,
+          "#e3e8e3",
+          32800,
+          "#e3e8e3",
+          32900,
+          "#e3e8e3",
+          33100,
+          "#e3e8e3",
+          "#f7f7f3"
+        ]
+      }
+    },
+    {
+      "id": "korkeus_viiva",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "korkeus",
+      "minzoom": 11,
+      "maxzoom": 20,
+      "layout": { "visibility": "none" },
+      "paint": { "line-color": "rgba(208, 208, 208, 1)", "line-width": 0.5 }
+    },
+    {
+      "id": "lautta ja lossi",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12151, 12152], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [6, 8],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "laiva ja venevaylat",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [16511, 16512], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(164, 182, 183, 1)",
+        "line-dasharray": [6, 8],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "vesisto_alue",
+      "type": "fill",
+      "source": "taustakartta",
+      "source-layer": "vesisto_alue",
+      "paint": { "fill-color": "rgba(199, 215, 216, 1)" }
+    },
+    {
+      "id": "vesisto_viiva",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "vesisto_viiva",
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(199, 215, 216, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.75,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rakennettu-ymparisto lentokentta_alue",
+      "type": "fill",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "Polygon"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [
+            32411, 32412, 32413, 32414, 32415, 32416, 32417, 32418, 32441, 32442
+          ],
+          true,
+          false
+        ]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "fill-color": "rgba(223, 223, 223, 1)",
+        "fill-outline-color": "rgba(204, 204, 204, 1)"
+      }
+    },
+    {
+      "id": "rakennettu-ymparisto rakennus",
+      "type": "fill",
+      "source": "taustakartta",
+      "source-layer": "rakennus",
+      "paint": {
+        "fill-color": "rgba(223, 223, 223, 1)",
+        "fill-outline-color": "rgba(204, 204, 204, 1)"
+      }
+    },
+    {
+      "id": "rakennettu-ymparisto rakennelmat",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "rakennelma",
+      "filter": [
+        "any",
+        ["==", "kohdeluokka", 45700],
+        ["==", "kohdeluokka", 45111],
+        ["==", "kohdeluokka", 45112],
+        ["==", "kohdeluokka", 44500]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": { "line-color": "#918a8c", "line-width": 0.5 }
+    },
+    {
+      "id": "ajotie sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajotie pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12141], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "polku pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12313], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [2, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "ajopolku pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12316], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [12, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": { "visibility": "none" },
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "rautatie_taytto, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-dasharray": [2, 2],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "rautatie_reuna, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [14111, 14110, 14112, 14131, 14121],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(208, 208, 208, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2,
+          20,
+          40
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystamaton, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [1], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [3, 1.5],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "kavely- ja pyoratie, paallystetty, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12314], true, false],
+        ["match", ["get", "paallyste"], [2], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          0.5,
+          20,
+          15
+        ]
+      }
+    },
+    {
+      "id": "tiet_tunnelissa",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        [
+          "match",
+          ["get", "kohdeluokka"],
+          [
+            12141, 12132, 12131, 12122, 12121, 12112, 12111, 12313, 12314, 12136
+          ],
+          true,
+          false
+        ],
+        ["match", ["get", "tasosijainti"], [-11], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-dasharray": [32, 16],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1,
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, pinnan alla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [-1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, pinnalla",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [0], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, sillalla 1",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [1], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, sillalla 2",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [2], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, sillalla 3",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [3], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, sillalla 4",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [4], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_reuna, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          6,
+          20,
+          84
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_reuna, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          63
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_reuna, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          3,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "tiet_1a_1b_taytto, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          4,
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "tiet_2a_2b_taytto, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          2.5,
+          20,
+          60
+        ]
+      }
+    },
+    {
+      "id": "tiet_3a_3b_taytto, sillalla 5",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
+        ["match", ["get", "tasosijainti"], [5], true, false]
+      ],
+      "layout": {},
+      "paint": {
+        "line-color": "rgba(251, 251, 251, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.55],
+          ["zoom"],
+          6,
+          1.5,
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "id": "nimisto",
+      "type": "symbol",
+      "source": "taustakartta",
+      "source-layer": "nimisto",
+      "filter": [
+        "all",
+        ["!", ["match", ["get", "teema"], ["Maasto", "Vedet"], true, false]],
+        ["!=", ["get", "alaryhma"], "Hallintoalueet"],
+        [
+          "match",
+          ["get", "laji"],
+          ["Kansallispuisto", "Luonnonpuisto"],
+          false,
+          true
+        ]
+      ],
+      "layout": {
+        "text-transform": [
+          "match",
+          ["get", "alaryhma"],
+          "Rautatieliikennepaikat",
+          "uppercase",
+          "none"
+        ],
+        "text-field": [
+          "coalesce",
+          ["get", "nimi_fin"],
+          ["get", "nimi_swe"],
+          ["get", "nimi_sme"],
+          ["get", "nimi_sms"],
+          ["get", "nimi_smn"]
+        ],
+        "icon-ignore-placement": true,
+        "icon-allow-overlap": true,
+        "text-font": ["Liberation Sans NLSFI"],
+        "text-size": 12,
+        "visibility": "visible",
+        "text-letter-spacing": 0.1
+      },
+      "paint": {
+        "text-halo-width": 2,
+        "text-halo-color": "rgba(251, 251, 251, 1)",
+        "text-color": "rgba(68, 68, 68, 1)",
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "nimisto_kunnat",
+      "type": "symbol",
+      "source": "taustakartta",
+      "source-layer": "nimisto",
+      "filter": [
+        "all",
+        ["==", ["get", "alaryhma"], "Hallintoalueet"],
+        ["==", ["get", "laji"], "Kunta"]
+      ],
+      "layout": {
+        "text-field": [
+          "coalesce",
+          ["get", "nimi_fin"],
+          ["get", "nimi_swe"],
+          ["get", "nimi_sme"],
+          ["get", "nimi_sms"],
+          ["get", "nimi_smn"]
+        ],
+        "icon-ignore-placement": false,
+        "icon-allow-overlap": false,
+        "text-size": 14,
+        "text-font": [
+          "step",
+          ["zoom"],
+          ["literal", ["Liberation Sans NLSFI"]],
+          6,
+          ["literal", ["Liberation Sans NLSFI Bold"]]
+        ],
+        "text-letter-spacing": 0.1,
+        "text-transform": "uppercase",
+        "visibility": "visible",
+        "text-line-height": ["literal", 1.2]
+      },
+      "paint": {
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(251, 251, 251, 1)",
+        "text-color": "rgba(68, 68, 68, 1)",
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "nimisto-maasto-vedet",
+      "type": "symbol",
+      "source": "taustakartta",
+      "source-layer": "nimisto",
+      "filter": ["match", ["get", "teema"], ["Maasto", "Vedet"], true, false],
+      "layout": {
+        "text-field": [
+          "coalesce",
+          ["get", "nimi_fin"],
+          ["get", "nimi_swe"],
+          ["get", "nimi_sme"],
+          ["get", "nimi_sms"],
+          ["get", "nimi_smn"]
+        ],
+        "text-font": [
+          "match",
+          ["get", "teema"],
+          "Vedet",
+          ["literal", ["Liberation Sans NLSFI"]],
+          "Maasto",
+          ["literal", ["Liberation Sans NLSFI"]],
+          ["literal", ["Liberation Sans NLSFI"]]
+        ],
+        "text-size": 12,
+        "visibility": "visible",
+        "text-padding": 2,
+        "text-line-height": 1.2,
+        "text-letter-spacing": 0.1
+      },
+      "paint": {
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(251, 251, 251, 1)",
+        "text-color": "rgba(68, 68, 68, 1)",
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "nimisto_luonnopuistot",
+      "type": "symbol",
+      "source": "taustakartta",
+      "source-layer": "nimisto",
+      "filter": [
+        "match",
+        ["get", "laji"],
+        ["Kansallispuisto", "Luonnonpuisto"],
+        true,
+        false
+      ],
+      "layout": {
+        "text-field": [
+          "coalesce",
+          ["get", "nimi_fin"],
+          ["get", "nimi_swe"],
+          ["get", "nimi_sme"],
+          ["get", "nimi_sms"],
+          ["get", "nimi_smn"]
+        ],
+        "icon-ignore-placement": true,
+        "icon-allow-overlap": false,
+        "text-font": ["Liberation Sans NLSFI"],
+        "visibility": "visible",
+        "text-size": 12,
+        "text-letter-spacing": 0.1
+      },
+      "paint": {
+        "text-halo-color": "rgba(251, 251, 251, 1)",
+        "text-color": "rgba(68, 68, 68, 1)",
+        "text-halo-blur": 1,
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "nimisto_tienimet",
+      "type": "symbol",
+      "source": "taustakartta",
+      "source-layer": "liikenne",
+      "filter": ["all", ["<", "tasosijainti", 1]],
+      "layout": {
+        "text-field": "{nimi_suomi}        {nimi_ruotsi}",
+        "text-font": ["Liberation Sans NLSFI"],
+        "symbol-placement": "line",
+        "text-size": 10,
+        "visibility": "visible",
+        "text-letter-spacing": 0.2
+      },
+      "paint": {
+        "text-color": "rgba(69, 86, 71, 1)",
+        "text-halo-color": "#fff",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "hallintorajat",
+      "type": "line",
+      "source": "taustakartta",
+      "source-layer": "hallintoalue",
+      "layout": { "visibility": "none" },
+      "paint": { "line-color": "hsl(0,0%,65%)", "line-width": 1 }
+    }
+  ],
+  "id": "NLS-Basemap"
+}
