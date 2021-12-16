@@ -2,6 +2,7 @@
 
 ![](https://github.com/GispoCoding/tarmo/workflows/Build/badge.svg)
 ![](https://github.com/GispoCoding/tarmo/workflows/Tests/badge.svg)
+![](https://github.com/GispoCoding/tarmo/workflows/Deploy/badge.svg)
 
 Tarmo - Tampere Mobilemap
 
