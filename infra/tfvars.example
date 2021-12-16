@@ -1,0 +1,7 @@
+AWS_REGION_NAME="<AWS Region name>"
+AWS_BUCKET_NAME="<AWS S3 bucket name>"
+AWS_S3_USER="<AWS S3 user name>"
+AWS_HOSTED_DOMAIN="<Domain for create route53 record>"
+
+enable_route53_record=false
+frontend_subdomain="<Name of the site, used for example in <SITE_NAME>.domain.com>"

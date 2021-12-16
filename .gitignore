@@ -1,2 +1,7 @@
 /dist/
 /.env
+*.tfstate
+*.tfstate.*
+*.tfvars
+**/.terraform/*
+/infra/get-mfa-vars.sh
