@@ -10,23 +10,27 @@ resource "aws_iam_policy" "ci_policy" {
   description = "Github CI policy"
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
-        Action = [
+        Action   = [
           "s3:PutObject",
-          "s3:PutObjectAcl"
+          "s3:PutObjectAcl",
+          "s3:DeleteObject",
+          "s3:DeleteObjectTagging",
+          "s3:DeleteObjectVersion",
+          "s3:DeleteObjectVersionTagging",
         ],
-        Effect = "Allow",
+        Effect   = "Allow",
         Resource = [
           "${aws_s3_bucket.static_react_bucket.arn}/*"
         ]
       },
       {
-        Action = [
+        Action   = [
           "s3:ListBucket"
         ],
-        Effect = "Allow",
+        Effect   = "Allow",
         Resource = [
           aws_s3_bucket.static_react_bucket.arn
         ]
