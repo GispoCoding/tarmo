@@ -1,7 +1,7 @@
 name: Deploy
 on:
   push:
-    branches: [main,6_terraform-configuration] # TODO: remove branch
+    branches: [main]
 
 jobs:
   build-and-deploy:
