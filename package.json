@@ -100,6 +100,7 @@
       "@typescript-eslint/no-unused-vars": [
         "warn"
       ],
+      "@typescript-eslint/ban-ts-comment": "warn",
       "react/prop-types": "warn",
       "import/no-unresolved": "warn",
       "react-hooks/rules-of-hooks": "error",
@@ -134,5 +135,10 @@
         }
       }
     }
-  }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "dist",
+    "test"
+  ]
 }
