@@ -23,6 +23,14 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 
 
 # Cloudfront
+data "aws_cloudfront_cache_policy" "ManagedCachingOptimized" {
+  name = "Managed-CachingOptimized"
+}
+
+data "aws_cloudfront_cache_policy" "ManagedCachingDisabled" {
+  name = "Managed-CachingDisabled"
+}
+
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "tarmo-react-app OAI"
@@ -49,13 +57,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.s3_origin_id
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
+    cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingOptimized.id
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
@@ -71,13 +73,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = local.s3_origin_id
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
+    cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingDisabled.id
 
     min_ttl                = 0
     default_ttl            = 0
@@ -85,6 +81,23 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
+
+  ordered_cache_behavior {
+    # Don't cache map styles
+    path_pattern     = "/map-styles/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = local.s3_origin_id
+
+    cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingDisabled.id
+
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
 
   price_class = "PriceClass_100"
 
