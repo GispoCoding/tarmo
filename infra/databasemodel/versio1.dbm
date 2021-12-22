@@ -1,0 +1,1816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7214" last-zoom="1" max-obj-count="51"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<role name="trerkp_admin"
+ superuser="true"
+ createdb="true"
+ createrole="true"
+ login="true">
+</role>
+
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="lipas" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="trerkp_admin"/>
+</schema>
+
+<schema name="kooste" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="trerkp_admin"/>
+</schema>
+
+<extension name="postgis">
+	<schema name="lipas"/>
+</extension>
+
+<table name="abstract" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="340" y="140"/>
+	<column name="email">
+		<type name="text" length="0"/>
+	</column>
+	<column name="admin">
+		<type name="text" length="0"/>
+	</column>
+	<column name="www">
+		<type name="text" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="type_typeCode">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="type_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phoneNumber">
+		<type name="text" length="0"/>
+	</column>
+	<column name="location_address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="location_city_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="location_postalOffice">
+		<type name="text" length="0"/>
+	</column>
+	<column name="location_postalCode">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="owner">
+		<type name="text" length="0"/>
+	</column>
+</table>
+
+<table name="luistelukentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="1440"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="luistelukentta_pk" type="pk-constr" table="lipas.luistelukentta">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="hiihtomaa" layers="0" collapse-mode="2" max-obj-count="30" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="780" y="660"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="equipmentRental">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiService">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackTraditional">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="hiihtomaa_pk" type="pk-constr" table="lipas.hiihtomaa">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="hiihtomaa_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#a33f6d"
+	 src-table="lipas.hiihtomaa"
+	 dst-table="lipas.abstract"/>
+
+<table name="kilpahiihtokeskus" layers="0" collapse-mode="2" max-obj-count="32" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="660"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiService">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="sauna">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="shower">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackTraditional">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="kilpahiihtokeskus_pk" type="pk-constr" table="lipas.kilpahiihtokeskus">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="kilpahiihtokeskus_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#83a790"
+	 src-table="lipas.kilpahiihtokeskus"
+	 dst-table="lipas.abstract"/>
+
+<table name="kaukalo" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="800" y="1440"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="kaukalo_pk" type="pk-constr" table="lipas.kaukalo">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="luistelukentta_cp_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#1937cc"
+	 src-table="lipas.kaukalo"
+	 dst-table="lipas.abstract"/>
+
+<table name="luistelureitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1380" y="1440"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="equipmentRental">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="trackLengthM">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="luistelureitti_pk" type="pk-constr" table="lipas.luistelureitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="luistelureitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#3d6c4d"
+	 src-table="lipas.luistelureitti"
+	 dst-table="lipas.abstract"/>
+
+<table name="tekojaakentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1900" y="1440"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="tekojaakentta_pk" type="pk-constr" table="lipas.tekojaakentta">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="tekojaakentta_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#f4259d"
+	 src-table="lipas.tekojaakentta"
+	 dst-table="lipas.abstract"/>
+
+<table name="ruoanlaittopaikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="2440" y="2040"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="ruoanlaittopaikka_pk" type="pk-constr" table="lipas.ruoanlaittopaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ruoanlaittopaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#61197a"
+	 src-table="lipas.ruoanlaittopaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="laavu_kota_kammi" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1320" y="2040"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="laavu_kota_kammi_pk" type="pk-constr" table="lipas.laavu_kota_kammi">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="laavu_kota_kammi_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#86b8ae"
+	 src-table="lipas.laavu_kota_kammi"
+	 dst-table="lipas.abstract"/>
+
+<table name="ulkoilumaja_hiihtomaja" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1880" y="2040"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="ulkoilumaja_hiihtomaja_pk" type="pk-constr" table="lipas.ulkoilumaja_hiihtomaja">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ulkoilumaja_hiihtomaja_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#cac95e"
+	 src-table="lipas.ulkoilumaja_hiihtomaja"
+	 dst-table="lipas.abstract"/>
+
+<table name="tupa" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="2040"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="tupa_pk" type="pk-constr" table="lipas.tupa">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="tupa_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#dbf4f8"
+	 src-table="lipas.tupa"
+	 dst-table="lipas.abstract"/>
+
+<table name="telttailu_leiriytyminen" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="780" y="2040"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="telttailu_leiriytyminen_pk" type="pk-constr" table="lipas.telttailu_leiriytyminen">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="telttailu_leiriytyminen_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#a20aa6"
+	 src-table="lipas.telttailu_leiriytyminen"
+	 dst-table="lipas.abstract"/>
+
+<table name="lahiliikuntapaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="exerciseMachinesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="playground">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="lahiliikuntapaikka_pk" type="pk-constr" table="lipas.lahiliikuntapaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="lahiliikuntapaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#d857e6"
+	 src-table="lipas.lahiliikuntapaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="ulkokuntoilupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="760" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="exerciseMachinesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="playground">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="ulkokuntoilupaikka_pk" type="pk-constr" table="lipas.ulkokuntoilupaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ulkokuntoilupaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#585c61"
+	 src-table="lipas.ulkokuntoilupaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="koiraurheilualue" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="3000" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="trackLengthM">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="koiraurheilualue_pk" type="pk-constr" table="lipas.koiraurheilualue">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="koiraurheilualue_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#d7401a"
+	 src-table="lipas.koiraurheilualue"
+	 dst-table="lipas.abstract"/>
+
+<table name="frisbeegolf_rata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1300" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="trackLengthM">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="altitudeDifference">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="holesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="trackType">
+		<type name="text" length="0"/>
+	</column>
+	<column name="range">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="frisbeegolf_rata_pk" type="pk-constr" table="lipas.frisbeegolf_rata">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="frisbeegolf_rata_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#41aea4"
+	 src-table="lipas.frisbeegolf_rata"
+	 dst-table="lipas.abstract"/>
+
+<table name="ulkokiipeilyseina" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1880" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="climbingWallWidthM">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingWallHeightM">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingRoutesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="iceClimbing">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="ulkokiipeilyseina_pk" type="pk-constr" table="lipas.ulkokiipeilyseina">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ulkokiipeilyseina_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#771cc8"
+	 src-table="lipas.ulkokiipeilyseina"
+	 dst-table="lipas.abstract"/>
+
+<table name="kiipeilykallio" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="2440" y="2580"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="climbingWallWidthM">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingWallHeightM">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingRoutesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="iceClimbing">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="kiipeilykallio_pk" type="pk-constr" table="lipas.kiipeilykallio">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="kiipeilykallio_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#2eadba"
+	 src-table="lipas.kiipeilykallio"
+	 dst-table="lipas.abstract"/>
+
+<table name="rantautumispaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="760" y="3680"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="boatLaunchingSpot">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="rantautumispaikka_pk" type="pk-constr" table="lipas.rantautumispaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="rantautumispaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#c36056"
+	 src-table="lipas.rantautumispaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="veneilyn_palvelupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="3680"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="boatLaunchingSpot">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="veneilyn_palvelupaikka_pk" type="pk-constr" table="lipas.veneilyn_palvelupaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="veneilyn_palvelupaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#ca71a5"
+	 src-table="lipas.veneilyn_palvelupaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="kalastusalue_paikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1320" y="3680"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="kalastusalue_paikka_pk" type="pk-constr" table="lipas.kalastusalue_paikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="kalastusalue_paikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#f81af6"
+	 src-table="lipas.kalastusalue_paikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="koskimelontakeskus" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1860" y="3680"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="equipmentRental">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="altitudeDifference">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="koskimelontakeskus_pk" type="pk-constr" table="lipas.koskimelontakeskus">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="koskimelontakeskus_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#40f44e"
+	 src-table="lipas.koskimelontakeskus"
+	 dst-table="lipas.abstract"/>
+
+<table name="luontotorni" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="760" y="4160"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="luontotorni_pk" type="pk-constr" table="lipas.luontotorni">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="luontotorni_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#b8a63c"
+	 src-table="lipas.luontotorni"
+	 dst-table="lipas.abstract"/>
+
+<table name="opastuspiste" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="4160"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="opastuspiste_pk" type="pk-constr" table="lipas.opastuspiste">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="opastuspiste_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#ef8daf"
+	 src-table="lipas.opastuspiste"
+	 dst-table="lipas.abstract"/>
+
+<table name="uimaranta" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="3120"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="sauna">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="shower">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="otherPlatforms">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="uimaranta_pk" type="pk-constr" table="lipas.uimaranta">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="uimaranta_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#03ea2c"
+	 src-table="lipas.uimaranta"
+	 dst-table="lipas.abstract"/>
+
+<table name="uimapaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="760" y="3120"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="sauna">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="shower">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="otherPlatforms">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="uimapaikka_pk" type="pk-constr" table="lipas.uimapaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="uimapaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#fb7521"
+	 src-table="lipas.uimapaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="talviuintipaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1320" y="3120"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="kiosk">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="sauna">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="shower">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pier">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="iceReduction">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="talviuintipaikka_pk" type="pk-constr" table="lipas.talviuintipaikka">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="talviuintipaikka_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#78cf8d"
+	 src-table="lipas.talviuintipaikka"
+	 dst-table="lipas.abstract"/>
+
+<table name="lahipuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="4700"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="playground">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="lahipuisto_pk" type="pk-constr" table="lipas.lahipuisto">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="lahipuisto_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#f51366"
+	 src-table="lipas.lahipuisto"
+	 dst-table="lipas.abstract"/>
+
+<table name="ulkoilupuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="760" y="4700"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="playground">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="ulkoilupuisto_pk" type="pk-constr" table="lipas.ulkoilupuisto">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ulkoilupuisto_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#c5e338"
+	 src-table="lipas.ulkoilupuisto"
+	 dst-table="lipas.abstract"/>
+
+<table name="liikuntapuisto" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1320" y="4700"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="ligthing">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Kirjoitusvirhe Lippaan päässä]]></comment>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="playground">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="liikuntapuisto_pk" type="pk-constr" table="lipas.liikuntapuisto">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="liikuntapuisto_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#aeada2"
+	 src-table="lipas.liikuntapuisto"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="luistelukentta_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#691700"
+	 src-table="lipas.luistelukentta"
+	 dst-table="lipas.abstract"/>
+
+<table name="koirahiihtolatu" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="820" y="5160"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackTraditional">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="koirahiihtolatu_pk" type="pk-constr" table="lipas.koirahiihtolatu">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="melontareitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="5780"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="melontareitti_pk" type="pk-constr" table="lipas.melontareitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="vesiretkeilyreitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="820" y="5780"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="vesiretkeilyreitti_pk" type="pk-constr" table="lipas.vesiretkeilyreitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="pyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="6300"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="pyorailyreitti_pk" type="pk-constr" table="lipas.pyorailyreitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="maastopyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="820" y="6300"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="maastopyorailyreitti_pk" type="pk-constr" table="lipas.maastopyorailyreitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="kavely_ulkoilureitti" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="6800"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="outdoorExerciseMachines">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="kavely_ulkoilureitti_pk" type="pk-constr" table="lipas.kavely_ulkoilureitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="retkeilyreitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="820" y="6800"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="retkeilyreitti_pk" type="pk-constr" table="lipas.retkeilyreitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="kuntorata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="1460" y="6800"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="shootingPositionsCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="outdoorExerciseMachines">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="kuntorata_pk" type="pk-constr" table="lipas.kuntorata">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="luontopolku" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="2060" y="6800"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo">
+		<type name="text" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="luontopolku_pk" type="pk-constr" table="lipas.luontopolku">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="hevosreitti" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="2680" y="6800"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<constraint name="hevosreitti_pk" type="pk-constr" table="lipas.hevosreitti">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="lipas_kohteet_piste" layers="0" collapse-mode="2" max-obj-count="57" z-value="0">
+	<schema name="kooste"/>
+	<role name="trerkp_admin"/>
+	<position x="180" y="7440"/>
+	<column name="koosteId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom" not-null="true">
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="typeCode" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="typeName" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="owner">
+		<type name="text" length="0"/>
+	</column>
+	<column name="admin">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="postalCode">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="postalOffice">
+		<type name="text" length="0"/>
+	</column>
+	<column name="cityName">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phoneNumber">
+		<type name="text" length="0"/>
+	</column>
+	<column name="www">
+		<type name="text" length="0"/>
+	</column>
+	<column name="season" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="toilet" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="shower" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="changingRooms" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="lighting" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="skiTrackTraditional" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="litRouteLengthKm" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="pier" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="otherPlatforms" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="accessibilityInfo" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="kiosk" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiService" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="equipmentRental" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="sauna" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="playground" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="exerciseMachines" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="trackLengthM" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="altitudeDifference" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingWallWidthM" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingWallHeightM" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="climbingRoutesCount" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="holesCount" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="boatLaunchingSpot" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="iceClimbing" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="iceReduction" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="range" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="trackType" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="status" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="additional_info" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="images" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="lipas_kohteet_piste_pk" type="pk-constr" table="kooste.lipas_kohteet_piste">
+		<columns names="koosteId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="latu" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
+	<schema name="lipas"/>
+	<role name="trerkp_admin"/>
+	<position x="200" y="5160"/>
+	<column name="sportsPlaceId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="toilet">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackTraditional">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="infoFi">
+		<type name="text" length="0"/>
+	</column>
+	<column name="litRouteLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="shootingPositionsCount">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="outdoorExerciseMachines">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="latu_pk" type="pk-constr" table="lipas.latu">
+		<columns names="sportsPlaceId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="latu_inherits_abstract_piste" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#b15ef1"
+	 src-table="lipas.latu"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="koirahiihtolatu_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#67444f"
+	 src-table="lipas.koirahiihtolatu"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="melontareitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#09205c"
+	 src-table="lipas.melontareitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="vesiretkeilyreitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#b6edab"
+	 src-table="lipas.vesiretkeilyreitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="pyorailyreitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#12ead7"
+	 src-table="lipas.pyorailyreitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="maastopyorailyreitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#dfd74e"
+	 src-table="lipas.maastopyorailyreitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="kavely_ulkoilureitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#2ea2c6"
+	 src-table="lipas.kavely_ulkoilureitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="retkeilyreitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#010a49"
+	 src-table="lipas.retkeilyreitti"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="kuntorata_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#0d47ba"
+	 src-table="lipas.kuntorata"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="luontopolku_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#c5ca3b"
+	 src-table="lipas.luontopolku"
+	 dst-table="lipas.abstract"/>
+
+<relationship name="hevosreitti_inherits_abstract" type="relgen" layers="0"
+	 pk-pattern="{dt}_pk"
+	 custom-color="#842fb1"
+	 src-table="lipas.hevosreitti"
+	 dst-table="lipas.abstract"/>
+
+<table name="lipas_kohteet_viiva" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
+	<schema name="kooste"/>
+	<role name="trerkp_admin"/>
+	<position x="680" y="7440"/>
+	<column name="koosteId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="geom" not-null="true">
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="typeCode" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="typeName" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="owner">
+		<type name="text" length="0"/>
+	</column>
+	<column name="admin">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="postalCode">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="postalOffice">
+		<type name="text" length="0"/>
+	</column>
+	<column name="cityName">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phoneNumber">
+		<type name="text" length="0"/>
+	</column>
+	<column name="www">
+		<type name="text" length="0"/>
+	</column>
+	<column name="season" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="toilet" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="restPlacesCount" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="skiTrackTraditional" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="skiTrackFreestyle" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="litRouteLengthKm" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="routeLengthKm" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="accessibilityInfo" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="exerciseMachines" default-value="NULL">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="infoFi" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="shootingPositionsCount" default-value="NULL">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="status" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="additional_info" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<column name="images" default-value="NULL">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="lipas_kohteet_viiva_pk" type="pk-constr" table="kooste.lipas_kohteet_viiva">
+		<columns names="koosteId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+</dbmodel>
