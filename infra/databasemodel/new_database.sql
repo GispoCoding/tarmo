@@ -18,7 +18,7 @@ CREATE ROLE trerkp_admin WITH
 -- 
 -- object: new_database | type: DATABASE --
 -- DROP DATABASE IF EXISTS new_database;
-CREATE DATABASE new_database;
+-- CREATE DATABASE new_database;
 -- ddl-end --
 
 
@@ -1340,7 +1340,7 @@ CREATE TABLE kooste.lipas_kohteet_piste (
 	range boolean DEFAULT NULL,
 	"trackType" text DEFAULT NULL,
 	status text DEFAULT NULL,
-	additional_info text DEFAULT NULL,
+	additionalInfo text DEFAULT NULL,
 	images text DEFAULT NULL,
 	CONSTRAINT lipas_kohteet_piste_pk PRIMARY KEY ("koosteId")
 
@@ -1413,7 +1413,7 @@ CREATE TABLE kooste.lipas_kohteet_viiva (
 	"infoFi" text DEFAULT NULL,
 	"shootingPositionsCount" numeric DEFAULT NULL,
 	status text DEFAULT NULL,
-	additional_info text DEFAULT NULL,
+	additionalInfo text DEFAULT NULL,
 	images text DEFAULT NULL,
 	CONSTRAINT lipas_kohteet_viiva_pk PRIMARY KEY ("koosteId")
 

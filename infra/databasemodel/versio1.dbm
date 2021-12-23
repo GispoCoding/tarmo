@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7214" last-zoom="1" max-obj-count="51"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7100" last-zoom="1" max-obj-count="51"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1599,7 +1599,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="status" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
-	<column name="additional_info" default-value="NULL">
+	<column name="additionalInfo" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
 	<column name="images" default-value="NULL">
@@ -1802,7 +1802,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="status" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
-	<column name="additional_info" default-value="NULL">
+	<column name="additionalInfo" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
 	<column name="images" default-value="NULL">
