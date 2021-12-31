@@ -1,12 +1,20 @@
 # tarmo
 
 ![](https://github.com/GispoCoding/tarmo/workflows/Build/badge.svg)
-![](https://github.com/GispoCoding/tarmo/workflows/Tests/badge.svg)
+![](https://github.com/GispoCoding/tarmo/workflows/CI/badge.svg)
 ![](https://github.com/GispoCoding/tarmo/workflows/Deploy/badge.svg)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 Tarmo - Tampere Mobilemap
 
-### Development
+## Development
+
+1. Create a Python virtual environment and activate it.
+2. `pip install pip-tools`
+3. `pip-sync requirements-dev.txt`
+4. `pre-commit install`
+
+### Frontend
 
 Use Node>=v16.
 

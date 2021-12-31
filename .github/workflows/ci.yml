@@ -1,11 +1,16 @@
-name: Tests
+name: CI
+
 on:
   pull_request:
   push:
     branches: [main]
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
     strategy:
       matrix:
         node-version: [16.x]
@@ -18,9 +23,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install
         run: yarn
-      - name: EsLint
-        run: yarn run lint
       - name: Test
         run: yarn run test
         env:
           CI: true
+
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
