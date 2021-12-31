@@ -34,4 +34,3 @@ resource "aws_route53_record" "frontend_validation" {
   type            = each.value.type
   zone_id         = data.aws_route53_zone.zone[0].id
 }
-
