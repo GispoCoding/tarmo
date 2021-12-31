@@ -5,7 +5,7 @@
 -- Model Author: ---
 -- object: trerkp_admin | type: ROLE --
 -- DROP ROLE IF EXISTS trerkp_admin;
-CREATE ROLE trerkp_admin WITH 
+CREATE ROLE trerkp_admin WITH
 	SUPERUSER
 	CREATEDB
 	CREATEROLE
@@ -13,9 +13,9 @@ CREATE ROLE trerkp_admin WITH
 -- ddl-end --
 
 
--- Database creation must be performed outside a multi lined SQL file. 
+-- Database creation must be performed outside a multi lined SQL file.
 -- These commands were put in this file only as a convenience.
--- 
+--
 -- object: new_database | type: DATABASE --
 -- DROP DATABASE IF EXISTS new_database;
 -- CREATE DATABASE new_database;
@@ -1421,5 +1421,3 @@ CREATE TABLE kooste.lipas_kohteet_viiva (
 -- ddl-end --
 ALTER TABLE kooste.lipas_kohteet_viiva OWNER TO trerkp_admin;
 -- ddl-end --
-
-

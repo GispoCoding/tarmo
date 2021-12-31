@@ -10,12 +10,13 @@ Tarmo - Tampere Mobilemap
 
 Use Node>=v16.
 
-1. Copy .env.sample as .env and fill your NLS Api key.
-2. Install dependencies:
+1. Navigate into web directory
+2. Copy .env.sample as .env and fill your NLS Api key.
+3. Install dependencies:
    ```shell
    yarn
    ```
-3. Run the development server in localhost:3000:
+4. Run the development server in localhost:3000:
    ```shell
    yarn run start
    ```
