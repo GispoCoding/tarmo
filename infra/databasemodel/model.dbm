@@ -3,18 +3,40 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7100" last-zoom="1" max-obj-count="51"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7020" last-zoom="1" max-obj-count="110"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
 	 layer-name-colors="#000000"
 	 layer-rect-colors="#b4b4b4"
 	 show-layer-names="false" show-layer-rects="false">
-<role name="trerkp_admin"
- superuser="true"
- createdb="true"
+<role name="tarmo_admin"
  createrole="true"
- login="true">
+ login="true"
+ encrypted="true"
+ password="vaihdaMinut1">
+</role>
+
+<role name="tarmo_read"
+ login="true"
+ encrypted="true"
+ password="vaihdaMinut2">
+</role>
+
+<role name="tarmo_read_write"
+ login="true"
+ encrypted="true"
+ password="vaihdaMinut3">
+</role>
+
+<role name="kooste_read"
+ login="true"
+ password="vaihdaMinut4">
+</role>
+
+<role name="kooste_read_write"
+ login="true"
+ password="vaihdaMinut5">
 </role>
 
 <database name="new_database" is-template="false" allow-conns="true">
@@ -24,11 +46,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <schema name="lipas" layers="0" rect-visible="true" fill-color="#e1e1e1">
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 </schema>
 
 <schema name="kooste" layers="0" rect-visible="true" fill-color="#e1e1e1">
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 </schema>
 
 <extension name="postgis">
@@ -37,7 +59,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="abstract" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="340" y="140"/>
 	<column name="email">
 		<type name="text" length="0"/>
@@ -79,7 +101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="luistelukentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="1440"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -111,7 +133,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="hiihtomaa" layers="0" collapse-mode="2" max-obj-count="30" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="780" y="660"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -166,7 +188,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kilpahiihtokeskus" layers="0" collapse-mode="2" max-obj-count="32" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="660"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -227,7 +249,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kaukalo" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="800" y="1440"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -262,7 +284,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="luistelureitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1380" y="1440"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -303,7 +325,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="tekojaakentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1900" y="1440"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -341,7 +363,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="ruoanlaittopaikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="2440" y="2040"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -369,7 +391,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="laavu_kota_kammi" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1320" y="2040"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -397,7 +419,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="ulkoilumaja_hiihtomaja" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1880" y="2040"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -425,7 +447,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="tupa" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="2040"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -453,7 +475,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="telttailu_leiriytyminen" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="780" y="2040"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -481,7 +503,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="lahiliikuntapaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -519,7 +541,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="ulkokuntoilupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="760" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -554,7 +576,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="koiraurheilualue" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="3000" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -589,7 +611,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="frisbeegolf_rata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1300" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -636,7 +658,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="ulkokiipeilyseina" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1880" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -677,7 +699,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kiipeilykallio" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="2440" y="2580"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -718,7 +740,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="rantautumispaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="760" y="3680"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -752,7 +774,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="veneilyn_palvelupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="3680"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -786,7 +808,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kalastusalue_paikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1320" y="3680"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -814,7 +836,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="koskimelontakeskus" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1860" y="3680"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -848,7 +870,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="luontotorni" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="760" y="4160"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -876,7 +898,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="opastuspiste" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="4160"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -904,7 +926,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="uimaranta" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="3120"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -950,7 +972,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="uimapaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="760" y="3120"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -996,7 +1018,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="talviuintipaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1320" y="3120"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1042,7 +1064,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="lahipuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="4700"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1070,7 +1092,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="ulkoilupuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="760" y="4700"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1098,7 +1120,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="liikuntapuisto" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1320" y="4700"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1139,7 +1161,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="koirahiihtolatu" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="820" y="5160"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1176,7 +1198,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="melontareitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="5780"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1201,7 +1223,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="vesiretkeilyreitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="820" y="5780"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1226,7 +1248,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="pyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="6300"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1257,7 +1279,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="maastopyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="820" y="6300"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1288,7 +1310,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kavely_ulkoilureitti" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="6800"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1325,7 +1347,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="retkeilyreitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="820" y="6800"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1359,7 +1381,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="kuntorata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="1460" y="6800"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1399,7 +1421,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="luontopolku" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="2060" y="6800"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1430,7 +1452,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="hevosreitti" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="2680" y="6800"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1458,8 +1480,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="lipas_kohteet_piste" layers="0" collapse-mode="2" max-obj-count="57" z-value="0">
 	<schema name="kooste"/>
-	<role name="trerkp_admin"/>
-	<position x="180" y="7440"/>
+	<role name="tarmo_admin"/>
+	<position x="200" y="7500"/>
 	<column name="koosteId" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -1612,7 +1634,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="latu" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
-	<role name="trerkp_admin"/>
+	<role name="tarmo_admin"/>
 	<position x="200" y="5160"/>
 	<column name="sportsPlaceId" not-null="true"
 	 identity-type="ALWAYS">
@@ -1721,8 +1743,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="lipas_kohteet_viiva" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
 	<schema name="kooste"/>
-	<role name="trerkp_admin"/>
-	<position x="680" y="7440"/>
+	<role name="tarmo_admin"/>
+	<position x="700" y="7500"/>
 	<column name="koosteId" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
@@ -1813,4 +1835,488 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<table name="metadata" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="lipas"/>
+	<role name="tarmo_admin"/>
+	<appended-sql><![CDATA[SET timezone = 'Europe/Helsinki';]]></appended-sql>
+	<position x="200" y="7300"/>
+	<column name="updateId" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="last_modified">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="typeCodeList">
+		<type name="jsonb" length="0"/>
+	</column>
+	<constraint name="metadata_pk" type="pk-constr" table="lipas.metadata">
+		<columns names="updateId" ref-type="src-columns"/>
+	</constraint>
+	<initial-data>
+<![CDATA[updateId•last_modified•typeCodeList⸣
+0•NULL•[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]]]>
+	</initial-data>
+</table>
+
+<permission>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.abstract" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.abstract" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kilpahiihtokeskus" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kilpahiihtokeskus" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.hiihtomaa" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.hiihtomaa" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelukentta" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelukentta" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kaukalo" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kaukalo" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelureitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelureitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.tekojaakentta" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.tekojaakentta" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.tupa" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.tupa" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.telttailu_leiriytyminen" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.telttailu_leiriytyminen" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.laavu_kota_kammi" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.laavu_kota_kammi" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkoilumaja_hiihtomaja" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkoilumaja_hiihtomaja" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.ruoanlaittopaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.ruoanlaittopaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.lahiliikuntapaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.lahiliikuntapaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkokuntoilupaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkokuntoilupaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.frisbeegolf_rata" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.frisbeegolf_rata" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkokiipeilyseina" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkokiipeilyseina" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kiipeilykallio" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kiipeilykallio" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.koiraurheilualue" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.koiraurheilualue" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.uimaranta" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.uimaranta" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.uimapaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.uimapaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.talviuintipaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.talviuintipaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.veneilyn_palvelupaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.veneilyn_palvelupaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.rantautumispaikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.rantautumispaikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kalastusalue_paikka" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kalastusalue_paikka" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.koskimelontakeskus" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.koskimelontakeskus" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.opastuspiste" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.opastuspiste" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luontotorni" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.luontotorni" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.lahipuisto" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.lahipuisto" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkoilupuisto" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.ulkoilupuisto" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.liikuntapuisto" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.liikuntapuisto" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.latu" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.latu" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.koirahiihtolatu" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.koirahiihtolatu" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.melontareitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.melontareitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.vesiretkeilyreitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.vesiretkeilyreitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.pyorailyreitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.pyorailyreitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.maastopyorailyreitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.maastopyorailyreitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kavely_ulkoilureitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kavely_ulkoilureitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.retkeilyreitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.retkeilyreitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kuntorata" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.kuntorata" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luontopolku" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.luontopolku" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.hevosreitti" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.hevosreitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.metadata" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="lipas.metadata" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<roles names="tarmo_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<roles names="kooste_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<roles names="kooste_read"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<roles names="kooste_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<roles names="kooste_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
 </dbmodel>
