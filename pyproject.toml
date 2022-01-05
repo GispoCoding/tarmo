@@ -1,0 +1,3 @@
+[tool.isort]
+# Black compatible values for isort https://black.readthedocs.io/en/stable/compatible_configs.html#isort
+profile = "black"

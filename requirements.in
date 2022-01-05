@@ -1,0 +1,5 @@
+geoalchemy2
+psycopg2
+requests==2.27.0
+shapely
+charset-normalizer==2.0.10

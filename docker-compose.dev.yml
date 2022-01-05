@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  db:
+    image: postgis/postgis:13-master
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+
+  lipas_loader:
+    build:
+      context: infra
+      dockerfile: lipas.Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./infra/functions/lipas_loader.py:/var/task/app.py
+
+  db_manager:
+    build:
+      context: infra
+      dockerfile: db_manager.Dockerfile
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./infra/functions/db_manager.py:/var/task/app.py
