@@ -9,6 +9,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
 
+  pg_tileserv:
+    image: pramsey/pg_tileserv:latest
+    environment:
+      - DATABASE_URL=postgresql://${SQL_USER:-postgres}:${SQL_PASSWORD:-postgres}@db/${SQL_DATABASE:-tarmo}
+    ports:
+      - "7800:7800"
+    depends_on:
+      - db
+    restart: unless-stopped
+
   lipas_loader:
     build:
       context: infra
