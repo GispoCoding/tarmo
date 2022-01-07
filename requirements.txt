@@ -20,6 +20,8 @@ packaging==21.3
     # via geoalchemy2
 psycopg2==2.9.3
     # via -r requirements.in
+psycopg2-binary==2.9.3
+    # via -r requirements.in
 pyparsing==3.0.6
     # via packaging
 requests==2.27.0
