@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7020" last-zoom="1" max-obj-count="110"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7350" last-zoom="1" max-obj-count="55"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -29,17 +29,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
  password="vaihdaMinut3">
 </role>
 
-<role name="kooste_read"
- login="true"
- password="vaihdaMinut4">
-</role>
-
-<role name="kooste_read_write"
- login="true"
- password="vaihdaMinut5">
-</role>
-
-<database name="new_database" is-template="false" allow-conns="true">
+<database name="model" is-template="false" allow-conns="true">
 </database>
 
 <schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
@@ -54,7 +44,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <extension name="postgis">
-	<schema name="lipas"/>
+	<schema name="public"/>
 </extension>
 
 <table name="abstract" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
@@ -99,16 +89,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 </table>
 
-<table name="luistelukentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="luistelukentta" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="1440"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -127,20 +119,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="luistelukentta_pk" type="pk-constr" table="lipas.luistelukentta">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="hiihtomaa" layers="0" collapse-mode="2" max-obj-count="30" z-value="0">
+<table name="hiihtomaa" layers="0" collapse-mode="2" max-obj-count="31" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="780" y="660"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="equipmentRental">
 		<type name="boolean" length="0"/>
@@ -176,7 +170,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="hiihtomaa_pk" type="pk-constr" table="lipas.hiihtomaa">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -186,16 +180,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.hiihtomaa"
 	 dst-table="lipas.abstract"/>
 
-<table name="kilpahiihtokeskus" layers="0" collapse-mode="2" max-obj-count="32" z-value="0">
+<table name="kilpahiihtokeskus" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="660"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -237,7 +233,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="kilpahiihtokeskus_pk" type="pk-constr" table="lipas.kilpahiihtokeskus">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -247,16 +243,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.kilpahiihtokeskus"
 	 dst-table="lipas.abstract"/>
 
-<table name="kaukalo" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="kaukalo" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="800" y="1440"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="changingRooms">
 		<type name="boolean" length="0"/>
@@ -272,7 +270,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="kaukalo_pk" type="pk-constr" table="lipas.kaukalo">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -282,16 +280,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.kaukalo"
 	 dst-table="lipas.abstract"/>
 
-<table name="luistelureitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+<table name="luistelureitti" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1380" y="1440"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -313,7 +313,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="luistelureitti_pk" type="pk-constr" table="lipas.luistelureitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -323,16 +323,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.luistelureitti"
 	 dst-table="lipas.abstract"/>
 
-<table name="tekojaakentta" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="tekojaakentta" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1900" y="1440"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -351,7 +353,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="tekojaakentta_pk" type="pk-constr" table="lipas.tekojaakentta">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -361,16 +363,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.tekojaakentta"
 	 dst-table="lipas.abstract"/>
 
-<table name="ruoanlaittopaikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="ruoanlaittopaikka" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="2440" y="2040"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -379,7 +383,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="ruoanlaittopaikka_pk" type="pk-constr" table="lipas.ruoanlaittopaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -389,16 +393,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.ruoanlaittopaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="laavu_kota_kammi" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="laavu_kota_kammi" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1320" y="2040"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -407,7 +413,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="laavu_kota_kammi_pk" type="pk-constr" table="lipas.laavu_kota_kammi">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -417,16 +423,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.laavu_kota_kammi"
 	 dst-table="lipas.abstract"/>
 
-<table name="ulkoilumaja_hiihtomaja" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="ulkoilumaja_hiihtomaja" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1880" y="2040"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -435,7 +443,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="ulkoilumaja_hiihtomaja_pk" type="pk-constr" table="lipas.ulkoilumaja_hiihtomaja">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -445,16 +453,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.ulkoilumaja_hiihtomaja"
 	 dst-table="lipas.abstract"/>
 
-<table name="tupa" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="tupa" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="2040"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -463,7 +473,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="tupa_pk" type="pk-constr" table="lipas.tupa">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -473,16 +483,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.tupa"
 	 dst-table="lipas.abstract"/>
 
-<table name="telttailu_leiriytyminen" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="telttailu_leiriytyminen" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="780" y="2040"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -491,7 +503,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="telttailu_leiriytyminen_pk" type="pk-constr" table="lipas.telttailu_leiriytyminen">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -501,16 +513,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.telttailu_leiriytyminen"
 	 dst-table="lipas.abstract"/>
 
-<table name="lahiliikuntapaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="lahiliikuntapaikka" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -529,7 +543,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="lahiliikuntapaikka_pk" type="pk-constr" table="lipas.lahiliikuntapaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -539,16 +553,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.lahiliikuntapaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="ulkokuntoilupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="ulkokuntoilupaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="760" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -564,7 +580,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="ulkokuntoilupaikka_pk" type="pk-constr" table="lipas.ulkokuntoilupaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -574,16 +590,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.ulkokuntoilupaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="koiraurheilualue" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="koiraurheilualue" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="3000" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -599,7 +617,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="koiraurheilualue_pk" type="pk-constr" table="lipas.koiraurheilualue">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -609,16 +627,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.koiraurheilualue"
 	 dst-table="lipas.abstract"/>
 
-<table name="frisbeegolf_rata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+<table name="frisbeegolf_rata" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1300" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -646,7 +666,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="frisbeegolf_rata_pk" type="pk-constr" table="lipas.frisbeegolf_rata">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -656,16 +676,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.frisbeegolf_rata"
 	 dst-table="lipas.abstract"/>
 
-<table name="ulkokiipeilyseina" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+<table name="ulkokiipeilyseina" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1880" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -687,7 +709,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="ulkokiipeilyseina_pk" type="pk-constr" table="lipas.ulkokiipeilyseina">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -697,16 +719,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.ulkokiipeilyseina"
 	 dst-table="lipas.abstract"/>
 
-<table name="kiipeilykallio" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+<table name="kiipeilykallio" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="2440" y="2580"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -728,7 +752,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="kiipeilykallio_pk" type="pk-constr" table="lipas.kiipeilykallio">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -738,16 +762,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.kiipeilykallio"
 	 dst-table="lipas.abstract"/>
 
-<table name="rantautumispaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="rantautumispaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="760" y="3680"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -762,7 +788,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="rantautumispaikka_pk" type="pk-constr" table="lipas.rantautumispaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -772,16 +798,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.rantautumispaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="veneilyn_palvelupaikka" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="veneilyn_palvelupaikka" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="3680"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -796,7 +824,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="veneilyn_palvelupaikka_pk" type="pk-constr" table="lipas.veneilyn_palvelupaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -806,16 +834,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.veneilyn_palvelupaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="kalastusalue_paikka" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="kalastusalue_paikka" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1320" y="3680"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -824,7 +854,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="kalastusalue_paikka_pk" type="pk-constr" table="lipas.kalastusalue_paikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -834,16 +864,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.kalastusalue_paikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="koskimelontakeskus" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="koskimelontakeskus" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1860" y="3680"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="equipmentRental">
 		<type name="boolean" length="0"/>
@@ -858,7 +890,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="koskimelontakeskus_pk" type="pk-constr" table="lipas.koskimelontakeskus">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -868,16 +900,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.koskimelontakeskus"
 	 dst-table="lipas.abstract"/>
 
-<table name="luontotorni" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="luontotorni" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="760" y="4160"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -886,7 +920,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="luontotorni_pk" type="pk-constr" table="lipas.luontotorni">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -896,16 +930,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.luontotorni"
 	 dst-table="lipas.abstract"/>
 
-<table name="opastuspiste" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="opastuspiste" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="4160"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -914,7 +950,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="opastuspiste_pk" type="pk-constr" table="lipas.opastuspiste">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -924,16 +960,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.opastuspiste"
 	 dst-table="lipas.abstract"/>
 
-<table name="uimaranta" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+<table name="uimaranta" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="3120"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -960,7 +998,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="uimaranta_pk" type="pk-constr" table="lipas.uimaranta">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -970,16 +1008,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.uimaranta"
 	 dst-table="lipas.abstract"/>
 
-<table name="uimapaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+<table name="uimapaikka" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="760" y="3120"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -1006,7 +1046,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="uimapaikka_pk" type="pk-constr" table="lipas.uimapaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1016,16 +1056,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.uimapaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="talviuintipaikka" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+<table name="talviuintipaikka" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1320" y="3120"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="kiosk">
 		<type name="boolean" length="0"/>
@@ -1052,7 +1094,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="talviuintipaikka_pk" type="pk-constr" table="lipas.talviuintipaikka">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1062,16 +1104,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.talviuintipaikka"
 	 dst-table="lipas.abstract"/>
 
-<table name="lahipuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="lahipuisto" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="4700"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="infoFi">
 		<type name="text" length="0"/>
@@ -1080,7 +1124,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="lahipuisto_pk" type="pk-constr" table="lipas.lahipuisto">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1090,16 +1134,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.lahipuisto"
 	 dst-table="lipas.abstract"/>
 
-<table name="ulkoilupuisto" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
+<table name="ulkoilupuisto" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="760" y="4700"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="infoFi">
 		<type name="text" length="0"/>
@@ -1108,7 +1154,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="ulkoilupuisto_pk" type="pk-constr" table="lipas.ulkoilupuisto">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1118,16 +1164,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.ulkoilupuisto"
 	 dst-table="lipas.abstract"/>
 
-<table name="liikuntapuisto" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="liikuntapuisto" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1320" y="4700"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="ligthing">
 		<type name="boolean" length="0"/>
@@ -1143,7 +1191,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="liikuntapuisto_pk" type="pk-constr" table="lipas.liikuntapuisto">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1159,16 +1207,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.luistelukentta"
 	 dst-table="lipas.abstract"/>
 
-<table name="koirahiihtolatu" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
+<table name="koirahiihtolatu" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="820" y="5160"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1192,20 +1242,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="koirahiihtolatu_pk" type="pk-constr" table="lipas.koirahiihtolatu">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="melontareitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
+<table name="melontareitti" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="5780"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="restPlacesCount">
 		<type name="numeric" length="0"/>
@@ -1217,20 +1269,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="melontareitti_pk" type="pk-constr" table="lipas.melontareitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="vesiretkeilyreitti" layers="0" collapse-mode="2" max-obj-count="20" z-value="0">
+<table name="vesiretkeilyreitti" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="820" y="5780"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="restPlacesCount">
 		<type name="numeric" length="0"/>
@@ -1242,20 +1296,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="vesiretkeilyreitti_pk" type="pk-constr" table="lipas.vesiretkeilyreitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="pyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="pyorailyreitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="6300"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1273,20 +1329,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="pyorailyreitti_pk" type="pk-constr" table="lipas.pyorailyreitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="maastopyorailyreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="maastopyorailyreitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="820" y="6300"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1304,20 +1362,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="maastopyorailyreitti_pk" type="pk-constr" table="lipas.maastopyorailyreitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="kavely_ulkoilureitti" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
+<table name="kavely_ulkoilureitti" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="6800"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1341,20 +1401,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="kavely_ulkoilureitti_pk" type="pk-constr" table="lipas.kavely_ulkoilureitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="retkeilyreitti" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
+<table name="retkeilyreitti" layers="0" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="820" y="6800"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1375,20 +1437,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="retkeilyreitti_pk" type="pk-constr" table="lipas.retkeilyreitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="kuntorata" layers="0" collapse-mode="2" max-obj-count="26" z-value="0">
+<table name="kuntorata" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="1460" y="6800"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1415,20 +1479,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="kuntorata_pk" type="pk-constr" table="lipas.kuntorata">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="luontopolku" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
+<table name="luontopolku" layers="0" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="2060" y="6800"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="restPlacesCount">
 		<type name="numeric" length="0"/>
@@ -1446,20 +1512,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="luontopolku_pk" type="pk-constr" table="lipas.luontopolku">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="hevosreitti" layers="0" collapse-mode="2" max-obj-count="21" z-value="0">
+<table name="hevosreitti" layers="0" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="2680" y="6800"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="restPlacesCount">
 		<type name="numeric" length="0"/>
@@ -1474,28 +1542,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" length="0"/>
 	</column>
 	<constraint name="hevosreitti_pk" type="pk-constr" table="lipas.hevosreitti">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="lipas_kohteet_piste" layers="0" collapse-mode="2" max-obj-count="57" z-value="0">
+<table name="lipas_kohteet_piste" layers="0" collapse-mode="2" max-obj-count="58" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="7500"/>
-	<column name="koosteId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom" not-null="true">
-		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTIPOINT" variation="0" srid="4326"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
-	<column name="typeCode" not-null="true">
+	<column name="type_typeCode" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="typeName" not-null="true">
+	<column name="type_name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="owner">
@@ -1537,8 +1607,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="changingRooms" default-value="NULL">
 		<type name="boolean" length="0"/>
 	</column>
-	<column name="lighting" default-value="NULL">
+	<column name="ligthing" default-value="NULL">
 		<type name="boolean" length="0"/>
+		<comment><![CDATA[Lippaan päässä kirjoitusvirhe]]></comment>
 	</column>
 	<column name="restPlacesCount" default-value="NULL">
 		<type name="numeric" length="0"/>
@@ -1628,20 +1699,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="lipas_kohteet_piste_pk" type="pk-constr" table="kooste.lipas_kohteet_piste">
-		<columns names="koosteId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="latu" layers="0" collapse-mode="2" max-obj-count="27" z-value="0">
+<table name="latu" layers="0" collapse-mode="2" max-obj-count="28" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="5160"/>
-	<column name="sportsPlaceId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="toilet">
 		<type name="boolean" length="0"/>
@@ -1671,7 +1744,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="latu_pk" type="pk-constr" table="lipas.latu">
-		<columns names="sportsPlaceId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1741,24 +1814,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.hevosreitti"
 	 dst-table="lipas.abstract"/>
 
-<table name="lipas_kohteet_viiva" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
+<table name="lipas_kohteet_viiva" layers="0" collapse-mode="2" max-obj-count="34" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="700" y="7500"/>
-	<column name="koosteId" not-null="true"
-	 identity-type="ALWAYS">
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="lipasId" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom" not-null="true">
-		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="3067"/>
+		<type name="geometry" length="0" spatial-type="MULTILINESTRING" variation="0" srid="4326"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
-	<column name="typeCode" not-null="true">
+	<column name="type_typeCode" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="typeName" not-null="true">
+	<column name="type_name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="owner">
@@ -1831,7 +1906,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="text" length="0"/>
 	</column>
 	<constraint name="lipas_kohteet_viiva_pk" type="pk-constr" table="kooste.lipas_kohteet_viiva">
-		<columns names="koosteId" ref-type="src-columns"/>
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1860,111 +1935,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </table>
 
 <permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.abstract" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.abstract" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.kilpahiihtokeskus" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.kilpahiihtokeskus" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.hiihtomaa" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.hiihtomaa" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.luistelukentta" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.luistelukentta" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.kaukalo" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.kaukalo" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.luistelureitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.luistelureitti" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.tekojaakentta" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.tekojaakentta" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.tupa" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.tupa" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.telttailu_leiriytyminen" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.telttailu_leiriytyminen" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.laavu_kota_kammi" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
 	<object name="lipas.laavu_kota_kammi" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
@@ -1975,14 +1945,74 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="lipas.ulkoilumaja_hiihtomaja" type="table"/>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="lipas.ruoanlaittopaikka" type="table"/>
+	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.metadata" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.abstract" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kilpahiihtokeskus" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.hiihtomaa" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelukentta" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.kaukalo" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.luistelureitti" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.tekojaakentta" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.tupa" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas.telttailu_leiriytyminen" type="table"/>
+	<roles names="tarmo_read_write"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
 	<object name="lipas.ruoanlaittopaikka" type="table"/>
@@ -1991,18 +2021,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.lahiliikuntapaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.lahiliikuntapaikka" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.ulkokuntoilupaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.ulkokuntoilupaikka" type="table"/>
@@ -2011,18 +2031,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.frisbeegolf_rata" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.frisbeegolf_rata" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.ulkokiipeilyseina" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.ulkokiipeilyseina" type="table"/>
@@ -2031,18 +2041,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.kiipeilykallio" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.kiipeilykallio" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.koiraurheilualue" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.koiraurheilualue" type="table"/>
@@ -2051,18 +2051,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.uimaranta" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.uimaranta" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.uimapaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.uimapaikka" type="table"/>
@@ -2071,18 +2061,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.talviuintipaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.talviuintipaikka" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.veneilyn_palvelupaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.veneilyn_palvelupaikka" type="table"/>
@@ -2091,18 +2071,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.rantautumispaikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.rantautumispaikka" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.kalastusalue_paikka" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.kalastusalue_paikka" type="table"/>
@@ -2111,18 +2081,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.koskimelontakeskus" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.koskimelontakeskus" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.opastuspiste" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.opastuspiste" type="table"/>
@@ -2131,18 +2091,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.luontotorni" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.luontotorni" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.lahipuisto" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.lahipuisto" type="table"/>
@@ -2151,18 +2101,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.ulkoilupuisto" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.ulkoilupuisto" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.liikuntapuisto" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.liikuntapuisto" type="table"/>
@@ -2171,18 +2111,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.latu" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.latu" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.koirahiihtolatu" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.koirahiihtolatu" type="table"/>
@@ -2191,18 +2121,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.melontareitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.melontareitti" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.vesiretkeilyreitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.vesiretkeilyreitti" type="table"/>
@@ -2211,18 +2131,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.pyorailyreitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.pyorailyreitti" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.maastopyorailyreitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.maastopyorailyreitti" type="table"/>
@@ -2231,18 +2141,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.kavely_ulkoilureitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.kavely_ulkoilureitti" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.retkeilyreitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.retkeilyreitti" type="table"/>
@@ -2251,18 +2151,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.kuntorata" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.kuntorata" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.luontopolku" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
 </permission>
 <permission>
 	<object name="lipas.luontopolku" type="table"/>
@@ -2271,52 +2161,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="lipas.hevosreitti" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.hevosreitti" type="table"/>
 	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="lipas.metadata" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="lipas.metadata" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
-	<roles names="tarmo_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
-	<roles names="tarmo_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
-	<roles names="kooste_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
-	<roles names="kooste_read"/>
-	<privileges select="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
-	<roles names="kooste_read_write"/>
-	<privileges select="true" delete="true" insert="true" update="true"/>
-</permission>
-<permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
-	<roles names="kooste_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 </dbmodel>
