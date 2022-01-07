@@ -7,7 +7,7 @@ import psycopg2
 import pytest
 from dotenv import load_dotenv
 
-from infra.functions import db_manager
+from backend.lambda_functions.db_manager import db_manager
 
 USE_DOCKER = (
     "1"  # Use "" if you don't want pytest-docker to start and destroy the containers

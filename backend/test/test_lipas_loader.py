@@ -1,7 +1,7 @@
 import psycopg2
 import pytest
 
-from infra.functions.lipas_loader import LipasLoader
+from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
 
 
 @pytest.fixture(autouse=True)

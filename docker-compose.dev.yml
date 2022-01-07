@@ -21,22 +21,22 @@ services:
 
   lipas_loader:
     build:
-      context: infra
+      context: backend
       dockerfile: lipas.Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - db
     volumes:
-      - ./infra/functions/lipas_loader.py:/var/task/app.py
+      - ./backend/lambda_functions/lipas_loader/lipas_loader.py:/var/task/app.py
 
   db_manager:
     build:
-      context: infra
+      context: backend
       dockerfile: db_manager.Dockerfile
     ports:
       - "8081:8080"
     depends_on:
       - db
     volumes:
-      - ./infra/functions/db_manager.py:/var/task/app.py
+      - ./backend/lambda_functions/db_manager/db_manager.py:/var/task/app.py
