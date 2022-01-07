@@ -38,7 +38,7 @@ def create_db(conn: psycopg2.extensions.connection, db_name: str) -> None:
 def populate_data_model(
     conn: psycopg2.extensions.connection, path_to_sql_files: str
 ) -> None:
-    data_model_file = Path(path_to_sql_files, "new_database.sql")
+    data_model_file = Path(path_to_sql_files, "model.sql")
     if not data_model_file.exists():
         raise FileNotFoundError(f"Could not find file {data_model_file}")
     with open(data_model_file) as f:
