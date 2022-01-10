@@ -22,10 +22,7 @@ def lipas_loader_url(docker_ip, docker_services):
 @pytest.fixture()
 def create_db(db_manager_url, main_db_params, root_db_params):
     payload = {
-        "root_db_params": {**root_db_params, "host": "db", "port": "5432"},
-        "main_db_params": {**main_db_params, "host": "db", "port": "5432"},
         "event_type": 1,
-        "path_to_sql_files": "databasemodel",
     }
     r = requests.post(db_manager_url, data=json.dumps(payload))
     assert r.json() == {"statusCode": 200, "body": '""'}
@@ -34,12 +31,11 @@ def create_db(db_manager_url, main_db_params, root_db_params):
 @pytest.fixture()
 def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
     payload = {
-        "db_params": {**main_db_params, "host": "db", "port": "5432"},
         "pages": [1, 2],
     }
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
     data = r.json()
-    assert data["statusCode"] == 200, data
+    assert data["statusCode"] == 200, data["body"]
 
 
 def test_db_created(create_db, main_db_params_with_root_user):

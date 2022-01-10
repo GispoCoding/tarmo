@@ -1,7 +1,9 @@
 import json
 import logging
+import os
 from typing import Any, Dict, List, Optional, Tuple, Type, TypedDict, Union
 
+import boto3
 import requests
 from shapely.geometry import LineString, MultiLineString, MultiPoint, Point, shape
 from shapely.geometry.base import BaseGeometry
@@ -17,13 +19,53 @@ LOGGER.setLevel(logging.INFO)
 
 
 class Event(TypedDict):
-    db_params: Dict
     pages: Optional[List[int]]
 
 
 class Response(TypedDict):
     statusCode: int  # noqa N815
     body: str
+
+
+class DatabaseHelper:
+    def __init__(self):
+        if os.environ.get("READ_FROM_AWS", "1") == "1":
+            session = boto3.session.Session()
+            client = session.client(
+                service_name="secretsmanager",
+                region_name=os.environ.get("AWS_REGION_NAME"),
+            )
+            self._credentials = json.loads(
+                client.get_secret_value(SecretId=os.environ.get("DB_SECRET_RW_ARN"))[
+                    "SecretString"
+                ]
+            )
+        else:
+            self._credentials = {
+                "username": os.environ.get("RW_USER"),
+                "password": os.environ.get("RW_USER"),
+            }
+
+        self._host = os.environ.get("DB_INSTANCE_ADDRESS")
+        self._db = os.environ.get("DB_MAIN_NAME")
+        self._port = os.environ.get("DB_INSTANCE_PORT", "5432")
+        self._region_name = os.environ.get("AWS_REGION_NAME")
+
+    def get_connection_parameters(self) -> Dict[str, str]:
+        return {
+            "host": self._host,
+            "port": self._port,
+            "dbname": self._db,
+            "user": self._credentials["username"],
+            "password": self._credentials["password"],
+        }
+
+    def get_connection_string(self) -> str:
+        db_params = self.get_connection_parameters()
+        return (
+            f'postgresql://{db_params["user"]}:{db_params["password"]}'
+            f'@{db_params["host"]}:{db_params["port"]}/{db_params["dbname"]}'
+        )
 
 
 class LipasLoader:
@@ -37,15 +79,12 @@ class LipasLoader:
 
     def __init__(
         self,
-        db_params: Dict,
+        connection_string: str,
         type_codes: Optional[List[int]] = None,
         lipas_api_url: Optional[str] = None,
     ) -> None:
 
-        engine = create_engine(
-            f'postgresql://{db_params["user"]}:{db_params["password"]}'
-            f'@{db_params["host"]}:{db_params["port"]}/{db_params["dbname"]}'
-        )
+        engine = create_engine(connection_string)
 
         LipasBase.prepare(engine, reflect=True)
         KoosteBase.prepare(engine, reflect=True)
@@ -170,14 +209,16 @@ def create_feature_for_object(
         key: sport_place[key]
         for key in set(sport_place.keys()).intersection(column_keys)
     }
+    vals["geom"] = "SRID=4326;" + vals["geom"]
     return table_cls(**vals)  # type: ignore
 
 
 def handler(event: Event, _) -> Response:
     """Handler which is called when accessing the endpoint."""
     response: Response = {"statusCode": 200, "body": json.dumps("")}
+    db_helper = DatabaseHelper()
     try:
-        loader = LipasLoader(event["db_params"])
+        loader = LipasLoader(db_helper.get_connection_string())
         ids = []
         if "pages" in event and event["pages"] is not None:
             for page in event["pages"]:
@@ -187,7 +228,8 @@ def handler(event: Event, _) -> Response:
         succesful_actions = 0
         with loader.Session() as session:
             for i, sports_place_id in enumerate(ids):
-                LOGGER.info(f"{100 * float(i) / len(ids)}% - {i}/{len(ids)}")
+                if i % 10 == 0:
+                    LOGGER.info(f"{100 * float(i) / len(ids)}% - {i}/{len(ids)}")
                 sport_place = loader.get_sport_place(sports_place_id)
                 if sport_place is not None:
                     succeeded = loader.save_lipas_feature(sport_place, session)
@@ -196,12 +238,13 @@ def handler(event: Event, _) -> Response:
                 else:
                     LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
             session.commit()
+        msg = f"{succesful_actions} inserted or updated."
+        LOGGER.info(msg)
+        response["body"] = json.dumps(msg)
 
-        response["body"] = json.dumps(f"{succesful_actions} inserted or updated.")
-
-    except Exception as e:
+    except Exception:
         LOGGER.exception("Uncaught error occurred")
         response["statusCode"] = 500
-        response["body"] = json.dumps(f"Exception occurred: {e}")
+        response["body"] = json.dumps("Exception occurred, check the log for details")
 
     return response

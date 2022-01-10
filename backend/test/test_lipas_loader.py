@@ -1,12 +1,20 @@
 import psycopg2
 import pytest
 
-from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
+from backend.lambda_functions.lipas_loader.lipas_loader import (
+    DatabaseHelper,
+    LipasLoader,
+)
+
+
+@pytest.fixture()
+def connection_string():
+    return DatabaseHelper().get_connection_string()
 
 
 @pytest.fixture(autouse=True)
-def loader(tarmo_database_created, main_db_params):
-    return LipasLoader(main_db_params)
+def loader(tarmo_database_created, connection_string):
+    return LipasLoader(connection_string)
 
 
 def test__sport_places_url(loader):
@@ -16,8 +24,8 @@ def test__sport_places_url(loader):
     )
 
 
-def test__sport_places_url_with_type_codes(main_db_params):
-    loader = LipasLoader(main_db_params, type_codes=[1, 2, 3])
+def test__sport_places_url_with_type_codes(connection_string):
+    loader = LipasLoader(connection_string, type_codes=[1, 2, 3])
     assert loader._sport_places_url_and_params(1) == (
         "http://lipas.cc.jyu.fi/api/sports-places",
         {

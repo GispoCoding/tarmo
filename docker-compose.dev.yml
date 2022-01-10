@@ -11,8 +11,10 @@ services:
 
   pg_tileserv:
     image: pramsey/pg_tileserv:latest
+    env_file:
+      - .env.local
     environment:
-      - DATABASE_URL=postgresql://${SQL_USER:-postgres}:${SQL_PASSWORD:-postgres}@db/${SQL_DATABASE:-tarmo}
+      - DATABASE_URL=postgresql://${R_USER:-postgres}:${R_USER_PW:-postgres}@db/${DB_MAIN_NAME:-tarmo}
     ports:
       - "7800:7800"
     depends_on:
@@ -23,6 +25,11 @@ services:
     build:
       context: backend
       dockerfile: lipas.Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      - DB_INSTANCE_ADDRESS=db
+      - DB_INSTANCE_PORT=5432
     ports:
       - "8080:8080"
     depends_on:
@@ -34,6 +41,11 @@ services:
     build:
       context: backend
       dockerfile: db_manager.Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      - DB_INSTANCE_ADDRESS=db
+      - DB_INSTANCE_PORT=5432
     ports:
       - "8081:8080"
     depends_on:

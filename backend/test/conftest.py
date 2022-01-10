@@ -16,41 +16,46 @@ USE_DOCKER = (
 
 @pytest.fixture(scope="session", autouse=True)
 def set_env():
-    dotenv_file = Path(__file__).parent / ".env.local"
+    dotenv_file = Path(__file__).parent.parent.parent / ".env.local"
     assert dotenv_file.exists()
     load_dotenv(str(dotenv_file))
+    db_manager.SCHEMA_FILES_PATH = str(Path(__file__).parent.parent / "databasemodel")
+
+
+def db_helper():
+    return db_manager.DatabaseHelper()
 
 
 @pytest.fixture(scope="session")
 def root_db_params():
     return {
-        "dbname": os.environ.get("ROOT_DB_DATABASE", ""),
-        "user": os.environ.get("ROOT_DB_USERNAME", ""),
-        "host": os.environ.get("ROOT_DB_HOSTNAME", ""),
-        "password": os.environ.get("ROOT_DB_PASSWORD", ""),
-        "port": os.environ.get("ROOT_DB_PORT", ""),
+        "dbname": os.environ.get("DB_MAINTENANCE_NAME", ""),
+        "user": os.environ.get("SU_USER", ""),
+        "host": os.environ.get("DB_INSTANCE_ADDRESS", ""),
+        "password": os.environ.get("SU_USER_PW", ""),
+        "port": os.environ.get("DB_INSTANCE_PORT", ""),
     }
 
 
 @pytest.fixture(scope="session")
 def main_db_params():
     return {
-        "dbname": os.environ.get("MAIN_DB_DATABASE", ""),
-        "user": os.environ.get("MAIN_DB_USERNAME", ""),
-        "host": os.environ.get("MAIN_DB_HOSTNAME", ""),
-        "password": os.environ.get("MAIN_DB_PASSWORD", ""),
-        "port": os.environ.get("MAIN_DB_PORT", ""),
+        "dbname": os.environ.get("DB_MAIN_NAME", ""),
+        "user": os.environ.get("RW_USER", ""),
+        "host": os.environ.get("DB_INSTANCE_ADDRESS", ""),
+        "password": os.environ.get("RW_USER_PW", ""),
+        "port": os.environ.get("DB_INSTANCE_PORT", ""),
     }
 
 
 @pytest.fixture(scope="session")
 def main_db_params_with_root_user():
     return {
-        "dbname": os.environ.get("MAIN_DB_DATABASE", ""),
-        "user": os.environ.get("ROOT_DB_USERNAME", ""),
-        "host": os.environ.get("MAIN_DB_HOSTNAME", ""),
-        "password": os.environ.get("ROOT_DB_PASSWORD", ""),
-        "port": os.environ.get("MAIN_DB_PORT", ""),
+        "dbname": os.environ.get("DB_MAIN_NAME", ""),
+        "user": os.environ.get("SU_USER", ""),
+        "host": os.environ.get("DB_INSTANCE_ADDRESS", ""),
+        "password": os.environ.get("SU_USER_PW", ""),
+        "port": os.environ.get("DB_INSTANCE_PORT", ""),
     }
 
 
@@ -92,14 +97,9 @@ else:
 
 @pytest.fixture()
 def tarmo_database_created(root_db_params, main_db_params):
-    event = {
-        "root_db_params": root_db_params,
-        "main_db_params": main_db_params,
-        "event_type": 1,
-        "path_to_sql_files": str(Path(__file__).parent.parent / "databasemodel"),
-    }
+    event = {"event_type": 1}
     response = db_manager.handler(event, None)
-    assert response["statusCode"] == 200, response
+    assert response["statusCode"] == 200, response["body"]
     yield
     drop_tarmo_db(main_db_params, root_db_params)
 
