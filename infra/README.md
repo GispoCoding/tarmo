@@ -23,6 +23,9 @@ and finally run `. /tmp/aws-mfa-token` to temporarily set the correct MFA enviro
 2. Create new IAM use, and take down the username and credentials. This user can be used to configure CD deployment from
    Github. If CD is already configured, use existing user.
 3. Change the values in `tarmo.tfvars` as required
+4. Create zip packages for the lambda functions by running `make build-lambda-docker` in the root of the project (this has to be
+   done only once since github actions can be configured to update functions).
+5.
 
 ## Deploy and teardown
 
