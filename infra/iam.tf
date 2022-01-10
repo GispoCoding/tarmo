@@ -67,3 +67,36 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+# Create the policy to access secrets manager in the region
+resource "aws_iam_policy" "secrets-policy" {
+  name        = "lambda-secrets-policy"
+  path        = "/"
+  description = "Lambda db secrets policy"
+
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action   = [
+          "secretsmanager:GetResourcePolicy",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds"
+        ],
+        Effect   = "Allow",
+        Resource = [
+          aws_secretsmanager_secret.tarmo-db-su.arn,
+          aws_secretsmanager_secret.tarmo-db-admin.arn,
+          aws_secretsmanager_secret.tarmo-db-rw.arn,
+          aws_secretsmanager_secret.tarmo-db-r.arn
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_secrets_attachment" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.secrets-policy.arn
+}

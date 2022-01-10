@@ -7,6 +7,19 @@ resource "aws_lambda_function" "db_manager" {
   timeout       = 120
 
   role = aws_iam_role.lambda_exec.arn
+
+  environment {
+    variables = {
+      AWS_REGION_NAME     = var.AWS_REGION_NAME
+      DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
+      DB_MAIN_NAME        = var.tarmo_db_name
+      DB_MAINTENANCE_NAME = "postgres"
+      DB_SECRET_SU_ARN    = aws_secretsmanager_secret.tarmo-db-su.arn
+      DB_SECRET_ADMIN_ARN = aws_secretsmanager_secret.tarmo-db-admin.arn
+      DB_SECRET_R_ARN     = aws_secretsmanager_secret.tarmo-db-r.arn
+      DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
+    }
+  }
 }
 
 resource "aws_lambda_function" "lipas_loader" {
@@ -18,4 +31,13 @@ resource "aws_lambda_function" "lipas_loader" {
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
+
+  environment {
+    variables = {
+      AWS_REGION_NAME     = var.AWS_REGION_NAME
+      DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
+      DB_MAIN_NAME        = var.tarmo_db_name
+      DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
+    }
+  }
 }
