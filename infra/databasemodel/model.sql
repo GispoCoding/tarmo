@@ -1650,3 +1650,21 @@ GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.hevosreitti
    TO tarmo_read_write;
 -- ddl-end --
+
+-- object: "grant_U_e822f7d865" | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA lipas
+   TO tarmo_read_write;
+-- ddl-end --
+
+-- object: "grant_U_ec9ae01f22" | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA kooste
+   TO tarmo_read;
+-- ddl-end --
+
+-- object: "grant_U_eafe528eb4" | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA kooste
+   TO tarmo_read_write;
+-- ddl-end --
