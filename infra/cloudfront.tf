@@ -60,9 +60,6 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
     cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingOptimized.id
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
     compress               = true
   }
 
@@ -75,9 +72,6 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
 
     cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingDisabled.id
 
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
@@ -91,9 +85,6 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
 
     cache_policy_id = data.aws_cloudfront_cache_policy.ManagedCachingDisabled.id
 
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
