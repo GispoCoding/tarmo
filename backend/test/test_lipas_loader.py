@@ -1,3 +1,5 @@
+import datetime
+
 import psycopg2
 import pytest
 
@@ -17,14 +19,22 @@ def loader(tarmo_database_created, connection_string):
     return LipasLoader(connection_string)
 
 
-def test__sport_places_url(loader):
-    assert loader._sport_places_url_and_params(1) == (
-        "http://lipas.cc.jyu.fi/api/sports-places",
-        {"fields": "location.geometries", "page": 1, "pageSize": 100},
-    )
+@pytest.fixture()
+def metadata_set(main_db_params):
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        date = datetime.datetime(2011, 2, 3, 4, 5, 6, 7)
+        with conn.cursor() as cur:
+            cur.execute(
+                f"UPDATE lipas.metadata SET last_modified = %(date)s",
+                vars={"date": date},
+            )
+        conn.commit()
+    finally:
+        conn.close()
 
 
-def test__sport_places_url_with_type_codes(connection_string):
+def test__sport_places_url(connection_string, metadata_set):
     loader = LipasLoader(connection_string, type_codes=[1, 2, 3])
     assert loader._sport_places_url_and_params(1) == (
         "http://lipas.cc.jyu.fi/api/sports-places",
@@ -33,6 +43,7 @@ def test__sport_places_url_with_type_codes(connection_string):
             "page": 1,
             "pageSize": 100,
             "typeCodes": [1, 2, 3],
+            "modifiedAfter": "2011-02-03 04:05:06.000007",
         },
     )
 
@@ -54,6 +65,7 @@ def test_save_lipas_feature(loader, main_db_params, sport_place_id):
         sport_place = loader.get_sport_place(sport_place_id)
         succeeded = loader.save_lipas_feature(sport_place, session)
         assert succeeded
+        loader.save_timestamp(session)
         session.commit()
 
     conn = psycopg2.connect(**main_db_params)
@@ -68,6 +80,10 @@ def test_save_lipas_feature(loader, main_db_params, sport_place_id):
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.{table}")
             assert cur.fetchone() == (1,)
-
+        with conn.cursor() as cur:
+            cur.execute("SELECT last_modified FROM lipas.metadata")
+            assert cur.fetchone()[0].timestamp() == pytest.approx(
+                datetime.datetime.now().timestamp(), 20
+            )
     finally:
         conn.close()

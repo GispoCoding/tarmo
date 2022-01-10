@@ -28,4 +28,4 @@ change-db-pw:
 	aws lambda invoke --region=${region} --cli-binary-format raw-in-base64-out --function-name ${db_manager} --payload '{"event_type": 2}' response_db.json
 
 populate-lipas:
-	aws lambda invoke --region=eu-central-1 --cli-binary-format raw-in-base64-out --function-name ${lipas_loader} --payload '{"pages": [1,2,3]}' response_lipas.json
+	aws lambda invoke --region=eu-central-1 --cli-binary-format raw-in-base64-out --function-name ${lipas_loader} --payload '{"pages": [1,2,3] "do_not_update_timestamp": true}' response_lipas.json

@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import os
@@ -20,6 +21,7 @@ LOGGER.setLevel(logging.INFO)
 
 class Event(TypedDict):
     pages: Optional[List[int]]
+    do_not_update_timestamp: bool
 
 
 class Response(TypedDict):
@@ -74,6 +76,7 @@ class LipasLoader:
     POINT_TABLE_NAME = "lipas_kohteet_piste"
     LINESTRING_TABLE_NAME = "lipas_kohteet_viiva"
     HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
+    DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
     api_url = "http://lipas.cc.jyu.fi/api"
 
@@ -91,10 +94,13 @@ class LipasLoader:
 
         self.Session = sessionmaker(bind=engine)
 
-        self.last_checked = None  # TODO: read from the db
-        self.type_codes = type_codes  # TODO: read from the db
         if lipas_api_url is not None:
             self.api_url = lipas_api_url
+
+        with self.Session() as session:
+            metadata_row = session.query(LipasBase.classes.metadata).first()
+            self.last_modified = metadata_row.last_modified
+            self.type_codes = type_codes if type_codes else metadata_row.typeCodeList
 
     def get_sport_place_ids(self, only_page: Optional[int] = None) -> List[int]:
         results_left = only_page is None
@@ -179,6 +185,11 @@ class LipasLoader:
         session.merge(common_obj)
         return True
 
+    def save_timestamp(self, session: Session) -> None:
+        metadata_row = session.query(LipasBase.classes.metadata).first()
+        metadata_row.last_modified = datetime.datetime.now()
+        session.merge(metadata_row)
+
     def _create_common_class_object_for_feature(self, sport_place):
         if sport_place["geom"].startswith("MULTILINE"):
             table_cls = getattr(KoosteBase.classes, self.LINESTRING_TABLE_NAME)
@@ -195,6 +206,8 @@ class LipasLoader:
         }
         if self.type_codes:
             params["typeCodes"] = self.type_codes
+        if self.last_modified:
+            params["modifiedAfter"] = self.last_modified.strftime(self.DATETIME_FORMAT)
         return main_url, params
 
     def _sport_place_url(self, sports_place_id: int):
@@ -237,6 +250,9 @@ def handler(event: Event, _) -> Response:
                         succesful_actions += 1
                 else:
                     LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
+
+            if not event["do_not_update_timestamp"]:
+                loader.save_timestamp(session)
             session.commit()
         msg = f"{succesful_actions} inserted or updated."
         LOGGER.info(msg)
