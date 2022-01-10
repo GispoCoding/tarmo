@@ -59,7 +59,13 @@ def create_tarmo_db(event: Event, root_conn: psycopg2.extensions.connection) -> 
     main_db_exists = database_exists(root_conn, event["main_db_params"]["dbname"])
     if not main_db_exists:
         create_db(root_conn, event["main_db_params"]["dbname"])
-    main_conn = psycopg2.connect(**event["main_db_params"])
+    main_conn = psycopg2.connect(
+        **{
+            **event["main_db_params"],
+            "user": event["root_db_params"]["user"],
+            "password": event["root_db_params"]["password"],
+        }
+    )
     try:
         main_conn.autocommit = True
         if not main_db_exists:

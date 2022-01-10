@@ -44,6 +44,17 @@ def main_db_params():
 
 
 @pytest.fixture(scope="session")
+def main_db_params_with_root_user():
+    return {
+        "dbname": os.environ.get("MAIN_DB_DATABASE", ""),
+        "user": os.environ.get("ROOT_DB_USERNAME", ""),
+        "host": os.environ.get("MAIN_DB_HOSTNAME", ""),
+        "password": os.environ.get("ROOT_DB_PASSWORD", ""),
+        "port": os.environ.get("MAIN_DB_PORT", ""),
+    }
+
+
+@pytest.fixture(scope="session")
 def docker_compose_file(pytestconfig):
     compose_file = Path(__file__).parent.parent.parent / "docker-compose.dev.yml"
     assert compose_file.exists()
@@ -101,9 +112,8 @@ def drop_tarmo_db(main_db_params, root_db_params):
             cur.execute(
                 f"DROP DATABASE IF EXISTS {main_db_params['dbname']} WITH (FORCE)"
             )
-            cur.execute(
-                "DROP ROLE IF EXISTS trerkp_admin"
-            )  # TODO: change this when the role name changes
+            for user in os.environ.get("DB_USERS").split(","):
+                cur.execute(f"DROP ROLE IF EXISTS {user}")
     finally:
         conn.close()
 

@@ -38,11 +38,12 @@ def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
         "pages": [1, 2],
     }
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
-    assert r.json()["statusCode"] == 200
+    data = r.json()
+    assert data["statusCode"] == 200, data
 
 
-def test_db_created(create_db, main_db_params, root_db_params):
-    conn = psycopg2.connect(**main_db_params)
+def test_db_created(create_db, main_db_params_with_root_user):
+    conn = psycopg2.connect(**main_db_params_with_root_user)
     try:
         with conn.cursor() as cur:
             cur.execute(
