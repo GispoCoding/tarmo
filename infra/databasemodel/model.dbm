@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="0,1809" last-zoom="0.35" max-obj-count="55"
+<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="88,3903" last-zoom="0.6" max-obj-count="58"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -2037,5 +2037,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<object name="lipas.hevosreitti" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="lipas" type="schema"/>
+	<roles names="tarmo_read_write"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="kooste" type="schema"/>
+	<roles names="tarmo_read"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="kooste" type="schema"/>
+	<roles names="tarmo_read_write"/>
+	<privileges usage="true"/>
 </permission>
 </dbmodel>
