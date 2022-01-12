@@ -79,8 +79,8 @@ resource "aws_security_group" "lb" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port   = var.public_port
-    to_port     = var.public_port
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -96,6 +96,20 @@ resource "aws_security_group" "lb" {
     Name = "tarmo-lb-sg"
   }
 
+}
+
+# Https
+resource "aws_security_group_rule" "lb-https" {
+  count       = var.enable_route53_record ? 1 : 0
+  description = "Load Balancer allow traffic using https"
+  type        = "ingress"
+
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.lb.id
 }
 
 # Security group for the backends that run the application.

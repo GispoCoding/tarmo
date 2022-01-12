@@ -45,13 +45,32 @@ resource "aws_lb_target_group" "tileserver" {
 }
 
 # The default route will point all traffic to the target group
-resource "aws_lb_listener" "http" {
+resource "aws_lb_listener" "tileserver" {
   load_balancer_arn = aws_lb.tileserver.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = var.enable_route53_record ? 443: 80
+  protocol          = var.enable_route53_record ? "HTTPS" : "HTTP"
+  ssl_policy        = var.enable_route53_record  ? "ELBSecurityPolicy-2016-08" : null
+  certificate_arn   = var.enable_route53_record  ? aws_acm_certificate.tileserver[0].arn : null
 
   default_action {
     type             = "forward"
+    target_group_arn = aws_lb_target_group.tileserver.arn
+  }
+}
+
+resource "aws_lb_listener" "http" {
+  count             = var.enable_route53_record ? 1 : 0
+  load_balancer_arn = aws_lb.tileserver.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
     target_group_arn = aws_lb_target_group.tileserver.arn
   }
 }

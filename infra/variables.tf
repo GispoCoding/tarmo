@@ -34,6 +34,12 @@ variable "frontend_subdomain" {
   type        = string
 }
 
+variable "backend_subdomain" {
+  description = "Name of the backend tileserver, used for example in  <SITE_NAME>.domain.com"
+  default     = "tarmo"
+  type        = string
+}
+
 variable "db_storage" {
   description = "DB Storage in GB"
   type        = number
@@ -86,11 +92,6 @@ variable "tarmo_rw_secrets" {
   }
 }
 
-variable "public_port" {
-  description = "Port for traffic from public internet"
-  type        = number
-  default     = 80
-}
 
 variable "pg_tileserv_port" {
   description = "Backend traffic port"
@@ -128,7 +129,8 @@ variable "pg_tileserv_image" {
 }
 
 locals {
-  frontend_dns_alias = "${var.frontend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
+  frontend_dns_alias   = "${var.frontend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
+  tileserver_dns_alias = "${var.backend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
 }
 
 locals {
