@@ -2,6 +2,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import MapGL, { Layer, NavigationControl, Source } from "react-map-gl";
 import {
+  LIPAS_LINE_SOURCE,
+  LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
   LIPAS_POINT_STYLE,
   NLS_STYLE_URI,
@@ -42,6 +44,9 @@ export default function Map() {
     >
       <Source {...LIPAS_POINT_SOURCE}>
         <Layer {...LIPAS_POINT_STYLE} />
+      </Source>
+      <Source {...LIPAS_LINE_SOURCE}>
+        <Layer {...LIPAS_LINE_STYLE} />
       </Source>
       <NavigationControl style={{ padding: 20 }} />
     </MapGL>

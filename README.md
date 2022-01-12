@@ -18,13 +18,14 @@ Tarmo - Tampere Mobilemap
 
 Use Node>=v16.
 
-1. Navigate into web directory
-2. Copy .env.sample as .env and fill your NLS Api key.
-3. Install dependencies:
+1. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
+2. Navigate into web directory
+3. Copy .env.sample as .env and fill your NLS Api key.
+4. Install dependencies:
    ```shell
    yarn
    ```
-4. Run the development server in localhost:3000:
+5. Run the development server in localhost:3000:
    ```shell
    yarn run start
    ```

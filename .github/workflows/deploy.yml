@@ -4,7 +4,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-web-app:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,5 +31,6 @@ jobs:
         run: yarn run build
         env:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
+          TILESERVER_URL: ${{ secrets.TILESERVER_URL }}
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./dist/ s3://${{ secrets.AWS_BUCKET_NAME }} --delete
