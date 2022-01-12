@@ -3,9 +3,9 @@ resource "aws_s3_bucket" "static_react_bucket" {
   bucket = var.AWS_BUCKET_NAME
   acl    = "private"
 
-  tags = {
+  tags = merge(local.default_tags, {
     Name = var.AWS_BUCKET_NAME
-  }
+  })
 
   versioning {
     enabled = true
@@ -105,6 +105,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
       restriction_type = "none"
     }
   }
+  tags = local.default_tags
 }
 
 # Cloudfront S3 policy

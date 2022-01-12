@@ -128,9 +128,25 @@ variable "pg_tileserv_image" {
   default     = "docker.io/pramsey/pg_tileserv:latest"
 }
 
+variable "prefix" {
+  description = "Prefix to be used in resource names"
+  type        = string
+}
+
+variable "extra_tags" {
+  description = "Some extra tags for all resources. Use JSON format"
+  type        = any
+  default     = {}
+}
+
 locals {
   frontend_dns_alias   = "${var.frontend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
   tileserver_dns_alias = "${var.backend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
+  default_tags         = merge(var.extra_tags, {
+    "Prefix"    = var.prefix
+    "Name"      = var.prefix
+    "Terraform" = "true"
+  })
 }
 
 locals {

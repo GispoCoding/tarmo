@@ -6,6 +6,8 @@ resource "aws_ecs_cluster" "pg_tileserv" {
     name  = "containerInsights"
     value = "enabled"
   }
+
+  tags = merge(local.default_tags, {Name = "${var.prefix}-cluster"})
 }
 
 # Task definition is a description of parameters given to docker daemon, in order to run a container
@@ -47,6 +49,7 @@ resource "aws_ecs_task_definition" "pg_tileserv" {
       ]
     }
   ])
+  tags = merge(local.default_tags, {Name = "${var.prefix}-pg_tileserv-definition"})
 }
 
 # Service can also be attached to a load balancer for HTTP, TCP or UDP traffic
@@ -73,4 +76,6 @@ resource "aws_ecs_service" "pg_tileserv" {
     security_groups  = [aws_security_group.backend.id]
     assign_public_ip = true
   }
+
+  tags = merge(local.default_tags, {Name = "${var.prefix}-pg_tileserv-service"})
 }

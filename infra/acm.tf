@@ -9,6 +9,7 @@ resource "aws_acm_certificate" "frontend" {
   count             = var.enable_route53_record ? 1 : 0
   domain_name       = local.frontend_dns_alias
   validation_method = "DNS"
+  tags              = merge(local.default_tags, { Name = "${var.prefix}-frontend-acm" })
 
   provider = aws.us1
 }
@@ -17,6 +18,7 @@ resource "aws_acm_certificate" "tileserver" {
   count             = var.enable_route53_record ? 1 : 0
   domain_name       = local.tileserver_dns_alias
   validation_method = "DNS"
+  tags              = merge(local.default_tags, { Name = "${var.prefix}-tileserver-acm" })
 }
 
 resource "aws_acm_certificate_validation" "frontend" {

@@ -6,6 +6,7 @@ resource "aws_db_parameter_group" "tarmo" {
     name  = "log_connections"
     value = "1"
   }
+  tags = local.default_tags
 }
 
 resource "aws_db_instance" "main_db" {
@@ -23,4 +24,5 @@ resource "aws_db_instance" "main_db" {
   apply_immediately      = true # TODO: remove when in "production"
   publicly_accessible    = true
   skip_final_snapshot    = true
+  tags                   = local.default_tags
 }

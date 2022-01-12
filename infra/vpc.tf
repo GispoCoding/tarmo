@@ -5,23 +5,20 @@ data "aws_availability_zones" "available" {
 module "vpc" {
   source               = "terraform-aws-modules/vpc/aws"
   version              = "2.77.0"
-  name                 = "tarmo"
+  name                 = "${var.prefix}"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags                 = { Project = "tarmo" }
+  tags                 = local.default_tags
 
 }
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
-  tags = {
-    Name    = "tarmo-2-vpc"
-    Project = "tarmo"
-  }
+  tags = merge(local.default_tags, { "Name" : "tarmo-lb-ecs-vpc" })
 }
 
 resource "aws_subnet" "public" {
@@ -31,27 +28,26 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.main.id
 
-  tags = {
-    Name       = "tarmo-public-subnet-${count.index}"
+  tags = merge(local.default_tags, {
+    Name       = "${var.prefix}-public-subnet-${count.index}"
     SubnetType = "public"
-  }
+  })
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name = "tarmo-igw"
-  }
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-igw"
+  })
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name       = "tarmo-public-route-table"
-    SubnetType = "public"
-  }
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-public-route-table"
+  })
 }
 
 resource "aws_route" "public" {
@@ -68,14 +64,17 @@ resource "aws_route_table_association" "public" {
 
 
 resource "aws_db_subnet_group" "db" {
-  name       = "tarmo-db"
+  name       = "${var.prefix}-db"
   subnet_ids = module.vpc.public_subnets
+  tags       = merge(local.default_tags, {
+    Name = "${var.prefix}-db"
+  })
 }
 
 # Security group for the public internet facing load balancer
 resource "aws_security_group" "lb" {
-  name        = "tarmo load balancer"
-  description = "tarmo Load balancer security group"
+  name        = "${var.prefix} load balancer"
+  description = "${var.prefix} Load balancer security group"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -92,10 +91,9 @@ resource "aws_security_group" "lb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "tarmo-lb-sg"
-  }
-
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-lb-sg"
+  })
 }
 
 # Https
@@ -115,8 +113,8 @@ resource "aws_security_group_rule" "lb-https" {
 # Security group for the backends that run the application.
 # Allows traffic from the load balancer
 resource "aws_security_group" "backend" {
-  name        = "tarmo backend"
-  description = "tarmo Backend security group"
+  name        = "${var.prefix} backend"
+  description = "${var.prefix} Backend security group"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -133,15 +131,14 @@ resource "aws_security_group" "backend" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "tarmo-backend-sg"
-  }
-
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-tileserver-sg"
+  })
 }
 
 
 resource "aws_security_group" "rds" {
-  name   = "tarmo-sg-rds"
+  name   = "${var.prefix}-sg-rds"
   vpc_id = module.vpc.vpc_id
 
   ingress {
@@ -157,4 +154,7 @@ resource "aws_security_group" "rds" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-rds"
+  })
 }

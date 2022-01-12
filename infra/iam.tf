@@ -53,7 +53,7 @@ resource "aws_iam_policy_attachment" "github_ci_attachment" {
 
 # Lambda role
 resource "aws_iam_role" "lambda_exec" {
-  name               = "tarmo_serverless_lambda"
+  name               = "${var.prefix}_serverless_lambda"
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [
@@ -65,6 +65,7 @@ resource "aws_iam_role" "lambda_exec" {
       }
     ]
   })
+  tags               = merge(local.default_tags, { Name = "${var.prefix}_serverless_lambda" })
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
@@ -74,7 +75,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 
 # Create the policy to access secrets manager in the region
 resource "aws_iam_policy" "secrets-policy" {
-  name        = "lambda-secrets-policy"
+  name        = "${var.prefix}-lambda-secrets-policy"
   path        = "/"
   description = "Lambda db secrets policy"
 
@@ -98,6 +99,7 @@ resource "aws_iam_policy" "secrets-policy" {
       }
     ]
   })
+  tags   = merge(local.default_tags, { Name = "${var.prefix}-lambda-secrets-policy" })
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_secrets_attachment" {
@@ -108,7 +110,7 @@ resource "aws_iam_role_policy_attachment" "lambda_secrets_attachment" {
 
 # This IAM role will be used by the docker daemon
 resource "aws_iam_role" "backend-task-execution" {
-  name               = "tarmo-backend-task-execution"
+  name               = "${var.prefix}-backend-task-execution"
   assume_role_policy = jsonencode(
   {
     Version   = "2012-10-17"
@@ -122,6 +124,8 @@ resource "aws_iam_role" "backend-task-execution" {
       }
     ]
   })
+  tags               = merge(local.default_tags, { Name = "${var.prefix}-backend-task-execution" })
+
 }
 
 # The IAM role above will be allowed to pull docker image from ECR, and to create Cloudwatch log groups
@@ -134,7 +138,7 @@ resource "aws_iam_role_policy_attachment" "backend" {
 
 # Create the policy to update lambda functions
 resource "aws_iam_policy" "lambda_update_policy" {
-  name        = "lambda_update_policy"
+  name        = "${var.prefix}-lambda_update_policy"
   path        = "/"
   description = "Github CI lambda update policy"
 
@@ -152,6 +156,7 @@ resource "aws_iam_policy" "lambda_update_policy" {
       }
     ]
   })
+  tags   = merge(local.default_tags, { Name = "${var.prefix}-lambda_update_policy" })
 }
 
 resource "aws_iam_policy_attachment" "lambda_update_attachment" {

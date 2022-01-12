@@ -1,12 +1,14 @@
 # The application will be reachable from public internet via a publi Application Load Balancer
 resource "aws_lb" "tileserver" {
-  name               = "tarmo-tileserver"
+  name               = "${var.prefix}-tileserver"
   internal           = false
   # We use Application Load Balancer: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb.id]
   subnets            = aws_subnet.public.*.id
   idle_timeout       = 900
+
+  tags = merge(local.default_tags, { Name = "${var.prefix}-lb-tileserver" })
 }
 
 #
@@ -15,7 +17,7 @@ resource "aws_lb" "tileserver" {
 
 # Targets to the load balancer are registered by IP address, into the following target group
 resource "aws_lb_target_group" "tileserver" {
-  name                 = "tarmo-tileserver"
+  name                 = "${var.prefix}-tileserver"
   port                 = var.pg_tileserv_port
   protocol             = "HTTP"
   deregistration_delay = 30
@@ -38,9 +40,9 @@ resource "aws_lb_target_group" "tileserver" {
     aws_lb.tileserver
   ]
 
-  tags = {
-    Name = "tarmo-lb-target-group"
-  }
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-lb-target-group"
+  })
 
 }
 
@@ -56,6 +58,7 @@ resource "aws_lb_listener" "tileserver" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tileserver.arn
   }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-lb-default-listener" })
 }
 
 resource "aws_lb_listener" "http" {
@@ -73,4 +76,5 @@ resource "aws_lb_listener" "http" {
     }
     target_group_arn = aws_lb_target_group.tileserver.arn
   }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-lb-http-listener" })
 }

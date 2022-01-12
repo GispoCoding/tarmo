@@ -20,6 +20,7 @@ resource "aws_lambda_function" "db_manager" {
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-db_manager" })
 }
 
 resource "aws_lambda_function" "lipas_loader" {
@@ -40,4 +41,5 @@ resource "aws_lambda_function" "lipas_loader" {
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-lipas_loader" })
 }

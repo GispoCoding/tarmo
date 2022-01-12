@@ -1,6 +1,7 @@
 # Database secrets
 resource "aws_secretsmanager_secret" "tarmo-db-su" {
-  name = "tarmo-postgres-database-su"
+  name = "${var.prefix}-postgres-database-su"
+  tags = local.default_tags
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-su" {
@@ -9,7 +10,8 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-su" {
 }
 
 resource "aws_secretsmanager_secret" "tarmo-db-admin" {
-  name = "tarmo-postgres-database-admin"
+  name = "${var.prefix}-postgres-database-admin"
+  tags = local.default_tags
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-admin" {
@@ -18,7 +20,8 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-admin" {
 }
 
 resource "aws_secretsmanager_secret" "tarmo-db-rw" {
-  name = "tarmo-postgres-database-rw"
+  name = "${var.prefix}-postgres-database-rw"
+  tags = local.default_tags
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-rw" {
@@ -27,7 +30,8 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-rw" {
 }
 
 resource "aws_secretsmanager_secret" "tarmo-db-r" {
-  name = "tarmo-postgres-database-r"
+  name = "${var.prefix}-postgres-database-r"
+  tags = local.default_tags
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-r" {
