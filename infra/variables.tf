@@ -81,6 +81,46 @@ variable "tarmo_rw_secrets" {
   }
 }
 
+variable "public_port" {
+  description = "Port for traffic from public internet"
+  type        = number
+  default     = 80
+}
+
+variable "pg_tileserv_port" {
+  description = "Backend traffic port"
+  type        = number
+  default     = 7800
+}
+
+variable "public-subnet-count" {
+  description = "TODO"
+  type        = number
+  default     = 2
+}
+
+variable "private-subnet-count" {
+  description = "TODO"
+  type        = number
+  default     = 2
+}
+
+variable "pg_tileserv_cpu" {
+  description = "CPU of the pg_tileserv"
+  type        = number
+  default     = 512
+}
+
+variable "pg_tileserv_memory" {
+  description = "Memory of the pg_tileserv"
+  type        = number
+  default     = 1024
+}
+
+variable "pg_tileserv_image" {
+  description = "Image of the pg_tileserv"
+  default = "docker.io/pramsey/pg_tileserv:latest"
+}
 
 locals {
   frontend_dns_alias = "${var.frontend_subdomain}.${var.AWS_HOSTED_DOMAIN}"

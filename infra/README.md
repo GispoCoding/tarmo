@@ -38,6 +38,11 @@ terraform apply -var-file tarmo.tfvars
 
 Note: Setting up the instances takes a couple of minutes.
 
+Take down the following outputs:
+
+- **frontend_route53_dns_record**
+- **tileserver_url**
+
 Shut down and destroy the instances with `terraform destroy -var-file tarmo.tfvars`
 
 ## Manual interactions

@@ -100,3 +100,29 @@ resource "aws_iam_role_policy_attachment" "lambda_secrets_attachment" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = aws_iam_policy.secrets-policy.arn
 }
+
+
+# This IAM role will be used by the docker daemon
+resource "aws_iam_role" "backend-task-execution" {
+  name = "tarmo-backend-task-execution"
+  assume_role_policy = jsonencode(
+  {
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# The IAM role above will be allowed to pull docker image from ECR, and to create Cloudwatch log groups
+# See: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
+resource "aws_iam_role_policy_attachment" "backend" {
+  role       = aws_iam_role.backend-task-execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}

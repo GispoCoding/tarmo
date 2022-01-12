@@ -23,3 +23,8 @@ output "lambda_lipas_loader" {
   description = "Name of the lipas Lambda function."
   value       = aws_lambda_function.lipas_loader.function_name
 }
+
+output "tileserver_url" {
+  description = "URL of the tileserver"
+  value = aws_lb.tileserver.dns_name
+}
