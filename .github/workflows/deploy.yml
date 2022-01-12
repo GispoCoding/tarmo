@@ -43,7 +43,7 @@ jobs:
         with:
           python-version: "3.8"
       - name: Build zip files for lambda
-        run: make build-lambda-pip
+        run: make build-lambda
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
