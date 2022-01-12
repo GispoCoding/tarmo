@@ -21,7 +21,7 @@ LOGGER.setLevel(logging.INFO)
 
 class Event(TypedDict):
     pages: Optional[List[int]]
-    do_not_update_timestamp: bool
+    do_not_update_timestamp: Optional[bool]
 
 
 class Response(TypedDict):
@@ -251,7 +251,7 @@ def handler(event: Event, _) -> Response:
                 else:
                     LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
 
-            if not event["do_not_update_timestamp"]:
+            if not event.get("do_not_update_timestamp", True):
                 loader.save_timestamp(session)
             session.commit()
         msg = f"{succesful_actions} inserted or updated."
