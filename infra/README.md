@@ -20,12 +20,13 @@ and finally run `. /tmp/aws-mfa-token` to temporarily set the correct MFA enviro
 ## Configuration
 
 1. Copy [tfvars.example](tfvars.example) to a new file called `tarmo.tfvars`
-2. Create new IAM use, and take down the username and credentials. This user can be used to configure CD deployment from
-   Github. If CD is already configured, use existing user.
+2. Create two new IAM users for CI/CD and take down the username and credentials. These users can be used to configure CD deployment from
+   Github. If CD is already configured, use existing users:
+   1. User to upload frontend to S3. Fill this user in `AWS_S3_USER` part in `tarmo.tfvars`. Fill credentials in Github secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+   2. User to update lambda functions. Fill this user in `AWS_LAMBDA_USER` part in `tarmo.tfvars`. Fill credentials in Github secrets `AWS_LAMBDA_UPLOAD_ACCESS_KEY_ID` and `AWS_LAMBDA_UPLOAD_SECRET_ACCESS_KEY`.
 3. Change the values in `tarmo.tfvars` as required
 4. Create zip packages for the lambda functions by running `make build-lambda-docker` in the root of the project (this
    has to be done only once since github actions can be configured to update functions).
-5.
 
 ## Deploy and teardown
 

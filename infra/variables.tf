@@ -13,6 +13,11 @@ variable "AWS_S3_USER" {
   type        = string
 }
 
+variable "AWS_LAMBDA_USER" {
+  description = "AWS user for updating lambda functions"
+  type        = string
+}
+
 variable "AWS_HOSTED_DOMAIN" {
   description = "Domain for create route53 record."
   type        = string
@@ -119,7 +124,7 @@ variable "pg_tileserv_memory" {
 
 variable "pg_tileserv_image" {
   description = "Image of the pg_tileserv"
-  default = "docker.io/pramsey/pg_tileserv:latest"
+  default     = "docker.io/pramsey/pg_tileserv:latest"
 }
 
 locals {
