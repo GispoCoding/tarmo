@@ -1,5 +1,5 @@
 build:
-	make build-lambda-docker -C ..
+	make build-lambda -C ..
 
 update-lambda: update-db-manager update-lipas-loader
 	echo "All updated"
@@ -25,3 +25,6 @@ change-db-pw:
 
 populate-lipas:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name lipas_loader --payload '{"pages": [98,99], "do_not_update_timestamp": true}' response_lipas.json
+
+populate-lipas-tre:
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name lipas_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_lipas.json

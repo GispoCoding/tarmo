@@ -9,8 +9,11 @@ import requests
 from shapely.geometry import LineString, MultiLineString, MultiPoint, Point, shape
 from shapely.geometry.base import BaseGeometry
 from sqlalchemy import MetaData, create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session, sessionmaker
+
+ID_FIELD = "sportsPlaceId"
 
 LipasBase = automap_base(metadata=MetaData(schema="lipas"))
 KoosteBase = automap_base(metadata=(MetaData(schema="kooste")))
@@ -21,7 +24,13 @@ LOGGER.setLevel(logging.INFO)
 
 class Event(TypedDict):
     pages: Optional[List[int]]
+
+    # Optional values
     do_not_update_timestamp: Optional[bool]
+
+    close_to_lon: Optional[float]
+    close_to_lat: Optional[float]
+    radius: Optional[float]
 
 
 class Response(TypedDict):
@@ -85,6 +94,8 @@ class LipasLoader:
         connection_string: str,
         type_codes: Optional[List[int]] = None,
         lipas_api_url: Optional[str] = None,
+        point_of_interest: Optional[Point] = None,
+        point_radius: Optional[float] = None,
     ) -> None:
 
         engine = create_engine(connection_string)
@@ -93,6 +104,9 @@ class LipasLoader:
         KoosteBase.prepare(engine, reflect=True)
 
         self.Session = sessionmaker(bind=engine)
+
+        self.point_of_interest = point_of_interest
+        self.point_radius = point_radius
 
         if lipas_api_url is not None:
             self.api_url = lipas_api_url
@@ -113,7 +127,7 @@ class LipasLoader:
             data = r.json()
 
             if data:
-                ids += [item["sportsPlaceId"] for item in data if "location" in item]
+                ids += [item[ID_FIELD] for item in data if "location" in item]
                 current_page += 1
             else:
                 results_left = False
@@ -181,8 +195,13 @@ class LipasLoader:
         new_obj = create_feature_for_object(table_cls, sport_place)
         common_obj = self._create_common_class_object_for_feature(sport_place)
 
-        session.merge(new_obj)
-        session.merge(common_obj)
+        try:
+            session.merge(new_obj)
+            session.merge(common_obj)
+        except SQLAlchemyError:
+            LOGGER.exception(
+                f"Error occurred while saving feature {sport_place[ID_FIELD]}"
+            )
         return True
 
     def save_timestamp(self, session: Session) -> None:
@@ -208,6 +227,10 @@ class LipasLoader:
             params["typeCodes"] = self.type_codes
         if self.last_modified:
             params["modifiedAfter"] = self.last_modified.strftime(self.DATETIME_FORMAT)
+        if self.point_of_interest and self.point_radius:
+            params["closeToLon"] = self.point_of_interest.x
+            params["closeToLat"] = self.point_of_interest.y
+            params["closeToDistanceKm"] = self.point_radius
         return main_url, params
 
     def _sport_place_url(self, sports_place_id: int):
@@ -231,7 +254,17 @@ def handler(event: Event, _) -> Response:
     response: Response = {"statusCode": 200, "body": json.dumps("")}
     db_helper = DatabaseHelper()
     try:
-        loader = LipasLoader(db_helper.get_connection_string())
+        point = (
+            Point(event["close_to_lon"], event["close_to_lat"])
+            if "close_to_lon" in event and "close_to_lat" in event
+            else None
+        )
+
+        loader = LipasLoader(
+            db_helper.get_connection_string(),
+            point_of_interest=point,
+            point_radius=event.get("radius", None),
+        )
         ids = []
         if "pages" in event and event["pages"] is not None:
             for page in event["pages"]:
@@ -251,7 +284,7 @@ def handler(event: Event, _) -> Response:
                 else:
                     LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
 
-            if not event.get("do_not_update_timestamp", True):
+            if not event.get("do_not_update_timestamp", False):
                 loader.save_timestamp(session)
             session.commit()
         msg = f"{succesful_actions} inserted or updated."
