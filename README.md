@@ -18,13 +18,30 @@ Tarmo - Tampere Mobilemap
 
 Use Node>=v16.
 
-1. Navigate into web directory
-2. Copy .env.sample as .env and fill your NLS Api key.
-3. Install dependencies:
+1. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
+2. Navigate into web directory
+3. Copy .env.sample as .env and fill your NLS Api key.
+4. Install dependencies:
    ```shell
    yarn
    ```
-4. Run the development server in localhost:3000:
+5. Run the development server in localhost:3000:
    ```shell
    yarn run start
    ```
+
+### Backend
+
+1. Install also main requirements to the same python virtual environment:
+   1. `pip-sync requirements.txt requirements-dev.txt`
+   2. `pre-commit install`
+2. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
+3. Edit the lambda [functions](./infra/functions) and restart the according container to see the changes.
+
+If test using pytest-docker get stuck, you can remove the dangling containers with:
+
+```shell
+docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} docker stop {}
+docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} docker rm {}
+docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I {} docker network rm {}
+```

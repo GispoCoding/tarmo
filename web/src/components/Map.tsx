@@ -1,7 +1,14 @@
 import * as React from "react";
-import MapGL, { NavigationControl } from "react-map-gl";
 import { useEffect, useState } from "react";
-import { OSM_STYLE, NLS_STYLE_URI } from "./style";
+import MapGL, { Layer, NavigationControl, Source } from "react-map-gl";
+import {
+  LIPAS_LINE_SOURCE,
+  LIPAS_LINE_STYLE,
+  LIPAS_POINT_SOURCE,
+  LIPAS_POINT_STYLE,
+  NLS_STYLE_URI,
+  OSM_STYLE,
+} from "./style";
 
 export default function Map() {
   const [viewport, setViewport] = useState({
@@ -35,6 +42,12 @@ export default function Map() {
       mapStyle={style}
       onViewportChange={setViewport}
     >
+      <Source {...LIPAS_POINT_SOURCE}>
+        <Layer {...LIPAS_POINT_STYLE} />
+      </Source>
+      <Source {...LIPAS_LINE_SOURCE}>
+        <Layer {...LIPAS_LINE_STYLE} />
+      </Source>
       <NavigationControl style={{ padding: 20 }} />
     </MapGL>
   );

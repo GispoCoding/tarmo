@@ -1,1 +1,5 @@
 pre-commit
+pytest
+python-dotenv
+pytest-docker
+boto3
