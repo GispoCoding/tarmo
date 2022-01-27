@@ -1,5 +1,5 @@
 test-create-db:
-	curl -XPOST "http://localhost:8081/2015-03-31/functions/function/invocations" -d '"event_type" : 1}'
+	curl -XPOST "http://localhost:8081/2015-03-31/functions/function/invocations" -d '{"event_type" : 1}'
 
 
 test-lipas:
