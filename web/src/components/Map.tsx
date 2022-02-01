@@ -1,6 +1,11 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import MapGL, { Layer, NavigationControl, Source } from "react-map-gl";
+import MapGL, {
+  Layer,
+  NavigationControl,
+  Source,
+  GeolocateControl,
+} from "react-map-gl";
 import {
   LIPAS_LINE_SOURCE,
   LIPAS_LINE_STYLE,
@@ -49,6 +54,11 @@ export default function Map() {
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
       <NavigationControl style={{ padding: 20 }} />
+      <GeolocateControl
+        style={{ left: 20, top: 120 }}
+        trackUserLocation={true}
+        auto
+      />
     </MapGL>
   );
 }
