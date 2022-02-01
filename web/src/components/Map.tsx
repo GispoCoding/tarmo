@@ -5,6 +5,7 @@ import MapGL, {
   NavigationControl,
   Source,
   GeolocateControl,
+  FullscreenControl,
 } from "react-map-gl";
 import {
   LIPAS_LINE_SOURCE,
@@ -25,6 +26,7 @@ export default function Map() {
   });
 
   const [style, setStyle] = useState(OSM_STYLE);
+  const [showNav, setShowNav] = useState(true);
 
   // Set Basemap to NLS base map
   useEffect(() => {
@@ -39,6 +41,14 @@ export default function Map() {
       );
   }, []);
 
+  const toggleNav = () => {
+    if (document.fullscreenElement) {
+      setShowNav(false);
+    } else {
+      setShowNav(true);
+    }
+  };
+
   return (
     <MapGL
       {...viewport}
@@ -46,6 +56,7 @@ export default function Map() {
       height="100%"
       mapStyle={style}
       onViewportChange={setViewport}
+      onResize={toggleNav}
     >
       <Source {...LIPAS_POINT_SOURCE}>
         <Layer {...LIPAS_POINT_STYLE} />
@@ -53,12 +64,17 @@ export default function Map() {
       <Source {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
-      <NavigationControl style={{ padding: 20 }} />
-      <GeolocateControl
-        style={{ left: 20, top: 120 }}
-        trackUserLocation={true}
-        auto
-      />
+      {showNav && (
+        <>
+          <NavigationControl style={{ padding: 20 }} />
+          <GeolocateControl
+            style={{ left: 20, top: 120 }}
+            trackUserLocation={true}
+            auto
+          />
+        </>
+      )}
+      <FullscreenControl style={{ right: 20, top: 20 }} />
     </MapGL>
   );
 }
