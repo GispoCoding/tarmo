@@ -2,8 +2,8 @@
   "version": 8,
   "name": "NLS Basemap",
   "metadata": { "maputnik:renderer": "mbgljs" },
-  "center": [21.645, 63.101],
-  "zoom": 11.35,
+  "center": [24.465, 61.309],
+  "zoom": 7.22,
   "sources": {
     "taustakartta": {
       "type": "vector",
@@ -2673,7 +2673,7 @@
         "icon-ignore-placement": true,
         "icon-allow-overlap": true,
         "text-font": ["Liberation Sans NLSFI"],
-        "text-size": 12,
+        "text-size": 14,
         "visibility": "visible",
         "text-letter-spacing": 0.1
       },
@@ -2705,7 +2705,7 @@
         ],
         "icon-ignore-placement": false,
         "icon-allow-overlap": false,
-        "text-size": 14,
+        "text-size": 16,
         "text-font": [
           "step",
           ["zoom"],
@@ -2749,7 +2749,7 @@
           ["literal", ["Liberation Sans NLSFI"]],
           ["literal", ["Liberation Sans NLSFI"]]
         ],
-        "text-size": 12,
+        "text-size": 14,
         "visibility": "visible",
         "text-padding": 2,
         "text-line-height": 1.2,
@@ -2787,7 +2787,7 @@
         "icon-allow-overlap": false,
         "text-font": ["Liberation Sans NLSFI"],
         "visibility": "visible",
-        "text-size": 12,
+        "text-size": 14,
         "text-letter-spacing": 0.1
       },
       "paint": {
@@ -2807,7 +2807,7 @@
         "text-field": "{nimi_suomi}        {nimi_ruotsi}",
         "text-font": ["Liberation Sans NLSFI"],
         "symbol-placement": "line",
-        "text-size": 10,
+        "text-size": 12,
         "visibility": "visible",
         "text-letter-spacing": 0.2
       },
