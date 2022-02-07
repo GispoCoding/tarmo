@@ -1,7 +1,7 @@
 {
   "version": 8,
   "name": "NLS Basemap",
-  "metadata": {"maputnik:renderer": "mbgljs"},
+  "metadata": { "maputnik:renderer": "mbgljs" },
   "center": [24.465, 61.309],
   "zoom": 7.22,
   "sources": {
@@ -15,8 +15,8 @@
     {
       "id": "background",
       "type": "background",
-      "layout": {"visibility": "visible"},
-      "paint": {"background-color": "rgba(238, 238, 238, 1)"}
+      "layout": { "visibility": "visible" },
+      "paint": { "background-color": "rgba(238, 238, 238, 1)" }
     },
     {
       "id": "maasto_alue",
@@ -27,27 +27,14 @@
         "match",
         ["get", "kohdeluokka"],
         [
-          35300,
-          35411,
-          35412,
-          35421,
-          35422,
-          38300,
-          38700,
-          39110,
-          39120,
-          39130,
-          33000,
-          38400,
-          38600,
-          35401,
-          35402
+          35300, 35411, 35412, 35421, 35422, 38300, 38700, 39110, 39120, 39130,
+          33000, 38400, 38600, 35401, 35402
         ],
         true,
         false
       ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(227, 232, 227, 1)"}
+      "layout": { "visibility": "visible" },
+      "paint": { "fill-color": "rgba(227, 232, 227, 1)" }
     },
     {
       "id": "maankaytto",
@@ -61,7 +48,7 @@
         true,
         false
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "fill-color": [
           "match",
@@ -87,8 +74,8 @@
       "source-layer": "korkeus",
       "minzoom": 11,
       "maxzoom": 20,
-      "layout": {"visibility": "none"},
-      "paint": {"line-color": "rgba(208, 208, 208, 1)", "line-width": 0.5}
+      "layout": { "visibility": "none" },
+      "paint": { "line-color": "rgba(208, 208, 208, 1)", "line-width": 0.5 }
     },
     {
       "id": "lautta ja lossi",
@@ -145,14 +132,14 @@
       "type": "fill",
       "source": "taustakartta",
       "source-layer": "vesisto_alue",
-      "paint": {"fill-color": "rgba(199, 215, 216, 1)"}
+      "paint": { "fill-color": "rgba(199, 215, 216, 1)" }
     },
     {
       "id": "vesisto_viiva",
       "type": "line",
       "source": "taustakartta",
       "source-layer": "vesisto_viiva",
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(199, 215, 216, 1)",
         "line-width": [
@@ -178,22 +165,13 @@
           "match",
           ["get", "kohdeluokka"],
           [
-            32411,
-            32412,
-            32413,
-            32414,
-            32415,
-            32416,
-            32417,
-            32418,
-            32441,
-            32442
+            32411, 32412, 32413, 32414, 32415, 32416, 32417, 32418, 32441, 32442
           ],
           true,
           false
         ]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "fill-color": "rgba(223, 223, 223, 1)",
         "fill-outline-color": "rgba(204, 204, 204, 1)"
@@ -221,8 +199,8 @@
         ["==", "kohdeluokka", 45112],
         ["==", "kohdeluokka", 44500]
       ],
-      "layout": {"visibility": "visible"},
-      "paint": {"line-color": "#918a8c", "line-width": 0.5}
+      "layout": { "visibility": "visible" },
+      "paint": { "line-color": "#918a8c", "line-width": 0.5 }
     },
     {
       "id": "ajotie sillalla 5",
@@ -780,7 +758,7 @@
         ],
         ["match", ["get", "tasosijainti"], [5], true, false]
       ],
-      "layout": {"visibility": "none"},
+      "layout": { "visibility": "none" },
       "paint": {
         "line-color": "rgba(208, 208, 208, 1)",
         "line-dasharray": [2, 2],
@@ -812,7 +790,7 @@
         ],
         ["match", ["get", "tasosijainti"], [5], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(208, 208, 208, 1)",
         "line-width": [
@@ -1587,16 +1565,7 @@
           "match",
           ["get", "kohdeluokka"],
           [
-            12141,
-            12132,
-            12131,
-            12122,
-            12121,
-            12112,
-            12111,
-            12313,
-            12314,
-            12136
+            12141, 12132, 12131, 12122, 12121, 12112, 12111, 12313, 12314, 12136
           ],
           true,
           false
@@ -1704,7 +1673,7 @@
         ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
         ["match", ["get", "tasosijainti"], [-1], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1779,7 +1748,7 @@
         ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
         ["match", ["get", "tasosijainti"], [0], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1804,7 +1773,7 @@
         ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
         ["match", ["get", "tasosijainti"], [0], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1829,7 +1798,7 @@
         ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
         ["match", ["get", "tasosijainti"], [0], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1929,7 +1898,7 @@
         ["match", ["get", "kohdeluokka"], [12111, 12112], true, false],
         ["match", ["get", "tasosijainti"], [1], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1954,7 +1923,7 @@
         ["match", ["get", "kohdeluokka"], [12121, 12122], true, false],
         ["match", ["get", "tasosijainti"], [1], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -1979,7 +1948,7 @@
         ["match", ["get", "kohdeluokka"], [12131, 12132], true, false],
         ["match", ["get", "tasosijainti"], [1], true, false]
       ],
-      "layout": {"visibility": "visible"},
+      "layout": { "visibility": "visible" },
       "paint": {
         "line-color": "rgba(251, 251, 251, 1)",
         "line-width": [
@@ -2854,8 +2823,8 @@
       "type": "line",
       "source": "taustakartta",
       "source-layer": "hallintoalue",
-      "layout": {"visibility": "none"},
-      "paint": {"line-color": "hsl(0,0%,65%)", "line-width": 1}
+      "layout": { "visibility": "none" },
+      "paint": { "line-color": "hsl(0,0%,65%)", "line-width": 1 }
     }
   ],
   "id": "NLS-Basemap"
