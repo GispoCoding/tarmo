@@ -1,0 +1,2 @@
+creation_rules:
+  - kms: "arn:aws:kms:eu-central-1:631260641272:alias/tarmo"
