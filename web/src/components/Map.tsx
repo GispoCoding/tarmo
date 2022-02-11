@@ -1,9 +1,10 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { Ref, useCallback, useEffect, useState } from "react";
 import MapGL, {
   FullscreenControl,
   GeolocateControl,
   Layer,
+  MapRef,
   NavigationControl,
   Source,
 } from "react-map-gl";
@@ -17,10 +18,14 @@ import {
   OSM_STYLE,
 } from "./style";
 import maplibregl from "maplibre-gl";
+import LipasPopup from "./LipasPopup";
+import { PopupInfo } from "../types";
+import { LngLat, MapboxGeoJSONFeature } from "mapbox-gl";
 
 export default function Map() {
   const [style, setStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
+  const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
 
   // Set Basemap to NLS base map
   useEffect(() => {
@@ -43,8 +48,45 @@ export default function Map() {
     }
   };
 
+  const setPopupFeature = useCallback(
+    (lngLat: LngLat, features: MapboxGeoJSONFeature[] | undefined) => {
+      if (
+        features &&
+        features[0] &&
+        Object.values(LayerSource).includes(features[0].source as LayerSource)
+      ) {
+        const feature = features[0];
+        setPopupInfo({
+          source: LayerSource[feature.source] as LayerSource,
+          properties: feature.properties,
+          longitude: lngLat.lng,
+          latitude: lngLat.lat,
+          onClose: () => setPopupInfo(null),
+        });
+      } else {
+        setPopupInfo(null);
+      }
+    },
+    []
+  );
+
+  const mapReference = useCallback(
+    (mapRef: MapRef) => {
+      if (mapRef !== null) {
+        for (const source in LayerSource) {
+          console.log("source", source);
+          mapRef.on("click", LayerSource[source], ev =>
+            setPopupFeature(ev.lngLat, ev.features)
+          );
+        }
+      }
+    },
+    [setPopupFeature]
+  );
+
   return (
     <MapGL
+      ref={mapReference as Ref<MapRef>}
       initialViewState={{
         latitude: 65,
         longitude: 27,
@@ -73,6 +115,7 @@ export default function Map() {
         </>
       )}
       <FullscreenControl style={{ right: 20, top: 20 }} />
+      {popupInfo && <LipasPopup popupInfo={popupInfo} />}
     </MapGL>
   );
 }
