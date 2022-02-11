@@ -1,6 +1,12 @@
 import { LayerProps } from "react-map-gl";
+import { VectorSource } from "mapbox-gl";
 
-export const OSM_STYLE = {
+export enum LayerId {
+  LipasPoint = "lipas-points",
+  LipasLine = "lipas-lines",
+}
+
+export const OSM_STYLE: import("mapbox-gl").Style = {
   version: 8,
   sources: {
     osm: {
@@ -22,29 +28,27 @@ export const OSM_STYLE = {
 
 export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
-export const LIPAS_POINT_SOURCE = {
-  id: "lipas-points",
+export const LIPAS_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
     `${process.env.TILESERVER_URL}/kooste.lipas_kohteet_piste/{z}/{x}/{y}.pbf`,
   ],
-  minZoom: 0,
-  maxZoom: 22,
+  minzoom: 0,
+  maxzoom: 22,
 };
 
-export const LIPAS_LINE_SOURCE = {
-  id: "lipas-lines",
+export const LIPAS_LINE_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
     `${process.env.TILESERVER_URL}/kooste.lipas_kohteet_viiva/{z}/{x}/{y}.pbf`,
   ],
-  minZoom: 0,
-  maxZoom: 22,
+  minzoom: 0,
+  maxzoom: 22,
 };
 
 export const LIPAS_POINT_STYLE: LayerProps = {
-  "id": "lipas-points",
-  "source": LIPAS_POINT_SOURCE.id,
+  "id": LayerId.LipasPoint,
+  "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_kohteet_piste",
   "type": "circle",
   "paint": {
@@ -54,8 +58,8 @@ export const LIPAS_POINT_STYLE: LayerProps = {
 };
 
 export const LIPAS_LINE_STYLE: LayerProps = {
-  "id": "lipas-lines",
-  "source": LIPAS_LINE_SOURCE.id,
+  "id": LayerId.LipasLine,
+  "source": LayerId.LipasLine,
   "source-layer": "kooste.lipas_kohteet_viiva",
   "type": "line",
   "paint": {
