@@ -1,13 +1,14 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import MapGL, {
+  FullscreenControl,
+  GeolocateControl,
   Layer,
   NavigationControl,
   Source,
-  GeolocateControl,
-  FullscreenControl,
 } from "react-map-gl";
 import {
+  LayerSource,
   LIPAS_LINE_SOURCE,
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
@@ -15,16 +16,9 @@ import {
   NLS_STYLE_URI,
   OSM_STYLE,
 } from "./style";
+import maplibregl from "maplibre-gl";
 
 export default function Map() {
-  const [viewport, setViewport] = useState({
-    latitude: 65,
-    longitude: 27,
-    zoom: 4.5,
-    bearing: 0,
-    pitch: 0,
-  });
-
   const [style, setStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
 
@@ -51,17 +45,22 @@ export default function Map() {
 
   return (
     <MapGL
-      {...viewport}
-      width="100%"
-      height="100%"
+      initialViewState={{
+        latitude: 65,
+        longitude: 27,
+        zoom: 4.5,
+        bearing: 0,
+        pitch: 0,
+      }}
+      style={{ width: "100%", height: "100%" }}
+      mapLib={maplibregl}
       mapStyle={style}
-      onViewportChange={setViewport}
       onResize={toggleNav}
     >
-      <Source {...LIPAS_POINT_SOURCE}>
+      <Source id={LayerSource.LipasPoint} {...LIPAS_POINT_SOURCE}>
         <Layer {...LIPAS_POINT_STYLE} />
       </Source>
-      <Source {...LIPAS_LINE_SOURCE}>
+      <Source id={LayerSource.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
       {showNav && (
@@ -70,7 +69,6 @@ export default function Map() {
           <GeolocateControl
             style={{ left: 20, top: 120 }}
             trackUserLocation={true}
-            auto
           />
         </>
       )}
