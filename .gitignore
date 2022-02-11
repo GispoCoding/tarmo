@@ -3,6 +3,7 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfvars.json
 **/.terraform/*
 /infra/get-mfa-vars.sh
 /web/node_modules/
