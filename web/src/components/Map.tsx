@@ -78,6 +78,12 @@ export default function Map() {
           mapRef.on("click", source_name, ev =>
             setPopupFeature(ev.lngLat, ev.features)
           );
+          mapRef.on("mouseenter", source_name, () => {
+            mapRef.getCanvas().style.cursor = "pointer";
+          });
+          mapRef.on("mouseleave", source_name, () => {
+            mapRef.getCanvas().style.cursor = "";
+          });
         }
       }
     },
@@ -107,7 +113,7 @@ export default function Map() {
       </Source>
       {showNav && (
         <>
-          <NavigationControl style={{ padding: 20 }} />
+          <NavigationControl />
           <GeolocateControl
             style={{ left: 20, top: 120 }}
             trackUserLocation={true}
