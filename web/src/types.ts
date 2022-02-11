@@ -1,8 +1,8 @@
-import { LayerSource } from "./components/style";
+import { LayerId } from "./components/style";
 import { GeoJsonProperties } from "geojson";
 
 export interface PopupInfo {
-  source: LayerSource;
+  layerId: LayerId;
   properties: GeoJsonProperties;
   longitude: number;
   latitude: number;

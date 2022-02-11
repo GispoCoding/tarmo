@@ -1,7 +1,7 @@
 import { LayerProps } from "react-map-gl";
 import { VectorSource } from "mapbox-gl";
 
-export enum LayerSource {
+export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
 }
@@ -47,8 +47,8 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
 };
 
 export const LIPAS_POINT_STYLE: LayerProps = {
-  "id": LayerSource.LipasPoint,
-  "source": LayerSource.LipasPoint,
+  "id": LayerId.LipasPoint,
+  "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_kohteet_piste",
   "type": "circle",
   "paint": {
@@ -58,8 +58,8 @@ export const LIPAS_POINT_STYLE: LayerProps = {
 };
 
 export const LIPAS_LINE_STYLE: LayerProps = {
-  "id": LayerSource.LipasLine,
-  "source": LayerSource.LipasLine,
+  "id": LayerId.LipasLine,
+  "source": LayerId.LipasLine,
   "source-layer": "kooste.lipas_kohteet_viiva",
   "type": "line",
   "paint": {

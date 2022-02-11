@@ -9,7 +9,7 @@ import MapGL, {
   Source,
 } from "react-map-gl";
 import {
-  LayerSource,
+  LayerId,
   LIPAS_LINE_SOURCE,
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
@@ -53,11 +53,11 @@ export default function Map() {
       if (
         features &&
         features[0] &&
-        Object.values(LayerSource).includes(features[0].source as LayerSource)
+        Object.values(LayerId).includes(features[0].source as LayerId)
       ) {
         const feature = features[0];
         setPopupInfo({
-          source: LayerSource[feature.source] as LayerSource,
+          layerId: LayerId[feature.source] as LayerId,
           properties: feature.properties,
           longitude: lngLat.lng,
           latitude: lngLat.lat,
@@ -73,9 +73,9 @@ export default function Map() {
   const mapReference = useCallback(
     (mapRef: MapRef) => {
       if (mapRef !== null) {
-        for (const source in LayerSource) {
-          console.log("source", source);
-          mapRef.on("click", LayerSource[source], ev =>
+        for (const source in LayerId) {
+          const source_name = LayerId[source];
+          mapRef.on("click", source_name, ev =>
             setPopupFeature(ev.lngLat, ev.features)
           );
         }
@@ -99,10 +99,10 @@ export default function Map() {
       mapStyle={style}
       onResize={toggleNav}
     >
-      <Source id={LayerSource.LipasPoint} {...LIPAS_POINT_SOURCE}>
+      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
         <Layer {...LIPAS_POINT_STYLE} />
       </Source>
-      <Source id={LayerSource.LipasLine} {...LIPAS_LINE_SOURCE}>
+      <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
       {showNav && (
