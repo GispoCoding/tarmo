@@ -24,8 +24,8 @@ export default function LipasPopup({ popupInfo }: PopupProps) {
     <Popup
       longitude={popupInfo.longitude}
       latitude={popupInfo.latitude}
-      anchor="top"
       onClose={() => popupInfo.onClose()}
+      style={{ color: "#58887d" }}
     >
       <div>
         <h2>{popupInfo.properties?.name}</h2>
