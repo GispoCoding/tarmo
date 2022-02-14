@@ -10,3 +10,4 @@
 /backend/lambda_functions/*.zip
 .venv
 .idea
+__pycache__

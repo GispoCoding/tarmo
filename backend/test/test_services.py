@@ -25,7 +25,19 @@ def create_db(db_manager_url, main_db_params, root_db_params):
         "event_type": 1,
     }
     r = requests.post(db_manager_url, data=json.dumps(payload))
-    assert r.json() == {"statusCode": 200, "body": '""'}
+    data = r.json()
+    assert data["statusCode"] == 200, data["body"]
+
+
+@pytest.fixture()
+def migrate_db(create_db):
+    payload = {
+        "event_type": 3,
+    }
+    r = requests.post(db_manager_url, data=json.dumps(payload))
+    data = r.json()
+    assert data["statusCode"] == 200
+    assert "No migrations were run" in data["body"]
 
 
 @pytest.fixture()
@@ -46,6 +58,29 @@ def test_db_created(create_db, main_db_params_with_root_user):
                 "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
             )
             assert cur.fetchall() == [("lipas",), ("kooste",)]
+
+            cur.execute(
+                "SELECT table_name FROM information_schema.tables WHERE table_name='alembic_version'"
+            )
+            assert cur.fetchall() == [("alembic_version",)]
+
+    finally:
+        conn.close()
+
+
+def test_db_migrated(create_db, main_db_params_with_root_user):
+    conn = psycopg2.connect(**main_db_params_with_root_user)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
+            )
+            assert cur.fetchall() == [("lipas",), ("kooste",)]
+
+            cur.execute(
+                "SELECT table_name FROM information_schema.tables WHERE table_name='alembic_version'"
+            )
+            assert cur.fetchall() == [("alembic_version",)]
     finally:
         conn.close()
 

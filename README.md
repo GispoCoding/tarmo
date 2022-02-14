@@ -48,3 +48,15 @@ docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} do
 docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} docker rm {}
 docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I {} docker network rm {}
 ```
+
+### Data model and database migrations
+
+1. Change the [model sql](./backend/databasemodel/model.sql).
+2. Create a new database revision:
+   1. `cd backend`
+   2. `alembic revision -m "describe your model change in this message"`
+3. Alembic created a new revision file in [alembic versions dir](./backend/databasemodel/alembic/versions), with name of the form `uuid_your_message.py`. `uuid` is your new revision id.
+4. Create a directory named your uuid in [alembic versions dir](./backend/databasemodel/alembic/versions).
+5. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new directory.
+6. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
+7. Commit the `uuid_your_message.py` file and uuid directory contents to Github.
