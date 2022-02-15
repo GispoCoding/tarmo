@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements.in
 #
+alembic==1.7.6
+    # via -r requirements.in
 certifi==2021.10.8
     # via requests
 charset-normalizer==2.0.10
@@ -16,6 +18,10 @@ greenlet==1.1.2
     # via sqlalchemy
 idna==3.3
     # via requests
+mako==1.1.6
+    # via alembic
+markupsafe==2.0.1
+    # via mako
 packaging==21.3
     # via geoalchemy2
 psycopg2==2.9.3
@@ -29,6 +35,8 @@ requests==2.27.0
 shapely==1.8.0
     # via -r requirements.in
 sqlalchemy==1.4.29
-    # via geoalchemy2
+    # via
+    #   alembic
+    #   geoalchemy2
 urllib3==1.26.7
     # via requests

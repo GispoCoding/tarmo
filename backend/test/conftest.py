@@ -5,6 +5,9 @@ from pathlib import Path
 
 import psycopg2
 import pytest
+from alembic import command
+from alembic.config import Config
+from alembic.script import ScriptDirectory
 from dotenv import load_dotenv
 
 from backend.lambda_functions.db_manager import db_manager
@@ -12,6 +15,7 @@ from backend.lambda_functions.db_manager import db_manager
 USE_DOCKER = (
     "1"  # Use "" if you don't want pytest-docker to start and destroy the containers
 )
+SCHEMA_FILES_PATH = Path("databasemodel")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -100,8 +104,49 @@ def tarmo_database_created(root_db_params, main_db_params):
     event = {"event_type": 1}
     response = db_manager.handler(event, None)
     assert response["statusCode"] == 200, response["body"]
-    yield
+    alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
+    script_dir = ScriptDirectory.from_config(alembic_cfg)
+    current_head_version_id = script_dir.get_current_head()
+    yield current_head_version_id
+
     drop_tarmo_db(main_db_params, root_db_params)
+
+
+@pytest.fixture()
+def migration_sql():
+    return (
+        "CREATE TABLE kooste.new_table (id bigint NOT NULL, "
+        "geom geometry(MULTIPOINT, 4326) NOT NULL, CONSTRAINT "
+        "new_table_pk PRIMARY KEY (id))"
+    )
+
+
+@pytest.fixture()
+def new_migration(migration_sql):
+    alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
+    revision = command.revision(alembic_cfg, message="Test migration")
+    path = Path(revision.path)
+    assert path.is_file()
+    version_dir = path.parent.absolute()
+    sql_dir = version_dir / revision.revision
+    sql_dir.mkdir()
+    revision_sql_path = sql_dir / "upgrade.sql"
+    with revision_sql_path.open("w") as file:
+        file.write(migration_sql)
+    new_head_version_id = revision.revision
+    yield new_head_version_id
+
+    revision_sql_path.unlink()
+    sql_dir.rmdir()
+    path.unlink()
+
+
+@pytest.fixture()
+def tarmo_database_migrated(tarmo_database_created, new_migration):
+    event = {"event_type": 3}
+    response = db_manager.handler(event, None)
+    assert response["statusCode"] == 200, response["body"]
+    yield new_migration
 
 
 def drop_tarmo_db(main_db_params, root_db_params):

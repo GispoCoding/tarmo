@@ -6,6 +6,7 @@ COPY databasemodel ${LAMBDA_TASK_ROOT}/databasemodel
 
 RUN pip3 install  \
     psycopg2-binary \
+    alembic \
     --target "${LAMBDA_TASK_ROOT}"
 
 CMD [ "app.handler" ]

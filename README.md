@@ -48,3 +48,14 @@ docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} do
 docker ps --format '{{.Names}}' |grep pytest | awk '{print $1}' | xargs -I {} docker rm {}
 docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I {} docker network rm {}
 ```
+
+### Data model and database migrations
+
+1. Add your changes to the [model sql](./backend/databasemodel/model.sql).
+2. Create a new database revision with `make revision name="describe your changes"`. This creates a new random id (`uuid`) for your migration, and two things in the [alembic versions dir](./backend/databasemodel/alembic/versions):
+   1. New revision file `uuid_your_message.py`,
+   2. New revision sql directory `uuid`.
+3. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
+4. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
+5. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
+6. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
