@@ -38,6 +38,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Test
         run: python -m pytest
+        working-directory: backend
 
   code-style:
     runs-on: ubuntu-latest
