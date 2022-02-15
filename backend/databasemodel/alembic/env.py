@@ -48,7 +48,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = get_url()
+    url = get_url({})
     context.configure(
         url=url,
         target_metadata=target_metadata,
