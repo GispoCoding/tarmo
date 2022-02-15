@@ -7,6 +7,11 @@ test-migrate-db:
 test-lipas:
 	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"pages": [1,2]}'
 
+revision:
+	cd backend; \
+	alembic revision -m "$(name)" | sed -E "s/.*([0-9a-f]{12})_([a-z_]+)\.py.*/\1/" | \
+		xargs -I {} mkdir databasemodel/alembic/versions/{}
+
 pytest:
 	docker-compose -f docker-compose.dev.yml down -v
 	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader
