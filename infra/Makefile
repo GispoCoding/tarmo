@@ -23,6 +23,9 @@ create-db:
 change-db-pw:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name db_manager --payload '{"event_type": 2}' response_db.json
 
+migrate-db:
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name db_manager --payload '{"event_type": 3}' response_db.json
+
 populate-lipas:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name lipas_loader --payload '{"pages": [98,99], "do_not_update_timestamp": true}' response_lipas.json
 
