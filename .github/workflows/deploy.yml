@@ -54,4 +54,3 @@ jobs:
         run: make update-lambda -C infra
       - name: Update database
         run: make migrate-db -C infra
-
