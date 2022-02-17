@@ -50,7 +50,7 @@ jobs:
   build-and-deploy-web-app:
     runs-on: ubuntu-latest
     needs: test_frontend
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ./web
@@ -83,7 +83,7 @@ jobs:
   build-and-deploy-lambda-functions:
     runs-on: ubuntu-latest
     needs: test_functions
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
