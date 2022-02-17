@@ -39,8 +39,9 @@ for acquiring an NLS API key (in Finnish).
 1. Install also main requirements to the same python virtual environment:
    1. `pip-sync requirements.txt requirements-dev.txt`
    2. `pre-commit install`
-2. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
-3. Edit the lambda [functions](./infra/functions) and restart the according container to see the changes.
+2. Run tests with `make pytest`
+3. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
+4. Edit the lambda [functions](./infra/functions) and restart the containers with `make rebuild` to see the changes.
 
 If test using pytest-docker get stuck, you can remove the dangling containers with:
 
@@ -58,6 +59,7 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
    1. New revision file `uuid_your_message.py`,
    2. New revision sql directory `uuid`.
 4. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
-5. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
-6. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
-7. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
+5. Add a `downgrade.sql` that will cancel the `upgrade.sql` operations in the same directory.
+6. Run tests with `make pytest` to check that your new model.sql, upgrade.sql and downgrade.sql run properly.
+7. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
+8. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
