@@ -58,6 +58,6 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
    1. New revision file `uuid_your_message.py`,
    2. New revision sql directory `uuid`.
 4. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
-5. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
+5. Add a `downgrade.sql` that will cancel the `upgrade.sql` operations in the same directory.
 6. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
 7. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
