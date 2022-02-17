@@ -52,3 +52,5 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Update lambda functions
         run: make update-lambda -C infra
+      - name: Update database
+        run: make migrate-db -C infra

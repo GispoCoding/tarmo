@@ -9,6 +9,7 @@ Tarmo - Tampere Mobilemap
 
 ## Development
 
+0. Install Docker based on [your platform's instructions](https://docs.docker.com/get-started/#download-and-install-docker).
 1. Create a Python virtual environment and activate it.
 2. `pip install pip-tools`
 3. `pip-sync requirements-dev.txt`
@@ -51,11 +52,12 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
 
 ### Data model and database migrations
 
-1. Add your changes to the [model sql](./backend/databasemodel/model.sql).
-2. Create a new database revision with `make revision name="describe your changes"`. This creates a new random id (`uuid`) for your migration, and two things in the [alembic versions dir](./backend/databasemodel/alembic/versions):
+1. Make sure your backend requirements are installed: `pip-sync requirements.txt requirements-dev.txt`.
+2. Add your changes to the [model sql](./backend/databasemodel/model.sql).
+3. Create a new database revision with `make revision name="describe your changes"`. This creates a new random id (`uuid`) for your migration, and two things in the [alembic versions dir](./backend/databasemodel/alembic/versions):
    1. New revision file `uuid_your_message.py`,
    2. New revision sql directory `uuid`.
-3. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
-4. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
-5. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
-6. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
+4. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
+5. _Optionally_, if there is a need to be able to revert the changes, you can also add `downgrade.sql` in the same directory.
+6. Commit the `uuid_your_message.py` file and `uuid` directory contents to Github.
+7. If you want to migrate your local development database to the new revision, run `make test-migrate-db`.
