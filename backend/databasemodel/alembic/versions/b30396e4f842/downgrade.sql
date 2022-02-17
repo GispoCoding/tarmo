@@ -1375,23 +1375,6 @@ SET timezone = 'Europe/Helsinki';
 INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
 -- ddl-end --
 
--- object: kooste.luonnonmuistomerkit | type: TABLE --
--- DROP TABLE IF EXISTS kooste.luonnonmuistomerkit CASCADE;
-CREATE TABLE kooste.luonnonmuistomerkit (
-	sw_member bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	nimi text,
-	kohteenkuvaus1 text,
-	paatosnumero integer,
-	paatospaiva date,
-	CONSTRAINT luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
-
-);
--- ddl-end --
-ALTER TABLE kooste.luonnonmuistomerkit OWNER TO tarmo_admin;
--- ddl-end --
-
 -- object: grant_rawd_d5a0ebb7a4 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.laavu_kota_kammi
@@ -1665,18 +1648,6 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 -- object: grant_rawd_fb01de299a | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.hevosreitti
-   TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_r_b0576134c9 | type: PERMISSION --
-GRANT SELECT
-   ON TABLE kooste.luonnonmuistomerkit
-   TO tarmo_read;
--- ddl-end --
-
--- object: grant_rawd_b182858222 | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.luonnonmuistomerkit
    TO tarmo_read_write;
 -- ddl-end --
 
