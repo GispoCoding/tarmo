@@ -99,30 +99,61 @@ else:
         drop_tarmo_db(main_db_params, root_db_params)
 
 
+@pytest.fixture(scope="session")
+def alembic_cfg():
+    return Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
+
+
+@pytest.fixture(scope="session")
+def current_head_version_id(alembic_cfg):
+    script_dir = ScriptDirectory.from_config(alembic_cfg)
+    return script_dir.get_current_head()
+
+
 @pytest.fixture()
-def tarmo_database_created(root_db_params, main_db_params):
+def tarmo_database_created(root_db_params, main_db_params, current_head_version_id):
     event = {"event_type": 1}
     response = db_manager.handler(event, None)
     assert response["statusCode"] == 200, response["body"]
-    alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
-    script_dir = ScriptDirectory.from_config(alembic_cfg)
-    current_head_version_id = script_dir.get_current_head()
     yield current_head_version_id
 
     drop_tarmo_db(main_db_params, root_db_params)
 
 
 @pytest.fixture()
-def migration_sql():
+def tarmo_database_migrated(root_db_params, main_db_params, current_head_version_id):
+    event = {"event_type": 3}
+    response = db_manager.handler(event, None)
+    assert response["statusCode"] == 200, response["body"]
+    yield current_head_version_id
+
+    drop_tarmo_db(main_db_params, root_db_params)
+
+
+@pytest.fixture()
+def tarmo_database_migrated_down(tarmo_database_migrated):
+    event = {"event_type": 3, "version": db_manager.INITIAL_MIGRATION}
+    response = db_manager.handler(event, None)
+    assert response["statusCode"] == 200, response["body"]
+    yield db_manager.INITIAL_MIGRATION
+
+
+@pytest.fixture()
+def upgrade_sql():
     return (
         "CREATE TABLE kooste.new_table (id bigint NOT NULL, "
         "geom geometry(MULTIPOINT, 4326) NOT NULL, CONSTRAINT "
-        "new_table_pk PRIMARY KEY (id))"
+        "new_table_pk PRIMARY KEY (id));"
     )
 
 
 @pytest.fixture()
-def new_migration(migration_sql):
+def downgrade_sql():
+    return "DROP TABLE kooste.new_table CASCADE;"
+
+
+@pytest.fixture()
+def new_migration(upgrade_sql, downgrade_sql):
     alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
     revision = command.revision(alembic_cfg, message="Test migration")
     path = Path(revision.path)
@@ -130,23 +161,35 @@ def new_migration(migration_sql):
     version_dir = path.parent.absolute()
     sql_dir = version_dir / revision.revision
     sql_dir.mkdir()
-    revision_sql_path = sql_dir / "upgrade.sql"
-    with revision_sql_path.open("w") as file:
-        file.write(migration_sql)
+    upgrade_sql_path = sql_dir / "upgrade.sql"
+    with upgrade_sql_path.open("w") as file:
+        file.write(upgrade_sql)
+    downgrade_sql_path = sql_dir / "downgrade.sql"
+    with downgrade_sql_path.open("w") as file:
+        file.write(downgrade_sql)
     new_head_version_id = revision.revision
     yield new_head_version_id
 
-    revision_sql_path.unlink()
+    upgrade_sql_path.unlink()
+    downgrade_sql_path.unlink()
     sql_dir.rmdir()
     path.unlink()
 
 
 @pytest.fixture()
-def tarmo_database_migrated(tarmo_database_created, new_migration):
+def tarmo_database_upgraded(tarmo_database_created, new_migration):
     event = {"event_type": 3}
     response = db_manager.handler(event, None)
     assert response["statusCode"] == 200, response["body"]
     yield new_migration
+
+
+@pytest.fixture()
+def tarmo_database_downgraded(tarmo_database_upgraded, current_head_version_id):
+    event = {"event_type": 3, "version": current_head_version_id}
+    response = db_manager.handler(event, None)
+    assert response["statusCode"] == 200, response["body"]
+    yield current_head_version_id
 
 
 def drop_tarmo_db(main_db_params, root_db_params):

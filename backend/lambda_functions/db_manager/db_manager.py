@@ -10,6 +10,7 @@ import psycopg2
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
+from alembic.util.exc import CommandError
 from psycopg2.sql import SQL, Identifier
 
 LOGGER = logging.getLogger()
@@ -165,6 +166,7 @@ def database_exists(conn: psycopg2.extensions.connection, db_name: str) -> bool:
 
 
 def create_tarmo_db(db_helper: DatabaseHelper) -> str:
+    """Creates a new db with the latest scheme."""
     root_conn = psycopg2.connect(
         **db_helper.get_connection_parameters(User.SU, Db.MAINTENANCE)
     )
@@ -179,9 +181,11 @@ def create_tarmo_db(db_helper: DatabaseHelper) -> str:
         try:
             main_conn.autocommit = True
             if not main_db_exists:
+                # new database will have the latest schema
                 msg += "\n" + populate_data_model(main_conn)
                 msg += "\n" + add_alembic_table(main_conn_params, "head")
             elif not alembic_table_exists(main_conn):
+                # database without alembic is always in initial schema
                 msg = add_alembic_table(main_conn_params, INITIAL_MIGRATION)
             else:
                 msg = "Database found already."
@@ -193,31 +197,60 @@ def create_tarmo_db(db_helper: DatabaseHelper) -> str:
 
 
 def migrate_tarmo_db(db_helper: DatabaseHelper, version: str = "head") -> str:
-    """Migrates the db to the latest scheme, or provided version."""
-    main_conn_params = db_helper.get_connection_parameters(User.SU, Db.MAIN)
-    main_conn = psycopg2.connect(**main_conn_params)
-    if not alembic_table_exists(main_conn):
-        add_alembic_table(main_conn_params, INITIAL_MIGRATION)
-    with main_conn.cursor() as cur:
-        version_query = SQL("SELECT version_num FROM alembic_version")
-        cur.execute(version_query)
-        old_version = cur.fetchone()[0]
-    main_conn.close()
-    alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
-    alembic_cfg.attributes["connection"] = main_conn_params
-    script_dir = ScriptDirectory.from_config(alembic_cfg)
-    current_head_version = script_dir.get_current_head()
-    if old_version != current_head_version:
-        command.upgrade(alembic_cfg, version)
-        msg = (
-            f"Database was in version {old_version}.\n"
-            f"Migrated the database to {version}."
-        )
-    else:
-        msg = (
-            "Script directory head is the same as current database "
-            f"version {old_version}.\nNo migrations were run."
-        )
+    """Migrates an existing db to the latest scheme, or provided version.
+
+    Can also be used to create the database up to any version.
+    """
+    root_conn = psycopg2.connect(
+        **db_helper.get_connection_parameters(User.SU, Db.MAINTENANCE)
+    )
+    try:
+        root_conn.autocommit = True
+
+        main_db_exists = database_exists(root_conn, db_helper.get_db_name(Db.MAIN))
+        main_conn_params = db_helper.get_connection_parameters(User.SU, Db.MAIN)
+        if not main_db_exists:
+            msg = create_db(root_conn, db_helper.get_db_name(Db.MAIN))
+            old_version = None
+        else:
+            main_conn = psycopg2.connect(**main_conn_params)
+            try:
+                main_conn.autocommit = True
+                if not alembic_table_exists(main_conn):
+                    # database without alembic is always in initial schema
+                    add_alembic_table(main_conn_params, INITIAL_MIGRATION)
+                with main_conn.cursor() as cur:
+                    version_query = SQL("SELECT version_num FROM alembic_version")
+                    cur.execute(version_query)
+                    old_version = cur.fetchone()[0]
+            finally:
+                main_conn.close()
+
+        alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
+        alembic_cfg.attributes["connection"] = main_conn_params
+        script_dir = ScriptDirectory.from_config(alembic_cfg)
+        current_head_version = script_dir.get_current_head()
+
+        if version == "head":
+            version = current_head_version
+        if old_version != version:
+            # Go figure. Alembic API has no way of checking if a version is up
+            # or down from current version. We have to figure it out by trying
+            try:
+                command.downgrade(alembic_cfg, version)
+            except CommandError:
+                command.upgrade(alembic_cfg, version)
+            msg = (
+                f"Database was in version {old_version}.\n"
+                f"Migrated the database to {version}."
+            )
+        else:
+            msg = (
+                "Requested version is the same as current database "
+                f"version {old_version}.\nNo migrations were run."
+            )
+    finally:
+        root_conn.close()
     LOGGER.info(msg)
     return msg
 
