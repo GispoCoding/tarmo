@@ -40,8 +40,8 @@ for acquiring an NLS API key (in Finnish).
    1. `pip-sync requirements.txt requirements-dev.txt`
    2. `pre-commit install`
 2. Run tests with `make pytest` 
-2. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
-3. Edit the lambda [functions](./infra/functions) and restart the containers with `make rebuild` to see the changes.
+3. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
+4. Edit the lambda [functions](./infra/functions) and restart the containers with `make rebuild` to see the changes.
 
 If test using pytest-docker get stuck, you can remove the dangling containers with:
 
