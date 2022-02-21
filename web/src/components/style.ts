@@ -1,12 +1,13 @@
 import { LayerProps } from "react-map-gl";
-import { VectorSource } from "mapbox-gl";
+import { Style, VectorSource } from "mapbox-gl";
 
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
 }
 
-export const OSM_STYLE: import("mapbox-gl").Style = {
+export const OSM_STYLE: Style = {
+  name: "OpenStreetMap",
   version: 8,
   sources: {
     osm: {
@@ -67,3 +68,29 @@ export const LIPAS_LINE_STYLE: LayerProps = {
     "line-color": "#00bf5c",
   },
 };
+
+export const NLS_TERRAIN_STYLE: Style = {
+  name: "NLS terrain map",
+  version: 8,
+  sources: {
+    terrain: {
+      type: "raster",
+      tiles: [
+        "https://avoin-karttakuva.maanmittauslaitos.fi/avoin/wmts/1.0.0/maastokartta/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
+          process.env.API_KEY_NLS,
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+    },
+  },
+  layers: [
+    {
+      id: "terrain",
+      type: "raster",
+      source: "terrain",
+    },
+  ],
+};
+
+// List of toggleable layers besides default
+export const LAYERS = [OSM_STYLE, NLS_TERRAIN_STYLE];
