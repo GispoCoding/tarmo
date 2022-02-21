@@ -20,25 +20,28 @@ import {
 import maplibregl from "maplibre-gl";
 import LipasPopup from "./LipasPopup";
 import { PopupInfo } from "../types";
-import { LngLat, MapboxGeoJSONFeature } from "mapbox-gl";
+import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
+import LayerPicker from "./LayerPicker";
 
 export default function Map() {
-  const [style, setStyle] = useState(OSM_STYLE);
+  const [mapStyle, setMapStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
   const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
 
-  // Set Basemap to NLS base map
-  useEffect(() => {
+  const setDefaultStyle = () => {
+    // Set Basemap to NLS base map
     fetch(NLS_STYLE_URI)
       .then(response => response.text())
       .then(nlsStyleString =>
-        setStyle(
+        setMapStyle(
           JSON.parse(
             nlsStyleString.replaceAll("{api-key}", `${process.env.API_KEY_NLS}`)
           )
         )
       );
-  }, []);
+  };
+
+  useEffect(() => setDefaultStyle(), []);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -46,6 +49,10 @@ export default function Map() {
     } else {
       setShowNav(true);
     }
+  };
+
+  const setLayer = (layer: Style | undefined) => {
+    layer ? setMapStyle(layer) : setDefaultStyle();
   };
 
   const setPopupFeature = useCallback(
@@ -102,7 +109,7 @@ export default function Map() {
       }}
       style={{ width: "100%", height: "100%" }}
       mapLib={maplibregl}
-      mapStyle={style}
+      mapStyle={mapStyle}
       onResize={toggleNav}
     >
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
@@ -118,6 +125,7 @@ export default function Map() {
             style={{ left: 20, top: 120 }}
             trackUserLocation={true}
           />
+          <LayerPicker setter={setLayer} />
         </>
       )}
       <FullscreenControl style={{ right: 20, top: 20 }} />
