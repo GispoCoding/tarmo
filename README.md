@@ -1,8 +1,6 @@
 # tarmo
 
-![](https://github.com/GispoCoding/tarmo/workflows/Build/badge.svg)
-![](https://github.com/GispoCoding/tarmo/workflows/CI/badge.svg)
-![](https://github.com/GispoCoding/tarmo/workflows/Deploy/badge.svg)
+[![CI/CD](https://github.com/GispoCoding/tarmo/actions/workflows/ci.yml/badge.svg)](https://github.com/GispoCoding/tarmo/actions/workflows/ci.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 Tarmo - Tampere Mobilemap
