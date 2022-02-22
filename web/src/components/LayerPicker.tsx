@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LAYERS } from "./style";
 import LayerButton from "./LayerButton";
 import { Style } from "mapbox-gl";
+import styles from "./LayerPicker.module.css";
 
 interface LayerPickerProps {
   setter: (layer: Style | undefined) => void;
@@ -19,7 +20,7 @@ export default function LayerPicker(props: LayerPickerProps) {
   return (
     <>
       {isOpen ? (
-        <div style={{ position: "absolute", right: 10, top: 190 }}>
+        <div className={styles.LayerPicker}>
           <div className={"mapboxgl-ctrl mapboxgl-ctrl-group"}>
             <table>
               <th>
