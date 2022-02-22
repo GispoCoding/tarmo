@@ -118,17 +118,14 @@ export default function Map() {
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
+      <FullscreenControl />
       {showNav && (
         <>
           <NavigationControl />
-          <GeolocateControl
-            style={{ left: 20, top: 120 }}
-            trackUserLocation={true}
-          />
+          <GeolocateControl trackUserLocation={true} />
           <LayerPicker setter={setLayer} />
         </>
       )}
-      <FullscreenControl style={{ right: 20, top: 20 }} />
       {popupInfo && <LipasPopup popupInfo={popupInfo} />}
     </MapGL>
   );
