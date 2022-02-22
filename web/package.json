@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
     "maplibre-gl": "^2.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -22,16 +23,17 @@
     "@babel/preset-typescript": "^7.16.5",
     "@babel/register": "^7.16.0",
     "@babel/runtime": "^7.16.5",
+    "@types/copy-webpack-plugin": "^10.1.0",
     "@types/fork-ts-checker-webpack-plugin": "^0.4.5",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/webpack-dev-server": "^4.5.0",
-    "@types/copy-webpack-plugin": "^10.1.0",
     "@typescript-eslint/eslint-plugin": "5.7.0",
     "@typescript-eslint/parser": "5.7.0",
     "@webpack-cli/serve": "^1.6.0",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^10.1.0",
     "css-loader": "^6.5.1",
     "dotenv-webpack": "^7.0.3",
     "eslint": "8.5.0",
@@ -48,8 +50,7 @@
     "typescript-eslint": "^0.0.1-alpha.0",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0",
-    "copy-webpack-plugin": "^10.1.0"
+    "webpack-dev-server": "^4.6.0"
   },
   "babel": {
     "presets": [
