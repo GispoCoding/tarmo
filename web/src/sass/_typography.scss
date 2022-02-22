@@ -1,37 +1,42 @@
 /** Typography - Main */
 
 body {
-    font-family: $bodyfont;
-    font-size: $bodyfontsize;
-    color: $bodyfontcolor;
+  font-family: $bodyfont;
+  font-size: $bodyfontsize;
+  color: $bodyfontcolor;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: $headerfont;
-    color: $headerfontcolor;
-    margin-bottom: 1rem;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $headerfont;
+  color: $headerfontcolor;
+  margin-bottom: 1rem;
 }
 
 p a {
-    color: $linkcolor;
-    text-decoration: underline;
+  color: $linkcolor;
+  text-decoration: underline;
 
-    &:hover {
-        text-decoration: none;
-    }
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 /** Typography - Table */
 
 tr {
-    padding: 1em;
-    font-family: $bodyfont;
+  padding: 1em;
+  font-family: $bodyfont;
 
-    th {
-        font-weight: bold;
-    }
+  th {
+    font-weight: bold;
+  }
 
-    td {
-        font-weight: inherit;
-    }
+  td {
+    font-weight: inherit;
+  }
 }
