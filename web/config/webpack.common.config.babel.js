@@ -52,12 +52,12 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        exclude: /\.module\.css$/,
+        test: /\.(sa|c)ss$/,
+        exclude: /\.module\.(sa|c)ss$/,
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.module\.css$/,
+        test: /\.module\.(sa|c)ss$/,
         use: [
           "style-loader",
           "@teamsupercell/typings-for-css-modules-loader",

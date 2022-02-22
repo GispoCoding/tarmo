@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LAYERS } from "./style";
 import LayerButton from "./LayerButton";
 import { Style } from "mapbox-gl";
-import styles from "./LayerPicker.module.css";
+import styles from "./LayerPicker.module.sass";
 
 interface LayerPickerProps {
   setter: (layer: Style | undefined) => void;
