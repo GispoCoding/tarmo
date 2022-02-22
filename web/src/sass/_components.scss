@@ -1,0 +1,17 @@
+/** Components - LayerButton, LayerPicker */
+
+// Singular buttons inherited from Mapbox and MapLibre
+.mapboxgl-ctrl,
+.maplibregl-ctrl {
+  background-color: $buttoncolor;
+}
+
+// Button group inherited from Mapbox and MapLibre
+.mapboxgl-ctrl-group,
+.maplibregl-ctrl-group {
+  &:not(:empty) {
+    box-shadow: none;
+  }
+}
+
+/** Components - LipasPopup */

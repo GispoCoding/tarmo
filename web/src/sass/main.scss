@@ -1,0 +1,71 @@
+/** Responsive breakpoints
+    - Mobile = < 600px
+    - Tablet = 600px - 900px
+    - Desktop = > 900px
+*/
+
+/** Fonts
+    - Headers = Montserrat
+    - Body = Open Sans
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
+
+$headerfont: "Montserrat", Arial;
+$bodyfont: "Open Sans", Arial;
+$bodyfontsize: 1rem;
+
+/** Colors
+    - Graphic guidelines from the city of Tampere
+    - Set of greys
+    - Default element colors
+*/
+
+$lightwarmred: #eb5e58;
+$warmred: #c83e36;
+$darkwarmred: #ae1e20;
+
+$pink: #cb4a6c;
+$berryred: #ad3963;
+$lilacviolet: #7361a2;
+
+$smogblue: #668ec9;
+$darkblue: #29549a;
+$darkwater: #00417d;
+
+$lightblue: #39a7d7;
+$greyblue: #5390b5;
+$aquablue: #91c9ea;
+
+$green: #abc872;
+$pinegreen: #397368;
+$lightpetrol: #8cc1b3;
+
+$yellow: #f4d240;
+$amarilloyellow: #e8b455;
+$lightyellow: #f8de79;
+
+$lightcoolgrey: #bebfbf;
+$darkcoolgrey: #585857;
+$lightbluegrey: #e5eef8;
+$bluegrey: #cad6e2;
+
+$grey1: #fbfbfb;
+$grey2: #f5f5f5;
+$grey3: #eee;
+$grey4: #444;
+$grey5: #333;
+
+$headerfontcolor: $grey5;
+$bodyfontcolor: $grey5;
+$buttoncolor: $green;
+$buttoniconcolor: $grey1;
+$iconcolor: $darkwater;
+$linkcolor: $darkwater;
+$hovercolor: $lightpetrol;
+
+/* Compiling */
+
+@import "./_typography";
+@import "./_components";

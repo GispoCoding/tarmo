@@ -1,0 +1,81 @@
+/** Responsive breakpoints
+    - Mobile = < 600px
+    - Tablet = 600px - 900px
+    - Desktop = > 900px
+*/
+/** Fonts
+    - Headers = Montserrat
+    - Body = Open Sans
+*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
+/** Colors
+    - Graphic guidelines from the city of Tampere
+    - Set of greys
+    - Default element colors
+*/
+/* Compiling */
+/** Typography - Main */
+/* line 3, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+body {
+  font-family: "Open Sans", Arial;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* line 9, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", Arial;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* line 15, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+p a {
+  color: #00417d;
+  text-decoration: underline;
+}
+
+/* line 19, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+p a:hover {
+  text-decoration: none;
+}
+
+/** Typography - Table */
+/* line 26, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+tr {
+  padding: 1em;
+  font-family: "Open Sans", Arial;
+}
+
+/* line 30, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+tr th {
+  font-weight: bold;
+}
+
+/* line 34, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+tr td {
+  font-weight: inherit;
+}
+
+/** Components - LayerButton, LayerPicker */
+/* line 4, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
+.mapboxgl-ctrl,
+.maplibregl-ctrl {
+  background-color: #abc872;
+}
+
+/* line 11, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
+.mapboxgl-ctrl-group:not(:empty),
+.maplibregl-ctrl-group:not(:empty) {
+  box-shadow: none;
+}
+
+/** Components - LipasPopup */
+
+/*# sourceMappingURL=main.css.map */
