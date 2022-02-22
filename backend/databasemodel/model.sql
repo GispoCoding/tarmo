@@ -934,6 +934,39 @@ COMMENT ON COLUMN lipas.liikuntapuisto.ligthing IS E'Kirjoitusvirhe Lippaan pä�
 ALTER TABLE lipas.liikuntapuisto OWNER TO tarmo_admin;
 -- ddl-end --
 
+-- object: lipas.latu | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.latu CASCADE;
+CREATE TABLE lipas.latu (
+	"sportsPlaceId" bigint NOT NULL,
+	geom geometry(MULTILINESTRING, 4326),
+	toilet boolean,
+	"skiTrackTraditional" boolean,
+	"skiTrackFreestyle" boolean,
+	"restPlacesCount" numeric,
+	"infoFi" text,
+	"litRouteLengthKm" numeric,
+	"routeLengthKm" numeric,
+	"shootingPositionsCount" numeric,
+	"outdoorExerciseMachines" boolean,
+-- 	email text,
+-- 	admin text,
+-- 	www text,
+-- 	name text NOT NULL,
+-- 	"type_typeCode" integer,
+-- 	type_name text,
+-- 	"phoneNumber" text,
+-- 	location_address text,
+-- 	location_city_name text,
+-- 	"location_postalOffice" text,
+-- 	"location_postalCode" integer,
+-- 	owner text,
+	CONSTRAINT latu_pk PRIMARY KEY ("sportsPlaceId")
+)
+ INHERITS(lipas.abstract);
+-- ddl-end --
+ALTER TABLE lipas.latu OWNER TO tarmo_admin;
+-- ddl-end --
+
 -- object: lipas.koirahiihtolatu | type: TABLE --
 -- DROP TABLE IF EXISTS lipas.koirahiihtolatu CASCADE;
 CREATE TABLE lipas.koirahiihtolatu (
@@ -1227,6 +1260,25 @@ CREATE TABLE lipas.hevosreitti (
 ALTER TABLE lipas.hevosreitti OWNER TO tarmo_admin;
 -- ddl-end --
 
+-- object: lipas.metadata | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.metadata CASCADE;
+CREATE TABLE lipas.metadata (
+	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	last_modified timestamptz,
+	"typeCodeList" jsonb,
+	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
+);
+-- ddl-end --
+ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
+-- ddl-end --
+
+-- Appended SQL commands --
+SET timezone = 'Europe/Helsinki';
+-- ddl-end --
+
+INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
+-- ddl-end --
+
 -- object: kooste.lipas_kohteet_piste | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.lipas_kohteet_piste CASCADE;
 CREATE TABLE kooste.lipas_kohteet_piste (
@@ -1286,39 +1338,6 @@ COMMENT ON COLUMN kooste.lipas_kohteet_piste.ligthing IS E'Lippaan päässä kir
 ALTER TABLE kooste.lipas_kohteet_piste OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: lipas.latu | type: TABLE --
--- DROP TABLE IF EXISTS lipas.latu CASCADE;
-CREATE TABLE lipas.latu (
-	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
-	toilet boolean,
-	"skiTrackTraditional" boolean,
-	"skiTrackFreestyle" boolean,
-	"restPlacesCount" numeric,
-	"infoFi" text,
-	"litRouteLengthKm" numeric,
-	"routeLengthKm" numeric,
-	"shootingPositionsCount" numeric,
-	"outdoorExerciseMachines" boolean,
--- 	email text,
--- 	admin text,
--- 	www text,
--- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
--- 	"phoneNumber" text,
--- 	location_address text,
--- 	location_city_name text,
--- 	"location_postalOffice" text,
--- 	"location_postalCode" integer,
--- 	owner text,
-	CONSTRAINT latu_pk PRIMARY KEY ("sportsPlaceId")
-)
- INHERITS(lipas.abstract);
--- ddl-end --
-ALTER TABLE lipas.latu OWNER TO tarmo_admin;
--- ddl-end --
-
 -- object: kooste.lipas_kohteet_viiva | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.lipas_kohteet_viiva CASCADE;
 CREATE TABLE kooste.lipas_kohteet_viiva (
@@ -1356,25 +1375,6 @@ CREATE TABLE kooste.lipas_kohteet_viiva (
 ALTER TABLE kooste.lipas_kohteet_viiva OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: lipas.metadata | type: TABLE --
--- DROP TABLE IF EXISTS lipas.metadata CASCADE;
-CREATE TABLE lipas.metadata (
-	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	last_modified timestamptz,
-	"typeCodeList" jsonb,
-	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
-);
--- ddl-end --
-ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
--- ddl-end --
-
--- Appended SQL commands --
-SET timezone = 'Europe/Helsinki';
--- ddl-end --
-
-INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
--- ddl-end --
-
 -- object: kooste.luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.luonnonmuistomerkit CASCADE;
 CREATE TABLE kooste.luonnonmuistomerkit (
@@ -1392,6 +1392,12 @@ CREATE TABLE kooste.luonnonmuistomerkit (
 ALTER TABLE kooste.luonnonmuistomerkit OWNER TO tarmo_admin;
 -- ddl-end --
 
+-- object: grant_rawd_ea7249322e | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE lipas.abstract
+   TO tarmo_read_write;
+-- ddl-end --
+
 -- object: grant_rawd_d5a0ebb7a4 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.laavu_kota_kammi
@@ -1401,42 +1407,6 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 -- object: grant_rawd_385751eb2c | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.ulkoilumaja_hiihtomaja
-   TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_r_a4eb7cf4b1 | type: PERMISSION --
-GRANT SELECT
-   ON TABLE kooste.lipas_kohteet_piste
-   TO tarmo_read;
--- ddl-end --
-
--- object: grant_rawd_eb6ff88ef6 | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.lipas_kohteet_piste
-   TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_r_5edde85695 | type: PERMISSION --
-GRANT SELECT
-   ON TABLE kooste.lipas_kohteet_viiva
-   TO tarmo_read;
--- ddl-end --
-
--- object: grant_rawd_9553cb2e9b | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.lipas_kohteet_viiva
-   TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE lipas.metadata
-   TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_rawd_ea7249322e | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE lipas.abstract
    TO tarmo_read_write;
 -- ddl-end --
 
@@ -1665,6 +1635,36 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 -- object: grant_rawd_fb01de299a | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.hevosreitti
+   TO tarmo_read_write;
+-- ddl-end --
+
+-- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE lipas.metadata
+   TO tarmo_read_write;
+-- ddl-end --
+
+-- object: grant_r_a4eb7cf4b1 | type: PERMISSION --
+GRANT SELECT
+   ON TABLE kooste.lipas_kohteet_piste
+   TO tarmo_read;
+-- ddl-end --
+
+-- object: grant_rawd_eb6ff88ef6 | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.lipas_kohteet_piste
+   TO tarmo_read_write;
+-- ddl-end --
+
+-- object: grant_r_5edde85695 | type: PERMISSION --
+GRANT SELECT
+   ON TABLE kooste.lipas_kohteet_viiva
+   TO tarmo_read;
+-- ddl-end --
+
+-- object: grant_rawd_9553cb2e9b | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.lipas_kohteet_viiva
    TO tarmo_read_write;
 -- ddl-end --
 
