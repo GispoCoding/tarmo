@@ -1262,21 +1262,21 @@ ALTER TABLE lipas.hevosreitti OWNER TO tarmo_admin;
 
 -- object: lipas.metadata | type: TABLE --
 -- DROP TABLE IF EXISTS lipas.metadata CASCADE;
-CREATE TABLE lipas.lipas_metadata (
+CREATE TABLE lipas.metadata (
 	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	last_modified timestamptz,
 	"typeCodeList" jsonb,
-	CONSTRAINT lipas_metadata_pk PRIMARY KEY ("updateId")
+	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
 );
 -- ddl-end --
-ALTER TABLE lipas.lipas_metadata OWNER TO tarmo_admin;
+ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- Appended SQL commands --
 SET timezone = 'Europe/Helsinki';
 -- ddl-end --
 
-INSERT INTO lipas.lipas_metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
+INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
 -- ddl-end --
 
 -- object: kooste.lipas_kohteet_piste | type: TABLE --

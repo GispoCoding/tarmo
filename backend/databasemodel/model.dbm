@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7388" last-zoom="1" max-obj-count="73"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7188" last-zoom="1" max-obj-count="73"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1784,7 +1784,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="lipas_metadata" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="metadata" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<appended-sql><![CDATA[SET timezone = 'Europe/Helsinki';]]></appended-sql>
@@ -1799,7 +1799,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="typeCodeList">
 		<type name="jsonb" length="0"/>
 	</column>
-	<constraint name="lipas_metadata_pk" type="pk-constr" table="lipas.lipas_metadata">
+	<constraint name="metadata_pk" type="pk-constr" table="lipas.metadata">
 		<columns names="updateId" ref-type="src-columns"/>
 	</constraint>
 	<initial-data>
@@ -2013,7 +2013,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="lipas.lipas_metadata" type="table"/>
+	<object name="lipas.metadata" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>

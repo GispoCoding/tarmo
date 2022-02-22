@@ -1,10 +1,3 @@
--- change the name of the metadata table of the lipas schema
-ALTER TABLE lipas.metadata
-RENAME TO lipas.lipas_metadata;
-
--- alter the name of the primary key constraint
-EXEC sp_rename N'lipas.metadata_pk', N'lipas_metadata_pk', N'OBJECT'
-
 -- object: kooste.luontorastit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.luontorastit CASCADE;
 CREATE TABLE kooste.luontorastit (
