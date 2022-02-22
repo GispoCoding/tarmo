@@ -21,7 +21,7 @@ import maplibregl from "maplibre-gl";
 import LipasPopup from "./LipasPopup";
 import { PopupInfo } from "../types";
 import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
-import LayerPicker from "./LayerPicker";
+import MenuItems from "./MenuItems";
 
 export default function Map() {
   const [mapStyle, setMapStyle] = useState(OSM_STYLE);
@@ -122,8 +122,16 @@ export default function Map() {
       {showNav && (
         <>
           <NavigationControl />
+<<<<<<< Updated upstream
           <GeolocateControl trackUserLocation={true} />
           <LayerPicker setter={setLayer} />
+=======
+          <GeolocateControl
+            style={{ left: 20, top: 120 }}
+            trackUserLocation={true}
+          />
+          <MenuItems setter={setLayer} />
+>>>>>>> Stashed changes
         </>
       )}
       {popupInfo && <LipasPopup popupInfo={popupInfo} />}
