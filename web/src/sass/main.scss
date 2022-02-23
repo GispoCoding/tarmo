@@ -1,9 +1,3 @@
-/** Responsive breakpoints
-    - Mobile = < 600px
-    - Tablet = 600px - 900px
-    - Desktop = > 900px
-*/
-
 /** Fonts
     - Headers = Montserrat
     - Body = Open Sans
@@ -69,3 +63,4 @@ $hovercolor: $lightpetrol;
 
 @import "./_typography";
 @import "./_components";
+@import "./_responsive";
