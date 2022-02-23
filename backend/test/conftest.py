@@ -110,7 +110,7 @@ def current_head_version_id(alembic_cfg):
     return script_dir.get_current_head()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def tarmo_database_created(root_db_params, main_db_params, current_head_version_id):
     event = {"event_type": 1}
     response = db_manager.handler(event, None)
@@ -138,7 +138,7 @@ def tarmo_database_migrated_down(tarmo_database_migrated):
     yield db_manager.INITIAL_MIGRATION
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def upgrade_sql():
     return (
         "CREATE TABLE kooste.new_table (id bigint NOT NULL, "
@@ -147,12 +147,12 @@ def upgrade_sql():
     )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def downgrade_sql():
     return "DROP TABLE kooste.new_table CASCADE;"
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def new_migration(upgrade_sql, downgrade_sql):
     alembic_cfg = Config(Path(SCHEMA_FILES_PATH, "alembic.ini"))
     revision = command.revision(alembic_cfg, message="Test migration")

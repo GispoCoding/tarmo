@@ -10,17 +10,17 @@ from backend.lambda_functions.lipas_loader.lipas_loader import (
 )
 
 
-@pytest.fixture()
-def connection_string():
+@pytest.fixture(scope="module")
+def connection_string(tarmo_database_created):
     return DatabaseHelper().get_connection_string()
 
 
-@pytest.fixture(autouse=True)
-def loader(tarmo_database_created, connection_string):
+@pytest.fixture(scope="module")
+def loader(connection_string):
     return LipasLoader(connection_string)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def metadata_set(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
