@@ -2,6 +2,8 @@ import datetime
 import json
 import logging
 import os
+import sys
+import traceback
 from typing import Any, Dict, List, Optional, Tuple, Type, TypedDict, Union
 
 import boto3
@@ -292,8 +294,11 @@ def handler(event: Event, _) -> Response:
         response["body"] = json.dumps(msg)
 
     except Exception:
-        LOGGER.exception("Uncaught error occurred")
         response["statusCode"] = 500
-        response["body"] = json.dumps("Exception occurred, check the log for details")
+
+        exc_info = sys.exc_info()
+        exc_string = "".join(traceback.format_exception(*exc_info))
+        response["body"] = exc_string
+        LOGGER.exception(exc_string)
 
     return response
