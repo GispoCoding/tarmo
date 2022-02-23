@@ -5,6 +5,7 @@ import pytest
 import requests
 
 from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
+from backend.lambda_functions.osm_loader.osm_loader import OSMLoader
 
 
 @pytest.fixture()
@@ -16,6 +17,12 @@ def db_manager_url(docker_ip, docker_services):
 @pytest.fixture()
 def lipas_loader_url(docker_ip, docker_services):
     port = docker_services.port_for("lipas_loader", 8080)
+    return f"http://{docker_ip}:{port}/2015-03-31/functions/function/invocations"
+
+
+@pytest.fixture()
+def osm_loader_url(docker_ip, docker_services):
+    port = docker_services.port_for("osm_loader", 8080)
     return f"http://{docker_ip}:{port}/2015-03-31/functions/function/invocations"
 
 
@@ -46,6 +53,18 @@ def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
         "pages": [1, 2],
     }
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
+    data = r.json()
+    assert data["statusCode"] == 200, data["body"]
+
+
+@pytest.fixture()
+def populate_closest_parking_lots_of_osm(create_db, main_db_params, osm_loader_url):
+    payload = {
+        "close_to_lon": 61.4980,
+        "close_to_lat": 23.7747,
+        "radius": 1,
+    }
+    r = requests.post(osm_loader_url, data=json.dumps(payload))
     data = r.json()
     assert data["statusCode"] == 200, data["body"]
 
@@ -90,6 +109,16 @@ def test_populate_lipas(populate_two_pages_of_lipas, main_db_params):
     try:
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.{LipasLoader.POINT_TABLE_NAME}")
+            assert cur.fetchone()[0] > 2
+    finally:
+        conn.close()
+
+
+def test_populate_osm(populate_closest_parking_lots_of_osm, main_db_params):
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT count(*) FROM kooste.{OSMLoader.POLYGON_TABLE_NAME}")
             assert cur.fetchone()[0] > 2
     finally:
         conn.close()

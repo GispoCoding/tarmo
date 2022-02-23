@@ -2,4 +2,5 @@ pre-commit
 pytest
 python-dotenv
 pytest-docker
+requests-mock
 boto3
