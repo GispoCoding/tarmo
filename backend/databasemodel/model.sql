@@ -1416,25 +1416,6 @@ ALTER TABLE kooste.osm_metadata OWNER TO tarmo_admin;
 
 INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private"]}');
 
--- object: lipas.metadata | type: TABLE --
--- DROP TABLE IF EXISTS lipas.metadata CASCADE;
-CREATE TABLE lipas.metadata (
-	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	last_modified timestamptz,
-	"typeCodeList" jsonb,
-	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
-);
--- ddl-end --
-ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
--- ddl-end --
-
--- Appended SQL commands --
-SET timezone = 'Europe/Helsinki';
--- ddl-end --
-
-INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
--- ddl-end --
-
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
 CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
