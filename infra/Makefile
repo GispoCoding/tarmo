@@ -1,7 +1,7 @@
 build:
 	make build-lambda -C ..
 
-update-lambda: update-db-manager update-lipas-loader
+update-lambda: update-db-manager update-lipas-loader update-osm-loader
 	echo "All updated"
 
 update-db-manager:
@@ -10,11 +10,17 @@ update-db-manager:
 update-lipas-loader:
 	aws lambda update-function-code --function-name lipas_loader --zip-file fileb://../backend/lambda_functions/lipas_loader.zip
 
+update-osm-loader:
+	aws lambda update-function-code --function-name osm_loader --zip-file fileb://../backend/lambda_functions/osm_loader.zip
+
 log-db-manager:
 	aws logs tail "/aws/lambda/db_manager"
 
 log-lipas:
 	aws logs tail "/aws/lambda/lipas_loader"
+
+log-osm:
+	aws logs tail "/aws/lambda/osm_loader"
 
 ## Commands to invoke lambda functions
 create-db:
