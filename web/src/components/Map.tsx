@@ -14,6 +14,10 @@ import {
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
   LIPAS_POINT_STYLE,
+  OSM_AREA_SOURCE,
+  OSM_AREA_STYLE,
+  OSM_POINT_SOURCE,
+  OSM_POINT_STYLE,
   NLS_STYLE_URI,
   OSM_STYLE,
 } from "./style";
@@ -117,6 +121,12 @@ export default function Map() {
       </Source>
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
+      </Source>
+      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
+        <Layer {...OSM_POINT_STYLE} />
+      </Source>
+      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_STYLE} />
       </Source>
       <FullscreenControl />
       {showNav && (
