@@ -11,14 +11,12 @@
 */
 /* Compiling */
 /** Typography - Main */
-/* line 3, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 body {
   font-family: "Open Sans", Arial;
   font-size: 1rem;
   color: #333;
 }
 
-/* line 9, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 h1,
 h2,
 h3,
@@ -30,53 +28,44 @@ h6 {
   margin-bottom: 1rem;
 }
 
-/* line 20, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 p a {
   color: #00417d;
   text-decoration: underline;
 }
 
-/* line 24, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 p a:hover {
   text-decoration: none;
 }
 
 /** Typography - Table */
-/* line 31, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr {
   padding: 1em;
   font-family: "Open Sans", Arial;
 }
 
-/* line 35, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr th {
   font-weight: bold;
 }
 
-/* line 39, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr td {
   font-weight: inherit;
 }
 
 /** Components - LayerButton, LayerPicker */
-/* line 4, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .maplibregl-ctrl {
   background-color: #abc872;
 }
 
-/* line 8, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 button.tarmo-ctrl-exit {
   background-color: #8cc1b3;
   border-radius: inherit;
 }
 
-/* line 16, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .mapboxgl-ctrl-group:not(:empty),
 .maplibregl-ctrl-group:not(:empty) {
   box-shadow: none;
 }
 
-/* line 22, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .mapboxgl-ctrl-top-right,
 .maplibregl-ctrl-top-right {
   position: relative;
@@ -87,7 +76,6 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
-/* line 34, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .tarmo-menutr-container {
   width: 80vw;
   max-width: 100vw;
@@ -98,7 +86,6 @@ button.tarmo-ctrl-exit {
   border-radius: 4px;
 }
 
-/* line 43, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .tarmo-menutr-container ul {
   display: flex;
   flex-direction: column;
@@ -109,7 +96,6 @@ button.tarmo-ctrl-exit {
   margin: 0;
 }
 
-/* line 52, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .tarmo-menutr-container ul li {
   display: flex;
   flex-direction: column;
@@ -118,7 +104,6 @@ button.tarmo-ctrl-exit {
   width: -webkit-fill-available;
 }
 
-/* line 59, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .tarmo-menutr-container ul li button {
   font-family: "Montserrat", Arial;
   font-weight: bold;
@@ -130,7 +115,6 @@ button.tarmo-ctrl-exit {
   margin-bottom: 0.1em;
 }
 
-/* line 70, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .tarmo-menutr-container ul li:hover {
   background-color: #8cc1b3;
 }
@@ -141,5 +125,3 @@ button.tarmo-ctrl-exit {
     - Tablet = 600px - 900px
     - Desktop = > 900px
 */
-
-/*# sourceMappingURL=main.css.map */
