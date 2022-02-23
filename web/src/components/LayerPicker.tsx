@@ -22,7 +22,7 @@ export default function LayerPicker(props: LayerPickerProps) {
       <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
         {isOpen ? (
           // Add container and ctrl styling for singular button and its menulist
-          <div className="tarmo-button-container">
+          <div className="tarmo-button-container mapboxgl-ctrl">
             <div
               className={
                 "maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group"
@@ -42,8 +42,8 @@ export default function LayerPicker(props: LayerPickerProps) {
                 <ul>
                   <li>
                     <button onClick={() => setter(undefined)}>Oletus</button>
-                    {layers}
                   </li>
+                  {layers}
                 </ul>
               </nav>
             </div>
