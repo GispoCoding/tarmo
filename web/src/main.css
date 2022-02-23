@@ -35,30 +35,30 @@ h6 {
   margin-bottom: 1rem;
 }
 
-/* line 15, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+/* line 20, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 p a {
   color: #00417d;
   text-decoration: underline;
 }
 
-/* line 19, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+/* line 24, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 p a:hover {
   text-decoration: none;
 }
 
 /** Typography - Table */
-/* line 26, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+/* line 31, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr {
   padding: 1em;
   font-family: "Open Sans", Arial;
 }
 
-/* line 30, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+/* line 35, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr th {
   font-weight: bold;
 }
 
-/* line 34, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
+/* line 39, ../../Users/annii/GitHub/tarmo/web/src/sass/_typography.scss */
 tr td {
   font-weight: inherit;
 }
@@ -70,7 +70,7 @@ tr td {
   background-color: #abc872;
 }
 
-/* line 11, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
+/* line 12, ../../Users/annii/GitHub/tarmo/web/src/sass/_components.scss */
 .mapboxgl-ctrl-group:not(:empty),
 .maplibregl-ctrl-group:not(:empty) {
   box-shadow: none;
