@@ -3,7 +3,6 @@ import { useState } from "react";
 import { LAYERS } from "./style";
 import LayerButton from "./LayerButton";
 import { Style } from "mapbox-gl";
-import styles from "./LayerPicker.module.sass";
 
 interface LayerPickerProps {
   setter: (layer: Style | undefined) => void;
@@ -18,46 +17,54 @@ export default function LayerPicker(props: LayerPickerProps) {
   });
 
   return (
-    <>
-      {isOpen ? (
-        <div className={styles.LayerPicker}>
-          <div className={"mapboxgl-ctrl mapboxgl-ctrl-group"}>
-            <table>
-              <th>
-                <td>Layers</td>
-                <td>
-                  <button
-                    style={{ padding: 20 }}
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    <span>X</span>
-                  </button>
-                </td>
-              </th>
-              <tr>
-                <td onClick={() => setter(undefined)}>
-                  <span style={{ color: "green" }}>Default</span>
-                </td>
-              </tr>
-              {layers}
-            </table>
+    // Add container and top-right menu styling for custom buttons
+    <div className={"maplibregl-control-container mapboxgl-control-container"}>
+      <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
+        {isOpen ? (
+          // Add container and ctrl styling for singular button and its menulist
+          <div className="tarmo-button-container">
+            <div
+              className={
+                "maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group"
+              }
+            >
+              <button
+                className={"tarmo-ctrl-exit"}
+                type={"button"}
+                title={"Toggle"}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                X
+              </button>
+            </div>
+            <div className="tarmo-menutr-container">
+              <nav className="tarmo-menutr">
+                <ul>
+                  <li>
+                    <button onClick={() => setter(undefined)}>Oletus</button>
+                    {layers}
+                  </li>
+                </ul>
+              </nav>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div
-          className={"mapboxgl-ctrl mapboxgl-ctrl-group"}
-          style={{ position: "absolute", right: 10, top: 190 }}
-        >
-          <button
-            className={"mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in"}
-            type={"button"}
-            title={"Toggle layer picker"}
-            onClick={() => setIsOpen(!isOpen)}
+        ) : (
+          <div
+            className={
+              "maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group"
+            }
           >
-            <span className={"mapboxgl-ctrl-icon"} />
-          </button>
-        </div>
-      )}
-    </>
+            <button
+              className={"mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in"}
+              type={"button"}
+              title={"Toggle layer picker"}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <span className={"mapboxgl-ctrl-icon"} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
