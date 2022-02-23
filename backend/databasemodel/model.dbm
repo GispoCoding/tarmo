@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7541" last-zoom="1" max-obj-count="73"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,6772" last-zoom="1" max-obj-count="73"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1429,7 +1429,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="lipas_kohteet_piste" layers="0" collapse-mode="2" max-obj-count="57" z-value="0">
+<table name="lipas_pisteet" layers="0" collapse-mode="2" max-obj-count="57" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="200" y="7500"/>
@@ -1578,7 +1578,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="images" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="lipas_kohteet_piste_pk" type="pk-constr" table="kooste.lipas_kohteet_piste">
+	<constraint name="lipas_pisteet_pk" type="pk-constr" table="kooste.lipas_pisteet">
 		<columns names="sportsPlaceId" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -1691,7 +1691,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="lipas.hevosreitti"
 	 dst-table="lipas.abstract"/>
 
-<table name="lipas_kohteet_viiva" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
+<table name="lipas_viivat" layers="0" collapse-mode="2" max-obj-count="33" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="700" y="7500"/>
@@ -1737,7 +1737,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="www">
 		<type name="text" length="0"/>
 	</column>
-	<column name="season" not-null="true">
+	<column name="season">
 		<type name="text" length="0"/>
 	</column>
 	<column name="toilet" default-value="NULL">
@@ -1779,28 +1779,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="images" default-value="NULL">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="lipas_kohteet_viiva_pk" type="pk-constr" table="kooste.lipas_kohteet_viiva">
+	<constraint name="lipas_viivat_pk" type="pk-constr" table="kooste.lipas_viivat">
 		<columns names="sportsPlaceId" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="lipas_metadata" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="metadata" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="lipas"/>
 	<role name="tarmo_admin"/>
 	<appended-sql><![CDATA[SET timezone = 'Europe/Helsinki';]]></appended-sql>
 	<position x="200" y="7300"/>
-	<column name="updateId" not-null="true"
+	<column name="update_id" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="lastModified">
+	<column name="last_modified">
 		<type name="timestamptz" length="0"/>
 	</column>
-	<column name="typeCodeList">
+	<column name="type_code_list">
 		<type name="jsonb" length="0"/>
 	</column>
-	<constraint name="lipas_metadata_pk" type="pk-constr" table="lipas.lipas_metadata">
-		<columns names="updateId" ref-type="src-columns"/>
+	<constraint name="metadata_pk" type="pk-constr" table="lipas.metadata">
+		<columns names="update_id" ref-type="src-columns"/>
 	</constraint>
 	<initial-data>
 <![CDATA[typeCodeList⸣
@@ -1808,7 +1808,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</initial-data>
 </table>
 
-<table name="luonnonmuistomerkit" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+<table name="tamperewfs_luonnonmuistomerkit" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="7920"/>
@@ -1833,12 +1833,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="paatospaiva">
 		<type name="date" length="0"/>
 	</column>
-	<constraint name="luonnonmuistomerkit_pk" type="pk-constr" table="kooste.luonnonmuistomerkit">
+	<constraint name="tamperewfs_luonnonmuistomerkit_pk" type="pk-constr" table="kooste.tamperewfs_luonnonmuistomerkit">
 		<columns names="sw_member" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="luontopolut" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+<table name="tamperewfs_luontopolut" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="7740"/>
@@ -1854,16 +1854,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="nimi">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="luontopolut_pk" type="pk-constr" table="kooste.luontopolut">
+	<constraint name="tamperewfs_luontopolut_pk" type="pk-constr" table="kooste.tamperewfs_luontopolut">
 		<columns names="tunnus" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="luontorastit" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+<table name="tamperewfs_luontorastit" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="7500"/>
-	<column name="kooste_id" not-null="true">
+	<column name="kooste_id" not-null="true"
+	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="geom" not-null="true">
@@ -1887,12 +1888,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="lisatietoja">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="luontorastit_pk" type="pk-constr" table="kooste.luontorastit">
+	<constraint name="tamperewfs_luontorastit_pk" type="pk-constr" table="kooste.tamperewfs_luontorastit">
 		<columns names="kooste_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="rkykohteet" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+<table name="museovirastoarcrest_rkykohteet" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="8140"/>
@@ -1911,12 +1912,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="url">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="rkykohteet_pk" type="pk-constr" table="kooste.rkykohteet">
+	<constraint name="museovirastoarcrest_rkykohteet_pk" type="pk-constr" table="kooste.museovirastoarcrest_rkykohteet">
 		<columns names="objectId" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="muinaisjaannokset" layers="0" collapse-mode="2" max-obj-count="15" z-value="0">
+<table name="museovirastoarcrest_muinaisjaannokset" layers="0" collapse-mode="2" max-obj-count="15" z-value="0">
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="720" y="8140"/>
@@ -1959,7 +1960,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="url">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="muinaisjaannokset_pk" type="pk-constr" table="kooste.muinaisjaannokset">
+	<constraint name="museovirastoarcrest_muinaisjaannokset_pk" type="pk-constr" table="kooste.museovirastoarcrest_muinaisjaannokset">
 		<columns names="mjtunnus" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -1968,17 +1969,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="8340"/>
-	<column name="updateId" not-null="true">
+	<column name="update_id" not-null="true"
+	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="dataSource" not-null="true">
+	<column name="datasource" not-null="true">
 		<type name="text" length="0"/>
+		<comment><![CDATA[You can get this information from table names by selecting the part before underscore character]]></comment>
 	</column>
-	<column name="lastModified">
+	<column name="last_modified">
 		<type name="timestamptz" length="0"/>
 	</column>
 	<constraint name="metadata_pk" type="pk-constr" table="kooste.metadata">
-		<columns names="updateId" ref-type="src-columns"/>
+		<columns names="update_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1993,27 +1996,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<object name="kooste.lipas_pisteet" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.lipas_kohteet_piste" type="table"/>
+	<object name="kooste.lipas_pisteet" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<object name="kooste.lipas_viivat" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.lipas_kohteet_viiva" type="table"/>
+	<object name="kooste.lipas_viivat" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="lipas.lipas_metadata" type="table"/>
+	<object name="lipas.metadata" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
@@ -2228,52 +2231,52 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges usage="true"/>
 </permission>
 <permission>
-	<object name="kooste.luonnonmuistomerkit" type="table"/>
+	<object name="kooste.tamperewfs_luonnonmuistomerkit" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.luonnonmuistomerkit" type="table"/>
+	<object name="kooste.tamperewfs_luonnonmuistomerkit" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.luontopolut" type="table"/>
+	<object name="kooste.tamperewfs_luontopolut" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.luontopolut" type="table"/>
+	<object name="kooste.tamperewfs_luontopolut" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.luontorastit" type="table"/>
+	<object name="kooste.tamperewfs_luontorastit" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.luontorastit" type="table"/>
+	<object name="kooste.tamperewfs_luontorastit" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.rkykohteet" type="table"/>
+	<object name="kooste.museovirastoarcrest_rkykohteet" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.rkykohteet" type="table"/>
+	<object name="kooste.museovirastoarcrest_rkykohteet" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 <permission>
-	<object name="kooste.muinaisjaannokset" type="table"/>
+	<object name="kooste.museovirastoarcrest_muinaisjaannokset" type="table"/>
 	<roles names="tarmo_read"/>
 	<privileges select="true"/>
 </permission>
 <permission>
-	<object name="kooste.muinaisjaannokset" type="table"/>
+	<object name="kooste.museovirastoarcrest_muinaisjaannokset" type="table"/>
 	<roles names="tarmo_read_write"/>
 	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
