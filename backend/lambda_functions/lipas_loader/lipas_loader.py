@@ -84,8 +84,8 @@ class DatabaseHelper:
 class LipasLoader:
     PAGE_SIZE = 100
     SPORT_PLACES = "sports-places"
-    POINT_TABLE_NAME = "lipas_kohteet_piste"
-    LINESTRING_TABLE_NAME = "lipas_kohteet_viiva"
+    POINT_TABLE_NAME = "lipas_pisteet"
+    LINESTRING_TABLE_NAME = "lipas_viivat"
     HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
@@ -116,7 +116,7 @@ class LipasLoader:
         with self.Session() as session:
             metadata_row = session.query(LipasBase.classes.metadata).first()
             self.last_modified = metadata_row.last_modified
-            self.type_codes = type_codes if type_codes else metadata_row.typeCodeList
+            self.type_codes = type_codes if type_codes else metadata_row.type_code_list
 
     def get_sport_place_ids(self, only_page: Optional[int] = None) -> List[int]:
         results_left = only_page is None
