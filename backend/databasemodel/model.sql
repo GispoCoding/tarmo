@@ -1375,6 +1375,66 @@ CREATE TABLE kooste.lipas_viivat (
 ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- ddl-end --
 
+-- object: kooste.osm_kohteet_piste | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.osm_kohteet_piste CASCADE;
+CREATE TABLE kooste.osm_kohteet_piste (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	osm_id bigint NOT NULL,
+	osm_type text NOT NULL,
+	geom geometry(POINT, 4326) NOT NULL,
+	tags jsonb,
+	CONSTRAINT osm_kohteet_piste_pk PRIMARY KEY (id),
+	UNIQUE (osm_id, osm_type)
+);
+ALTER TABLE kooste.osm_kohteet_piste OWNER TO tarmo_admin;
+
+-- object: kooste.osm_kohteet_alue | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.osm_kohteet_alue CASCADE;
+CREATE TABLE kooste.osm_kohteet_alue (
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	osm_id bigint NOT NULL,
+	osm_type text NOT NULL,
+	geom geometry(POLYGON, 4326) NOT NULL,
+	tags jsonb,
+	CONSTRAINT osm_kohteet_alue_pk PRIMARY KEY (id),
+	UNIQUE (osm_id, osm_type)
+);
+ALTER TABLE kooste.osm_kohteet_piste OWNER TO tarmo_admin;
+
+-- object: kooste.osm_metadata | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.metadata CASCADE;
+CREATE TABLE kooste.osm_metadata (
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	last_modified timestamptz,
+	tags_to_include jsonb,
+	tags_to_exclude jsonb,
+	CONSTRAINT osm_metadata_pk PRIMARY KEY (update_id)
+);
+-- ddl-end --
+ALTER TABLE kooste.osm_metadata OWNER TO tarmo_admin;
+-- ddl-end --
+
+INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private"]}');
+
+-- object: lipas.metadata | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.metadata CASCADE;
+CREATE TABLE lipas.metadata (
+	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	last_modified timestamptz,
+	"typeCodeList" jsonb,
+	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
+);
+-- ddl-end --
+ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
+-- ddl-end --
+
+-- Appended SQL commands --
+SET timezone = 'Europe/Helsinki';
+-- ddl-end --
+
+INSERT INTO lipas.metadata ("typeCodeList") VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
+-- ddl-end --
+
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
 CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
@@ -1483,7 +1543,27 @@ GRANT SELECT,INSERT,UPDATE,DELETE
    TO tarmo_read_write;
 -- ddl-end --
 
--- object: grant_rawd_d5a0ebb7a4 | type: PERMISSION --
+GRANT SELECT
+   ON TABLE kooste.osm_kohteet_piste
+   TO tarmo_read;
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.osm_kohteet_piste
+   TO tarmo_read_write;
+
+GRANT SELECT
+   ON TABLE kooste.osm_kohteet_alue
+   TO tarmo_read;
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.osm_kohteet_alue
+   TO tarmo_read_write;
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.osm_metadata
+   TO tarmo_read_write;
+
+-- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE lipas.laavu_kota_kammi
    TO tarmo_read_write;

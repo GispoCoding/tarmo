@@ -9,11 +9,5 @@ interface LayerButtonProps {
 export default function LayerButton(props: LayerButtonProps) {
   const layer = props.layer;
   const setter = props.setter;
-  return (
-    <tr key={layer.name}>
-      <td>
-        <button onClick={() => setter(layer)}>{layer.name}</button>
-      </td>
-    </tr>
-  );
+  return <button onClick={() => setter(layer)}>{layer.name}</button>;
 }

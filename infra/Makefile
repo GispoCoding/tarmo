@@ -31,3 +31,6 @@ populate-lipas:
 
 populate-lipas-tre:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name lipas_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_lipas.json
+
+populate-osm-tre:
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name osm_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_osm.json

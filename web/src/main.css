@@ -1,0 +1,127 @@
+/** Fonts
+    - Headers = Montserrat
+    - Body = Open Sans
+*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
+/** Colors
+    - Graphic guidelines from the city of Tampere
+    - Set of greys
+    - Default element colors
+*/
+/* Compiling */
+/** Typography - Main */
+body {
+  font-family: "Open Sans", Arial;
+  font-size: 1rem;
+  color: #333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", Arial;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+p a {
+  color: #00417d;
+  text-decoration: underline;
+}
+
+p a:hover {
+  text-decoration: none;
+}
+
+/** Typography - Table */
+tr {
+  padding: 1em;
+  font-family: "Open Sans", Arial;
+}
+
+tr th {
+  font-weight: bold;
+}
+
+tr td {
+  font-weight: inherit;
+}
+
+/** Components - LayerButton, LayerPicker */
+.maplibregl-ctrl {
+  background-color: #abc872;
+}
+
+button.tarmo-ctrl-exit {
+  background-color: #8cc1b3;
+  border-radius: inherit;
+}
+
+.mapboxgl-ctrl-group:not(:empty),
+.maplibregl-ctrl-group:not(:empty) {
+  box-shadow: none;
+}
+
+.mapboxgl-ctrl-top-right,
+.maplibregl-ctrl-top-right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+}
+
+.tarmo-menutr-container {
+  width: 80vw;
+  max-width: 100vw;
+  height: auto;
+  overflow: hidden;
+  margin-right: 3rem;
+  background-color: #abc872;
+  border-radius: 4px;
+}
+
+.tarmo-menutr-container ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tarmo-menutr-container ul li {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: -webkit-fill-available;
+}
+
+.tarmo-menutr-container ul li button {
+  font-family: "Montserrat", Arial;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 0.6em 1em;
+  margin-bottom: 0.1em;
+}
+
+.tarmo-menutr-container ul li:hover {
+  background-color: #8cc1b3;
+}
+
+/** Components - LipasPopup */
+/** Responsive breakpoints
+    - Mobile = < 600px
+    - Tablet = 600px - 900px
+    - Desktop = > 900px
+*/
