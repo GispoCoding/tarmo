@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,7548" last-zoom="1" max-obj-count="73"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,6772" last-zoom="1" max-obj-count="73"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1789,18 +1789,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="tarmo_admin"/>
 	<appended-sql><![CDATA[SET timezone = 'Europe/Helsinki';]]></appended-sql>
 	<position x="200" y="7300"/>
-	<column name="updateId" not-null="true"
+	<column name="update_id" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="lastModified">
+	<column name="last_modified">
 		<type name="timestamptz" length="0"/>
 	</column>
-	<column name="typeCodeList">
+	<column name="type_code_list">
 		<type name="jsonb" length="0"/>
 	</column>
 	<constraint name="metadata_pk" type="pk-constr" table="lipas.metadata">
-		<columns names="updateId" ref-type="src-columns"/>
+		<columns names="update_id" ref-type="src-columns"/>
 	</constraint>
 	<initial-data>
 <![CDATA[typeCodeList⸣
@@ -1888,7 +1888,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="lisatietoja">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="luontorastit_pk" type="pk-constr" table="kooste.tamperewfs_luontorastit">
+	<constraint name="tamperewfs_luontorastit_pk" type="pk-constr" table="kooste.tamperewfs_luontorastit">
 		<columns names="kooste_id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -1969,19 +1969,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="kooste"/>
 	<role name="tarmo_admin"/>
 	<position x="1260" y="8340"/>
-	<column name="updateId" not-null="true"
+	<column name="update_id" not-null="true"
 	 identity-type="ALWAYS">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="dataSource" not-null="true">
+	<column name="datasource" not-null="true">
 		<type name="text" length="0"/>
 		<comment><![CDATA[You can get this information from table names by selecting the part before underscore character]]></comment>
 	</column>
-	<column name="lastModified">
+	<column name="last_modified">
 		<type name="timestamptz" length="0"/>
 	</column>
 	<constraint name="metadata_pk" type="pk-constr" table="kooste.metadata">
-		<columns names="updateId" ref-type="src-columns"/>
+		<columns names="update_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 

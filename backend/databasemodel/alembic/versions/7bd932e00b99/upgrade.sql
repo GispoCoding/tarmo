@@ -1,4 +1,32 @@
 -- object: kooste.lipas_kohteet_piste | type: TABLE --
+DROP TABLE IF EXISTS lipas.metadata CASCADE;
+
+-- object: lipas.metadata | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.metadata CASCADE;
+CREATE TABLE lipas.metadata (
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	last_modified timestamptz,
+	type_code_list jsonb,
+	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
+);
+-- ddl-end --
+ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
+-- ddl-end --
+
+-- Appended SQL commands --
+SET timezone = 'Europe/Helsinki';
+-- ddl-end --
+
+INSERT INTO lipas.metadata (type_code_list) VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
+-- ddl-end --
+
+-- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE lipas.metadata
+   TO tarmo_read_write;
+-- ddl-end --
+
+-- object: kooste.lipas_kohteet_piste | type: TABLE --
 DROP TABLE IF EXISTS kooste.lipas_kohteet_piste CASCADE;
 
 -- object: kooste.lipas_pisteet | type: TABLE --
@@ -197,14 +225,14 @@ ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- object: kooste.metadata | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.metadata CASCADE;
 CREATE TABLE kooste.metadata (
-	"updateId" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	"dataSource" text NOT NULL,
-	"lastModified" timestamptz,
-	CONSTRAINT metadata_pk PRIMARY KEY ("updateId")
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	datasource text NOT NULL,
+	last_modified timestamptz,
+	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
 
 );
 -- ddl-end --
-COMMENT ON COLUMN kooste.metadata.dataSource IS E'You can get this information from table names by selecting the part before underscore character';
+COMMENT ON COLUMN kooste.metadata.datasource IS E'You can get this information from table names by selecting the part before underscore character';
 -- ddl-end --
 ALTER TABLE kooste.metadata OWNER TO tarmo_admin;
 -- ddl-end --
