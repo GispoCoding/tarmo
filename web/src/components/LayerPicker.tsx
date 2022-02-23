@@ -40,8 +40,9 @@ export default function LayerPicker(props: LayerPickerProps) {
             <div className="tarmo-menutr-container">
               <nav className="tarmo-menutr">
                 <ul>
-                  <li><button onClick={() => setter(undefined)}>Oletus</button>
-                  {layers}
+                  <li>
+                    <button onClick={() => setter(undefined)}>Oletus</button>
+                    {layers}
                   </li>
                 </ul>
               </nav>
