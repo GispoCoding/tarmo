@@ -122,16 +122,8 @@ export default function Map() {
       {showNav && (
         <>
           <NavigationControl />
-<<<<<<< Updated upstream
           <GeolocateControl trackUserLocation={true} />
-          <LayerPicker setter={setLayer} />
-=======
-          <GeolocateControl
-            style={{ left: 20, top: 120 }}
-            trackUserLocation={true}
-          />
           <MenuItems setter={setLayer} />
->>>>>>> Stashed changes
         </>
       )}
       {popupInfo && <LipasPopup popupInfo={popupInfo} />}

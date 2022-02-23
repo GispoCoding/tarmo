@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { LAYERS } from "./style";
-import LayerButton from "./LayerButton";
+import ButtonSmall from "./ButtonSmall";
 import { Style } from "mapbox-gl";
 import styles from "./LayerPicker.module.sass";
 
@@ -14,7 +14,7 @@ export default function LayerPicker(props: LayerPickerProps) {
   const setter = props.setter;
 
   const layers = LAYERS.map(layer => {
-    return <LayerButton key={layer.name} layer={layer} setter={setter} />;
+    return <ButtonSmall key={layer.name} layer={layer} setter={setter} />;
   });
 
   return (
