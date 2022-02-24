@@ -26,6 +26,7 @@ import LipasPopup from "./LipasPopup";
 import { PopupInfo } from "../types";
 import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
 import LayerPicker from "./LayerPicker";
+import InfoButton from "./InfoButton";
 
 export default function Map() {
   const [mapStyle, setMapStyle] = useState(OSM_STYLE);
@@ -134,6 +135,7 @@ export default function Map() {
           <NavigationControl />
           <GeolocateControl trackUserLocation={true} />
           <LayerPicker setter={setLayer} />
+          <InfoButton />
         </>
       )}
       {popupInfo && <LipasPopup popupInfo={popupInfo} />}
