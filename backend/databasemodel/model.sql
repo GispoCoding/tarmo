@@ -1377,29 +1377,29 @@ ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 
 -- object: kooste.osm_kohteet_piste | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_kohteet_piste CASCADE;
-CREATE TABLE kooste.osm_kohteet_piste (
+CREATE TABLE kooste.osm_pisteet (
 	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POINT, 4326) NOT NULL,
 	tags jsonb,
-	CONSTRAINT osm_kohteet_piste_pk PRIMARY KEY (id),
+	CONSTRAINT osm_pisteet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
 );
-ALTER TABLE kooste.osm_kohteet_piste OWNER TO tarmo_admin;
+ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 
 -- object: kooste.osm_kohteet_alue | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_kohteet_alue CASCADE;
-CREATE TABLE kooste.osm_kohteet_alue (
+CREATE TABLE kooste.osm_alueet (
 	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POLYGON, 4326) NOT NULL,
 	tags jsonb,
-	CONSTRAINT osm_kohteet_alue_pk PRIMARY KEY (id),
+	CONSTRAINT osm_alueet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
 );
-ALTER TABLE kooste.osm_kohteet_piste OWNER TO tarmo_admin;
+ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 
 -- object: kooste.osm_metadata | type: TABLE --
 -- DROP TABLE IF EXISTS lipas.metadata CASCADE;
@@ -1525,19 +1525,19 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 -- ddl-end --
 
 GRANT SELECT
-   ON TABLE kooste.osm_kohteet_piste
+   ON TABLE kooste.osm_pisteet
    TO tarmo_read;
 
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.osm_kohteet_piste
+   ON TABLE kooste.osm_pisteet
    TO tarmo_read_write;
 
 GRANT SELECT
-   ON TABLE kooste.osm_kohteet_alue
+   ON TABLE kooste.osm_alueet
    TO tarmo_read;
 
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.osm_kohteet_alue
+   ON TABLE kooste.osm_alueet
    TO tarmo_read_write;
 
 GRANT SELECT,INSERT,UPDATE,DELETE

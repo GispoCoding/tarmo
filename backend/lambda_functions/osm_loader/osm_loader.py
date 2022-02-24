@@ -78,10 +78,10 @@ class DatabaseHelper:
 
 
 class OSMLoader:
-    POINT_TABLE_NAME = "osm_kohteet_piste"
+    POINT_TABLE_NAME = "osm_pisteet"
     # TODO: support linestrings later if needed
-    # LINE_TABLE_NAME = "osm_kohteet_viiva"
-    POLYGON_TABLE_NAME = "osm_kohteet_alue"
+    # LINE_TABLE_NAME = "osm_viivat"
+    POLYGON_TABLE_NAME = "osm_alueet"
     HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 

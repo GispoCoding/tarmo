@@ -69,18 +69,14 @@ export const LIPAS_LINE_STYLE: LayerProps = {
 
 export const OSM_POINT_SOURCE: VectorSource = {
   type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.osm_kohteet_piste/{z}/{x}/{y}.pbf`,
-  ],
+  tiles: [`${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf`],
   minzoom: 12,
   maxzoom: 22,
 };
 
 export const OSM_AREA_SOURCE: VectorSource = {
   type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.osm_kohteet_alue/{z}/{x}/{y}.pbf`,
-  ],
+  tiles: [`${process.env.TILESERVER_URL}/kooste.osm_alueet/{z}/{x}/{y}.pbf`],
   minzoom: 12,
   maxzoom: 22,
 };
@@ -88,7 +84,7 @@ export const OSM_AREA_SOURCE: VectorSource = {
 export const OSM_POINT_STYLE: LayerProps = {
   "id": LayerId.OsmPoint,
   "source": LayerId.OsmPoint,
-  "source-layer": "kooste.osm_kohteet_piste",
+  "source-layer": "kooste.osm_pisteet",
   "type": "circle",
   "paint": {
     "circle-radius": 2,
@@ -99,7 +95,7 @@ export const OSM_POINT_STYLE: LayerProps = {
 export const OSM_AREA_STYLE: LayerProps = {
   "id": LayerId.OsmArea,
   "source": LayerId.OsmArea,
-  "source-layer": "kooste.osm_kohteet_alue",
+  "source-layer": "kooste.osm_alueet",
   "type": "line",
   "paint": {
     "line-width": 1,
