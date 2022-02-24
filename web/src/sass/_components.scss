@@ -10,6 +10,13 @@ button.tarmo-ctrl-exit {
   border-radius: inherit;
 }
 
+.tarmo-button-container {
+  float: right;
+  clear: both;
+  pointer-events: auto;
+  transform: translate(0);
+}
+
 // Button groups
 .mapboxgl-ctrl-group,
 .maplibregl-ctrl-group {
