@@ -8,7 +8,14 @@ from typing import Any, Dict, List, Optional, Tuple, Type, TypedDict, Union
 
 import boto3
 import requests
-from shapely.geometry import LineString, MultiLineString, MultiPoint, Point, shape
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    Point,
+    Polygon,
+    shape,
+)
 from shapely.geometry.base import BaseGeometry
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.exc import SQLAlchemyError
@@ -168,6 +175,8 @@ class LipasLoader:
             geom = MultiPoint(geometries)
         elif isinstance(geometries[0], LineString):
             geom = MultiLineString(geometries)
+        elif isinstance(geometries[0], Polygon):
+            geom = MultiPoint([geom.centroid for geom in geometries])
         else:
             # Unsupported geometry type
             return None

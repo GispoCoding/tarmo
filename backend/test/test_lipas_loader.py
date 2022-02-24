@@ -82,8 +82,21 @@ def test_get_sport_place_line(loader):
     assert len(sport_place["geom"]) > 2000
 
 
-@pytest.mark.parametrize("sport_place_id", [76249, 513435])
-def test_save_lipas_feature(loader, main_db_params, sport_place_id):
+def test_get_sport_place_polygon_centroid(loader):
+    sport_place = loader.get_sport_place(528808)
+    assert sport_place["geom"].startswith("MULTIPOINT")
+
+
+# note that importing the centroid will add another object to the point table:
+@pytest.mark.parametrize(
+    "sport_place_id, count",
+    [
+        (76249, 1),
+        (513435, 1),
+        (528808, 2),
+    ],
+)
+def test_save_lipas_feature(loader, main_db_params, sport_place_id, count):
     with loader.Session() as session:
         sport_place = loader.get_sport_place(sport_place_id)
         succeeded = loader.save_lipas_feature(sport_place, session)
@@ -102,7 +115,7 @@ def test_save_lipas_feature(loader, main_db_params, sport_place_id):
             table = loader.POINT_TABLE_NAME
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.{table}")
-            assert cur.fetchone() == (1,)
+            assert cur.fetchone() == (count,)
         with conn.cursor() as cur:
             cur.execute("SELECT last_modified FROM lipas.metadata")
             assert cur.fetchone()[0].timestamp() == pytest.approx(
