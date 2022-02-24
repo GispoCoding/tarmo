@@ -61,6 +61,13 @@ button.tarmo-ctrl-exit {
   border-radius: inherit;
 }
 
+.tarmo-button-container {
+  float: right;
+  clear: both;
+  pointer-events: auto;
+  transform: translate(0);
+}
+
 .mapboxgl-ctrl-group:not(:empty),
 .maplibregl-ctrl-group:not(:empty) {
   box-shadow: none;
