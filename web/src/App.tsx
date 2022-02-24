@@ -12,5 +12,20 @@ export default function App() {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-  return showSplash ? <div>Welcome to Tarmo</div> : <Map />;
+  return showSplash ? (
+    <div className="splashscreen-container">
+      <div className="splashscreen-heroimg">
+        <img src="/img/tarmo-summer-1.jpg"></img>
+      </div>
+      <div className="splashscreen-heroheader">
+        <h1>Tarmo</h1>
+        <h2>Tampereen kaupunkiseudun retkeilykarttapalvelu.</h2>
+      </div>
+      <div className="splashscreen-copyright">
+        <p>Kuva: Laura Vanzo</p>
+      </div>
+    </div>
+  ) : (
+    <Map />
+  );
 }

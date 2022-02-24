@@ -51,6 +51,77 @@ tr td {
   font-weight: inherit;
 }
 
+/** Components - SplashScreen */
+.splashscreen-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  opacity: 1;
+  animation: fadeOut ease 0.6s;
+  animation-delay: 1.4s;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.splashscreen-heroimg {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  z-index: -999;
+}
+
+.splashscreen-heroimg img {
+  min-width: 100vw;
+  max-height: 100vh;
+  height: auto;
+  object-fit: cover;
+  filter: brightness(0.8);
+}
+
+.splashscreen-heroheader {
+  position: relative;
+  float: right;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  margin-top: 30vh;
+  margin-bottom: auto;
+  text-align: center;
+  text-shadow: 2px 2px 10px #333333cc, 2px 2px 20px #33333366;
+}
+
+.splashscreen-heroheader h1 {
+  font-size: 3em;
+  color: #fbfbfb;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.splashscreen-heroheader h2 {
+  font-size: 1.2em;
+  color: #fbfbfb;
+  line-height: 1.6em;
+  letter-spacing: 0.1em;
+}
+
+.splashscreen-copyright {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 1em;
+}
+
+.splashscreen-copyright p {
+  font-size: 0.6em;
+  color: #fbfbfb;
+}
+
 /** Components - LayerButton, LayerPicker */
 .maplibregl-ctrl {
   background-color: #abc872;
