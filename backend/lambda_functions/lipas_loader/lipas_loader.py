@@ -1,4 +1,5 @@
 import datetime
+import enum
 import json
 import logging
 import os
@@ -29,6 +30,12 @@ KoosteBase = automap_base(metadata=(MetaData(schema="kooste")))
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
+
+
+class Season(enum.Enum):
+    SUMMER = "summer"
+    WINTER = "winter"
+    ALL_YEAR = "all_year"
 
 
 class Event(TypedDict):
@@ -101,7 +108,9 @@ class LipasLoader:
     def __init__(
         self,
         connection_string: str,
-        type_codes: Optional[List[int]] = None,
+        type_codes_all_year: Optional[List[int]] = None,
+        type_codes_summer: Optional[List[int]] = None,
+        type_codes_winter: Optional[List[int]] = None,
         lipas_api_url: Optional[str] = None,
         point_of_interest: Optional[Point] = None,
         point_radius: Optional[float] = None,
@@ -123,7 +132,21 @@ class LipasLoader:
         with self.Session() as session:
             metadata_row = session.query(LipasBase.classes.metadata).first()
             self.last_modified = metadata_row.last_modified
-            self.type_codes = type_codes if type_codes else metadata_row.type_code_list
+            self.type_codes_all_year = (
+                type_codes_all_year
+                if type_codes_all_year
+                else metadata_row.type_codes_all_year
+            )
+            self.type_codes_summer = (
+                type_codes_summer
+                if type_codes_summer
+                else metadata_row.type_codes_summer
+            )
+            self.type_codes_winter = (
+                type_codes_winter
+                if type_codes_winter
+                else metadata_row.type_codes_winter
+            )
 
     def get_sport_place_ids(self, only_page: Optional[int] = None) -> List[int]:
         results_left = only_page is None
@@ -181,6 +204,13 @@ class LipasLoader:
             # Unsupported geometry type
             return None
 
+        if type_data["type_typeCode"] in self.type_codes_summer:
+            season = Season.SUMMER.value
+        elif type_data["type_typeCode"] in self.type_codes_winter:
+            season = Season.WINTER.value
+        else:
+            season = Season.ALL_YEAR.value
+
         flattened = {
             **data,
             **props,
@@ -188,7 +218,7 @@ class LipasLoader:
             **type_data,
             "geom": geom.wkt,
             "table": table_name,
-            "season": "kesä",  # TODO: change this
+            "season": season,
         }
 
         return flattened
@@ -234,8 +264,12 @@ class LipasLoader:
             "page": page,
             "fields": "location.geometries",
         }
-        if self.type_codes:
-            params["typeCodes"] = self.type_codes
+        if self.type_codes_all_year or self.type_codes_summer or self.type_codes_winter:
+            params["typeCodes"] = list(
+                set(self.type_codes_all_year)
+                | set(self.type_codes_summer)
+                | set(self.type_codes_winter)
+            )
         if self.last_modified:
             params["modifiedAfter"] = self.last_modified.strftime(self.DATETIME_FORMAT)
         if self.point_of_interest and self.point_radius:
