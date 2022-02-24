@@ -187,7 +187,7 @@ def ice_cream_loader(connection_string):
         connection_string,
         tags_to_include={"amenity": ["ice_cream", "cafe"], "shop": ["bakery"]},
         tags_to_exclude={"amenity": ["fast_food"]},
-        point_of_interest=Point(60.1593807, 24.9424875),
+        point_of_interest=Point(24.9424875, 60.1593807),
         point_radius=1,
         overpass_api_url="http://mock.url",
     )
@@ -199,7 +199,7 @@ def parking_loader(connection_string):
         connection_string,
         tags_to_include={"amenity": ["parking"]},
         tags_to_exclude={"access": ["private"]},
-        point_of_interest=Point(61.4980, 23.7747),
+        point_of_interest=Point(23.7747, 61.4980),
         point_radius=10,
         overpass_api_url="http://mock.url",
     )

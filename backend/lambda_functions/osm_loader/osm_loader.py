@@ -208,7 +208,8 @@ class OSMLoader:
         Construct the overpass query. This is a bit tricky if there are multiple tags
         we want.
         """
-        around_string = f"around:{1000*self.point_radius},{self.point_of_interest.x},{self.point_of_interest.y}"  # noqa
+        # Of course, OSM uses lat,lon while we use lon,lat
+        around_string = f"around:{1000*self.point_radius},{self.point_of_interest.y},{self.point_of_interest.x}"  # noqa
         include_rows = (
             f"nwr[{tag}~\"^{'$|^'.join(values)}$\"]({around_string});"
             for tag, values in self.tags_to_include.items()

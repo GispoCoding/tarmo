@@ -60,8 +60,8 @@ def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
 @pytest.fixture()
 def populate_closest_parking_lots_of_osm(create_db, main_db_params, osm_loader_url):
     payload = {
-        "close_to_lon": 61.4980,
-        "close_to_lat": 23.7747,
+        "close_to_lon": 23.7634608,
+        "close_to_lat": 61.4976505,
         "radius": 1,
     }
     r = requests.post(osm_loader_url, data=json.dumps(payload))
@@ -119,6 +119,6 @@ def test_populate_osm(populate_closest_parking_lots_of_osm, main_db_params):
     try:
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.{OSMLoader.POLYGON_TABLE_NAME}")
-            assert cur.fetchone()[0] > 2
+            assert cur.fetchone()[0] > 20
     finally:
         conn.close()
