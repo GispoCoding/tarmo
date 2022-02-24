@@ -48,7 +48,7 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
 export const LIPAS_POINT_STYLE: LayerProps = {
   "id": LayerId.LipasPoint,
   "source": LayerId.LipasPoint,
-  "source-layer": "kooste.lipas_kohteet_piste",
+  "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
   "paint": {
     "circle-radius": 5,
@@ -59,7 +59,7 @@ export const LIPAS_POINT_STYLE: LayerProps = {
 export const LIPAS_LINE_STYLE: LayerProps = {
   "id": LayerId.LipasLine,
   "source": LayerId.LipasLine,
-  "source-layer": "kooste.lipas_kohteet_viiva",
+  "source-layer": "kooste.lipas_viivat",
   "type": "line",
   "paint": {
     "line-width": 2,
