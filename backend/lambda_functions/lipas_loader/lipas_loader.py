@@ -33,9 +33,9 @@ LOGGER.setLevel(logging.INFO)
 
 
 class Season(enum.Enum):
-    SUMMER = "summer"
-    WINTER = "winter"
-    ALL_YEAR = "all_year"
+    SUMMER = "Kesä"
+    WINTER = "Talvi"
+    ALL_YEAR = "Koko vuosi"
 
 
 class Event(TypedDict):
