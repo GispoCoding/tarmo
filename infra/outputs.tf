@@ -28,3 +28,8 @@ output "lambda_lipas_loader" {
   description = "Name of the lipas Lambda function."
   value       = aws_lambda_function.lipas_loader.function_name
 }
+
+output "lambda_osm_loader" {
+  description = "Name of the osm Lambda function."
+  value       = aws_lambda_function.osm_loader.function_name
+}
