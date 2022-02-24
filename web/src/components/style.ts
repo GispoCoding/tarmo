@@ -96,10 +96,9 @@ export const OSM_AREA_STYLE: LayerProps = {
   "id": LayerId.OsmArea,
   "source": LayerId.OsmArea,
   "source-layer": "kooste.osm_alueet",
-  "type": "line",
+  "type": "fill",
   "paint": {
-    "line-width": 1,
-    "line-color": "#007cbf",
+    "fill-color": "#007cbf",
   },
 };
 
