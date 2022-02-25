@@ -92,6 +92,16 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
+.mapboxgl-ctrl
+  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
+  .mapboxgl-ctrl-icon,
+.maplibregl-ctrl
+  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
+  .maplibregl-ctrl-icon {
+  background-image: inherit;
+  filter: brightness(99);
+}
+
 // Button groups
 .mapboxgl-ctrl-group,
 .maplibregl-ctrl-group {
