@@ -1265,7 +1265,9 @@ ALTER TABLE lipas.hevosreitti OWNER TO tarmo_admin;
 CREATE TABLE lipas.metadata (
 	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	last_modified timestamptz,
-	type_code_list jsonb,
+	type_codes_summer jsonb,
+	type_codes_winter jsonb,
+	type_codes_all_year jsonb,
 	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
 );
 -- ddl-end --
@@ -1276,7 +1278,16 @@ ALTER TABLE lipas.metadata OWNER TO tarmo_admin;
 SET timezone = 'Europe/Helsinki';
 -- ddl-end --
 
-INSERT INTO lipas.metadata (type_code_list) VALUES ('[4640,4630,1520,1530,1550,1510,206,301,304,302,202,1120,1130,6210,1180,4710,4720,205,203,201,5150,3220,3230,3240,204,207,4402,4440,4451,4452,4412,4411,4403,4405,4401,4404,4430,101,102,1110]');
+INSERT INTO lipas.metadata (
+	type_codes_summer,
+	type_codes_winter,
+	type_codes_all_year
+) VALUES (
+	'[205,203,5150,3220,3230,4451,4452]',
+	'[4640,4630,1520,1530,1550,1510,3240,4402,4440]',
+	'[201,206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,102,1110]'
+);
+
 -- ddl-end --
 
 -- object: kooste.lipas_pisteet | type: TABLE --

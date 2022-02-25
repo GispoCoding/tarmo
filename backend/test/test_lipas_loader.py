@@ -36,7 +36,12 @@ def metadata_set(main_db_params):
 
 
 def test__sport_places_url(connection_string, metadata_set):
-    loader = LipasLoader(connection_string, type_codes=[1, 2, 3])
+    loader = LipasLoader(
+        connection_string,
+        type_codes_all_year=[1],
+        type_codes_summer=[2],
+        type_codes_winter=[3],
+    )
     assert loader._sport_places_url_and_params(1) == (
         "http://lipas.cc.jyu.fi/api/sports-places",
         {
@@ -52,7 +57,9 @@ def test__sport_places_url(connection_string, metadata_set):
 def test__sport_places_url_point_of_interest(connection_string, metadata_set):
     loader = LipasLoader(
         connection_string,
-        type_codes=[1, 2, 3],
+        type_codes_all_year=[1],
+        type_codes_summer=[2],
+        type_codes_winter=[3],
         point_of_interest=Point(1, 2),
         point_radius=10,
     )
@@ -74,17 +81,20 @@ def test__sport_places_url_point_of_interest(connection_string, metadata_set):
 def test_get_sport_place_point(loader):
     sport_place = loader.get_sport_place(76249)
     assert sport_place["geom"] == "MULTIPOINT (27.2258867781278 63.545014556221)"
+    assert sport_place["season"] == "Talvi"
 
 
 def test_get_sport_place_line(loader):
     sport_place = loader.get_sport_place(513435)
     assert sport_place["geom"].startswith("MULTILINESTRING")
     assert len(sport_place["geom"]) > 2000
+    assert sport_place["season"] == "Talvi"
 
 
 def test_get_sport_place_polygon_centroid(loader):
     sport_place = loader.get_sport_place(528808)
     assert sport_place["geom"].startswith("MULTIPOINT")
+    assert sport_place["season"] == "Koko vuosi"
 
 
 # note that importing the centroid will add another object to the point table:
