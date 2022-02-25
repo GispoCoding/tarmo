@@ -125,6 +125,8 @@ tr td {
 /** Components - LayerButton, LayerPicker */
 .maplibregl-ctrl {
   background-color: #abc872;
+  margin: 1.4em 1.4em 0 0 !important;
+  box-shadow: 2px 2px 6px 0px #959b8966 !important;
 }
 
 button.tarmo-ctrl-exit {
@@ -132,16 +134,41 @@ button.tarmo-ctrl-exit {
   border-radius: inherit;
 }
 
-.tarmo-button-container {
+.tarmo-button-wrapper {
   float: right;
   clear: both;
   pointer-events: auto;
   transform: translate(0);
 }
 
+.mapboxgl-ctrl
+  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
+  .mapboxgl-ctrl-icon,
+.maplibregl-ctrl
+  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
+  .maplibregl-ctrl-icon {
+  background-image: inherit;
+  filter: brightness(99);
+}
+
+.mapboxgl-ctrl
+  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
+  .mapboxgl-ctrl-icon,
+.maplibregl-ctrl
+  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
+  .maplibregl-ctrl-icon {
+  background-image: inherit;
+  filter: brightness(99);
+}
+
 .mapboxgl-ctrl-group:not(:empty),
 .maplibregl-ctrl-group:not(:empty) {
   box-shadow: none;
+}
+
+.mapboxgl-ctrl-group,
+.maplibregl-ctrl-group {
+  border-radius: 0.8em;
 }
 
 .mapboxgl-ctrl-top-right,
@@ -154,17 +181,21 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
-.tarmo-menutr-container {
+.tarmo-button-menu-container {
   width: 80vw;
   max-width: 100vw;
   height: auto;
   overflow: hidden;
-  margin-right: 3rem;
+  margin-right: 3.6rem;
+  margin-top: 1.4em;
   background-color: #abc872;
-  border-radius: 4px;
+  border-radius: 1em;
+  position: absolute;
+  right: 0;
+  box-shadow: 2px 2px 6px 0px #959b8966 !important;
 }
 
-.tarmo-menutr-container ul {
+.tarmo-button-menu-container ul {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -174,16 +205,14 @@ button.tarmo-ctrl-exit {
   margin: 0;
 }
 
-.tarmo-menutr-container ul li {
+.tarmo-button-menu-container ul li {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: stretch;
   width: -webkit-fill-available;
-}
-
-.tarmo-menutr-container ul li button {
   font-family: "Montserrat", Arial;
+  font-size: 1.2em;
   font-weight: bold;
   color: #333;
   text-align: left;
@@ -193,7 +222,7 @@ button.tarmo-ctrl-exit {
   margin-bottom: 0.1em;
 }
 
-.tarmo-menutr-container ul li:hover {
+.tarmo-button-menu-container ul li:hover {
   background-color: #8cc1b3;
 }
 
