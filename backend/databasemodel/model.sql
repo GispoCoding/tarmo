@@ -1386,8 +1386,8 @@ CREATE TABLE kooste.lipas_viivat (
 ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: kooste.osm_kohteet_piste | type: TABLE --
--- DROP TABLE IF EXISTS kooste.osm_kohteet_piste CASCADE;
+-- object: kooste.osm_pisteet | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.osm_pisteet CASCADE;
 CREATE TABLE kooste.osm_pisteet (
 	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
 	osm_id bigint NOT NULL,
@@ -1399,8 +1399,8 @@ CREATE TABLE kooste.osm_pisteet (
 );
 ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 
--- object: kooste.osm_kohteet_alue | type: TABLE --
--- DROP TABLE IF EXISTS kooste.osm_kohteet_alue CASCADE;
+-- object: kooste.osm_alueet | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.osm_alueet CASCADE;
 CREATE TABLE kooste.osm_alueet (
 	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
 	osm_id bigint NOT NULL,
