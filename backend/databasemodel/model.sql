@@ -1389,7 +1389,7 @@ ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- object: kooste.osm_kohteet_piste | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_kohteet_piste CASCADE;
 CREATE TABLE kooste.osm_pisteet (
-	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POINT, 4326) NOT NULL,
@@ -1402,7 +1402,7 @@ ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 -- object: kooste.osm_kohteet_alue | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_kohteet_alue CASCADE;
 CREATE TABLE kooste.osm_alueet (
-	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POLYGON, 4326) NOT NULL,
@@ -1447,7 +1447,7 @@ ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 -- object: kooste.tamperewfs_luontorastit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luontorastit CASCADE;
 CREATE TABLE kooste.tamperewfs_luontorastit (
-	kooste_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	id text NOT NULL GENERATED ALWAYS AS (CAST(tunnus AS TEXT) || '-' || CAST(rasti AS TEXT)) STORED,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	nakyvyys boolean NOT NULL DEFAULT True,
 	nimi text,
@@ -1455,8 +1455,8 @@ CREATE TABLE kooste.tamperewfs_luontorastit (
 	rasti integer,
 	kohteenkuvaus text,
 	lisatietoja text,
-	CONSTRAINT tamperewfs_luontorastit_pk PRIMARY KEY (kooste_id)
-
+	CONSTRAINT tamperewfs_luontorastit_pk PRIMARY KEY (id),
+	UNIQUE (tunnus, rasti)
 );
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontorastit OWNER TO tarmo_admin;

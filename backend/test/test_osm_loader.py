@@ -279,6 +279,10 @@ def test_save_parking_features(parking_loader, parking_data, main_db_params):
                 f"SELECT count(*) FROM kooste.{parking_loader.POLYGON_TABLE_NAME}"
             )
             assert cur.fetchone()[0] == 2
+            cur.execute(f"SELECT id FROM kooste.{parking_loader.POINT_TABLE_NAME}")
+            assert all("-" in id for id in cur.fetchone())
+            cur.execute(f"SELECT id FROM kooste.{parking_loader.POLYGON_TABLE_NAME}")
+            assert all("-" in id for id in cur.fetchone())
         with conn.cursor() as cur:
             cur.execute("SELECT last_modified FROM kooste.osm_metadata")
             assert cur.fetchone()[0].timestamp() == pytest.approx(
@@ -310,6 +314,10 @@ def test_save_ice_cream_features(ice_cream_loader, ice_cream_data, main_db_param
                 f"SELECT count(*) FROM kooste.{ice_cream_loader.POLYGON_TABLE_NAME}"
             )
             assert cur.fetchone()[0] == 2
+            cur.execute(f"SELECT id FROM kooste.{ice_cream_loader.POINT_TABLE_NAME}")
+            assert all("-" in id for id in cur.fetchone())
+            cur.execute(f"SELECT id FROM kooste.{ice_cream_loader.POLYGON_TABLE_NAME}")
+            assert all("-" in id for id in cur.fetchone())
         with conn.cursor() as cur:
             cur.execute("SELECT last_modified FROM kooste.osm_metadata")
             assert cur.fetchone()[0].timestamp() == pytest.approx(
