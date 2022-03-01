@@ -82,6 +82,7 @@ def test_get_sport_place_point(loader):
     sport_place = loader.get_sport_place(76249)
     assert sport_place["geom"] == "MULTIPOINT (27.2258867781278 63.545014556221)"
     assert sport_place["season"] == "Talvi"
+    assert sport_place["table"] == "luistelukentta"
 
 
 def test_get_sport_place_line(loader):
@@ -89,21 +90,64 @@ def test_get_sport_place_line(loader):
     assert sport_place["geom"].startswith("MULTILINESTRING")
     assert len(sport_place["geom"]) > 2000
     assert sport_place["season"] == "Talvi"
+    assert sport_place["table"] == "latu"
 
 
 def test_get_sport_place_polygon_centroid(loader):
     sport_place = loader.get_sport_place(528808)
     assert sport_place["geom"].startswith("MULTIPOINT")
     assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "lahipuisto"
 
 
-# note that importing the centroid will add another object to the point table:
+def test_get_sport_place_ulkoilumaja_hiihtomaja(loader):
+    sport_place = loader.get_sport_place(73043)
+    assert sport_place["geom"] == "MULTIPOINT (22.2373969295559 62.4105611192765)"
+    assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "ulkoilumaja_hiihtomaja"
+
+
+def test_get_sport_place_kavelyreitti_ulkoilureitti(loader):
+    sport_place = loader.get_sport_place(92112)
+    assert sport_place["geom"].startswith("MULTILINESTRING")
+    assert len(sport_place["geom"]) > 1000
+    assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "kavelyreitti_ulkoilureitti"
+
+
+def test_get_sport_place_frisbeegolfrata(loader):
+    sport_place = loader.get_sport_place(500285)
+    assert sport_place["geom"] == "MULTIPOINT (27.6580811870223 63.0789878701306)"
+    assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "frisbeegolfrata"
+
+
+def test_get_sport_place_veneilyn_palvelupaikka(loader):
+    sport_place = loader.get_sport_place(72948)
+    assert sport_place["geom"] == "MULTIPOINT (24.8293942857947 60.2031118334012)"
+    assert sport_place["season"] == "Kesä"
+    assert sport_place["table"] == "veneilyn_palvelupaikka"
+
+
+def test_get_sport_place_laavu_kota_tai_kammi(loader):
+    sport_place = loader.get_sport_place(72944)
+    assert sport_place["geom"] == "MULTIPOINT (24.9058410960006 63.2442368074224)"
+    assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "laavu_kota_tai_kammi"
+
+
+# note that consecutive imports will add more objects to point and line tables:
 @pytest.mark.parametrize(
     "sport_place_id, count",
     [
         (76249, 1),
         (513435, 1),
         (528808, 2),
+        (73043, 3),
+        (92112, 2),
+        (500285, 4),
+        (72948, 5),
+        (72944, 6),
     ],
 )
 def test_save_lipas_feature(loader, main_db_params, sport_place_id, count):
