@@ -7,7 +7,7 @@ RUN pip3 install  \
     psycopg2-binary \
     geoalchemy2 \
     requests \
-    shapely  \
+    shapely==1.8.0  \
     --target "${LAMBDA_TASK_ROOT}"
 
 CMD [ "app.handler" ]
