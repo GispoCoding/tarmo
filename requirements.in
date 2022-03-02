@@ -2,6 +2,7 @@ alembic
 geoalchemy2
 psycopg2
 psycopg2-binary
+python-slugify
 requests==2.27.0
 shapely
 charset-normalizer==2.0.10

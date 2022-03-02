@@ -18,6 +18,9 @@ from shapely.geometry import (
     shape,
 )
 from shapely.geometry.base import BaseGeometry
+
+# mypy doesn't find types-python-slugify for reasons unknown :(
+from slugify import slugify  # type: ignore
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
@@ -176,7 +179,7 @@ class LipasLoader:
             return None
 
         type = data.pop("type")
-        table_name = type["name"].lower().replace("ä", "a").replace("ö", "o")
+        table_name = slugify(type["name"], separator="_")
         location_data = {
             f"location_{key}": val
             for key, val in location.items()

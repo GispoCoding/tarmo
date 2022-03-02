@@ -30,6 +30,8 @@ psycopg2-binary==2.9.3
     # via -r requirements.in
 pyparsing==3.0.6
     # via packaging
+python-slugify==6.1.1
+    # via -r requirements.in
 requests==2.27.0
     # via -r requirements.in
 shapely==1.8.0
@@ -38,5 +40,7 @@ sqlalchemy==1.4.29
     # via
     #   alembic
     #   geoalchemy2
+text-unidecode==1.3
+    # via python-slugify
 urllib3==1.26.7
     # via requests

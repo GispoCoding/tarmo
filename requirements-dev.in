@@ -4,3 +4,4 @@ python-dotenv
 pytest-docker
 requests-mock
 boto3
+types-python-slugify

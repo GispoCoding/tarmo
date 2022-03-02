@@ -8,6 +8,7 @@ RUN pip3 install  \
     geoalchemy2 \
     requests \
     shapely==1.8.0  \
+    python-slugify==6.1.1 \
     --target "${LAMBDA_TASK_ROOT}"
 
 CMD [ "app.handler" ]
