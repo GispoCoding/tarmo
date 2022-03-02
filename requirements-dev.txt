@@ -119,6 +119,8 @@ toml==0.10.2
     # via
     #   pre-commit
     #   pytest
+types-python-slugify==5.0.3
+    # via -r requirements-dev.in
 urllib3==1.26.7
     # via
     #   botocore

@@ -301,9 +301,9 @@ CREATE TABLE lipas.ruoanlaittopaikka (
 ALTER TABLE lipas.ruoanlaittopaikka OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: lipas.laavu_kota_kammi | type: TABLE --
--- DROP TABLE IF EXISTS lipas.laavu_kota_kammi CASCADE;
-CREATE TABLE lipas.laavu_kota_kammi (
+-- object: lipas.laavu_kota_tai_kammi | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.laavu_kota_tai_kammi CASCADE;
+CREATE TABLE lipas.laavu_kota_tai_kammi (
 	"sportsPlaceId" bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326),
 	toilet boolean,
@@ -320,11 +320,11 @@ CREATE TABLE lipas.laavu_kota_kammi (
 -- 	"location_postalOffice" text,
 -- 	"location_postalCode" integer,
 -- 	owner text,
-	CONSTRAINT laavu_kota_kammi_pk PRIMARY KEY ("sportsPlaceId")
+	CONSTRAINT laavu_kota_tai_kammi_pk PRIMARY KEY ("sportsPlaceId")
 )
  INHERITS(lipas.abstract);
 -- ddl-end --
-ALTER TABLE lipas.laavu_kota_kammi OWNER TO tarmo_admin;
+ALTER TABLE lipas.laavu_kota_tai_kammi OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- object: lipas.ulkoilumaja_hiihtomaja | type: TABLE --
@@ -496,9 +496,9 @@ COMMENT ON COLUMN lipas.koiraurheilualue.ligthing IS E'Kirjoitusvirhe Lippaan p�
 ALTER TABLE lipas.koiraurheilualue OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: lipas.frisbeegolf_rata | type: TABLE --
--- DROP TABLE IF EXISTS lipas.frisbeegolf_rata CASCADE;
-CREATE TABLE lipas.frisbeegolf_rata (
+-- object: lipas.frisbeegolfrata | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.frisbeegolfrata CASCADE;
+CREATE TABLE lipas.frisbeegolfrata (
 	"sportsPlaceId" bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326),
 	ligthing boolean,
@@ -521,13 +521,13 @@ CREATE TABLE lipas.frisbeegolf_rata (
 -- 	"location_postalOffice" text,
 -- 	"location_postalCode" integer,
 -- 	owner text,
-	CONSTRAINT frisbeegolf_rata_pk PRIMARY KEY ("sportsPlaceId")
+	CONSTRAINT frisbeegolfrata_pk PRIMARY KEY ("sportsPlaceId")
 )
  INHERITS(lipas.abstract);
 -- ddl-end --
-COMMENT ON COLUMN lipas.frisbeegolf_rata.ligthing IS E'Kirjoitusvirhe Lippaan p채채ss채';
+COMMENT ON COLUMN lipas.frisbeegolfrata.ligthing IS E'Kirjoitusvirhe Lippaan p채채ss채';
 -- ddl-end --
-ALTER TABLE lipas.frisbeegolf_rata OWNER TO tarmo_admin;
+ALTER TABLE lipas.frisbeegolfrata OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- object: lipas.ulkokiipeilyseina | type: TABLE --
@@ -1110,9 +1110,9 @@ CREATE TABLE lipas.maastopyorailyreitti (
 ALTER TABLE lipas.maastopyorailyreitti OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: lipas.kavely_ulkoilureitti | type: TABLE --
--- DROP TABLE IF EXISTS lipas.kavely_ulkoilureitti CASCADE;
-CREATE TABLE lipas.kavely_ulkoilureitti (
+-- object: lipas.kavelyreitti_ulkoilureitti | type: TABLE --
+-- DROP TABLE IF EXISTS lipas.kavelyreitti_ulkoilureitti CASCADE;
+CREATE TABLE lipas.kavelyreitti_ulkoilureitti (
 	"sportsPlaceId" bigint NOT NULL,
 	geom geometry(MULTILINESTRING, 4326),
 	toilet boolean,
@@ -1134,11 +1134,11 @@ CREATE TABLE lipas.kavely_ulkoilureitti (
 -- 	"location_postalOffice" text,
 -- 	"location_postalCode" integer,
 -- 	owner text,
-	CONSTRAINT kavely_ulkoilureitti_pk PRIMARY KEY ("sportsPlaceId")
+	CONSTRAINT kavelyreitti_ulkoilureitti_pk PRIMARY KEY ("sportsPlaceId")
 )
  INHERITS(lipas.abstract);
 -- ddl-end --
-ALTER TABLE lipas.kavely_ulkoilureitti OWNER TO tarmo_admin;
+ALTER TABLE lipas.kavelyreitti_ulkoilureitti OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- object: lipas.retkeilyreitti | type: TABLE --
@@ -1557,7 +1557,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 -- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE lipas.laavu_kota_kammi
+   ON TABLE lipas.laavu_kota_tai_kammi
    TO tarmo_read_write;
 -- ddl-end --
 
@@ -1635,7 +1635,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 -- object: grant_rawd_551ca1ba30 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE lipas.frisbeegolf_rata
+   ON TABLE lipas.frisbeegolfrata
    TO tarmo_read_write;
 -- ddl-end --
 
@@ -1767,7 +1767,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 -- object: grant_rawd_5ff0776190 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE lipas.kavely_ulkoilureitti
+   ON TABLE lipas.kavelyreitti_ulkoilureitti
    TO tarmo_read_write;
 -- ddl-end --
 
