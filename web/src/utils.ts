@@ -20,7 +20,8 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
     gqlFeature.patterns.some(
       pattern =>
         pattern.route.shortName === "1" || pattern.route.shortName === "3"
-    )
+    ) &&
+    gqlFeature.gtfsId.startsWith("tampere")
   ) {
     type = stopType.Tram;
   }
