@@ -166,6 +166,7 @@ export default function TarmoMap(): JSX.Element {
           DIGITRANSIT_IMAGES.forEach((tuple: any) =>
             mapRef.addImage(tuple[0], tuple[1])
           );
+          // eslint-disable-next-line
           OSM_IMAGES.forEach((tuple: any) =>
             mapRef.addImage(tuple[0], tuple[1])
           );

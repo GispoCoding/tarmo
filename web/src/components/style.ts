@@ -128,8 +128,8 @@ export const DIGITRANSIT_IMAGES = digiTransitImageIds.map((key, index) => [
   images[index],
 ]);
 // [string, HTMLImageElement] typing does not work here, no idea why?
-// eslint-disable-next-line
 DIGITRANSIT_IMAGES.forEach(
+  // eslint-disable-next-line
   (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.svg`)
 );
 
