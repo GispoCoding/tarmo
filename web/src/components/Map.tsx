@@ -17,12 +17,14 @@ import {
   LIPAS_POINT_STYLE,
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
+  OSM_AREA_LABEL_STYLE,
   OSM_POINT_SOURCE,
-  OSM_POINT_STYLE,
+  OSM_POINT_LABEL_STYLE,
   NLS_STYLE_URI,
   OSM_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
+  OSM_IMAGES,
 } from "./style";
 import maplibregl from "maplibre-gl";
 import LipasPopup from "./LipasPopup";
@@ -164,6 +166,9 @@ export default function TarmoMap(): JSX.Element {
           DIGITRANSIT_IMAGES.forEach((tuple: any) =>
             mapRef.addImage(tuple[0], tuple[1])
           );
+          OSM_IMAGES.forEach((tuple: any) =>
+            mapRef.addImage(tuple[0], tuple[1])
+          );
         });
         for (const source in LayerId) {
           const source_name = LayerId[source];
@@ -231,10 +236,13 @@ export default function TarmoMap(): JSX.Element {
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer {...OSM_POINT_STYLE} />
+        <Layer {...OSM_POINT_LABEL_STYLE} />
       </Source>
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
         <Layer {...OSM_AREA_STYLE} />
+      </Source>
+      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_LABEL_STYLE} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&

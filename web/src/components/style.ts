@@ -7,6 +7,7 @@ export enum LayerId {
   LipasLine = "lipas-lines",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
+  OsmAreaLabel = "osm-areas-labels",
   DigiTransitPoint = "digitransit-points",
 }
 
@@ -83,14 +84,27 @@ export const OSM_AREA_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const OSM_POINT_STYLE: LayerProps = {
+const parking_image: HTMLImageElement = new Image(24, 24);
+parking_image.src = "/img/parking.svg";
+export const OSM_IMAGES = [["parking", parking_image]];
+
+export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "id": LayerId.OsmPoint,
   "source": LayerId.OsmPoint,
   "source-layer": "kooste.osm_pisteet",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 2,
-    "circle-color": "#007cbf",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "parking",
+  },
+};
+
+export const OSM_AREA_LABEL_STYLE: LayerProps = {
+  "id": LayerId.OsmAreaLabel,
+  "source": LayerId.OsmArea,
+  "source-layer": "kooste.osm_alueet",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "parking",
   },
 };
 
@@ -100,7 +114,8 @@ export const OSM_AREA_STYLE: LayerProps = {
   "source-layer": "kooste.osm_alueet",
   "type": "fill",
   "paint": {
-    "fill-color": "#007cbf",
+    "fill-color": "#0a47a9",
+    "fill-opacity": 0.2,
   },
 };
 
