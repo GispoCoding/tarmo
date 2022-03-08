@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Ref, useCallback, useEffect, useState } from "react";
+import { rawRequest } from "graphql-request";
 import MapGL, {
   FullscreenControl,
   GeolocateControl,
@@ -20,18 +21,51 @@ import {
   OSM_POINT_STYLE,
   NLS_STYLE_URI,
   OSM_STYLE,
+  DIGITRANSIT_POINT_STYLE,
+  DIGITRANSIT_IMAGES,
 } from "./style";
 import maplibregl from "maplibre-gl";
 import LipasPopup from "./LipasPopup";
-import { PopupInfo } from "../types";
+import { PopupInfo, ExternalSource, Bbox } from "../types";
+import { buildQuery, parseResponse } from "../utils";
 import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
 import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
+import { FeatureCollection } from "geojson";
 
-export default function Map() {
+export default function TarmoMap(): JSX.Element {
   const [mapStyle, setMapStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
   const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
+  const [zoom, setZoom] = useState(4.5);
+  const [bounds, setBounds] = useState<Bbox | null>(null);
+  const [externalData, setExternalData] =
+    useState<Map<LayerId, FeatureCollection>>();
+
+  const externalSources = new Map<LayerId, ExternalSource>([
+    [
+      LayerId.DigiTransitPoint,
+      {
+        url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        zoomThreshold: 13,
+        gqlQuery: `{
+        stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
+          vehicleType
+          gtfsId
+          name
+          lat
+          lon
+          patterns {
+            headsign
+            route {
+              shortName
+            }
+          }
+        }
+      }`,
+      },
+    ],
+  ]);
 
   const setDefaultStyle = () => {
     // Set Basemap to NLS base map
@@ -46,7 +80,44 @@ export default function Map() {
       );
   };
 
-  useEffect(() => setDefaultStyle(), []);
+  const loadExternalData = () => {
+    // Load external data for the visible area
+    const requestHeaders: HeadersInit = {
+      "User-Agent": "TARMO - Tampere Mobilemap",
+    };
+    externalSources.forEach((value, key) => {
+      const url = value.url;
+      let query = value.gqlQuery ? value.gqlQuery : "";
+      if (bounds && query && zoom > value.zoomThreshold) {
+        const params = new Map<string, string>(Object.entries(bounds));
+        query = buildQuery(query, params);
+        rawRequest(url, query, requestHeaders).then(response => {
+          const featureCollection = parseResponse(response);
+          // https://medium.com/swlh/using-es6-map-with-react-state-hooks-800b91eedd5f
+          setExternalData(prevState => {
+            if (!prevState) {
+              return new Map([[key, featureCollection]]);
+            }
+            return new Map(prevState.set(key, featureCollection));
+          });
+        });
+      }
+      // TODO: support also REST sources (url + params) if needed
+    });
+  };
+
+  useEffect(() => {
+    setDefaultStyle();
+  }, []);
+
+  // Here, we definitely don't want to add zoom to the useEffect dependencies.
+  // This would trigger multiple loads. Still, react seems to require us to
+  // add any loadExternalData dependencies here:
+  // https://github.com/facebook/react/issues/22132
+  useEffect(() => {
+    loadExternalData();
+    // eslint-disable-next-line
+  }, [bounds]);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -85,6 +156,15 @@ export default function Map() {
   const mapReference = useCallback(
     (mapRef: MapRef) => {
       if (mapRef !== null) {
+        mapRef.on("load", () => {
+          // Any style images must be passed here, image props are not supported.
+          // https://github.com/visgl/react-map-gl/issues/1118
+          // Also, [string, HTMLImageElement] typing does not work here, no idea why?
+          // eslint-disable-next-line
+          DIGITRANSIT_IMAGES.forEach((tuple: any) =>
+            mapRef.addImage(tuple[0], tuple[1])
+          );
+        });
         for (const source in LayerId) {
           const source_name = LayerId[source];
           mapRef.on("click", source_name, ev =>
@@ -95,6 +175,33 @@ export default function Map() {
           });
           mapRef.on("mouseleave", source_name, () => {
             mapRef.getCanvas().style.cursor = "";
+          });
+          mapRef.on("moveend", () => {
+            setZoom(mapRef.getZoom());
+            const newBounds = mapRef.getBounds();
+            const sw = newBounds.getSouthWest();
+            const ne = newBounds.getNorthEast();
+            const bbox: Bbox = {
+              minLon: sw.lng,
+              minLat: sw.lat,
+              maxLon: ne.lng,
+              maxLat: ne.lat,
+            };
+            // We must only update bounds when an *actual* change happens.
+            // Moveend tends to fire approx. five times with each move.
+            // Otherwise we will fire lots of useless API calls
+            // https://stackoverflow.com/questions/60241974/inconsistent-event-firing-on-mapbox-zoomstart-and-zoomend
+            setBounds(prevState => {
+              if (
+                prevState?.minLon != sw.lng ||
+                prevState?.minLat != sw.lat ||
+                prevState?.maxLon != ne.lng ||
+                prevState?.maxLat != ne.lat
+              ) {
+                return bbox;
+              }
+              return prevState;
+            });
           });
         }
       }
@@ -108,7 +215,7 @@ export default function Map() {
       initialViewState={{
         latitude: 65,
         longitude: 27,
-        zoom: 4.5,
+        zoom: zoom,
         bearing: 0,
         pitch: 0,
       }}
@@ -129,6 +236,18 @@ export default function Map() {
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
         <Layer {...OSM_AREA_STYLE} />
       </Source>
+      {externalData &&
+        externalData.get(LayerId.DigiTransitPoint) &&
+        // eslint-disable-next-line
+        zoom > externalSources.get(LayerId.DigiTransitPoint)!.zoomThreshold && (
+          <Source
+            id={LayerId.DigiTransitPoint}
+            type="geojson"
+            data={externalData.get(LayerId.DigiTransitPoint)}
+          >
+            <Layer {...DIGITRANSIT_POINT_STYLE} />
+          </Source>
+        )}
       <FullscreenControl />
       {showNav && (
         <>

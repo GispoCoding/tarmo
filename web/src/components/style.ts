@@ -1,11 +1,13 @@
 import { LayerProps } from "react-map-gl";
 import { Style, VectorSource } from "mapbox-gl";
+import { stopType } from "../types";
 
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
+  DigiTransitPoint = "digitransit-points",
 }
 
 export const OSM_STYLE: Style = {
@@ -70,14 +72,14 @@ export const LIPAS_LINE_STYLE: LayerProps = {
 export const OSM_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf`],
-  minzoom: 12,
+  minzoom: 13,
   maxzoom: 22,
 };
 
 export const OSM_AREA_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.osm_alueet/{z}/{x}/{y}.pbf`],
-  minzoom: 12,
+  minzoom: 13,
   maxzoom: 22,
 };
 
@@ -99,6 +101,29 @@ export const OSM_AREA_STYLE: LayerProps = {
   "type": "fill",
   "paint": {
     "fill-color": "#007cbf",
+  },
+};
+
+const digiTransitImageIds: Array<string> = Object.values(stopType);
+const images: Array<HTMLImageElement> = digiTransitImageIds.map(
+  () => new Image(24, 24)
+);
+export const DIGITRANSIT_IMAGES = digiTransitImageIds.map((key, index) => [
+  key,
+  images[index],
+]);
+// [string, HTMLImageElement] typing does not work here, no idea why?
+// eslint-disable-next-line
+DIGITRANSIT_IMAGES.forEach(
+  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.svg`)
+);
+
+export const DIGITRANSIT_POINT_STYLE: LayerProps = {
+  id: LayerId.DigiTransitPoint,
+  source: LayerId.DigiTransitPoint,
+  type: "symbol",
+  layout: {
+    "icon-image": ["get", "type"],
   },
 };
 
