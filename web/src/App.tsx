@@ -1,5 +1,5 @@
 import * as React from "react";
-import Map from "./components/Map";
+import TarmoMap from "./components/Map";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState } from "react";
 
@@ -26,6 +26,6 @@ export default function App() {
       </div>
     </div>
   ) : (
-    <Map />
+    <TarmoMap />
   );
 }

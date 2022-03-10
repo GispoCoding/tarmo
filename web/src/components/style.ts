@@ -1,11 +1,14 @@
 import { LayerProps } from "react-map-gl";
 import { Style, VectorSource } from "mapbox-gl";
+import { stopType } from "../types";
 
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
+  OsmAreaLabel = "osm-areas-labels",
+  DigiTransitPoint = "digitransit-points",
 }
 
 export const OSM_STYLE: Style = {
@@ -70,25 +73,38 @@ export const LIPAS_LINE_STYLE: LayerProps = {
 export const OSM_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf`],
-  minzoom: 12,
+  minzoom: 13,
   maxzoom: 22,
 };
 
 export const OSM_AREA_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.osm_alueet/{z}/{x}/{y}.pbf`],
-  minzoom: 12,
+  minzoom: 13,
   maxzoom: 22,
 };
 
-export const OSM_POINT_STYLE: LayerProps = {
+const parking_image: HTMLImageElement = new Image(24, 24);
+parking_image.src = "/img/parking.svg";
+export const OSM_IMAGES = [["parking", parking_image]];
+
+export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "id": LayerId.OsmPoint,
   "source": LayerId.OsmPoint,
   "source-layer": "kooste.osm_pisteet",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 2,
-    "circle-color": "#007cbf",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "parking",
+  },
+};
+
+export const OSM_AREA_LABEL_STYLE: LayerProps = {
+  "id": LayerId.OsmAreaLabel,
+  "source": LayerId.OsmArea,
+  "source-layer": "kooste.osm_alueet",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "parking",
   },
 };
 
@@ -98,7 +114,31 @@ export const OSM_AREA_STYLE: LayerProps = {
   "source-layer": "kooste.osm_alueet",
   "type": "fill",
   "paint": {
-    "fill-color": "#007cbf",
+    "fill-color": "#0a47a9",
+    "fill-opacity": 0.2,
+  },
+};
+
+const digiTransitImageIds: Array<string> = Object.values(stopType);
+const images: Array<HTMLImageElement> = digiTransitImageIds.map(
+  () => new Image(24, 24)
+);
+export const DIGITRANSIT_IMAGES = digiTransitImageIds.map((key, index) => [
+  key,
+  images[index],
+]);
+// [string, HTMLImageElement] typing does not work here, no idea why?
+DIGITRANSIT_IMAGES.forEach(
+  // eslint-disable-next-line
+  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.svg`)
+);
+
+export const DIGITRANSIT_POINT_STYLE: LayerProps = {
+  id: LayerId.DigiTransitPoint,
+  source: LayerId.DigiTransitPoint,
+  type: "symbol",
+  layout: {
+    "icon-image": ["get", "type"],
   },
 };
 
