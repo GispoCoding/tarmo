@@ -29,7 +29,8 @@ export default function LayerPicker(props: LayerPickerProps) {
               type={"button"}
               title={"Toggle"}
               onClick={() => setIsOpen(!isOpen)}
-            />
+            >
+            </button>
           </div>
           <div className="tarmo-button-menu-container">
             <nav className="tarmo-button-menu">
