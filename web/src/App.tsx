@@ -2,14 +2,21 @@ import * as React from "react";
 import TarmoMap from "./components/Map";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState } from "react";
+import InfoSlider from "./components/InfoSlider";
+import { PopupInfo } from "./types";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
+
   useEffect(() => {
     // Show splash screen for 2s on startup
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2000);
+    const timer = setTimeout(
+      () => {
+        setShowSplash(false);
+      },
+      process.env.SPLASH_MS ? +process.env.SPLASH_MS : 2000
+    );
     return () => clearTimeout(timer);
   }, []);
   return showSplash ? (
@@ -26,6 +33,9 @@ export default function App() {
       </div>
     </div>
   ) : (
-    <TarmoMap />
+    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+      <TarmoMap setPopupInfo={setPopupInfo} />
+      {popupInfo && <InfoSlider popupInfo={popupInfo} />}
+    </div>
   );
 }
