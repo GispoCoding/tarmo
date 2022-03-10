@@ -102,16 +102,12 @@ class WFSLoader:
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
     wfs_url = "https://geodata.tampere.fi/geoserver/wfs"
-    # default_point = Point(0, 0)
 
     def __init__(
         self,
         connection_string: str,
         layers_to_include: Optional[list] = None,
-        # tags_to_exclude: Optional[dict] = None,
         wfs_url: Optional[str] = None,
-        # point_of_interest: Point = default_point,
-        # point_radius: float = 1,
     ) -> None:
 
         engine = create_engine(connection_string)
@@ -119,9 +115,6 @@ class WFSLoader:
         KoosteBase.prepare(engine, reflect=True)
 
         self.Session = sessionmaker(bind=engine)
-
-        # self.point_of_interest = point_of_interest
-        # self.point_radius = point_radius
 
         if wfs_url is not None:
             self.wfs_url = wfs_url
@@ -237,19 +230,6 @@ def handler(event: Event, _) -> Response:
     response: Response = {"statusCode": 200, "body": json.dumps("")}
     db_helper = DatabaseHelper()
     try:
-        # params = {}
-        # point = (
-        #     Point(event["close_to_lon"], event["close_to_lat"])
-        #     if "close_to_lon" in event and "close_to_lat" in event
-        #     else None
-        # )
-        # if point:
-        #     params["point_of_interest"] = point
-        # radius = event.get("radius", None)
-        # if radius:
-        #     params["point_radius"] = radius
-
-        # loader = OSMLoader(db_helper.get_connection_string(), **params)
         loader = WFSLoader(db_helper.get_connection_string())
         wfs_objects = loader.get_wfs_objects()["features"]
 
@@ -276,7 +256,6 @@ def handler(event: Event, _) -> Response:
         response["body"] = json.dumps(msg)
 
     except Exception:
-        # LOGGER.exception("Uncaught error occurred")
         response["statusCode"] = 500
 
         exc_info = sys.exc_info()
