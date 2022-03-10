@@ -5,6 +5,9 @@ import { stopType } from "../types";
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
+  WFSLuonnonmuistomerkki = "wfs-luonnonmuistomerkit",
+  WFSLuontopolkureitti = "wfs-luontopolkureitit",
+  WFSLuontopolkurasti = "wfs-luontopolkurastit",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
@@ -67,6 +70,66 @@ export const LIPAS_LINE_STYLE: LayerProps = {
   "paint": {
     "line-width": 2,
     "line-color": "#00bf5c",
+  },
+};
+
+export const WFS_LUONNONMUISTOMERKKI_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luonnonmuistomerkit/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const WFS_LUONTOPOLKUREITTI_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkureitit/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkurastit/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const WFS_LUONNONMUISTOMERKKI_STYLE: LayerProps = {
+  "id": LayerId.WFSLuonnonmuistomerkki,
+  "source": LayerId.WFSLuonnonmuistomerkki,
+  "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 5,
+    "circle-color": "#007cbf",
+  },
+};
+
+export const WFS_LUONTOPOLKUREITTI_STYLE: LayerProps = {
+  "id": LayerId.WFSLuontopolkureitti,
+  "source": LayerId.WFSLuontopolkureitti,
+  "source-layer": "kooste.tamperewfs_luontopolkureitit",
+  "type": "line",
+  "paint": {
+    "line-width": 2,
+    "line-color": "#00bf5c",
+  },
+};
+
+export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
+  "id": LayerId.WFSLuontopolkurasti,
+  "source": LayerId.WFSLuontopolkurasti,
+  "source-layer": "kooste.tamperewfs_luontopolkurastit",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 5,
+    "circle-color": "#007cbf",
   },
 };
 

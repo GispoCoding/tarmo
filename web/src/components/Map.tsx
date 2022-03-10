@@ -15,6 +15,12 @@ import {
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
   LIPAS_POINT_STYLE,
+  WFS_LUONNONMUISTOMERKKI_SOURCE,
+  WFS_LUONNONMUISTOMERKKI_STYLE,
+  WFS_LUONTOPOLKUREITTI_SOURCE,
+  WFS_LUONTOPOLKUREITTI_STYLE,
+  WFS_LUONTOPOLKURASTI_SOURCE,
+  WFS_LUONTOPOLKURASTI_STYLE,
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
   OSM_AREA_LABEL_STYLE,
@@ -241,6 +247,21 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       </Source>
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
+      </Source>
+      <Source
+        id={LayerId.WFSLuonnonmuistomerkki}
+        {...WFS_LUONNONMUISTOMERKKI_SOURCE}
+      >
+        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE} />
+      </Source>
+      <Source
+        id={LayerId.WFSLuontopolkureitti}
+        {...WFS_LUONTOPOLKUREITTI_SOURCE}
+      >
+        <Layer {...WFS_LUONTOPOLKUREITTI_STYLE} />
+      </Source>
+      <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
+        <Layer {...WFS_LUONTOPOLKURASTI_STYLE} />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer {...OSM_POINT_LABEL_STYLE} />
