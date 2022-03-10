@@ -33,3 +33,8 @@ output "lambda_osm_loader" {
   description = "Name of the osm Lambda function."
   value       = aws_lambda_function.osm_loader.function_name
 }
+
+output "lambda_wfs_loader" {
+  description = "Name of the wfs Lambda function."
+  value       = aws_lambda_function.wfs_loader.function_name
+}
