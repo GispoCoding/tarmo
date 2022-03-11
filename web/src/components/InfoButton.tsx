@@ -15,8 +15,7 @@ export default function InfoButton() {
               type={"button"}
               title={"Toggle"}
               onClick={() => setIsOpen(!isOpen)}
-            >
-            </button>
+            ></button>
           </div>
           <div className="tarmo-button-menu-container">
             <nav className="tarmo-button-menu">
