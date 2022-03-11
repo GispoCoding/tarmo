@@ -13,7 +13,7 @@ here = os.path.dirname(os.path.realpath(__file__))
 
 # revision identifiers, used by Alembic.
 revision = "1dc4ac9953cb"
-down_revision = "ca6838d8e8a5"
+down_revision = "2580e0ce4aae"
 branch_labels = None
 depends_on = None
 
