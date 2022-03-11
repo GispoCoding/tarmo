@@ -53,6 +53,22 @@ services:
     volumes:
       - ./backend/lambda_functions/osm_loader/osm_loader.py:/var/task/app.py
 
+  wfs_loader:
+    build:
+      context: backend
+      dockerfile: wfs.Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      - DB_INSTANCE_ADDRESS=db
+      - DB_INSTANCE_PORT=5432
+    ports:
+      - "8083:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/lambda_functions/wfs_loader/wfs_loader.py:/var/task/app.py
+
   db_manager:
     build:
       context: backend

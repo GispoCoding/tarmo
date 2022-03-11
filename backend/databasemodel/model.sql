@@ -1435,7 +1435,7 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	nakyvyys boolean NOT NULL DEFAULT True,
 	nimi text,
 	kohteenkuvaus1 text,
-	paatosnumero integer,
+	paatosnumero text,
 	paatospaiva date,
 	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
 
@@ -1444,10 +1444,10 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: kooste.tamperewfs_luontorastit | type: TABLE --
--- DROP TABLE IF EXISTS kooste.tamperewfs_luontorastit CASCADE;
-CREATE TABLE kooste.tamperewfs_luontorastit (
-	id text NOT NULL GENERATED ALWAYS AS (CAST(tunnus AS TEXT) || '-' || CAST(rasti AS TEXT)) STORED,
+-- object: kooste.tamperewfs_luontopolkurastit | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.tamperewfs_luontopolkurastit CASCADE;
+CREATE TABLE kooste.tamperewfs_luontopolkurastit (
+	mi_prinx bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	nakyvyys boolean NOT NULL DEFAULT True,
 	nimi text,
@@ -1455,26 +1455,40 @@ CREATE TABLE kooste.tamperewfs_luontorastit (
 	rasti integer,
 	kohteenkuvaus text,
 	lisatietoja text,
-	CONSTRAINT tamperewfs_luontorastit_pk PRIMARY KEY (id),
+	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
 	UNIQUE (tunnus, rasti)
 );
 -- ddl-end --
-ALTER TABLE kooste.tamperewfs_luontorastit OWNER TO tarmo_admin;
+ALTER TABLE kooste.tamperewfs_luontopolkurastit OWNER TO tarmo_admin;
 -- ddl-end --
 
--- object: kooste.tamperewfs_luontopolut | type: TABLE --
--- DROP TABLE IF EXISTS kooste.tamperewfs_luontopolut CASCADE;
-CREATE TABLE kooste.tamperewfs_luontopolut (
+-- object: kooste.tamperewfs_luontopolkureitit | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.tamperewfs_luontopolkureitit CASCADE;
+CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	tunnus bigint NOT NULL,
 	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	nakyvyys boolean NOT NULL DEFAULT True,
 	nimi text,
-	CONSTRAINT tamperewfs_luontopolut_pk PRIMARY KEY (tunnus)
+	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)
 
 );
 -- ddl-end --
-ALTER TABLE kooste.tamperewfs_luontopolut OWNER TO tarmo_admin;
+ALTER TABLE kooste.tamperewfs_luontopolkureitit OWNER TO tarmo_admin;
 -- ddl-end --
+
+-- object: kooste.tamperewfs_metadata | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.tamperewfs.metadata CASCADE;
+CREATE TABLE kooste.tamperewfs_metadata (
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	last_modified timestamptz,
+	layers_to_include jsonb,
+	CONSTRAINT tamperewfs_metadata_pk PRIMARY KEY (update_id)
+);
+-- ddl-end --
+ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
+-- ddl-end --
+
+INSERT INTO kooste.tamperewfs_metadata (layers_to_include) VALUES ('["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]');
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_rkykohteet CASCADE;
@@ -1553,6 +1567,14 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE kooste.osm_metadata
+   TO tarmo_read_write;
+
+GRANT SELECT
+   ON TABLE kooste.tamperewfs_metadata
+   TO tarmo_read;
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.tamperewfs_metadata
    TO tarmo_read_write;
 
 -- object: grant_rawd_6bd09fd3fa | type: PERMISSION --
@@ -1839,25 +1861,25 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 -- object: grant_r_6fccdd230c | type: PERMISSION --
 GRANT SELECT
-   ON TABLE kooste.tamperewfs_luontorastit
+   ON TABLE kooste.tamperewfs_luontopolkurastit
    TO tarmo_read;
 -- ddl-end --
 
 -- object: grant_rawd_69ac05820f | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.tamperewfs_luontorastit
+   ON TABLE kooste.tamperewfs_luontopolkurastit
    TO tarmo_read_write;
 -- ddl-end --
 
 -- object: grant_r_fdbd4d94a9 | type: PERMISSION --
 GRANT SELECT
-   ON TABLE kooste.tamperewfs_luontopolut
+   ON TABLE kooste.tamperewfs_luontopolkureitit
    TO tarmo_read;
 -- ddl-end --
 
 -- object: grant_rawd_a905fd4ec3 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
-   ON TABLE kooste.tamperewfs_luontopolut
+   ON TABLE kooste.tamperewfs_luontopolkureitit
    TO tarmo_read_write;
 -- ddl-end --
 

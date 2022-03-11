@@ -13,6 +13,9 @@ update-lipas-loader:
 update-osm-loader:
 	aws lambda update-function-code --function-name osm_loader --zip-file fileb://../backend/lambda_functions/osm_loader.zip
 
+update-wfs-loader:
+	aws lambda update-function-code --function-name wfs_loader --zip-file fileb://../backend/lambda_functions/wfs_loader.zip
+
 log-db-manager:
 	aws logs tail "/aws/lambda/db_manager"
 
@@ -21,6 +24,9 @@ log-lipas:
 
 log-osm:
 	aws logs tail "/aws/lambda/osm_loader"
+
+log-wfs:
+	aws logs tail "/aws/lambda/wfs_loader"
 
 ## Commands to invoke lambda functions
 create-db:
@@ -39,4 +45,7 @@ populate-lipas-tre:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name lipas_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_lipas.json
 
 populate-osm-tre:
-	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name osm_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_osm.json
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name osm_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 20}' response_osm.json
+
+populate-wfs-tre:
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name wfs_loader --payload '{}' response_wfs.json
