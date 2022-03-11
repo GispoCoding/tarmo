@@ -6,7 +6,7 @@ ALTER TABLE kooste.tamperewfs_luontopolkureitit DROP CONSTRAINT tamperewfs_luont
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit DROP CONSTRAINT luonnonmuistomerkit_pk;
 
 ALTER TABLE kooste.tamperewfs_luontopolkurastit DROP COLUMN id;
-ALTER TABLE kooste.tamperewfs_luontopolkurastit ADD COLUMN mi_prinx bigint;
+ALTER TABLE kooste.tamperewfs_luontopolkurastit ADD COLUMN mi_prinx bigint NOT NULL;
 ALTER TABLE kooste.tamperewfs_luontopolkurastit ADD CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY ("mi_prinx");
 
 ALTER TABLE kooste.tamperewfs_luontopolkureitit ADD CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY ("tunnus");
