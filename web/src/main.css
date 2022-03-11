@@ -168,8 +168,12 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
   filter: brightness(99);
 }
 
-.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background .mapboxgl-ctrl-icon,
-.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background .maplibregl-ctrl-icon {
+.mapboxgl-ctrl
+button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
+.mapboxgl-ctrl-icon,
+.maplibregl-ctrl
+button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
+.maplibregl-ctrl-icon {
   background-image: inherit;
   filter: brightness(99);
 }
