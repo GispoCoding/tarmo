@@ -27,7 +27,6 @@ import {
   OSM_IMAGES,
 } from "./style";
 import maplibregl from "maplibre-gl";
-import LipasPopup from "./LipasPopup";
 import { PopupInfo, ExternalSource, Bbox } from "../types";
 import { buildQuery, parseResponse } from "../utils";
 import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
@@ -35,10 +34,13 @@ import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection } from "geojson";
 
-export default function TarmoMap(): JSX.Element {
+interface TarmoMapProps {
+  setPopupInfo: (popupInfo: PopupInfo | null) => void;
+}
+
+export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const [mapStyle, setMapStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
-  const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
   const [zoom, setZoom] = useState(4.5);
   const [bounds, setBounds] = useState<Bbox | null>(null);
   const [externalData, setExternalData] =
@@ -152,7 +154,7 @@ export default function TarmoMap(): JSX.Element {
         setPopupInfo(null);
       }
     },
-    []
+    [setPopupInfo]
   );
 
   const mapReference = useCallback(
@@ -171,6 +173,10 @@ export default function TarmoMap(): JSX.Element {
             mapRef.addImage(tuple[0], tuple[1])
           );
         });
+
+        // Clearing the feature when clicking a basemap
+        mapRef.on("click", ev => setPopupFeature(ev.lngLat, undefined));
+
         for (const source in LayerId) {
           const source_name = LayerId[source];
           mapRef.on("click", source_name, ev =>
@@ -266,7 +272,6 @@ export default function TarmoMap(): JSX.Element {
           <InfoButton />
         </>
       )}
-      {popupInfo && <LipasPopup popupInfo={popupInfo} />}
     </MapGL>
   );
 }
