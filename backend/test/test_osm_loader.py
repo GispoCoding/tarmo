@@ -56,7 +56,7 @@ parking_query = (
     "   (\n"
     '   nwr[amenity~"^parking$"](around:10000,61.498,23.7747);\n'
     "   ); - (\n"
-    '   nwr[access~"^private$"](around:10000,61.498,23.7747);\n'
+    '   nwr[access~"^private$|^permit$"](around:10000,61.498,23.7747);\n'
     "   );\n"
     ");\n"
     "out geom;"
@@ -198,7 +198,7 @@ def parking_loader(connection_string):
     return OSMLoader(
         connection_string,
         tags_to_include={"amenity": ["parking"]},
-        tags_to_exclude={"access": ["private"]},
+        tags_to_exclude={"access": ["private", "permit"]},
         point_of_interest=Point(23.7747, 61.4980),
         point_radius=10,
         overpass_api_url="http://mock.url",

@@ -1425,7 +1425,7 @@ CREATE TABLE kooste.osm_metadata (
 ALTER TABLE kooste.osm_metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
-INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private"]}');
+INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private", "permit"]}');
 
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
