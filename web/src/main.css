@@ -173,6 +173,7 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
+/** Menus */
 .tarmo-button-menu-container {
   width: 80vw;
   max-width: 100vw;
@@ -224,21 +225,43 @@ button.tarmo-ctrl-exit {
   left: 0;
   bottom: 0;
   width: 100vw;
-  background-color: #58887d;
+  background-color: #397368f0;
   transition: bottom 0.5s;
   -webkit-transition: bottom 0.5s;
+  backdrop-filter: blur(4px);
 }
 
-.slider.isHidden {
-  bottom: -21vh;
+.slider .nav-content .burger__checkbox {
+  display: none;
 }
 
-.slider .wrapper {
+.slider .nav-content label.burger__toggle {
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  width: auto;
+  text-align: center;
+  z-index: 10;
+  list-style-type: none;
+}
+
+.slider .nav-content svg {
+  max-width: 2em;
+  height: auto;
+  fill: none;
+  stroke: #fbfbfb;
+  stroke-width: 2;
+  stroke-linecap: round;
+  padding: 0.8em 0 0 0;
+}
+
+.slider .text-content {
   transition: 0.5s all linear;
   will-change: transform;
+  padding: 0 1.4em;
 }
 
-.slider .dots-container {
+.slider .dots-content {
   height: auto;
   margin: 0;
   padding: 0;
@@ -252,51 +275,58 @@ button.tarmo-ctrl-exit {
   list-style-type: none;
 }
 
-.slider .dots-container li {
+.slider .dots-content li {
   display: inline-block;
   padding: 2px;
 }
 
-.slider .dots-container li.active button {
-  color: #387267;
-}
-
-.slider .dots-container li button {
-  color: #fbfcfc;
+.slider .dots-content li button {
+  color: #585857;
   background-color: transparent;
   border: none;
 }
 
-.slider .dots-container li button:hover {
+.slider .dots-content li button:hover {
   text-decoration: none;
   opacity: 0.7;
   cursor: pointer;
+}
+
+.slider .dots-content li.active button {
+  color: #fbfbfb;
 }
 
 .slider .each-slide {
   width: 100vw;
   height: 20vh;
   float: left;
-  font-size: 2vh;
-  color: #fbfcfc;
+  color: #fbfbfb;
 }
 
 .slider .each-slide h3 {
-  color: #fbfcfc;
+  color: #fbfbfb;
 }
 
-.burger__checkbox {
-  display: none;
+.slider .each-slide p {
+  font-family: "Open Sans", Arial;
 }
 
-label.burger__toggle {
-  cursor: pointer;
-  display: block;
-  padding: 0;
-  width: auto;
-  text-align: center;
-  z-index: 10;
-  list-style-type: none;
+.slider .each-slide button {
+  background-color: #abc872;
+  border: none;
+  padding: 1em;
+  border-radius: 10px;
+}
+
+.slider .each-slide button a {
+  font-family: "Open Sans", Arial;
+  color: #333;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.slider.isHidden {
+  bottom: -21vh;
 }
 
 /** Responsive breakpoints

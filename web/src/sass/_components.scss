@@ -128,7 +128,7 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
-// Menus
+/** Menus */
 
 .tarmo-button-menu-container {
   width: 80vw;
@@ -182,77 +182,109 @@ button.tarmo-ctrl-exit {
   left: 0;
   bottom: 0;
   width: 100vw;
-  background-color: #58887d;
+  background-color: #397368f0;
   transition: bottom 0.5s;
   -webkit-transition: bottom 0.5s;
+  backdrop-filter: blur(4px);
+
+  .nav-content {
+
+    .burger__checkbox {
+      display: none;
+    }
+
+    label.burger__toggle {
+      cursor: pointer;
+      display: block;
+      padding: 0;
+      width: auto;
+      text-align: center;
+      z-index: 10;
+      list-style-type: none;
+    }
+
+    svg {
+      max-width: 2em;
+      height: auto;
+      fill: none;
+      stroke: $grey1;
+      stroke-width: 2;
+      stroke-linecap: round;
+      padding: 0.8em 0 0 0;
+    }
+  }
+
+  .text-content {
+    transition: 0.5s all linear;
+    will-change: transform;
+    padding: 0 1.4em;
+  }
+
+  .dots-content {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: auto;
+    text-align: center;
+    left: 50%;
+    bottom: 9px;
+    transform: translateX(-50%);
+    z-index: 10;
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      padding: 2px;
+
+      button {
+        color: $darkcoolgrey;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+          text-decoration: none;
+          opacity: 0.7;
+          cursor: pointer;
+        }
+      }
+    }
+
+    li.active button {
+      color: $grey1;
+    }
+  }
+
+  .each-slide {
+    width: 100vw;
+    height: 20vh;
+    float: left;
+    color: $grey1;
+
+    h3 {
+      color: $grey1;
+    }
+
+    p {
+      font-family: $bodyfont;
+    }
+
+    button {
+      background-color: $buttoncolor;
+      border: none;
+      padding: 1em;
+      border-radius: 10px;
+
+      a {
+        font-family: $bodyfont;
+        color: $grey5;
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .slider.isHidden {
   bottom: -21vh;
-}
-
-.slider .wrapper {
-  transition: 0.5s all linear;
-  will-change: transform;
-}
-
-.slider .dots-container {
-  height: auto;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  width: auto;
-  text-align: center;
-  left: 50%;
-  bottom: 9px;
-  transform: translateX(-50%);
-  z-index: 10;
-  list-style-type: none;
-}
-
-.slider .dots-container li {
-  display: inline-block;
-  padding: 2px;
-}
-
-.slider .dots-container li.active button {
-  color: #387267;
-}
-
-.slider .dots-container li button {
-  color: #fbfcfc;
-  background-color: transparent;
-  border: none;
-}
-
-.slider .dots-container li button:hover {
-  text-decoration: none;
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-.slider .each-slide {
-  width: 100vw;
-  height: 20vh;
-  float: left;
-  font-size: 2vh;
-  color: #fbfcfc;
-}
-
-.slider .each-slide h3 {
-  color: #fbfcfc;
-}
-
-.burger__checkbox {
-  display: none;
-}
-
-label.burger__toggle {
-  cursor: pointer;
-  display: block;
-  padding: 0;
-  width: auto;
-  text-align: center;
-  z-index: 10;
-  list-style-type: none;
 }

@@ -31,7 +31,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     </div>,
     <div key={3}>
       <h3>Lue lisää kunnan verkkosivuilta</h3>
-      <a href={popupInfo.properties["www"]}>Siirry verkkosivulle</a>
+      <button><a href={popupInfo.properties["www"]}>Siirry verkkosivuille</a></button>
     </div>,
   ];
 
@@ -66,8 +66,8 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     );
 
   return (
-    <section className={"slider" + (isHidden ? " isHidden" : "")}>
-      <div className="container nav-container">
+    <div className={"slider" + (isHidden ? " isHidden" : "")}>
+      <div className="container nav-content">
         <input
           id="burger"
           className="burger__checkbox"
@@ -75,24 +75,16 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           onClick={() => setHidden(!isHidden)}
         />
         <label className="burger__toggle" htmlFor="burger">
-          <svg
-            width="35"
-            height="35"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#397368"
-            strokeWidth="2"
-            strokeLinecap="butt"
-          >
+          <svg viewBox="0 0 24 24">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
           </svg>
         </label>
       </div>
-      <div className="wrapper" style={setSliderStyles()}>
+      <div className="container text-content" style={setSliderStyles()}>
         {renderSlides()}
       </div>
-      <ul className="dots-container">{renderDots()}</ul>
-    </section>
+      <ul className="container dots-content">{renderDots()}</ul>
+    </div>
   );
 }
