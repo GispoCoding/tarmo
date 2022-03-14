@@ -142,19 +142,19 @@ button.tarmo-ctrl-exit {
 }
 
 .tarmo-icon-close {
-  background-image: url("/public/img/icons8-close-90.png");
+  background-image: url("/public/img/close-dark.svg");
   background-repeat: no-repeat;
   background-size: 70%;
   background-position: 50%;
 }
 
 .tarmo-icon-menu {
-  background-image: url("/public/img/icons8-info-90.png");
+  background-image: url("/public/img/info-dark.svg");
   background-size: 70%;
 }
 
 .tarmo-icon-layerpicker {
-  background-image: url("/public/img/icons8-layers-90.png");
+  background-image: url("/public/img/layers-dark.png");
   background-size: 70%;
 }
 
