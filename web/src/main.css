@@ -141,22 +141,14 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
-.mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
-  .mapboxgl-ctrl-icon,
-.maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
-  .maplibregl-ctrl-icon {
+.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active .maplibregl-ctrl-icon {
   background-image: inherit;
   filter: brightness(99);
 }
 
-.mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
-  .mapboxgl-ctrl-icon,
-.maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
-  .maplibregl-ctrl-icon {
+.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background .maplibregl-ctrl-icon {
   background-image: inherit;
   filter: brightness(99);
 }
@@ -226,7 +218,87 @@ button.tarmo-ctrl-exit {
   background-color: #8cc1b3;
 }
 
-/** Components - LipasPopup */
+/** Components - InfoSlider */
+.slider {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: #58887d;
+  transition: bottom 0.5s;
+  -webkit-transition: bottom 0.5s;
+}
+
+.slider.isHidden {
+  bottom: -21vh;
+}
+
+.slider .wrapper {
+  transition: 0.5s all linear;
+  will-change: transform;
+}
+
+.slider .dots-container {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: auto;
+  text-align: center;
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  z-index: 10;
+  list-style-type: none;
+}
+
+.slider .dots-container li {
+  display: inline-block;
+  padding: 2px;
+}
+
+.slider .dots-container li.active button {
+  color: #387267;
+}
+
+.slider .dots-container li button {
+  color: #fbfcfc;
+  background-color: transparent;
+  border: none;
+}
+
+.slider .dots-container li button:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.slider .each-slide {
+  width: 100vw;
+  height: 20vh;
+  float: left;
+  font-size: 2vh;
+  color: #fbfcfc;
+}
+
+.slider .each-slide h3 {
+  color: #fbfcfc;
+}
+
+.burger__checkbox {
+  display: none;
+}
+
+label.burger__toggle {
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  width: auto;
+  text-align: center;
+  z-index: 10;
+  list-style-type: none;
+}
+
 /** Responsive breakpoints
     - Mobile = < 600px
     - Tablet = 600px - 900px
