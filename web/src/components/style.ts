@@ -37,6 +37,8 @@ export const OSM_STYLE: Style = {
 
 export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
+export const NLS_STYLE_LABELS_URI = "map-styles/nls-style-labels.json";
+
 export const LIPAS_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.lipas_pisteet/{z}/{x}/{y}.pbf`],
