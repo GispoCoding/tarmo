@@ -32,7 +32,9 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <div key={3}>
       <h3>Lue lisää kunnan verkkosivuilta</h3>
       <div className="button-slide">
-        <a href={popupInfo.properties["www"]}><button>Siirry verkkosivuille</button></a>
+        <a href={popupInfo.properties["www"]}>
+          <button>Siirry verkkosivuille</button>
+        </a>
       </div>
     </div>,
   ];
