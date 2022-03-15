@@ -92,6 +92,23 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
+.tarmo-icon-close {
+  background-image: url("/public/img/close-dark.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: 50%;
+}
+
+.tarmo-icon-menu {
+  background-image: url("/public/img/info-dark.svg");
+  background-size: 70%;
+}
+
+.tarmo-icon-layerpicker {
+  background-image: url("/public/img/layers-dark.png");
+  background-size: 70%;
+}
+
 .mapboxgl-ctrl
   button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
   .mapboxgl-ctrl-icon,
@@ -122,7 +139,7 @@ button.tarmo-ctrl-exit {
 
 .mapboxgl-ctrl-group,
 .maplibregl-ctrl-group {
-  border-radius: 0.8em;
+  border-radius: 0.6em;
 }
 
 // Button components
