@@ -298,12 +298,14 @@ button.tarmo-ctrl-exit {
       border: none;
       padding: 1em;
       border-radius: 10px;
+      cursor: pointer;
+      font-family: $bodyfont;
+      color: $grey5;
+      font-weight: bold;
+      text-decoration: none;
 
-      a {
-        font-family: $bodyfont;
-        color: $grey5;
-        font-weight: bold;
-        text-decoration: none;
+      &:hover {
+        background-color: $hovercolor;
       }
     }
   }

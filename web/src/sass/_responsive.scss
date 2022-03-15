@@ -3,3 +3,55 @@
     - Tablet = 600px - 900px
     - Desktop = > 900px
 */
+
+@media only screen and (min-width: 900px) {
+  /** SplashScreen */
+
+  .splashscreen-container {
+    justify-content: center;
+
+    .splashscreen-heroimg {
+      left: 0;
+    }
+  }
+
+  /** LayerButton, InfoButton, LayerPicker */
+
+  .tarmo-button-menu-container {
+    width: 20vw;
+  }
+
+  /** ModalSlider */
+
+  .each-slide {
+    .button-slide {
+      position: relative;
+      right: -45%;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-align: center;
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 900px) {
+  /** SplashScreen */
+
+  .splashscreen-container {
+    justify-content: center;
+
+    .splashscreen-heroimg {
+      left: 0;
+    }
+  }
+}
