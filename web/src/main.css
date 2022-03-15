@@ -198,7 +198,6 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
-/** Menus */
 .tarmo-button-menu-container {
   width: 80vw;
   max-width: 100vw;
@@ -328,12 +327,19 @@ button.tarmo-ctrl-exit {
   color: #fbfbfb;
 }
 
-.slider .each-slide h3 {
+.slider .each-slide h1,
+.slider .each-slide h2,
+.slider .each-slide h3,
+.slider .each-slide h4,
+.slider .each-slide h5,
+.slider .each-slide h6 {
   color: #fbfbfb;
+  max-width: 90vw;
 }
 
 .slider .each-slide p {
   font-family: "Open Sans", Arial;
+  max-width: 90vw;
 }
 
 .slider .each-slide button {
@@ -380,6 +386,7 @@ button.tarmo-ctrl-exit {
   }
   .each-slide p {
     text-align: center;
+    max-width: none !important;
   }
   .each-slide h1,
   .each-slide h2,
@@ -388,6 +395,7 @@ button.tarmo-ctrl-exit {
   .each-slide h5,
   .each-slide h6 {
     text-align: center;
+    max-width: none !important;
   }
 }
 
