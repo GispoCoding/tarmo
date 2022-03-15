@@ -1,8 +1,13 @@
 import * as React from "react";
-import { useState } from "react";
 
-export default function InfoButton() {
-  const [isOpen, setIsOpen] = useState(false);
+interface InfoButtonProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function InfoButton(props: InfoButtonProps) {
+  const isOpen = props.isOpen;
+  const setIsOpen = props.setIsOpen;
 
   return (
     <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
@@ -15,7 +20,7 @@ export default function InfoButton() {
               type={"button"}
               title={"Toggle"}
               onClick={() => setIsOpen(!isOpen)}
-            ></button>
+            />
           </div>
           <div className="tarmo-button-menu-container">
             <nav className="tarmo-button-menu">
