@@ -33,7 +33,7 @@ export default function App() {
       </div>
     </div>
   ) : (
-    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+    <div className="map-container">
       <TarmoMap setPopupInfo={setPopupInfo} />
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
     </div>

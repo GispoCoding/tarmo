@@ -136,7 +136,7 @@ button.tarmo-ctrl-exit {
   align-items: flex-end;
 }
 
-// Menus
+/** Menus */
 
 .tarmo-button-menu-container {
   width: 80vw;
@@ -183,4 +183,115 @@ button.tarmo-ctrl-exit {
   }
 }
 
-/** Components - LipasPopup */
+/** Components - InfoSlider */
+
+.slider {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: #397368f0;
+  transition: bottom 0.5s;
+  -webkit-transition: bottom 0.5s;
+  backdrop-filter: blur(4px);
+
+  .nav-content {
+    .burger__checkbox {
+      display: none;
+    }
+
+    label.burger__toggle {
+      cursor: pointer;
+      display: block;
+      padding: 0;
+      width: auto;
+      text-align: center;
+      z-index: 10;
+      list-style-type: none;
+    }
+
+    svg {
+      max-width: 2em;
+      height: auto;
+      fill: none;
+      stroke: $grey1;
+      stroke-width: 2;
+      stroke-linecap: round;
+      padding: 0.8em 0 0 0;
+    }
+  }
+
+  .text-content {
+    transition: 0.5s all linear;
+    will-change: transform;
+    padding: 0 1.4em;
+  }
+
+  .dots-content {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: auto;
+    text-align: center;
+    left: 50%;
+    bottom: 9px;
+    transform: translateX(-50%);
+    z-index: 10;
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      padding: 2px;
+
+      button {
+        color: $darkcoolgrey;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+          text-decoration: none;
+          opacity: 0.7;
+          cursor: pointer;
+        }
+      }
+    }
+
+    li.active button {
+      color: $grey1;
+    }
+  }
+
+  .each-slide {
+    width: 100vw;
+    height: 20vh;
+    float: left;
+    color: $grey1;
+
+    h3 {
+      color: $grey1;
+    }
+
+    p {
+      font-family: $bodyfont;
+    }
+
+    button {
+      background-color: $buttoncolor;
+      border: none;
+      padding: 1em;
+      border-radius: 10px;
+
+      a {
+        font-family: $bodyfont;
+        color: $grey5;
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.slider.isHidden {
+  bottom: -21vh;
+}
