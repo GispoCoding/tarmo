@@ -141,22 +141,14 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
-.mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
-  .mapboxgl-ctrl-icon,
-.maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
-  .maplibregl-ctrl-icon {
+.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active .maplibregl-ctrl-icon {
   background-image: inherit;
   filter: brightness(99);
 }
 
-.mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
-  .mapboxgl-ctrl-icon,
-.maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
-  .maplibregl-ctrl-icon {
+.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background .maplibregl-ctrl-icon {
   background-image: inherit;
   filter: brightness(99);
 }
@@ -324,13 +316,15 @@ button.tarmo-ctrl-exit {
   border: none;
   padding: 1em;
   border-radius: 10px;
-}
-
-.slider .each-slide button a {
+  cursor: pointer;
   font-family: "Open Sans", Arial;
   color: #333;
   font-weight: bold;
   text-decoration: none;
+}
+
+.slider .each-slide button:hover {
+  background-color: #8cc1b3;
 }
 
 .slider.isHidden {
@@ -342,3 +336,32 @@ button.tarmo-ctrl-exit {
     - Tablet = 600px - 900px
     - Desktop = > 900px
 */
+@media only screen and (min-width: 900px) {
+  /** SplashScreen */
+  .splashscreen-container {
+    justify-content: center;
+  }
+  .splashscreen-container .splashscreen-heroimg {
+    left: 0;
+  }
+  /** LayerButton, InfoButton, LayerPicker */
+  .tarmo-button-menu-container {
+    width: 20vw;
+  }
+  /** ModalSlider */
+  .each-slide .button-slide {
+    position: relative;
+    right: -45%;
+  }
+  .each-slide p {
+    text-align: center;
+  }
+  .each-slide h1,
+  .each-slide h2,
+  .each-slide h3,
+  .each-slide h4,
+  .each-slide h5,
+  .each-slide h6 {
+    text-align: center;
+  }
+}
