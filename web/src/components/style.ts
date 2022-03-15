@@ -148,7 +148,7 @@ export const OSM_AREA_SOURCE: VectorSource = {
 };
 
 const parking_image: HTMLImageElement = new Image(24, 24);
-parking_image.src = "/img/parking.svg";
+parking_image.src = "/img/parking.png";
 export const OSM_IMAGES = [["parking", parking_image]];
 
 export const OSM_POINT_LABEL_STYLE: LayerProps = {
@@ -193,7 +193,7 @@ export const DIGITRANSIT_IMAGES = digiTransitImageIds.map((key, index) => [
 // [string, HTMLImageElement] typing does not work here, no idea why?
 DIGITRANSIT_IMAGES.forEach(
   // eslint-disable-next-line
-  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.svg`)
+  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.png`)
 );
 
 export const DIGITRANSIT_POINT_STYLE: LayerProps = {
