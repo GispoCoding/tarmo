@@ -159,20 +159,20 @@ button.tarmo-ctrl-exit {
 }
 
 .mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
-  .mapboxgl-ctrl-icon,
+button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
+.mapboxgl-ctrl-icon,
 .maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
-  .maplibregl-ctrl-icon {
+button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
+.maplibregl-ctrl-icon {
   filter: brightness(99);
 }
 
 .mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
-  .mapboxgl-ctrl-icon,
+button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
+.mapboxgl-ctrl-icon,
 .maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
-  .maplibregl-ctrl-icon {
+button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
+.maplibregl-ctrl-icon {
   filter: brightness(99);
 }
 
