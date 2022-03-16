@@ -322,9 +322,31 @@ button.tarmo-ctrl-exit {
 
 .slider .each-slide {
   width: 100vw;
-  height: 20vh;
+  height: 30vh;
   float: left;
   color: #fbfbfb;
+}
+
+.slider .each-slide .numbers {
+  position: relative;
+  width: 20vw;
+  float: left;
+}
+
+.slider .each-slide .titles {
+  position: relative;
+  width: 70vw;
+  float: left;
+}
+
+.slider .each-slide .titles h1,
+.slider .each-slide .titles h2,
+.slider .each-slide .titles h3,
+.slider .each-slide .titles h4,
+.slider .each-slide .titles h5,
+.slider .each-slide .titles h6 {
+  margin-bottom: 0;
+  margin-top: 0.8em;
 }
 
 .slider .each-slide h1,
@@ -334,12 +356,16 @@ button.tarmo-ctrl-exit {
 .slider .each-slide h5,
 .slider .each-slide h6 {
   color: #fbfbfb;
-  max-width: 90vw;
+  float: left;
+  clear: both;
+  letter-spacing: 0.04em;
 }
 
 .slider .each-slide p {
   font-family: "Open Sans", Arial;
   max-width: 90vw;
+  float: left;
+  margin-top: 1.4em;
 }
 
 .slider .each-slide button {
@@ -359,7 +385,7 @@ button.tarmo-ctrl-exit {
 }
 
 .slider.isHidden {
-  bottom: -21vh;
+  bottom: -30vh;
 }
 
 /** Responsive breakpoints
@@ -384,9 +410,18 @@ button.tarmo-ctrl-exit {
     position: relative;
     right: -45%;
   }
+  .each-slide .titles {
+    width: unset !important;
+    float: none !important;
+  }
+  .each-slide .numbers {
+    width: unset !important;
+    float: none !important;
+  }
   .each-slide p {
     text-align: center;
     max-width: none !important;
+    float: none !important;
   }
   .each-slide h1,
   .each-slide h2,
@@ -396,6 +431,7 @@ button.tarmo-ctrl-exit {
   .each-slide h6 {
     text-align: center;
     max-width: none !important;
+    float: none !important;
   }
 }
 

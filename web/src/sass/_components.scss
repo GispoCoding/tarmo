@@ -281,9 +281,31 @@ button.tarmo-ctrl-exit {
 
   .each-slide {
     width: 100vw;
-    height: 20vh;
+    height: 30vh;
     float: left;
     color: $grey1;
+
+    .numbers {
+      position: relative;
+      width: 20vw;
+      float: left;
+    }
+
+    .titles {
+      position: relative;
+      width: 70vw;
+      float: left;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-bottom: 0;
+        margin-top: 0.8em;
+      }
+    }
 
     h1,
     h2,
@@ -292,12 +314,16 @@ button.tarmo-ctrl-exit {
     h5,
     h6 {
       color: $grey1;
-      max-width: 90vw;
+      float: left;
+      clear: both;
+      letter-spacing: 0.04em;
     }
 
     p {
       font-family: $bodyfont;
       max-width: 90vw;
+      float: left;
+      margin-top: 1.4em;
     }
 
     button {
@@ -319,5 +345,5 @@ button.tarmo-ctrl-exit {
 }
 
 .slider.isHidden {
-  bottom: -21vh;
+  bottom: -30vh;
 }
