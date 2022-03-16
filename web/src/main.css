@@ -123,6 +123,12 @@ tr td {
 }
 
 /** Components - LayerButton, LayerPicker */
+.LayerPicker {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+}
+
 .maplibregl-ctrl {
   background-color: #abc872;
   margin: 1.4em 1.4em 0 0 !important;
@@ -386,6 +392,41 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   bottom: -30vh;
 }
 
+/** Components - LayerFilter */
+.layerfilter-wrapper {
+  display: block;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 200vw;
+  height: 10vh;
+  background-color: #fbfbfb66;
+  backdrop-filter: blur(6px);
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.layerfilter-wrapper .layerfilter-item {
+  float: left;
+  width: 8vw;
+  height: 8vw;
+  margin: 1em;
+  overflow: hidden;
+}
+
+.layerfilter-wrapper .layerfilter-item button {
+  border: none;
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: inherit;
+  height: inherit;
+}
+
+.layerfilter-wrapper .layerfilter-item button p {
+  display: none;
+}
+
 /** Responsive breakpoints
     - Mobile = < 600px
     - Tablet = 600px - 900px
@@ -430,6 +471,15 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
     text-align: center;
     max-width: none !important;
     float: none !important;
+  }
+  /** LayerFilter */
+  .layerfilter-wrapper .layerfilter-container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .layerfilter-wrapper .layerfilter-item {
+    width: 40px;
+    height: 40px;
   }
 }
 

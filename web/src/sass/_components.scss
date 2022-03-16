@@ -73,6 +73,12 @@
 
 /** Components - LayerButton, LayerPicker */
 
+.LayerPicker {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+}
+
 // Singular buttons
 .maplibregl-ctrl {
   background-color: $buttoncolor;
@@ -344,4 +350,40 @@ button.tarmo-ctrl-exit {
 
 .slider.isHidden {
   bottom: -30vh;
+}
+
+/** Components - LayerFilter */
+
+.layerfilter-wrapper {
+  display: block;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 200vw;
+  height: 10vh;
+  background-color: #fbfbfb66;
+  backdrop-filter: blur(6px);
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  .layerfilter-item {
+    float: left;
+    width: 8vw;
+    height: 8vw;
+    margin: 1em;
+    overflow: hidden;
+
+    button {
+      border: none;
+      background-color: transparent;
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: inherit;
+      height: inherit;
+
+      p {
+        display: none;
+      }
+    }
+  }
 }
