@@ -20,11 +20,21 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     return <div></div>;
   }
 
+  // TODO: If "numbers" have no content, don't show it
+  // TODO: Array address, postcode and municipality from different fields
+
   // TODO: Fill content here
   const slides = [
     <div key={1}>
-      <h3>{popupInfo.properties["name"]}</h3>
-      <p>{popupInfo.properties["type_name"]}</p>
+      <div className="titles">
+        <h3>{popupInfo.properties["name"]}</h3>
+        <h4>[Ikoni ja kategoria]</h4>
+        <h4>{popupInfo.properties["type_name"]}</h4>
+      </div>
+      <div className="numbers">
+        <h3>[10 km]</h3>
+      </div>
+      <p>[Address], [postcode] [municipality]</p>
     </div>,
     <div key={2}>
       <h3>Aktiviteetit ja palvelut</h3>
