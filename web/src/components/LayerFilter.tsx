@@ -3,51 +3,51 @@ import * as React from "react";
 const categories = [
   {
     name: "ulkoilureitit",
-    icon: "trekking-dark.png",
+    icon: "trekking-darkwater.png",
   },
   {
     name: "ulkoiluaktiviteetit",
-    icon: "frisbee-dark.png",
+    icon: "frisbee-darkwater.png",
   },
   {
     name: "ulkoilupaikat",
-    icon: "park-dark.png",
+    icon: "park-darkwater.png",
   },
   {
     name: "ruokailu",
-    icon: "campfire-dark.png",
+    icon: "campfire-darkwater.png",
   },
   {
     name: "pyöräily",
-    icon: "cycling-dark.png",
+    icon: "cycling-darkwater.png",
   },
   {
     name: "hiihto",
-    icon: "ski-dark.png",
+    icon: "ski-darkwater.png",
   },
   {
     name: "luistelu",
-    icon: "skating-dark.png",
+    icon: "skating-darkwater.png",
   },
   {
     name: "uinti",
-    icon: "swimming-dark.png",
+    icon: "swimming-darkwater.png",
   },
   {
     name: "vesiulkoilu",
-    icon: "dinghy-dark.png",
+    icon: "dinghy-darkwater.png",
   },
   {
     name: "nähtävyydet",
-    icon: "camera-dark.png",
+    icon: "camera-darkwater.png",
   },
   {
     name: "pysäköinti",
-    icon: "info-dark.png",
+    icon: "parking-darkwater.png",
   },
   {
     name: "pysäkit",
-    icon: "info-dark.png",
+    icon: "bus-darkwater.png",
   },
 ];
 

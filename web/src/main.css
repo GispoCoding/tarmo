@@ -399,11 +399,15 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   left: 0;
   bottom: 0;
   width: 200vw;
-  height: 10vh;
-  background-color: #fbfbfb66;
+  height: auto;
+  background-color: #fbfbfb90;
   backdrop-filter: blur(6px);
-  overflow-x: scroll;
-  overflow-y: hidden;
+}
+
+.layerfilter-wrapper .layerfilter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 .layerfilter-wrapper .layerfilter-item {
@@ -421,6 +425,17 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   background-repeat: no-repeat;
   width: inherit;
   height: inherit;
+}
+
+.layerfilter-wrapper .layerfilter-item button::before {
+  content: "";
+  position: absolute;
+  box-shadow: 0px 0px 16px 12px #ffffff99;
+  z-index: -99;
+}
+
+.layerfilter-wrapper .layerfilter-item button:hover {
+  background-image: url("/public/img/trekking-light.png") !important;
 }
 
 .layerfilter-wrapper .layerfilter-item button p {
@@ -473,9 +488,13 @@ button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
     float: none !important;
   }
   /** LayerFilter */
+  .layerfilter-wrapper {
+    width: 100vw;
+  }
   .layerfilter-wrapper .layerfilter-container {
     margin-left: auto;
     margin-right: auto;
+    justify-content: center;
   }
   .layerfilter-wrapper .layerfilter-item {
     width: 40px;

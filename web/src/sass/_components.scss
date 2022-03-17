@@ -360,11 +360,15 @@ button.tarmo-ctrl-exit {
   left: 0;
   bottom: 0;
   width: 200vw;
-  height: 10vh;
-  background-color: #fbfbfb66;
+  height: auto;
+  background-color: #fbfbfb90;
   backdrop-filter: blur(6px);
-  overflow-x: scroll;
-  overflow-y: hidden;
+
+  .layerfilter-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 
   .layerfilter-item {
     float: left;
@@ -381,9 +385,20 @@ button.tarmo-ctrl-exit {
       width: inherit;
       height: inherit;
 
-      p {
-        display: none;
+      &::before {
+        content: "";
+        position: absolute;
+        box-shadow: 0px 0px 16px 12px #ffffff99;
+        z-index: -99;
       }
+
+      &:hover {
+        background-image: url("/public/img/trekking-light.png") !important;
+    }
+
+    p {
+      display: none;
     }
   }
+}
 }
