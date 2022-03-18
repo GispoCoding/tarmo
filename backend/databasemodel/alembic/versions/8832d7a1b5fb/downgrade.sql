@@ -211,7 +211,7 @@ ALTER TABLE kooste.tamperewfs_luontopolkurastit
 RENAME COLUMN "infoFi" TO kohteenkuvaus;
 
 ALTER TABLE kooste.tamperewfs_luontopolkurastit
-RENAME COLUMN "additionalInfo" TO lisatietoja;
+ADD lisatietoja text;
 
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
 ALTER COLUMN visibility SET NOT NULL;
@@ -271,3 +271,87 @@ TO tarmo_read;
 GRANT SELECT
 ON TABLE kooste.metadata
 TO tarmo_read;
+
+ALTER TABLE lipas.metadata
+DROP COLUMN tarmo_categories_summer;
+
+ALTER TABLE lipas.metadata
+DROP COLUMN tarmo_categories_winter;
+
+ALTER TABLE lipas.metadata
+DROP COLUMN tarmo_categories_all_year;
+
+ALTER TABLE kooste.osm_metadata
+DROP COLUMN osm_types_tarmo_joukkoliikennepysakit;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_hiihto;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_luistelu;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_uinti;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_vesilla_ulkoilu;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_laavut_majat_ruokailu;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_ulkoilupaikat;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_ulkoiluaktiviteetit;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_ulkoilureitit;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_nahtavyydet;
+
+ALTER TABLE kooste.metadata
+DROP COLUMN codes_tarmo_pyoraily;
+
+ALTER TABLE kooste.lipas_pisteet
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.lipas_viivat
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.osm_pisteet
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.osm_alueet
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.tamperewfs_luontopolkurastit
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.tamperewfs_luontopolkureitit
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.museovirastoarcrest_rkykohteet
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
+DROP COLUMN tarmo_category;
+
+ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit
+DROP COLUMN type_name;
+
+ALTER TABLE kooste.tamperewfs_luontopolkurastit
+DROP COLUMN type_name;
+
+ALTER TABLE kooste.tamperewfs_luontopolkureitit
+DROP COLUMN type_name;
+
+ALTER TABLE kooste.museovirastoarcrest_rkykohteet
+DROP COLUMN type_name;
+
+ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
+ALTER COLUMN type_name DROP DEFAULT;

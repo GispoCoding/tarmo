@@ -1263,11 +1263,14 @@ ALTER TABLE lipas.hevosreitti OWNER TO tarmo_admin;
 -- object: lipas.metadata | type: TABLE --
 -- DROP TABLE IF EXISTS lipas.metadata CASCADE;
 CREATE TABLE lipas.metadata (
-	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	last_modified timestamptz,
 	type_codes_summer jsonb,
 	type_codes_winter jsonb,
 	type_codes_all_year jsonb,
+	tarmo_categories_summer jsonb,
+	tarmo_categories_winter jsonb,
+	tarmo_categories_all_year jsonb,
 	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
 );
 -- ddl-end --
@@ -1281,13 +1284,18 @@ SET timezone = 'Europe/Helsinki';
 INSERT INTO lipas.metadata (
 	type_codes_summer,
 	type_codes_winter,
-	type_codes_all_year
+	type_codes_all_year,
+	tarmo_categories_summer,
+	tarmo_categories_winter,
+	tarmo_categories_all_year
 ) VALUES (
-	'[205,203,5150,3220,3230,4451,4452]',
+	'[205,203,201,5150,3220,3230,4451,4452]',
 	'[4640,4630,1520,1530,1550,1510,3240,4402,4440]',
-	'[201,206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,102,1110]'
+	'[206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,102,1110]',
+	'["Vesillä ulkoilu"]',
+	'["Hiihto", "Luistelu"]',
+	'["Uinti", "Laavut, majat, ruokailu", "Ulkoilupaikat", "Ulkoiluaktiviteetit", "Ulkoilureitit", "Pyöräily", "Nähtävyydet"]'
 );
-
 -- ddl-end --
 
 -- object: kooste.lipas_pisteet | type: TABLE --
@@ -1298,6 +1306,7 @@ CREATE TABLE kooste.lipas_pisteet (
 	name text NOT NULL,
 	"type_typeCode" integer NOT NULL,
 	type_name text NOT NULL,
+	tarmo_category text NOT NULL,
 	owner text,
 	admin text,
 	address text,
@@ -1357,6 +1366,7 @@ CREATE TABLE kooste.lipas_viivat (
 	name text NOT NULL,
 	"type_typeCode" integer NOT NULL,
 	type_name text NOT NULL,
+	tarmo_category text NOT NULL,
 	owner text,
 	admin text,
 	address text,
@@ -1393,6 +1403,7 @@ CREATE TABLE kooste.osm_pisteet (
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POINT, 4326) NOT NULL,
+	tarmo_category text NOT NULL,
 	tags jsonb,
 	CONSTRAINT osm_pisteet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
@@ -1406,6 +1417,7 @@ CREATE TABLE kooste.osm_alueet (
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POLYGON, 4326) NOT NULL,
+	tarmo_category text NOT NULL,
 	tags jsonb,
 	CONSTRAINT osm_alueet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
@@ -1419,13 +1431,22 @@ CREATE TABLE kooste.osm_metadata (
 	last_modified timestamptz,
 	tags_to_include jsonb,
 	tags_to_exclude jsonb,
+	osm_types_tarmo_joukkoliikennepysakit jsonb,
 	CONSTRAINT osm_metadata_pk PRIMARY KEY (update_id)
 );
 -- ddl-end --
 ALTER TABLE kooste.osm_metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
-INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private", "permit"]}');
+INSERT INTO kooste.osm_metadata (
+    tags_to_include,
+    tags_to_exclude,
+    osm_types_tarmo_joukkoliikennepysakit
+) VALUES (
+    '{"amenity": ["parking"]}',
+    '{"access": ["private", "permit"]}',
+    '["Bus", "Tram", "Train"]'
+);
 
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
@@ -1434,6 +1455,8 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
+	type_name text DEFAULT 'Luonnonmuistomerkki',
 	"infoFi" text,
 	paatosnumero text,
 	paatospaiva date,
@@ -1450,10 +1473,11 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
+	tarmo_category text DEFAULT 'Ulkoilureitit',
+	type_name text DEFAULT 'Luontopolkurasti',
 	tunnus integer,
 	rasti integer,
 	"infoFi" text,
-	"additionalInfo" text,
 	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
 	UNIQUE (tunnus, rasti)
 );
@@ -1468,6 +1492,8 @@ CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
+	tarmo_category text DEFAULT 'Ulkoilureitit',
+	type_name text DEFAULT 'Luontopolku',
 	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)
 );
 -- ddl-end --
@@ -1486,7 +1512,11 @@ CREATE TABLE kooste.tamperewfs_metadata (
 ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
-INSERT INTO kooste.tamperewfs_metadata (layers_to_include) VALUES ('["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]');
+INSERT INTO kooste.tamperewfs_metadata (
+    layers_to_include
+) VALUES (
+    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]'
+);
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_rkykohteet CASCADE;
@@ -1495,6 +1525,8 @@ CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
 	geom geometry(MULTIPOINT, 3067) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
+	type_name text DEFAULT 'Rakennettu kulttuurikohde',
 	www text,
 	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("objectId")
 );
@@ -1509,8 +1541,9 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 	geom geometry(MULTIPOINT, 3067) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
 	"cityName" text,
-	type_name text,
+	type_name text DEFAULT 'Muinaisjäännös',
 	alatyyppi text,
 	ajoitus text,
 	vedenalainen boolean,
@@ -1530,6 +1563,16 @@ CREATE TABLE kooste.metadata (
 	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	datasource text NOT NULL,
 	last_modified timestamptz,
+	codes_tarmo_hiihto jsonb,
+	codes_tarmo_luistelu jsonb,
+	codes_tarmo_uinti jsonb,
+	codes_tarmo_vesilla_ulkoilu jsonb,
+	codes_tarmo_laavut_majat_ruokailu jsonb,
+	codes_tarmo_ulkoilupaikat jsonb,
+	codes_tarmo_ulkoiluaktiviteetit jsonb,
+	codes_tarmo_ulkoilureitit jsonb,
+	codes_tarmo_nahtavyydet jsonb,
+	codes_tarmo_pyoraily jsonb,
 	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
 
 );
@@ -1538,6 +1581,30 @@ COMMENT ON COLUMN kooste.metadata.datasource IS E'You can get this information f
 -- ddl-end --
 ALTER TABLE kooste.metadata OWNER TO tarmo_admin;
 -- ddl-end --
+
+INSERT INTO kooste.metadata (
+    codes_tarmo_hiihto,
+    codes_tarmo_luistelu,
+    codes_tarmo_uinti,
+    codes_tarmo_vesilla_ulkoilu,
+    codes_tarmo_laavut_majat_ruokailu,
+    codes_tarmo_ulkoilupaikat,
+    codes_tarmo_ulkoiluaktiviteetit,
+    codes_tarmo_ulkoilureitit,
+    codes_tarmo_nahtavyydet,
+    codes_tarmo_pyoraily
+) VALUES (
+    '[4402,4440,4630,4640]',
+    '[1510,1530,1540,1550]',
+    '[3220,3230,3240]',
+    '[201,203,205,5150,4451,4452]',
+    '[202,206,301,302,304]',
+    '[101,102,1110,1120]',
+    '[1130,1180,4710,4720,6210]',
+    '[207,4401,4403,4404,4405,4430]',
+    '[204]',
+    '[4411,4412]'
+);
 
 -- object: grant_rawd_ea7249322e | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
