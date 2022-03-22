@@ -18,7 +18,7 @@ const categories = [
     icon: "campfire-darkwater.png",
   },
   {
-    name: "pyöräily",
+    name: "pyoraily",
     icon: "cycling-darkwater.png",
   },
   {
@@ -38,15 +38,15 @@ const categories = [
     icon: "dinghy-darkwater.png",
   },
   {
-    name: "nähtävyydet",
+    name: "nahtavyydet",
     icon: "camera-darkwater.png",
   },
   {
-    name: "pysäköinti",
+    name: "pysakointi",
     icon: "parking-darkwater.png",
   },
   {
-    name: "pysäkit",
+    name: "pysakit",
     icon: "bus-darkwater.png",
   },
 ];

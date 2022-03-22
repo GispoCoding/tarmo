@@ -200,6 +200,10 @@ button.tarmo-ctrl-exit {
       &:hover {
         background-color: $hovercolor;
       }
+
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
     }
   }
 }
@@ -384,6 +388,7 @@ button.tarmo-ctrl-exit {
       background-repeat: no-repeat;
       width: inherit;
       height: inherit;
+      cursor: pointer;
 
       &::before {
         content: "";
@@ -392,13 +397,81 @@ button.tarmo-ctrl-exit {
         z-index: -99;
       }
 
-      &:hover {
-        background-image: url("/public/img/trekking-light.png") !important;
+      p {
+        display: none;
+      }
     }
 
-    p {
-      display: none;
+    .layerfilter-item-ulkoilureitit {
+      &:hover {
+        background-image: url("/public/img/trekking-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ulkoiluaktiviteetit {
+      &:hover {
+        background-image: url("/public/img/frisbee-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ulkoilupaikat {
+      &:hover {
+        background-image: url("/public/img/park-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ruokailu {
+      &:hover {
+        background-image: url("/public/img/campfire-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pyoraily {
+      &:hover {
+        background-image: url("/public/img/cycling-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-hiihto {
+      &:hover {
+        background-image: url("/public/img/ski-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-luistelu {
+      &:hover {
+        background-image: url("/public/img/skating-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-uinti {
+      &:hover {
+        background-image: url("/public/img/swimming-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-vesiulkoilu {
+      &:hover {
+        background-image: url("/public/img/dinghy-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-nahtavyydet {
+      &:hover {
+        background-image: url("/public/img/camera-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pysakointi {
+      &:hover {
+        background-image: url("/public/img/parking-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pysakit {
+      &:hover {
+        background-image: url("/public/img/bus-green.png") !important;
+      }
     }
   }
-}
 }
