@@ -164,7 +164,6 @@ button.tarmo-ctrl-exit {
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
@@ -174,7 +173,6 @@ button.tarmo-ctrl-exit {
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
