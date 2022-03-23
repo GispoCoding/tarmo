@@ -28,7 +28,6 @@ export default function InfoButton(props: InfoButtonProps) {
                 <li>Palvelun tiedot</li>
                 <li>Lisenssit</li>
                 <li>Tietosuoja</li>
-                <li>Palaute</li>
               </ul>
             </nav>
           </div>

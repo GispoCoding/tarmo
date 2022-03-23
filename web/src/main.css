@@ -159,20 +159,20 @@ button.tarmo-ctrl-exit {
 }
 
 .mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
-  .mapboxgl-ctrl-icon,
+button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
+.mapboxgl-ctrl-icon,
 .maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
-  .maplibregl-ctrl-icon {
+button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
+.maplibregl-ctrl-icon {
   filter: brightness(99);
 }
 
 .mapboxgl-ctrl
-  button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
-  .mapboxgl-ctrl-icon,
+button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-background
+.mapboxgl-ctrl-icon,
 .maplibregl-ctrl
-  button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
-  .maplibregl-ctrl-icon {
+button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
+.maplibregl-ctrl-icon {
   filter: brightness(99);
 }
 
@@ -235,10 +235,15 @@ button.tarmo-ctrl-exit {
   background: transparent;
   padding: 0.6em 1em;
   margin-bottom: 0.1em;
+  cursor: pointer;
 }
 
 .tarmo-button-menu-container ul li:hover {
   background-color: #8cc1b3;
+}
+
+.tarmo-button-menu-container ul li:last-child {
+  margin-bottom: 0 !important;
 }
 
 /** Components - InfoSlider */
