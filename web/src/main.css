@@ -123,6 +123,12 @@ tr td {
 }
 
 /** Components - LayerButton, LayerPicker */
+.LayerPicker {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+}
+
 .maplibregl-ctrl {
   background-color: #abc872;
   margin: 1.4em 1.4em 0 0 !important;
@@ -239,6 +245,10 @@ button.tarmo-ctrl-exit {
 
 .tarmo-button-menu-container ul li:hover {
   background-color: #8cc1b3;
+}
+
+.tarmo-button-menu-container ul li:last-child {
+  margin-bottom: 0 !important;
 }
 
 /** Components - InfoSlider */
@@ -386,6 +396,103 @@ button.tarmo-ctrl-exit {
   bottom: -30vh;
 }
 
+/** Components - LayerFilter */
+.layerfilter-wrapper {
+  display: block;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 200vw;
+  height: auto;
+  background-color: #fbfbfb90;
+  backdrop-filter: blur(6px);
+}
+
+.layerfilter-wrapper .layerfilter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.layerfilter-wrapper .layerfilter-item {
+  float: left;
+  width: 8vw;
+  height: 8vw;
+  margin: 1em;
+  overflow: hidden;
+}
+
+.layerfilter-wrapper .layerfilter-item button {
+  border: none;
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: inherit;
+  height: inherit;
+  cursor: pointer;
+}
+
+.layerfilter-wrapper .layerfilter-item button::before {
+  content: "";
+  position: absolute;
+  box-shadow: 0px 0px 16px 12px #ffffff99;
+  z-index: -99;
+}
+
+.layerfilter-wrapper .layerfilter-item button p {
+  display: none;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ulkoilureitit:hover {
+  background-image: url("/public/img/trekking-green.png") !important;
+}
+
+.layerfilter-wrapper
+  .layerfilter-item
+  .layerfilter-item-ulkoiluaktiviteetit:hover {
+  background-image: url("/public/img/frisbee-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ulkoilupaikat:hover {
+  background-image: url("/public/img/park-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ruokailu:hover {
+  background-image: url("/public/img/campfire-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pyoraily:hover {
+  background-image: url("/public/img/cycling-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-hiihto:hover {
+  background-image: url("/public/img/ski-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-luistelu:hover {
+  background-image: url("/public/img/skating-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-uinti:hover {
+  background-image: url("/public/img/swimming-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-vesiulkoilu:hover {
+  background-image: url("/public/img/dinghy-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-nahtavyydet:hover {
+  background-image: url("/public/img/camera-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pysakointi:hover {
+  background-image: url("/public/img/parking-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pysakit:hover {
+  background-image: url("/public/img/bus-green.png") !important;
+}
+
 /** Responsive breakpoints
     - Mobile = < 600px
     - Tablet = 600px - 900px
@@ -430,6 +537,19 @@ button.tarmo-ctrl-exit {
     text-align: center;
     max-width: none !important;
     float: none !important;
+  }
+  /** LayerFilter */
+  .layerfilter-wrapper {
+    width: 100vw;
+  }
+  .layerfilter-wrapper .layerfilter-container {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+  }
+  .layerfilter-wrapper .layerfilter-item {
+    width: 40px;
+    height: 40px;
   }
 }
 

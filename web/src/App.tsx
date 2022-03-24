@@ -4,6 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState } from "react";
 import InfoSlider from "./components/InfoSlider";
 import { PopupInfo } from "./types";
+import LayerFilter from "./components/LayerFilter";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -36,6 +37,7 @@ export default function App() {
     <div className="map-container">
       <TarmoMap setPopupInfo={setPopupInfo} />
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
+      {!popupInfo && <LayerFilter></LayerFilter>}
     </div>
   );
 }
