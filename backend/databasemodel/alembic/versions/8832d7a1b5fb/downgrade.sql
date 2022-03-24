@@ -121,11 +121,11 @@ ALTER COLUMN geom DROP NOT NULL;
 ALTER TABLE lipas.hevosreitti
 ALTER COLUMN geom DROP NOT NULL;
 
-ALTER TABLE kooste.lipas_pisteet
-ADD status text DEFAULT NULL;
+ALTER TABLE lipas.metadata
+DROP COLUMN tarmo_category_by_code;
 
 ALTER TABLE kooste.lipas_pisteet
-DROP COLUMN visibility;
+ADD status text DEFAULT NULL;
 
 -- VAIHDA NAIHIN boolean yms tilalle SET !!
 ALTER TABLE kooste.lipas_pisteet ALTER COLUMN toilet SET DEFAULT NULL;
@@ -163,9 +163,6 @@ ALTER TABLE kooste.lipas_pisteet ALTER COLUMN images SET DEFAULT NULL;
 
 ALTER TABLE kooste.lipas_viivat
 ADD status text DEFAULT NULL;
-
-ALTER TABLE kooste.lipas_viivat
-DROP visibility;
 
 ALTER TABLE kooste.lipas_viivat ALTER COLUMN toilet SET DEFAULT NULL;
 ALTER TABLE kooste.lipas_viivat ALTER COLUMN "restPlacesCount" SET DEFAULT NULL;
@@ -259,6 +256,9 @@ ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
 RENAME COLUMN "cityName" TO kunta;
 
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
+ALTER COLUMN type_name DROP DEFAULT;
+
+ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
 RENAME COLUMN type_name TO tyyppi;
 
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
@@ -272,48 +272,6 @@ GRANT SELECT
 ON TABLE kooste.metadata
 TO tarmo_read;
 
-ALTER TABLE lipas.metadata
-DROP COLUMN tarmo_categories_summer;
-
-ALTER TABLE lipas.metadata
-DROP COLUMN tarmo_categories_winter;
-
-ALTER TABLE lipas.metadata
-DROP COLUMN tarmo_categories_all_year;
-
-ALTER TABLE kooste.osm_metadata
-DROP COLUMN osm_types_tarmo_joukkoliikennepysakit;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_hiihto;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_luistelu;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_uinti;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_vesilla_ulkoilu;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_laavut_majat_ruokailu;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_ulkoilupaikat;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_ulkoiluaktiviteetit;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_ulkoilureitit;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_nahtavyydet;
-
-ALTER TABLE kooste.metadata
-DROP COLUMN codes_tarmo_pyoraily;
-
 ALTER TABLE kooste.lipas_pisteet
 DROP COLUMN tarmo_category;
 
@@ -323,9 +281,15 @@ DROP COLUMN tarmo_category;
 ALTER TABLE kooste.osm_pisteet
 DROP COLUMN tarmo_category;
 
+ALTER TABLE kooste.osm_pisteet
+DROP COLUMN type_name;
+
 ALTER TABLE kooste.osm_alueet
 DROP COLUMN tarmo_category;
 
+ALTER TABLE kooste.osm_alueet
+DROP COLUMN type_name;
+
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit
 DROP COLUMN tarmo_category;
 
@@ -352,6 +316,3 @@ DROP COLUMN type_name;
 
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet
 DROP COLUMN type_name;
-
-ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset
-ALTER COLUMN type_name DROP DEFAULT;

@@ -121,11 +121,17 @@ ALTER COLUMN geom SET NOT NULL;
 ALTER TABLE lipas.hevosreitti
 ALTER COLUMN geom SET NOT NULL;
 
-ALTER TABLE kooste.lipas_pisteet
-DROP COLUMN status;
+ALTER TABLE lipas.metadata
+ADD tarmo_category_by_code jsonb;
+
+INSERT INTO lipas.metadata (
+	tarmo_category_by_code
+) VALUES (
+	'{"Hiihto": [4402,4440,4630,4640], "Luistelu": [1510,1530,1540,1550], "Uinti": [3220,3230,3240], "Vesillä ulkoilu": [201,203,205,5150,4451,4452], "Laavut, majat, ruokailu": [202,206,301,302,304], "Ulkoilupaikat": [101,102,1110,1120], "Ulkoiluaktiviteetit": [1130,1180,4710,4720,6210], "Ulkoilureitit": [207,4401,4403,4404,4405,4430], "Pyöräily": [4411,4412], "Nähtävyydet": [204]}'
+);
 
 ALTER TABLE kooste.lipas_pisteet
-ADD visibility boolean DEFAULT True;
+DROP COLUMN status;
 
 ALTER TABLE kooste.lipas_pisteet ALTER COLUMN toilet DROP DEFAULT;
 ALTER TABLE kooste.lipas_pisteet ALTER COLUMN shower DROP DEFAULT;
@@ -162,9 +168,6 @@ ALTER TABLE kooste.lipas_pisteet ALTER COLUMN images DROP DEFAULT;
 
 ALTER TABLE kooste.lipas_viivat
 DROP COLUMN status;
-
-ALTER TABLE kooste.lipas_viivat
-ADD visibility boolean DEFAULT True;
 
 ALTER TABLE kooste.lipas_viivat ALTER COLUMN toilet DROP DEFAULT;
 ALTER TABLE kooste.lipas_viivat ALTER COLUMN "restPlacesCount" DROP DEFAULT;
@@ -271,95 +274,23 @@ GRANT DELETE
 ON TABLE kooste.metadata
 TO tarmo_read;
 
-ALTER TABLE lipas.metadata
-ADD tarmo_categories_summer jsonb;
-
-ALTER TABLE lipas.metadata
-ADD tarmo_categories_winter jsonb;
-
-ALTER TABLE lipas.metadata
-ADD tarmo_categories_all_year jsonb;
-
-INSERT INTO lipas.metadata (
-	tarmo_categories_summer,
-	tarmo_categories_winter,
-	tarmo_categories_all_year
-) VALUES (
-	'["Vesillä ulkoilu"]',
-	'["Hiihto", "Luistelu"]',
-	'["Uinti", "Laavut, majat, ruokailu", "Ulkoilupaikat", "Ulkoiluaktiviteetit", "Ulkoilureitit", "Pyöräily", "Nähtävyydet"]'
-);
-
-ALTER TABLE kooste.osm_metadata
-ADD osm_types_tarmo_joukkoliikennepysakit jsonb;
-
-INSERT INTO kooste.osm_metadata (osm_types_tarmo_joukkoliikennepysakit) VALUES ('["Bus", "Tram", "Train"]');
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_hiihto jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_luistelu jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_uinti jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_vesilla_ulkoilu jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_laavut_majat_ruokailu jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_ulkoilupaikat jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_ulkoiluaktiviteetit jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_ulkoilureitit jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_nahtavyydet jsonb;
-
-ALTER TABLE kooste.metadata
-ADD codes_tarmo_pyoraily jsonb;
-
-INSERT INTO kooste.metadata (
-    codes_tarmo_hiihto,
-    codes_tarmo_luistelu,
-    codes_tarmo_uinti,
-    codes_tarmo_vesilla_ulkoilu,
-    codes_tarmo_laavut_majat_ruokailu,
-    codes_tarmo_ulkoilupaikat,
-    codes_tarmo_ulkoiluaktiviteetit,
-    codes_tarmo_ulkoilureitit,
-    codes_tarmo_nahtavyydet,
-    codes_tarmo_pyoraily
-) VALUES (
-    '[4402,4440,4630,4640]',
-    '[1510,1530,1540,1550]',
-    '[3220,3230,3240]',
-    '[201,203,205,5150,4451,4452]',
-    '[202,206,301,302,304]',
-    '[101,102,1110,1120]',
-    '[1130,1180,4710,4720,6210]',
-    '[207,4401,4403,4404,4405,4430]',
-    '[204]',
-    '[4411,4412]'
-);
-
 ALTER TABLE kooste.lipas_pisteet
-ADD tarmo_category text NOT NULL;
+ADD tarmo_category text;
 
 ALTER TABLE kooste.lipas_viivat
-ADD tarmo_category text NOT NULL;
+ADD tarmo_category text;
 
 ALTER TABLE kooste.osm_pisteet
-ADD tarmo_category text NOT NULL;
+ADD tarmo_category text DEFAULT 'Pysäköinti';
+
+ALTER TABLE kooste.osm_pisteet
+ADD type_name text DEFAULT 'Pysäköintipaikka';
 
 ALTER TABLE kooste.osm_alueet
-ADD tarmo_category text NOT NULL;
+ADD tarmo_category text DEFAULT 'Pysäköinti';
+
+ALTER TABLE kooste.osm_alueet
+ADD type_name text DEFAULT 'Pysäköintialue';
 
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit
 ADD tarmo_category text DEFAULT 'Nähtävyydet';
