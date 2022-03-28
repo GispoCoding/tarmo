@@ -212,9 +212,6 @@ RENAME COLUMN nimi TO name;
 ALTER TABLE kooste.tamperewfs_luontopolkurastit
 RENAME COLUMN kohteenkuvaus TO "infoFi";
 
-ALTER TABLE kooste.tamperewfs_luontopolkurastit
-DROP COLUMN lisatietoja;
-
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
 ALTER COLUMN nakyvyys DROP NOT NULL;
 

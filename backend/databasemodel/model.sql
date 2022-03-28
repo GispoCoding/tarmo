@@ -1469,6 +1469,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	tunnus integer,
 	rasti integer,
 	"infoFi" text,
+	lisatietoja text,
 	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
 	UNIQUE (tunnus, rasti)
 );
