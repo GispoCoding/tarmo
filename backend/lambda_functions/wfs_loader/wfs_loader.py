@@ -97,6 +97,12 @@ class WFSLoader:
         "luonto:YV_LUONTOPOLKU": "tamperewfs_luontopolkureitit",
         "luonto:YV_LUONTORASTI": "tamperewfs_luontopolkurastit",
     }
+    # Any field names we want to harmonize with other data sources
+    FIELD_NAMES = {
+        "nimi": "name",
+        "kohteenkuvaus": "infoFi",
+        "kohteenkuvaus1": "infoFi",
+    }
     DEFAULT_PROJECTION = "4326"
     HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
@@ -191,6 +197,10 @@ class WFSLoader:
                 year=int(year), month=int(month), day=int(day)
             )
 
+        # Rename desired fields
+        for origin_name, tarmo_name in self.FIELD_NAMES.items():
+            if origin_name in lowercase_props.keys():
+                lowercase_props[tarmo_name] = lowercase_props.pop(origin_name)
         flattened = {
             **lowercase_props,
             "geom": geom.wkt,

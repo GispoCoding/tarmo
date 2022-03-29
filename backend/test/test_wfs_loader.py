@@ -313,6 +313,11 @@ def wfs_data(mock_wfs, loader, metadata_set):
 def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
     feature = loader.get_wfs_feature(wfs_data["features"][0])
     assert feature["sw_member"]
+    assert feature["name"] == "Lamminpään Kuusikorvenpuiston kuuset"
+    assert (
+        feature["infoFi"]
+        == "Lamminpäässä kasvavat viisi kuusta on rauhoitettu juurineen."
+    )
     assert feature["geom"].startswith("MULTIPOINT")
     assert feature["table"] == "tamperewfs_luonnonmuistomerkit"
 
@@ -320,6 +325,7 @@ def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
 def test_get_luontopolku_feature(loader, wfs_data):
     feature = loader.get_wfs_feature(wfs_data["features"][1])
     assert feature["tunnus"]
+    assert feature["name"] == "Viikinsaaren luontopolku"
     assert feature["geom"].startswith("MULTILINESTRING")
     assert feature["table"] == "tamperewfs_luontopolkureitit"
 
@@ -327,6 +333,8 @@ def test_get_luontopolku_feature(loader, wfs_data):
 def test_get_luontorasti_feature(loader, wfs_data):
     feature = loader.get_wfs_feature(wfs_data["features"][2])
     assert feature["mi_prinx"]
+    assert feature["name"] == "Metsälehmus - niinipuu"
+    assert feature["infoFi"] == "Niinipuun monet kasvot"
     assert feature["geom"].startswith("MULTIPOINT")
     assert feature["table"] == "tamperewfs_luontopolkurastit"
 
