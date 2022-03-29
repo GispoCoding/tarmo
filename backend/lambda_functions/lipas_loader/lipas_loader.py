@@ -114,6 +114,7 @@ class LipasLoader:
         type_codes_all_year: Optional[List[int]] = None,
         type_codes_summer: Optional[List[int]] = None,
         type_codes_winter: Optional[List[int]] = None,
+        tarmo_category_by_code: Optional[Dict] = None,
         lipas_api_url: Optional[str] = None,
         point_of_interest: Optional[Point] = None,
         point_radius: Optional[float] = None,
@@ -150,6 +151,16 @@ class LipasLoader:
                 if type_codes_winter
                 else metadata_row.type_codes_winter
             )
+            self.tarmo_category_by_code = (
+                tarmo_category_by_code
+                if tarmo_category_by_code
+                else metadata_row.tarmo_category_by_code
+            )
+            # the dict in the database is the other way around for easy update
+            self.category_from_code = {}
+            for category, code_list in self.tarmo_category_by_code.items():
+                for code in code_list:
+                    self.category_from_code[code] = category
 
     def get_sport_place_ids(self, only_page: Optional[int] = None) -> List[int]:
         results_left = only_page is None
@@ -207,12 +218,15 @@ class LipasLoader:
             # Unsupported geometry type
             return None
 
-        if type_data["type_typeCode"] in self.type_codes_summer:
+        # tarmo category and season both depend on the type code
+        type_code = type_data["type_typeCode"]
+        if type_code in self.type_codes_summer:
             season = Season.SUMMER.value
-        elif type_data["type_typeCode"] in self.type_codes_winter:
+        elif type_code in self.type_codes_winter:
             season = Season.WINTER.value
         else:
             season = Season.ALL_YEAR.value
+        tarmo_category = self.category_from_code[type_code]
 
         flattened = {
             **data,
@@ -222,6 +236,7 @@ class LipasLoader:
             "geom": geom.wkt,
             "table": table_name,
             "season": season,
+            "tarmo_category": tarmo_category,
         }
 
         return flattened

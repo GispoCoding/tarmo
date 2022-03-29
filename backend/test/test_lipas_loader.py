@@ -83,6 +83,7 @@ def test_get_sport_place_point(loader):
     assert sport_place["geom"] == "MULTIPOINT (27.2258867781278 63.545014556221)"
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "luistelukentta"
+    assert sport_place["tarmo_category"] == "Luistelu"
 
 
 def test_get_sport_place_line(loader):
@@ -91,6 +92,7 @@ def test_get_sport_place_line(loader):
     assert len(sport_place["geom"]) > 2000
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "latu"
+    assert sport_place["tarmo_category"] == "Hiihto"
 
 
 def test_get_sport_place_polygon_centroid(loader):
@@ -98,6 +100,7 @@ def test_get_sport_place_polygon_centroid(loader):
     assert sport_place["geom"].startswith("MULTIPOINT")
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "lahipuisto"
+    assert sport_place["tarmo_category"] == "Ulkoilupaikat"
 
 
 def test_get_sport_place_ulkoilumaja_hiihtomaja(loader):
@@ -105,6 +108,7 @@ def test_get_sport_place_ulkoilumaja_hiihtomaja(loader):
     assert sport_place["geom"] == "MULTIPOINT (22.2373969295559 62.4105611192765)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "ulkoilumaja_hiihtomaja"
+    assert sport_place["tarmo_category"] == "Laavut, majat, ruokailu"
 
 
 def test_get_sport_place_kavelyreitti_ulkoilureitti(loader):
@@ -113,6 +117,7 @@ def test_get_sport_place_kavelyreitti_ulkoilureitti(loader):
     assert len(sport_place["geom"]) > 1000
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "kavelyreitti_ulkoilureitti"
+    assert sport_place["tarmo_category"] == "Ulkoilureitit"
 
 
 def test_get_sport_place_frisbeegolfrata(loader):
@@ -120,6 +125,7 @@ def test_get_sport_place_frisbeegolfrata(loader):
     assert sport_place["geom"] == "MULTIPOINT (27.6580811870223 63.0789878701306)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "frisbeegolfrata"
+    assert sport_place["tarmo_category"] == "Ulkoiluaktiviteetit"
 
 
 def test_get_sport_place_veneilyn_palvelupaikka(loader):
@@ -127,6 +133,7 @@ def test_get_sport_place_veneilyn_palvelupaikka(loader):
     assert sport_place["geom"] == "MULTIPOINT (24.8293942857947 60.2031118334012)"
     assert sport_place["season"] == "Kesä"
     assert sport_place["table"] == "veneilyn_palvelupaikka"
+    assert sport_place["tarmo_category"] == "Vesillä ulkoilu"
 
 
 def test_get_sport_place_laavu_kota_tai_kammi(loader):
@@ -134,6 +141,7 @@ def test_get_sport_place_laavu_kota_tai_kammi(loader):
     assert sport_place["geom"] == "MULTIPOINT (24.9058410960006 63.2442368074224)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "laavu_kota_tai_kammi"
+    assert sport_place["tarmo_category"] == "Laavut, majat, ruokailu"
 
 
 # note that consecutive imports will add more objects to point and line tables:
