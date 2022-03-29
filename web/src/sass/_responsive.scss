@@ -56,6 +56,23 @@
       float: none !important;
     }
   }
+
+  /** LayerFilter */
+
+  .layerfilter-wrapper {
+    width: 100vw;
+
+    .layerfilter-container {
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+    }
+
+    .layerfilter-item {
+      width: 40px;
+      height: 40px;
+    }
+  }
 }
 
 @media only screen and (min-width: 600px) and (max-width: 900px) {

@@ -27,6 +27,7 @@ resource "aws_cloudwatch_event_rule" "lambda_lipas" {
   name        = "Tarmo-lambda-lipas-update"
   description = "Run lipas import every night"
   schedule_expression = "cron(0 4 * * ? *)"
+  tags              = local.default_tags
 }
 
 # not tested yet, probably won't work
