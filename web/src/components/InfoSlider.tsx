@@ -34,6 +34,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
       <div className="numbers">
         <h3>[10 km]</h3>
       </div>
+      <h4>{popupInfo.properties["season"]}</h4>
       <p>[Address], [postcode] [municipality]</p>
     </div>,
     <div key={2}>

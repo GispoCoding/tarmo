@@ -16,6 +16,7 @@ export const buildQuery = (
 export const parseFeature = (gqlFeature: gqlFeature): Feature => {
   // we have to be a bit creative to find out the stop type in Tampere
   let type: stopType = stopType.Bus;
+  let tarmo_category = "Bussipysäkki";
   if (
     gqlFeature.patterns.some(
       pattern =>
@@ -24,9 +25,11 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
     gqlFeature.gtfsId.startsWith("tampere")
   ) {
     type = stopType.Tram;
+    tarmo_category = "Ratikkapysäkki";
   }
   if (gqlFeature.gtfsId.startsWith("TampereVR")) {
     type = stopType.Train;
+    tarmo_category = "Rautatieasema";
   }
 
   return {
@@ -41,6 +44,7 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
       vehicleType: gqlFeature.vehicleType,
       patterns: gqlFeature.patterns,
       type: type,
+      tarmo_category: tarmo_category,
     },
   };
 };
