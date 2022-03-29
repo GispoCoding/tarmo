@@ -28,7 +28,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <div key={1}>
       <div className="titles">
         <h3>{popupInfo.properties["name"]}</h3>
-        <h4>[Ikoni ja kategoria]</h4>
+        <h4>{popupInfo.properties["tarmo_category"]}</h4>
         <h4>{popupInfo.properties["type_name"]}</h4>
       </div>
       <div className="numbers">
@@ -38,6 +38,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     </div>,
     <div key={2}>
       <h3>Aktiviteetit ja palvelut</h3>
+      <h4>{popupInfo.properties["infoFi"]}</h4>
     </div>,
     <div key={3}>
       <h3>Lue lisää kunnan verkkosivuilta</h3>
