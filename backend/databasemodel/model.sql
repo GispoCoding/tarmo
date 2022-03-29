@@ -1391,7 +1391,7 @@ ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- object: kooste.osm_pisteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_pisteet CASCADE;
 CREATE TABLE kooste.osm_pisteet (
-	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
+	id text NOT NULL,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POINT, 4326) NOT NULL,
@@ -1406,7 +1406,7 @@ ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 -- object: kooste.osm_alueet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.osm_alueet CASCADE;
 CREATE TABLE kooste.osm_alueet (
-	id text NOT NULL GENERATED ALWAYS AS (osm_type || '-' || CAST(osm_id AS TEXT)) STORED,
+	id text NOT NULL,
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POLYGON, 4326) NOT NULL,

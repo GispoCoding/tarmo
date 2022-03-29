@@ -153,7 +153,7 @@ class OSMLoader:
         ]
 
     def get_osm_feature(self, element: Dict[str, Any]) -> Optional[dict]:
-        id = element["id"]
+        osm_id = element["id"]
         type = element["type"]
         tags = element["tags"]
 
@@ -179,9 +179,15 @@ class OSMLoader:
         if geom.is_empty:
             return None
 
-        # OSM ids are *only* unique *within* each type! Let db create the unique id.
+        # OSM ids are *only* unique *within* each type!
+        # SQLAlchemy merge() doesn't know how to handle unique constraints that are not
+        # pk. Therefore, we will have to specify the primary key here (not generated in
+        # db) so we will not get an IntegrityError.
+        # https://sqlalchemy.narkive.com/mCDgZiDa/why-does-session-merge-only-look-at-primary-key-and-not-all-unique-keys
+        id = "-".join((type, str(osm_id)))
         flattened = {
-            "osm_id": id,
+            "id": id,
+            "osm_id": osm_id,
             "osm_type": type,
             "geom": geom.wkt,
             "tags": tags,
