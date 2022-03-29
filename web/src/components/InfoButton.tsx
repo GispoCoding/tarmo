@@ -1,8 +1,13 @@
 import * as React from "react";
-import { useState } from "react";
 
-export default function InfoButton() {
-  const [isOpen, setIsOpen] = useState(false);
+interface InfoButtonProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function InfoButton(props: InfoButtonProps) {
+  const isOpen = props.isOpen;
+  const setIsOpen = props.setIsOpen;
 
   return (
     <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
@@ -11,13 +16,11 @@ export default function InfoButton() {
         <div className="tarmo-button-wrapper">
           <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
             <button
-              className={"tarmo-ctrl-exit"}
+              className={"tarmo-icon-close"}
               type={"button"}
               title={"Toggle"}
               onClick={() => setIsOpen(!isOpen)}
-            >
-              X
-            </button>
+            ></button>
           </div>
           <div className="tarmo-button-menu-container">
             <nav className="tarmo-button-menu">
@@ -33,12 +36,12 @@ export default function InfoButton() {
       ) : (
         <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
           <button
-            className={"mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in"}
+            className={"mapboxgl-ctrl-icon tarmo-icon"}
             type={"button"}
             title={"Toggle info menu"}
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span className={"mapboxgl-ctrl-icon"} />
+            <span className={"mapboxgl-ctrl-icon tarmo-icon-menu"} />
           </button>
         </div>
       )}

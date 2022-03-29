@@ -123,6 +123,12 @@ tr td {
 }
 
 /** Components - LayerButton, LayerPicker */
+.LayerPicker {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+}
+
 .maplibregl-ctrl {
   background-color: #abc872;
   margin: 1.4em 1.4em 0 0 !important;
@@ -141,13 +147,29 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
+.tarmo-icon-close {
+  background-image: url("/public/img/close-dark.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: 50%;
+}
+
+.tarmo-icon-menu {
+  background-image: url("/public/img/info-dark.svg");
+  background-size: 70%;
+}
+
+.tarmo-icon-layerpicker {
+  background-image: url("/public/img/layers-dark.png");
+  background-size: 70%;
+}
+
 .mapboxgl-ctrl
   button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
   .mapboxgl-ctrl-icon,
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
@@ -157,7 +179,6 @@ button.tarmo-ctrl-exit {
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
@@ -168,7 +189,7 @@ button.tarmo-ctrl-exit {
 
 .mapboxgl-ctrl-group,
 .maplibregl-ctrl-group {
-  border-radius: 0.8em;
+  border-radius: 0.6em;
 }
 
 .mapboxgl-ctrl-top-right,
@@ -226,9 +247,318 @@ button.tarmo-ctrl-exit {
   background-color: #8cc1b3;
 }
 
-/** Components - LipasPopup */
+.tarmo-button-menu-container ul li:last-child {
+  margin-bottom: 0 !important;
+}
+
+/** Components - InfoSlider */
+.slider {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: #397368f0;
+  transition: bottom 0.5s;
+  -webkit-transition: bottom 0.5s;
+  backdrop-filter: blur(4px);
+}
+
+.slider .nav-content .burger__checkbox {
+  display: none;
+}
+
+.slider .nav-content label.burger__toggle {
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  width: auto;
+  text-align: center;
+  z-index: 10;
+  list-style-type: none;
+}
+
+.slider .nav-content svg {
+  max-width: 2em;
+  height: auto;
+  fill: none;
+  stroke: #fbfbfb;
+  stroke-width: 2;
+  stroke-linecap: round;
+  padding: 0.8em 0 0 0;
+}
+
+.slider .text-content {
+  transition: 0.5s all linear;
+  will-change: transform;
+  padding: 0 1.4em;
+}
+
+.slider .dots-content {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: auto;
+  text-align: center;
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  z-index: 10;
+  list-style-type: none;
+}
+
+.slider .dots-content li {
+  display: inline-block;
+  padding: 2px;
+}
+
+.slider .dots-content li button {
+  color: #585857;
+  background-color: transparent;
+  border: none;
+}
+
+.slider .dots-content li button:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.slider .dots-content li.active button {
+  color: #fbfbfb;
+}
+
+.slider .each-slide {
+  width: 100vw;
+  height: 30vh;
+  float: left;
+  color: #fbfbfb;
+}
+
+.slider .each-slide .numbers {
+  position: relative;
+  width: 20vw;
+  float: left;
+}
+
+.slider .each-slide .titles {
+  position: relative;
+  width: 70vw;
+  float: left;
+}
+
+.slider .each-slide .titles h1,
+.slider .each-slide .titles h2,
+.slider .each-slide .titles h3,
+.slider .each-slide .titles h4,
+.slider .each-slide .titles h5,
+.slider .each-slide .titles h6 {
+  margin-bottom: 0;
+  margin-top: 0.8em;
+}
+
+.slider .each-slide h1,
+.slider .each-slide h2,
+.slider .each-slide h3,
+.slider .each-slide h4,
+.slider .each-slide h5,
+.slider .each-slide h6 {
+  color: #fbfbfb;
+  float: left;
+  clear: both;
+  letter-spacing: 0.04em;
+}
+
+.slider .each-slide p {
+  font-family: "Open Sans", Arial;
+  max-width: 90vw;
+  float: left;
+  margin-top: 1.4em;
+}
+
+.slider .each-slide button {
+  background-color: #abc872;
+  border: none;
+  padding: 1em;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: "Open Sans", Arial;
+  color: #333;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.slider .each-slide button:hover {
+  background-color: #8cc1b3;
+}
+
+.slider.isHidden {
+  bottom: -30vh;
+}
+
+/** Components - LayerFilter */
+.layerfilter-wrapper {
+  display: block;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 200vw;
+  height: auto;
+  background-color: #fbfbfb90;
+  backdrop-filter: blur(6px);
+}
+
+.layerfilter-wrapper .layerfilter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.layerfilter-wrapper .layerfilter-item {
+  float: left;
+  width: 8vw;
+  height: 8vw;
+  margin: 1em;
+  overflow: hidden;
+}
+
+.layerfilter-wrapper .layerfilter-item button {
+  border: none;
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: inherit;
+  height: inherit;
+  cursor: pointer;
+}
+
+.layerfilter-wrapper .layerfilter-item button::before {
+  content: "";
+  position: absolute;
+  box-shadow: 0px 0px 16px 12px #ffffff99;
+  z-index: -99;
+}
+
+.layerfilter-wrapper .layerfilter-item button p {
+  display: none;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ulkoilureitit:hover {
+  background-image: url("/public/img/trekking-green.png") !important;
+}
+
+.layerfilter-wrapper
+  .layerfilter-item
+  .layerfilter-item-ulkoiluaktiviteetit:hover {
+  background-image: url("/public/img/frisbee-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ulkoilupaikat:hover {
+  background-image: url("/public/img/park-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-ruokailu:hover {
+  background-image: url("/public/img/campfire-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pyoraily:hover {
+  background-image: url("/public/img/cycling-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-hiihto:hover {
+  background-image: url("/public/img/ski-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-luistelu:hover {
+  background-image: url("/public/img/skating-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-uinti:hover {
+  background-image: url("/public/img/swimming-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-vesiulkoilu:hover {
+  background-image: url("/public/img/dinghy-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-nahtavyydet:hover {
+  background-image: url("/public/img/camera-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pysakointi:hover {
+  background-image: url("/public/img/parking-green.png") !important;
+}
+
+.layerfilter-wrapper .layerfilter-item .layerfilter-item-pysakit:hover {
+  background-image: url("/public/img/bus-green.png") !important;
+}
+
 /** Responsive breakpoints
     - Mobile = < 600px
     - Tablet = 600px - 900px
     - Desktop = > 900px
 */
+@media only screen and (min-width: 900px) {
+  /** SplashScreen */
+  .splashscreen-container {
+    justify-content: center;
+  }
+  .splashscreen-container .splashscreen-heroimg {
+    left: 0;
+  }
+  /** LayerButton, InfoButton, LayerPicker */
+  .tarmo-button-menu-container {
+    width: 20vw;
+  }
+  /** ModalSlider */
+  .each-slide .button-slide {
+    position: relative;
+    right: -45%;
+  }
+  .each-slide .titles {
+    width: unset !important;
+    float: none !important;
+  }
+  .each-slide .numbers {
+    width: unset !important;
+    float: none !important;
+  }
+  .each-slide p {
+    text-align: center;
+    max-width: none !important;
+    float: none !important;
+  }
+  .each-slide h1,
+  .each-slide h2,
+  .each-slide h3,
+  .each-slide h4,
+  .each-slide h5,
+  .each-slide h6 {
+    text-align: center;
+    max-width: none !important;
+    float: none !important;
+  }
+  /** LayerFilter */
+  .layerfilter-wrapper {
+    width: 100vw;
+  }
+  .layerfilter-wrapper .layerfilter-container {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+  }
+  .layerfilter-wrapper .layerfilter-item {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 900px) {
+  /** SplashScreen */
+  .splashscreen-container {
+    justify-content: center;
+  }
+  .splashscreen-container .splashscreen-heroimg {
+    left: 0;
+  }
+}

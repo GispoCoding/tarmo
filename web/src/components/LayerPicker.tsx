@@ -1,15 +1,17 @@
 import * as React from "react";
-import { useState } from "react";
 import { LAYERS } from "./style";
 import LayerButton from "./LayerButton";
 import { Style } from "mapbox-gl";
 
 interface LayerPickerProps {
   setter: (layer: Style | undefined) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function LayerPicker(props: LayerPickerProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = props.isOpen;
+  const setIsOpen = props.setIsOpen;
   const setter = props.setter;
 
   const layers = LAYERS.map(layer => {
@@ -23,13 +25,11 @@ export default function LayerPicker(props: LayerPickerProps) {
         <div className="tarmo-button-wrapper">
           <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
             <button
-              className={"tarmo-ctrl-exit"}
+              className={"tarmo-icon-close"}
               type={"button"}
               title={"Toggle"}
               onClick={() => setIsOpen(!isOpen)}
-            >
-              X
-            </button>
+            ></button>
           </div>
           <div className="tarmo-button-menu-container">
             <nav className="tarmo-button-menu">
@@ -43,12 +43,12 @@ export default function LayerPicker(props: LayerPickerProps) {
       ) : (
         <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
           <button
-            className={"mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in"}
+            className={"mapboxgl-ctrl-icon tarmo-icon"}
             type={"button"}
             title={"Toggle layer picker"}
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span className={"mapboxgl-ctrl-icon"} />
+            <span className={"mapboxgl-ctrl-icon tarmo-icon-layerpicker"} />
           </button>
         </div>
       )}

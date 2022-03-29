@@ -73,6 +73,12 @@
 
 /** Components - LayerButton, LayerPicker */
 
+.LayerPicker {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+}
+
 // Singular buttons
 .maplibregl-ctrl {
   background-color: $buttoncolor;
@@ -92,13 +98,29 @@ button.tarmo-ctrl-exit {
   transform: translate(0);
 }
 
+.tarmo-icon-close {
+  background-image: url("/public/img/close-dark.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: 50%;
+}
+
+.tarmo-icon-menu {
+  background-image: url("/public/img/info-dark.svg");
+  background-size: 70%;
+}
+
+.tarmo-icon-layerpicker {
+  background-image: url("/public/img/layers-dark.png");
+  background-size: 70%;
+}
+
 .mapboxgl-ctrl
   button.mapboxgl-ctrl-geolocate.mapboxgl-ctrl-geolocate-active
   .mapboxgl-ctrl-icon,
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
@@ -108,7 +130,6 @@ button.tarmo-ctrl-exit {
 .maplibregl-ctrl
   button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background
   .maplibregl-ctrl-icon {
-  background-image: inherit;
   filter: brightness(99);
 }
 
@@ -122,7 +143,7 @@ button.tarmo-ctrl-exit {
 
 .mapboxgl-ctrl-group,
 .maplibregl-ctrl-group {
-  border-radius: 0.8em;
+  border-radius: 0.6em;
 }
 
 // Button components
@@ -179,8 +200,278 @@ button.tarmo-ctrl-exit {
       &:hover {
         background-color: $hovercolor;
       }
+
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
     }
   }
 }
 
-/** Components - LipasPopup */
+/** Components - InfoSlider */
+
+.slider {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: #397368f0;
+  transition: bottom 0.5s;
+  -webkit-transition: bottom 0.5s;
+  backdrop-filter: blur(4px);
+
+  .nav-content {
+    .burger__checkbox {
+      display: none;
+    }
+
+    label.burger__toggle {
+      cursor: pointer;
+      display: block;
+      padding: 0;
+      width: auto;
+      text-align: center;
+      z-index: 10;
+      list-style-type: none;
+    }
+
+    svg {
+      max-width: 2em;
+      height: auto;
+      fill: none;
+      stroke: $grey1;
+      stroke-width: 2;
+      stroke-linecap: round;
+      padding: 0.8em 0 0 0;
+    }
+  }
+
+  .text-content {
+    transition: 0.5s all linear;
+    will-change: transform;
+    padding: 0 1.4em;
+  }
+
+  .dots-content {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: auto;
+    text-align: center;
+    left: 50%;
+    bottom: 9px;
+    transform: translateX(-50%);
+    z-index: 10;
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      padding: 2px;
+
+      button {
+        color: $darkcoolgrey;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+          text-decoration: none;
+          opacity: 0.7;
+          cursor: pointer;
+        }
+      }
+    }
+
+    li.active button {
+      color: $grey1;
+    }
+  }
+
+  .each-slide {
+    width: 100vw;
+    height: 30vh;
+    float: left;
+    color: $grey1;
+
+    .numbers {
+      position: relative;
+      width: 20vw;
+      float: left;
+    }
+
+    .titles {
+      position: relative;
+      width: 70vw;
+      float: left;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-bottom: 0;
+        margin-top: 0.8em;
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $grey1;
+      float: left;
+      clear: both;
+      letter-spacing: 0.04em;
+    }
+
+    p {
+      font-family: $bodyfont;
+      max-width: 90vw;
+      float: left;
+      margin-top: 1.4em;
+    }
+
+    button {
+      background-color: $buttoncolor;
+      border: none;
+      padding: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: $bodyfont;
+      color: $grey5;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $hovercolor;
+      }
+    }
+  }
+}
+
+.slider.isHidden {
+  bottom: -30vh;
+}
+
+/** Components - LayerFilter */
+
+.layerfilter-wrapper {
+  display: block;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 200vw;
+  height: auto;
+  background-color: #fbfbfb90;
+  backdrop-filter: blur(6px);
+
+  .layerfilter-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .layerfilter-item {
+    float: left;
+    width: 8vw;
+    height: 8vw;
+    margin: 1em;
+    overflow: hidden;
+
+    button {
+      border: none;
+      background-color: transparent;
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: inherit;
+      height: inherit;
+      cursor: pointer;
+
+      &::before {
+        content: "";
+        position: absolute;
+        box-shadow: 0px 0px 16px 12px #ffffff99;
+        z-index: -99;
+      }
+
+      p {
+        display: none;
+      }
+    }
+
+    .layerfilter-item-ulkoilureitit {
+      &:hover {
+        background-image: url("/public/img/trekking-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ulkoiluaktiviteetit {
+      &:hover {
+        background-image: url("/public/img/frisbee-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ulkoilupaikat {
+      &:hover {
+        background-image: url("/public/img/park-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-ruokailu {
+      &:hover {
+        background-image: url("/public/img/campfire-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pyoraily {
+      &:hover {
+        background-image: url("/public/img/cycling-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-hiihto {
+      &:hover {
+        background-image: url("/public/img/ski-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-luistelu {
+      &:hover {
+        background-image: url("/public/img/skating-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-uinti {
+      &:hover {
+        background-image: url("/public/img/swimming-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-vesiulkoilu {
+      &:hover {
+        background-image: url("/public/img/dinghy-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-nahtavyydet {
+      &:hover {
+        background-image: url("/public/img/camera-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pysakointi {
+      &:hover {
+        background-image: url("/public/img/parking-green.png") !important;
+      }
+    }
+
+    .layerfilter-item-pysakit {
+      &:hover {
+        background-image: url("/public/img/bus-green.png") !important;
+      }
+    }
+  }
+}

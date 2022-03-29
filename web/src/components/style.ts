@@ -37,6 +37,8 @@ export const OSM_STYLE: Style = {
 
 export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
+export const NLS_STYLE_LABELS_URI = "map-styles/nls-style-labels.json";
+
 export const LIPAS_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [`${process.env.TILESERVER_URL}/kooste.lipas_pisteet/{z}/{x}/{y}.pbf`],
@@ -57,8 +59,9 @@ export const LIPAS_POINT_STYLE: LayerProps = {
   "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
   "paint": {
-    "circle-radius": 5,
-    "circle-color": "#007cbf",
+    "circle-radius": 8,
+    // Circle color is "darkwater" from the brand book
+    "circle-color": "#00417d",
   },
 };
 
@@ -69,7 +72,8 @@ export const LIPAS_LINE_STYLE: LayerProps = {
   "type": "line",
   "paint": {
     "line-width": 2,
-    "line-color": "#00bf5c",
+    // Line color is "green" from the brand book
+    "line-color": "#abc872",
   },
 };
 
@@ -106,8 +110,9 @@ export const WFS_LUONNONMUISTOMERKKI_STYLE: LayerProps = {
   "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
   "type": "circle",
   "paint": {
-    "circle-radius": 5,
-    "circle-color": "#007cbf",
+    "circle-radius": 8,
+    // Circle color is "darkwater" from brand book
+    "circle-color": "#00417d",
   },
 };
 
@@ -118,7 +123,8 @@ export const WFS_LUONTOPOLKUREITTI_STYLE: LayerProps = {
   "type": "line",
   "paint": {
     "line-width": 2,
-    "line-color": "#00bf5c",
+    // Line color is "green" from brand book
+    "line-color": "#abc872",
   },
 };
 
@@ -128,8 +134,8 @@ export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
   "source-layer": "kooste.tamperewfs_luontopolkurastit",
   "type": "circle",
   "paint": {
-    "circle-radius": 5,
-    "circle-color": "#007cbf",
+    "circle-radius": 8,
+    "circle-color": "#00417d",
   },
 };
 
@@ -148,7 +154,7 @@ export const OSM_AREA_SOURCE: VectorSource = {
 };
 
 const parking_image: HTMLImageElement = new Image(24, 24);
-parking_image.src = "/img/parking.svg";
+parking_image.src = "/img/parking.png";
 export const OSM_IMAGES = [["parking", parking_image]];
 
 export const OSM_POINT_LABEL_STYLE: LayerProps = {
@@ -193,7 +199,7 @@ export const DIGITRANSIT_IMAGES = digiTransitImageIds.map((key, index) => [
 // [string, HTMLImageElement] typing does not work here, no idea why?
 DIGITRANSIT_IMAGES.forEach(
   // eslint-disable-next-line
-  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.svg`)
+  (tuple: any) => (tuple[1].src = `/img/${tuple[0]}.png`)
 );
 
 export const DIGITRANSIT_POINT_STYLE: LayerProps = {

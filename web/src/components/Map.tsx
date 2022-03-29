@@ -27,6 +27,7 @@ import {
   OSM_POINT_SOURCE,
   OSM_POINT_LABEL_STYLE,
   NLS_STYLE_URI,
+  // NLS_STYLE_LABELS_URI,
   OSM_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
@@ -47,10 +48,30 @@ interface TarmoMapProps {
 export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const [mapStyle, setMapStyle] = useState(OSM_STYLE);
   const [showNav, setShowNav] = useState(true);
+  const [layerPickerOpen, setLayerPickerOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [zoom, setZoom] = useState(4.5);
   const [bounds, setBounds] = useState<Bbox | null>(null);
   const [externalData, setExternalData] =
     useState<Map<LayerId, FeatureCollection>>();
+
+  const layerPickerOpenSetter = (open: boolean) => {
+    if (open) {
+      setLayerPickerOpen(true);
+      setInfoOpen(false);
+    } else {
+      setLayerPickerOpen(false);
+    }
+  };
+
+  const infoOpenSetter = (open: boolean) => {
+    if (open) {
+      setInfoOpen(true);
+      setLayerPickerOpen(false);
+    } else {
+      setInfoOpen(false);
+    }
+  };
 
   const externalSources = new Map<LayerId, ExternalSource>([
     [
@@ -289,8 +310,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <>
           <NavigationControl />
           <GeolocateControl trackUserLocation={true} />
-          <LayerPicker setter={setLayer} />
-          <InfoButton />
+          <LayerPicker
+            setter={setLayer}
+            isOpen={layerPickerOpen}
+            setIsOpen={layerPickerOpenSetter}
+          />
+          <InfoButton isOpen={infoOpen} setIsOpen={infoOpenSetter} />
         </>
       )}
     </MapGL>

@@ -20,18 +20,32 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     return <div></div>;
   }
 
+  // TODO: If "numbers" have no content, don't show it
+  // TODO: Array address, postcode and municipality from different fields
+
   // TODO: Fill content here
   const slides = [
     <div key={1}>
-      <h3>{popupInfo.properties["name"]}</h3>
-      <p>{popupInfo.properties["type_name"]}</p>
+      <div className="titles">
+        <h3>{popupInfo.properties["name"]}</h3>
+        <h4>[Ikoni ja kategoria]</h4>
+        <h4>{popupInfo.properties["type_name"]}</h4>
+      </div>
+      <div className="numbers">
+        <h3>[10 km]</h3>
+      </div>
+      <p>[Address], [postcode] [municipality]</p>
     </div>,
     <div key={2}>
       <h3>Aktiviteetit ja palvelut</h3>
     </div>,
     <div key={3}>
       <h3>Lue lisää kunnan verkkosivuilta</h3>
-      <a href={popupInfo.properties["www"]}>Siirry verkkosivulle</a>
+      <div className="button-slide">
+        <a href={popupInfo.properties["www"]}>
+          <button>Siirry verkkosivuille</button>
+        </a>
+      </div>
     </div>,
   ];
 
@@ -66,8 +80,8 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     );
 
   return (
-    <section className={"slider" + (isHidden ? " isHidden" : "")}>
-      <div className="container nav-container">
+    <div className={"slider" + (isHidden ? " isHidden" : "")}>
+      <div className="container nav-content">
         <input
           id="burger"
           className="burger__checkbox"
@@ -75,24 +89,16 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           onClick={() => setHidden(!isHidden)}
         />
         <label className="burger__toggle" htmlFor="burger">
-          <svg
-            width="35"
-            height="35"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#397368"
-            strokeWidth="2"
-            strokeLinecap="butt"
-          >
+          <svg viewBox="0 0 24 24">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
           </svg>
         </label>
       </div>
-      <div className="wrapper" style={setSliderStyles()}>
+      <div className="container text-content" style={setSliderStyles()}>
         {renderSlides()}
       </div>
-      <ul className="dots-container">{renderDots()}</ul>
-    </section>
+      <ul className="container dots-content">{renderDots()}</ul>
+    </div>
   );
 }
