@@ -65,8 +65,8 @@ CREATE TABLE lipas.abstract (
 	admin text,
 	www text,
 	name text NOT NULL,
-	"type_typeCode" integer,
-	type_name text,
+	"type_typeCode" integer NOT NULL,
+	type_name text NOT NULL,
 	"phoneNumber" text,
 	location_address text,
 	location_city_name text,
@@ -83,7 +83,7 @@ ALTER TABLE lipas.abstract OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.luistelukentta CASCADE;
 CREATE TABLE lipas.luistelukentta (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	"changingRooms" boolean,
 	toilet boolean,
@@ -93,8 +93,8 @@ CREATE TABLE lipas.luistelukentta (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -114,7 +114,7 @@ ALTER TABLE lipas.luistelukentta OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.hiihtomaa CASCADE;
 CREATE TABLE lipas.hiihtomaa (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	"equipmentRental" boolean,
 	kiosk boolean,
 	"skiService" boolean,
@@ -130,8 +130,8 @@ CREATE TABLE lipas.hiihtomaa (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -149,7 +149,7 @@ ALTER TABLE lipas.hiihtomaa OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kilpahiihtokeskus CASCADE;
 CREATE TABLE lipas.kilpahiihtokeskus (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	"skiService" boolean,
 	sauna boolean,
@@ -167,8 +167,8 @@ CREATE TABLE lipas.kilpahiihtokeskus (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -186,7 +186,7 @@ ALTER TABLE lipas.kilpahiihtokeskus OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kaukalo CASCADE;
 CREATE TABLE lipas.kaukalo (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	"changingRooms" boolean,
 	toilet boolean,
 	ligthing boolean,
@@ -195,8 +195,8 @@ CREATE TABLE lipas.kaukalo (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -216,7 +216,7 @@ ALTER TABLE lipas.kaukalo OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.luistelureitti CASCADE;
 CREATE TABLE lipas.luistelureitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	"equipmentRental" boolean,
 	toilet boolean,
@@ -227,8 +227,8 @@ CREATE TABLE lipas.luistelureitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -248,7 +248,7 @@ ALTER TABLE lipas.luistelureitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.tekojaakentta CASCADE;
 CREATE TABLE lipas.tekojaakentta (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	"changingRooms" boolean,
 	toilet boolean,
@@ -258,8 +258,8 @@ CREATE TABLE lipas.tekojaakentta (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -279,15 +279,15 @@ ALTER TABLE lipas.tekojaakentta OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.ruoanlaittopaikka CASCADE;
 CREATE TABLE lipas.ruoanlaittopaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -305,15 +305,15 @@ ALTER TABLE lipas.ruoanlaittopaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.laavu_kota_tai_kammi CASCADE;
 CREATE TABLE lipas.laavu_kota_tai_kammi (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -331,15 +331,15 @@ ALTER TABLE lipas.laavu_kota_tai_kammi OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.ulkoilumaja_hiihtomaja CASCADE;
 CREATE TABLE lipas.ulkoilumaja_hiihtomaja (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -357,15 +357,15 @@ ALTER TABLE lipas.ulkoilumaja_hiihtomaja OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.tupa CASCADE;
 CREATE TABLE lipas.tupa (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -383,15 +383,15 @@ ALTER TABLE lipas.tupa OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.telttailu_leiriytyminen CASCADE;
 CREATE TABLE lipas.telttailu_leiriytyminen (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -409,7 +409,7 @@ ALTER TABLE lipas.telttailu_leiriytyminen OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.lahiliikuntapaikka CASCADE;
 CREATE TABLE lipas.lahiliikuntapaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"accessibilityInfo" text,
 	"infoFi" text,
@@ -419,8 +419,8 @@ CREATE TABLE lipas.lahiliikuntapaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -440,7 +440,7 @@ ALTER TABLE lipas.lahiliikuntapaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.ulkokuntoilupaikka CASCADE;
 CREATE TABLE lipas.ulkokuntoilupaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"infoFi" text,
 	"exerciseMachinesCount" numeric,
@@ -449,8 +449,8 @@ CREATE TABLE lipas.ulkokuntoilupaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -470,7 +470,7 @@ ALTER TABLE lipas.ulkokuntoilupaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.koiraurheilualue CASCADE;
 CREATE TABLE lipas.koiraurheilualue (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	ligthing boolean,
 	"infoFi" text,
@@ -479,8 +479,8 @@ CREATE TABLE lipas.koiraurheilualue (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -500,7 +500,7 @@ ALTER TABLE lipas.koiraurheilualue OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.frisbeegolfrata CASCADE;
 CREATE TABLE lipas.frisbeegolfrata (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"accessibilityInfo" text,
 	"infoFi" text,
@@ -513,8 +513,8 @@ CREATE TABLE lipas.frisbeegolfrata (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -534,7 +534,7 @@ ALTER TABLE lipas.frisbeegolfrata OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.ulkokiipeilyseina CASCADE;
 CREATE TABLE lipas.ulkokiipeilyseina (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"infoFi" text,
 	"climbingWallWidthM" numeric,
@@ -545,8 +545,8 @@ CREATE TABLE lipas.ulkokiipeilyseina (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -566,7 +566,7 @@ ALTER TABLE lipas.ulkokiipeilyseina OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kiipeilykallio CASCADE;
 CREATE TABLE lipas.kiipeilykallio (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"infoFi" text,
 	"climbingWallWidthM" numeric,
@@ -577,8 +577,8 @@ CREATE TABLE lipas.kiipeilykallio (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -598,7 +598,7 @@ ALTER TABLE lipas.kiipeilykallio OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.rantautumispaikka CASCADE;
 CREATE TABLE lipas.rantautumispaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 	pier boolean,
@@ -607,8 +607,8 @@ CREATE TABLE lipas.rantautumispaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -626,7 +626,7 @@ ALTER TABLE lipas.rantautumispaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.veneilyn_palvelupaikka CASCADE;
 CREATE TABLE lipas.veneilyn_palvelupaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 	pier boolean,
@@ -635,8 +635,8 @@ CREATE TABLE lipas.veneilyn_palvelupaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -654,15 +654,15 @@ ALTER TABLE lipas.veneilyn_palvelupaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kalastusalue_paikka CASCADE;
 CREATE TABLE lipas.kalastusalue_paikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -680,7 +680,7 @@ ALTER TABLE lipas.kalastusalue_paikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.koskimelontakeskus CASCADE;
 CREATE TABLE lipas.koskimelontakeskus (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	"equipmentRental" boolean,
 	"infoFi" text,
 	"altitudeDifference" numeric,
@@ -689,8 +689,8 @@ CREATE TABLE lipas.koskimelontakeskus (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -708,15 +708,15 @@ ALTER TABLE lipas.koskimelontakeskus OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.luontotorni CASCADE;
 CREATE TABLE lipas.luontotorni (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -734,15 +734,15 @@ ALTER TABLE lipas.luontotorni OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.opastuspiste CASCADE;
 CREATE TABLE lipas.opastuspiste (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	toilet boolean,
 	"infoFi" text,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -760,7 +760,7 @@ ALTER TABLE lipas.opastuspiste OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.uimaranta CASCADE;
 CREATE TABLE lipas.uimaranta (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	sauna boolean,
 	shower boolean,
@@ -773,8 +773,8 @@ CREATE TABLE lipas.uimaranta (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -792,7 +792,7 @@ ALTER TABLE lipas.uimaranta OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.uimapaikka CASCADE;
 CREATE TABLE lipas.uimapaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	sauna boolean,
 	shower boolean,
@@ -805,8 +805,8 @@ CREATE TABLE lipas.uimapaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -824,7 +824,7 @@ ALTER TABLE lipas.uimapaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.talviuintipaikka CASCADE;
 CREATE TABLE lipas.talviuintipaikka (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	kiosk boolean,
 	sauna boolean,
 	shower boolean,
@@ -837,8 +837,8 @@ CREATE TABLE lipas.talviuintipaikka (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -856,15 +856,15 @@ ALTER TABLE lipas.talviuintipaikka OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.lahipuisto CASCADE;
 CREATE TABLE lipas.lahipuisto (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	"infoFi" text,
 	playground boolean,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -882,15 +882,15 @@ ALTER TABLE lipas.lahipuisto OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.ulkoilupuisto CASCADE;
 CREATE TABLE lipas.ulkoilupuisto (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	"infoFi" text,
 	playground boolean,
 -- 	email text,
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -908,7 +908,7 @@ ALTER TABLE lipas.ulkoilupuisto OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.liikuntapuisto CASCADE;
 CREATE TABLE lipas.liikuntapuisto (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 4326),
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	ligthing boolean,
 	"accessibilityInfo" text,
 	"infoFi" text,
@@ -917,8 +917,8 @@ CREATE TABLE lipas.liikuntapuisto (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -938,7 +938,7 @@ ALTER TABLE lipas.liikuntapuisto OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.latu CASCADE;
 CREATE TABLE lipas.latu (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"skiTrackTraditional" boolean,
 	"skiTrackFreestyle" boolean,
@@ -952,8 +952,8 @@ CREATE TABLE lipas.latu (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -971,7 +971,7 @@ ALTER TABLE lipas.latu OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.koirahiihtolatu CASCADE;
 CREATE TABLE lipas.koirahiihtolatu (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"skiTrackTraditional" boolean,
 	"skiTrackFreestyle" boolean,
@@ -983,8 +983,8 @@ CREATE TABLE lipas.koirahiihtolatu (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1002,7 +1002,7 @@ ALTER TABLE lipas.koirahiihtolatu OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.melontareitti CASCADE;
 CREATE TABLE lipas.melontareitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	"restPlacesCount" numeric,
 	"infoFi" text,
 	"routeLengthKm" numeric,
@@ -1010,8 +1010,8 @@ CREATE TABLE lipas.melontareitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1029,7 +1029,7 @@ ALTER TABLE lipas.melontareitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.vesiretkeilyreitti CASCADE;
 CREATE TABLE lipas.vesiretkeilyreitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	"restPlacesCount" numeric,
 	"infoFi" text,
 	"routeLengthKm" numeric,
@@ -1037,8 +1037,8 @@ CREATE TABLE lipas.vesiretkeilyreitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1056,7 +1056,7 @@ ALTER TABLE lipas.vesiretkeilyreitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.pyorailyreitti CASCADE;
 CREATE TABLE lipas.pyorailyreitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"restPlacesCount" numeric,
 	"infoFi" text,
@@ -1066,8 +1066,8 @@ CREATE TABLE lipas.pyorailyreitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1085,7 +1085,7 @@ ALTER TABLE lipas.pyorailyreitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.maastopyorailyreitti CASCADE;
 CREATE TABLE lipas.maastopyorailyreitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"restPlacesCount" numeric,
 	"infoFi" text,
@@ -1095,8 +1095,8 @@ CREATE TABLE lipas.maastopyorailyreitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1114,7 +1114,7 @@ ALTER TABLE lipas.maastopyorailyreitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kavelyreitti_ulkoilureitti CASCADE;
 CREATE TABLE lipas.kavelyreitti_ulkoilureitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"restPlacesCount" numeric,
 	"accessibilityInfo" text,
@@ -1126,8 +1126,8 @@ CREATE TABLE lipas.kavelyreitti_ulkoilureitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1145,7 +1145,7 @@ ALTER TABLE lipas.kavelyreitti_ulkoilureitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.retkeilyreitti CASCADE;
 CREATE TABLE lipas.retkeilyreitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"restPlacesCount" numeric,
 	"accessibilityInfo" text,
@@ -1156,8 +1156,8 @@ CREATE TABLE lipas.retkeilyreitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1175,7 +1175,7 @@ ALTER TABLE lipas.retkeilyreitti OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.kuntorata CASCADE;
 CREATE TABLE lipas.kuntorata (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	toilet boolean,
 	"restPlacesCount" numeric,
 	"accessibilityInfo" text,
@@ -1188,8 +1188,8 @@ CREATE TABLE lipas.kuntorata (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1207,7 +1207,7 @@ ALTER TABLE lipas.kuntorata OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.luontopolku CASCADE;
 CREATE TABLE lipas.luontopolku (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	"restPlacesCount" numeric,
 	"accessibilityInfo" text,
 	"infoFi" text,
@@ -1217,8 +1217,8 @@ CREATE TABLE lipas.luontopolku (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1236,7 +1236,7 @@ ALTER TABLE lipas.luontopolku OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS lipas.hevosreitti CASCADE;
 CREATE TABLE lipas.hevosreitti (
 	"sportsPlaceId" bigint NOT NULL,
-	geom geometry(MULTILINESTRING, 4326),
+	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	"restPlacesCount" numeric,
 	"infoFi" text,
 	"litRouteLengthKm" numeric,
@@ -1245,8 +1245,8 @@ CREATE TABLE lipas.hevosreitti (
 -- 	admin text,
 -- 	www text,
 -- 	name text NOT NULL,
--- 	"type_typeCode" integer,
--- 	type_name text,
+-- 	"type_typeCode" integer NOT NULL,
+-- 	type_name text NOT NULL,
 -- 	"phoneNumber" text,
 -- 	location_address text,
 -- 	location_city_name text,
@@ -1268,6 +1268,7 @@ CREATE TABLE lipas.metadata (
 	type_codes_summer jsonb,
 	type_codes_winter jsonb,
 	type_codes_all_year jsonb,
+	tarmo_category_by_code jsonb,
 	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
 );
 -- ddl-end --
@@ -1281,13 +1282,14 @@ SET timezone = 'Europe/Helsinki';
 INSERT INTO lipas.metadata (
 	type_codes_summer,
 	type_codes_winter,
-	type_codes_all_year
+	type_codes_all_year,
+	tarmo_category_by_code
 ) VALUES (
-	'[205,203,5150,3220,3230,4451,4452]',
+	'[205,203,201,5150,3220,3230,4451,4452]',
 	'[4640,4630,1520,1530,1550,1510,3240,4402,4440]',
-	'[201,206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,102,1110]'
+	'[206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,102,1110]',
+	'{"Hiihto": [4402,4440,4630,4640], "Luistelu": [1510,1530,1540,1550], "Uinti": [3220,3230,3240], "Vesillä ulkoilu": [201,203,205,5150,4451,4452], "Laavut, majat, ruokailu": [202,206,301,302,304], "Ulkoilupaikat": [101,102,1110,1120], "Ulkoiluaktiviteetit": [1130,1180,4710,4720,6210], "Ulkoilureitit": [207,4401,4403,4404,4405,4430], "Pyöräily": [4411,4412], "Nähtävyydet": [204]}'
 );
-
 -- ddl-end --
 
 -- object: kooste.lipas_pisteet | type: TABLE --
@@ -1298,6 +1300,7 @@ CREATE TABLE kooste.lipas_pisteet (
 	name text NOT NULL,
 	"type_typeCode" integer NOT NULL,
 	type_name text NOT NULL,
+	tarmo_category text,
 	owner text,
 	admin text,
 	address text,
@@ -1308,39 +1311,38 @@ CREATE TABLE kooste.lipas_pisteet (
 	"phoneNumber" text,
 	www text,
 	season text NOT NULL,
-	toilet boolean DEFAULT NULL,
-	shower boolean DEFAULT NULL,
-	"changingRooms" boolean DEFAULT NULL,
-	ligthing boolean DEFAULT NULL,
-	"restPlacesCount" numeric DEFAULT NULL,
-	"skiTrackTraditional" boolean DEFAULT NULL,
-	"skiTrackFreestyle" boolean DEFAULT NULL,
-	"litRouteLengthKm" numeric DEFAULT NULL,
-	"routeLengthKm" numeric DEFAULT NULL,
-	pier boolean DEFAULT NULL,
-	"otherPlatforms" boolean DEFAULT NULL,
-	"accessibilityInfo" text DEFAULT NULL,
-	kiosk boolean DEFAULT NULL,
-	"skiService" boolean DEFAULT NULL,
-	"equipmentRental" boolean DEFAULT NULL,
-	sauna boolean DEFAULT NULL,
-	playground boolean DEFAULT NULL,
-	"exerciseMachines" boolean DEFAULT NULL,
-	"infoFi" text DEFAULT NULL,
-	"trackLengthM" numeric DEFAULT NULL,
-	"altitudeDifference" numeric DEFAULT NULL,
-	"climbingWallWidthM" numeric DEFAULT NULL,
-	"climbingWallHeightM" numeric DEFAULT NULL,
-	"climbingRoutesCount" numeric DEFAULT NULL,
-	"holesCount" numeric DEFAULT NULL,
-	"boatLaunchingSpot" boolean DEFAULT NULL,
-	"iceClimbing" boolean DEFAULT NULL,
-	"iceReduction" boolean DEFAULT NULL,
-	range boolean DEFAULT NULL,
-	"trackType" text DEFAULT NULL,
-	status text DEFAULT NULL,
-	"additionalInfo" text DEFAULT NULL,
-	images text DEFAULT NULL,
+	toilet boolean,
+	shower boolean,
+	"changingRooms" boolean,
+	ligthing boolean,
+	"restPlacesCount" numeric,
+	"skiTrackTraditional" boolean,
+	"skiTrackFreestyle" boolean,
+	"litRouteLengthKm" numeric,
+	"routeLengthKm" numeric,
+	pier boolean,
+	"otherPlatforms" boolean,
+	"accessibilityInfo" text,
+	kiosk boolean,
+	"skiService" boolean,
+	"equipmentRental" boolean,
+	sauna boolean,
+	playground boolean,
+	"exerciseMachines" boolean,
+	"infoFi" text,
+	"trackLengthM" numeric,
+	"altitudeDifference" numeric,
+	"climbingWallWidthM" numeric,
+	"climbingWallHeightM" numeric,
+	"climbingRoutesCount" numeric,
+	"holesCount" numeric,
+	"boatLaunchingSpot" boolean,
+	"iceClimbing" boolean,
+	"iceReduction" boolean,
+	range boolean,
+	"trackType" text,
+	"additionalInfo" text,
+	images text,
 	CONSTRAINT lipas_pisteet_pk PRIMARY KEY ("sportsPlaceId")
 );
 -- ddl-end --
@@ -1357,6 +1359,7 @@ CREATE TABLE kooste.lipas_viivat (
 	name text NOT NULL,
 	"type_typeCode" integer NOT NULL,
 	type_name text NOT NULL,
+	tarmo_category text,
 	owner text,
 	admin text,
 	address text,
@@ -1367,19 +1370,18 @@ CREATE TABLE kooste.lipas_viivat (
 	"phoneNumber" text,
 	www text,
 	season text NOT NULL,
-	toilet boolean DEFAULT NULL,
-	"restPlacesCount" numeric DEFAULT NULL,
-	"skiTrackTraditional" boolean DEFAULT NULL,
-	"skiTrackFreestyle" boolean DEFAULT NULL,
-	"litRouteLengthKm" numeric DEFAULT NULL,
-	"routeLengthKm" numeric DEFAULT NULL,
-	"accessibilityInfo" text DEFAULT NULL,
-	"exerciseMachines" boolean DEFAULT NULL,
-	"infoFi" text DEFAULT NULL,
-	"shootingPositionsCount" numeric DEFAULT NULL,
-	status text DEFAULT NULL,
-	"additionalInfo" text DEFAULT NULL,
-	images text DEFAULT NULL,
+	toilet boolean,
+	"restPlacesCount" numeric,
+	"skiTrackTraditional" boolean,
+	"skiTrackFreestyle" boolean,
+	"litRouteLengthKm" numeric,
+	"routeLengthKm" numeric,
+	"accessibilityInfo" text,
+	"exerciseMachines" boolean,
+	"infoFi" text,
+	"shootingPositionsCount" numeric,
+	"additionalInfo" text,
+	images text,
 	CONSTRAINT lipas_viivat_pk PRIMARY KEY ("sportsPlaceId")
 );
 -- ddl-end --
@@ -1393,6 +1395,8 @@ CREATE TABLE kooste.osm_pisteet (
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POINT, 4326) NOT NULL,
+	tarmo_category text DEFAULT 'Pysäköinti',
+	type_name text DEFAULT 'Pysäköintipaikka',
 	tags jsonb,
 	CONSTRAINT osm_pisteet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
@@ -1406,16 +1410,18 @@ CREATE TABLE kooste.osm_alueet (
 	osm_id bigint NOT NULL,
 	osm_type text NOT NULL,
 	geom geometry(POLYGON, 4326) NOT NULL,
+	tarmo_category text DEFAULT 'Pysäköinti',
+	type_name text DEFAULT 'Pysäköintialue',
 	tags jsonb,
 	CONSTRAINT osm_alueet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
 );
-ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
+ALTER TABLE kooste.osm_alueet OWNER TO tarmo_admin;
 
 -- object: kooste.osm_metadata | type: TABLE --
--- DROP TABLE IF EXISTS lipas.metadata CASCADE;
+-- DROP TABLE IF EXISTS kooste.osm_metadata CASCADE;
 CREATE TABLE kooste.osm_metadata (
-	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	last_modified timestamptz,
 	tags_to_include jsonb,
 	tags_to_exclude jsonb,
@@ -1425,20 +1431,27 @@ CREATE TABLE kooste.osm_metadata (
 ALTER TABLE kooste.osm_metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
-INSERT INTO kooste.osm_metadata (tags_to_include, tags_to_exclude) VALUES ('{"amenity": ["parking"]}', '{"access": ["private", "permit"]}');
+INSERT INTO kooste.osm_metadata (
+    tags_to_include,
+    tags_to_exclude
+) VALUES (
+    '{"amenity": ["parking"]}',
+    '{"access": ["private", "permit"]}'
+);
 
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
 CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	sw_member bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	nimi text,
-	kohteenkuvaus1 text,
+	visibility boolean DEFAULT True,
+	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
+	type_name text DEFAULT 'Luonnonmuistomerkki',
+	"infoFi" text,
 	paatosnumero text,
 	paatospaiva date,
 	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
-
 );
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
@@ -1449,11 +1462,13 @@ ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	mi_prinx bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	nimi text,
+	visibility boolean DEFAULT True,
+	name text NOT NULL,
+	tarmo_category text DEFAULT 'Ulkoilureitit',
+	type_name text DEFAULT 'Luontopolkurasti',
 	tunnus integer,
 	rasti integer,
-	kohteenkuvaus text,
+	"infoFi" text,
 	lisatietoja text,
 	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
 	UNIQUE (tunnus, rasti)
@@ -1467,17 +1482,18 @@ ALTER TABLE kooste.tamperewfs_luontopolkurastit OWNER TO tarmo_admin;
 CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	tunnus bigint NOT NULL,
 	geom geometry(MULTILINESTRING, 4326) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	nimi text,
+	visibility boolean DEFAULT True,
+	name text NOT NULL DEFAULT 'Nimitieto puuttuu',
+	tarmo_category text DEFAULT 'Ulkoilureitit',
+	type_name text DEFAULT 'Luontopolku',
 	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)
-
 );
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontopolkureitit OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- object: kooste.tamperewfs_metadata | type: TABLE --
--- DROP TABLE IF EXISTS kooste.tamperewfs.metadata CASCADE;
+-- DROP TABLE IF EXISTS kooste.tamperewfs_metadata CASCADE;
 CREATE TABLE kooste.tamperewfs_metadata (
 	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
 	last_modified timestamptz,
@@ -1488,18 +1504,23 @@ CREATE TABLE kooste.tamperewfs_metadata (
 ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
 -- ddl-end --
 
-INSERT INTO kooste.tamperewfs_metadata (layers_to_include) VALUES ('["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]');
+INSERT INTO kooste.tamperewfs_metadata (
+    layers_to_include
+) VALUES (
+    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]'
+);
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_rkykohteet CASCADE;
 CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
 	"objectId" bigint NOT NULL,
 	geom geometry(MULTIPOINT, 3067) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	kohdenimi text,
-	url text,
+	visibility boolean DEFAULT True,
+	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
+	type_name text DEFAULT 'Rakennettu kulttuurikohde',
+	www text,
 	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("objectId")
-
 );
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
@@ -1510,17 +1531,17 @@ ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
 CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 	mjtunnus bigint NOT NULL,
 	geom geometry(MULTIPOINT, 3067) NOT NULL,
-	nakyvyys boolean NOT NULL DEFAULT True,
-	kohdenimi text,
-	laji text,
-	kunta text,
-	tyyppi text,
+	visibility boolean DEFAULT True,
+	name text NOT NULL,
+	tarmo_category text DEFAULT 'Nähtävyydet',
+	"cityName" text,
+	type_name text DEFAULT 'Muinaisjäännös',
 	alatyyppi text,
 	ajoitus text,
 	vedenalainen boolean,
 	luontipvm date,
 	muutospvm date,
-	url text,
+	www text,
 	CONSTRAINT museovirastoarcrest_muinaisjaannokset_pk PRIMARY KEY (mjtunnus)
 
 );
@@ -1531,7 +1552,7 @@ ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- object: kooste.metadata | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.metadata CASCADE;
 CREATE TABLE kooste.metadata (
-	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ,
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	datasource text NOT NULL,
 	last_modified timestamptz,
 	CONSTRAINT metadata_pk PRIMARY KEY (update_id)
@@ -1568,10 +1589,6 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE kooste.osm_metadata
    TO tarmo_read_write;
-
-GRANT SELECT
-   ON TABLE kooste.tamperewfs_metadata
-   TO tarmo_read;
 
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE kooste.tamperewfs_metadata
@@ -1905,12 +1922,6 @@ GRANT SELECT
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE kooste.museovirastoarcrest_muinaisjaannokset
    TO tarmo_read_write;
--- ddl-end --
-
--- object: grant_r_91bcc10e15 | type: PERMISSION --
-GRANT SELECT
-   ON TABLE kooste.metadata
-   TO tarmo_read;
 -- ddl-end --
 
 -- object: grant_rawd_5082180c53 | type: PERMISSION --
