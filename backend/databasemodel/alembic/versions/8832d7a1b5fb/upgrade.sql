@@ -218,6 +218,9 @@ ALTER COLUMN nakyvyys DROP NOT NULL;
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
 RENAME COLUMN nakyvyys TO visibility;
 
+UPDATE kooste.tamperewfs_luontopolkureitit
+SET nimi = 'Nimitieto puuttuu' WHERE nimi IS NULL;
+
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
 ALTER COLUMN nimi SET NOT NULL;
 
