@@ -222,6 +222,9 @@ ALTER TABLE kooste.tamperewfs_luontopolkureitit
 ALTER COLUMN nimi SET NOT NULL;
 
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
+ALTER COLUMN nimi SET DEFAULT 'Nimitieto puuttuu';
+
+ALTER TABLE kooste.tamperewfs_luontopolkureitit
 RENAME COLUMN nimi TO name;
 
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet

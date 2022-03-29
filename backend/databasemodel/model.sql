@@ -1483,7 +1483,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	tunnus bigint NOT NULL,
 	geom geometry(MULTILINESTRING, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
-	name text NOT NULL,
+	name text NOT NULL DEFAULT 'Nimitieto puuttuu',
 	tarmo_category text DEFAULT 'Ulkoilureitit',
 	type_name text DEFAULT 'Luontopolku',
 	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)

@@ -217,6 +217,9 @@ ALTER TABLE kooste.tamperewfs_luontopolkureitit
 ALTER COLUMN name DROP NOT NULL;
 
 ALTER TABLE kooste.tamperewfs_luontopolkureitit
+ALTER COLUMN name DROP DEFAULT;
+
+ALTER TABLE kooste.tamperewfs_luontopolkureitit
 RENAME COLUMN name TO nimi;
 
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet
