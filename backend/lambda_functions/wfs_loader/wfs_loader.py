@@ -171,7 +171,10 @@ class WFSLoader:
 
     def get_wfs_feature(self, element: Dict[str, Any]) -> Optional[dict]:
         props = element["properties"]
-        lowercase_props = {key.lower(): value for key, value in props.items()}
+        # Get rid of empty fields, they might not go well with the database
+        cleaned_props = {
+            key.lower(): value for key, value in props.items() if value is not None
+        }
         layer = props.pop("layer")
         table_name = self.TABLE_NAMES[layer]
 
@@ -191,22 +194,21 @@ class WFSLoader:
             return None
 
         # Date field needs iso format
-        if "paatospaiva" in lowercase_props.keys():
-            day, month, year = lowercase_props["paatospaiva"].split(".")
-            lowercase_props["paatospaiva"] = datetime.date(
+        if "paatospaiva" in cleaned_props.keys():
+            day, month, year = cleaned_props["paatospaiva"].split(".")
+            cleaned_props["paatospaiva"] = datetime.date(
                 year=int(year), month=int(month), day=int(day)
             )
 
         # Rename desired fields
         for origin_name, tarmo_name in self.FIELD_NAMES.items():
-            if origin_name in lowercase_props.keys():
-                lowercase_props[tarmo_name] = lowercase_props.pop(origin_name)
+            if origin_name in cleaned_props.keys():
+                cleaned_props[tarmo_name] = cleaned_props.pop(origin_name)
         flattened = {
-            **lowercase_props,
+            **cleaned_props,
             "geom": geom.wkt,
             "table": table_name,
         }
-        print(flattened)
         return flattened
 
     def save_wfs_feature(self, wfs_object: Dict[str, Any], session: Session) -> bool:
