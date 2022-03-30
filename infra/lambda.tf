@@ -44,6 +44,13 @@ resource "aws_lambda_function" "lipas_loader" {
   tags = merge(local.default_tags, { Name = "${var.prefix}-lipas_loader" })
 }
 
+resource "aws_lambda_permission" "cloudwatch_call_lipas_loader" {
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.lipas_loader.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lambda_lipas.arn
+}
+
 resource "aws_lambda_function" "osm_loader" {
   function_name = "osm_loader"
   filename      = "../backend/lambda_functions/osm_loader.zip"
@@ -65,6 +72,13 @@ resource "aws_lambda_function" "osm_loader" {
   tags = merge(local.default_tags, { Name = "${var.prefix}-osm_loader" })
 }
 
+resource "aws_lambda_permission" "cloudwatch_call_osm_loader" {
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.osm_loader.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lambda_osm.arn
+}
+
 resource "aws_lambda_function" "wfs_loader" {
   function_name = "wfs_loader"
   filename      = "../backend/lambda_functions/wfs_loader.zip"
@@ -84,4 +98,11 @@ resource "aws_lambda_function" "wfs_loader" {
     }
   }
   tags = merge(local.default_tags, { Name = "${var.prefix}-wfs_loader" })
+}
+
+resource "aws_lambda_permission" "cloudwatch_call_wfs_loader" {
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.wfs_loader.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lambda_wfs.arn
 }
