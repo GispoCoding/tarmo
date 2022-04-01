@@ -21,6 +21,10 @@ import {
   WFS_LUONTOPOLKUREITTI_STYLE,
   WFS_LUONTOPOLKURASTI_SOURCE,
   WFS_LUONTOPOLKURASTI_STYLE,
+  ARCGIS_MUINAISJAANNOS_SOURCE,
+  ARCGIS_MUINAISJAANNOS_STYLE,
+  ARCGIS_RKYKOHDE_SOURCE,
+  ARCGIS_RKYKOHDE_STYLE,
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
   OSM_AREA_LABEL_STYLE,
@@ -283,6 +287,15 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
         <Layer {...WFS_LUONTOPOLKURASTI_STYLE} />
+      </Source>
+      <Source
+        id={LayerId.ArcGisMuinaisjaannos}
+        {...ARCGIS_MUINAISJAANNOS_SOURCE}
+      >
+        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE} />
+      </Source>
+      <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
+        <Layer {...ARCGIS_RKYKOHDE_STYLE} />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer {...OSM_POINT_LABEL_STYLE} />

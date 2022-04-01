@@ -1513,14 +1513,14 @@ INSERT INTO kooste.tamperewfs_metadata (
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_rkykohteet CASCADE;
 CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
-	"objectId" bigint NOT NULL,
-	geom geometry(MULTIPOINT, 3067) NOT NULL,
+	id bigint NOT NULL,
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
 	tarmo_category text DEFAULT 'Nähtävyydet',
 	type_name text DEFAULT 'Rakennettu kulttuurikohde',
 	www text,
-	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("objectId")
+	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY (id)
 );
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
@@ -1530,7 +1530,7 @@ ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_muinaisjaannokset CASCADE;
 CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 	mjtunnus bigint NOT NULL,
-	geom geometry(MULTIPOINT, 3067) NOT NULL,
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
 	tarmo_category text DEFAULT 'Nähtävyydet',
@@ -1548,6 +1548,25 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- ddl-end --
+
+-- object: kooste.museovirastoarcrest_metadata | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.museovirastoarcrestmetadata CASCADE;
+CREATE TABLE kooste.museovirastoarcrest_metadata (
+	update_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	last_modified timestamptz,
+	layers_to_include jsonb,
+	url text DEFAULT 'http://kartta.nba.fi/arcgis/rest/services/',
+	CONSTRAINT museovirastoarcrest_metadata_pk PRIMARY KEY (update_id)
+
+);
+
+ALTER TABLE kooste.museovirastoarcrest_metadata OWNER TO tarmo_admin;
+
+INSERT INTO kooste.museovirastoarcrest_metadata(
+	layers_to_include
+) VALUES (
+	'{"WFS/MV_KulttuuriymparistoSuojellut": ["Muinaisjaannokset_piste", "RKY_piste"]}'
+);
 
 -- object: kooste.syke_natura2000 | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.syke_natura2000 CASCADE;
@@ -1630,6 +1649,10 @@ GRANT SELECT,INSERT,UPDATE,DELETE
 
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE kooste.tamperewfs_metadata
+   TO tarmo_read_write;
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.museovirastoarcrest_metadata
    TO tarmo_read_write;
 
 -- object: grant_rawd_6bd09fd3fa | type: PERMISSION --

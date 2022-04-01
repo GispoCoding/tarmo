@@ -8,6 +8,8 @@ export enum LayerId {
   WFSLuonnonmuistomerkki = "wfs-luonnonmuistomerkit",
   WFSLuontopolkureitti = "wfs-luontopolkureitit",
   WFSLuontopolkurasti = "wfs-luontopolkurastit",
+  ArcGisMuinaisjaannos = "arcgis-muinaisjaannokset",
+  ArcGisRKYkohde = "arcgis-rkykohteet",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
@@ -135,6 +137,48 @@ export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
   "type": "circle",
   "paint": {
     "circle-radius": 8,
+    "circle-color": "#00417d",
+  },
+};
+
+export const ARCGIS_MUINAISJAANNOS_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const ARCGIS_RKYKOHDE_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkykohteet/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const ARCGIS_MUINAISJAANNOS_STYLE: LayerProps = {
+  "id": LayerId.ArcGisMuinaisjaannos,
+  "source": LayerId.ArcGisMuinaisjaannos,
+  "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 8,
+    // Circle color is "darkwater" from brand book
+    "circle-color": "#00417d",
+  },
+};
+
+export const ARCGIS_RKYKOHDE_STYLE: LayerProps = {
+  "id": LayerId.ArcGisRKYkohde,
+  "source": LayerId.ArcGisRKYkohde,
+  "source-layer": "kooste.museovirastoarcrest_rkykohteet",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 8,
+    // Circle color is "darkwater" from brand book
     "circle-color": "#00417d",
   },
 };
