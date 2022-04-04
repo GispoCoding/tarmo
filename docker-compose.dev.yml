@@ -79,7 +79,7 @@ services:
       - DB_INSTANCE_ADDRESS=db
       - DB_INSTANCE_PORT=5432
     ports:
-      - "8084:8080"
+      - "8085:8080"
     depends_on:
       - db
     volumes:
