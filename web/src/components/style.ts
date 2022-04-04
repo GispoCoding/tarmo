@@ -10,6 +10,8 @@ export enum LayerId {
   WFSLuontopolkurasti = "wfs-luontopolkurastit",
   ArcGisMuinaisjaannos = "arcgis-muinaisjaannokset",
   ArcGisRKYkohde = "arcgis-rkykohteet",
+  SykeNatura = "syke-natura-alueet",
+  SykeValtion = "syke-valtionluonnonsuojelualueet",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
@@ -180,6 +182,46 @@ export const ARCGIS_RKYKOHDE_STYLE: LayerProps = {
     "circle-radius": 8,
     // Circle color is "darkwater" from brand book
     "circle-color": "#00417d",
+  },
+};
+
+export const SYKE_NATURA_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.syke_natura2000/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const SYKE_NATURA_STYLE: LayerProps = {
+  "id": LayerId.SykeNatura,
+  "source": LayerId.SykeNatura,
+  "source-layer": "kooste.syke_natura2000",
+  "type": "fill",
+  "paint": {
+    "fill-color": "#9cbf5f",
+    "fill-opacity": 0.2,
+  },
+};
+
+export const SYKE_VALTION_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.syke_valtionluonnonsuojelualueet/{z}/{x}/{y}.pbf`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const SYKE_VALTION_STYLE: LayerProps = {
+  "id": LayerId.SykeValtion,
+  "source": LayerId.SykeValtion,
+  "source-layer": "kooste.syke_valtionluonnonsuojelualueet",
+  "type": "fill",
+  "paint": {
+    "fill-color": "#9cbf5f",
+    "fill-opacity": 0.2,
   },
 };
 

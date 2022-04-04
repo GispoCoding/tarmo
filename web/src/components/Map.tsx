@@ -25,6 +25,10 @@ import {
   ARCGIS_MUINAISJAANNOS_STYLE,
   ARCGIS_RKYKOHDE_SOURCE,
   ARCGIS_RKYKOHDE_STYLE,
+  SYKE_NATURA_SOURCE,
+  SYKE_NATURA_STYLE,
+  SYKE_VALTION_SOURCE,
+  SYKE_VALTION_STYLE,
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
   OSM_AREA_LABEL_STYLE,
@@ -267,6 +271,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       mapStyle={mapStyle}
       onResize={toggleNav}
     >
+      <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
+        <Layer {...SYKE_NATURA_STYLE} />
+      </Source>
+      <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
+        <Layer {...SYKE_VALTION_STYLE} />
+      </Source>
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
         <Layer {...LIPAS_POINT_STYLE} />
       </Source>
