@@ -88,7 +88,6 @@ if os.environ.get("MANAGE_DOCKER", USE_DOCKER):
         )
         drop_tarmo_db(main_db_params, root_db_params)
 
-
 else:
 
     @pytest.fixture(scope="session", autouse=True)
