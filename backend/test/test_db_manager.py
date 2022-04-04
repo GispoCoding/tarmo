@@ -4,7 +4,7 @@ import psycopg2
 
 
 def assert_database_is_alright(
-    cur: psycopg2.extensions.cursor, expected_kooste_count: int = 14
+    cur: psycopg2.extensions.cursor, expected_kooste_count: int = 16
 ):
     cur.execute(
         "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
@@ -100,7 +100,7 @@ def test_database_upgrade(main_db_params_with_root_user, tarmo_database_upgraded
     try:
         with conn.cursor() as cur:
             # we added an extra table
-            assert_database_is_alright(cur, expected_kooste_count=15)
+            assert_database_is_alright(cur, expected_kooste_count=17)
 
             cur.execute("SELECT version_num FROM alembic_version")
             assert cur.fetchall() == [(tarmo_database_upgraded,)]

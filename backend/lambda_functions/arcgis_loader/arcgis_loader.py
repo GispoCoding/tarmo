@@ -109,22 +109,22 @@ class ArcGisLoader:
     }
     FIELD_NAMES = {
         "kohdenimi": "name",
+        "nimiSuomi": "name",
+        "Nimi": "name",
+        "TyyppiNimi": "infoFi",
         "kunta": "cityName",
         "tyyppi": "type_name",
         "alatyyppi": "type_name",
     }
-    BOOLEAN_FIELDS = ["vedenalainen"]
 
     DEFAULT_PROJECTION = 4326
     HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
-    DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
     def __init__(
         self,
         connection_string: str,
-        arcgis_url: Optional[str] = None,
-        metadata_table: Optional[str] = None,
-        layers_to_include: Optional[list] = None,
+        arcgis_urls: Optional[dict] = None,
+        layers_to_include: Optional[dict] = None,
         point_of_interest: Optional[Point] = None,
         point_radius: Optional[float] = None,
     ) -> None:
@@ -138,8 +138,8 @@ class ArcGisLoader:
         self.point_of_interest = point_of_interest
         self.point_radius = point_radius
 
-        self.arcgis_url = {}
-        self.layers_to_include = {}
+        self.arcgis_urls = arcgis_urls if arcgis_urls else {}
+        self.layers_to_include = layers_to_include if layers_to_include else {}
         self.last_modified = {}
         with self.Session() as session:
             for metadata_table, _data_tables in self.TABLE_NAMES.items():
@@ -147,10 +147,12 @@ class ArcGisLoader:
                     getattr(KoosteBase.classes, metadata_table)
                 ).first()
                 self.last_modified[metadata_table] = metadata_row.last_modified
-                self.layers_to_include[metadata_table] = metadata_row.layers_to_include
-                self.arcgis_url[metadata_table] = (
-                    arcgis_url if arcgis_url else metadata_row.url
-                )
+                if not arcgis_urls:
+                    self.arcgis_urls[metadata_table] = metadata_row.url
+                if not layers_to_include:
+                    self.layers_to_include[
+                        metadata_table
+                    ] = metadata_row.layers_to_include
 
     def get_arcgis_query_params(self) -> dict:
         params = {
@@ -185,6 +187,40 @@ class ArcGisLoader:
         url = f"{arcgis_url}{service_name}/MapServer/{layer_number}/query"
         return url
 
+    def get_geojson(self, arcgis_type: str, feature: dict) -> dict:
+        # geojsonify arcgis json
+        geojson = {}
+        geojson["properties"] = feature["attributes"]
+        if arcgis_type == "esriGeometryPoint":
+            geojson["geometry"] = {
+                "type": "Point",
+                "coordinates": [
+                    feature["geometry"]["x"],
+                    feature["geometry"]["y"],
+                ],
+            }
+        # TODO: support line geometries
+        elif arcgis_type == "esriGeometryPolygon":
+            rings = feature["geometry"]["rings"]
+            # Oh great. Arcgis doesn't differentiate outer and inner rings.
+            # Would be too easy if it did.
+            # Let's assume the first ring is always an outer ring and go from there.
+            outer_rings = [[rings[0]]]
+            for ring in rings[1:]:
+                for outer_ring in outer_rings:
+                    if Polygon(ring).within(Polygon(outer_ring[0])):
+                        # we have an inner ring, hooray
+                        outer_ring.append(ring)
+                        break
+                else:
+                    # we have an outer ring, yippee
+                    outer_rings.append([ring])
+            geojson["geometry"] = {
+                "type": "MultiPolygon",
+                "coordinates": outer_rings,
+            }
+        return geojson
+
     def get_arcgis_objects(self) -> FeatureCollection:
         data = FeatureCollection(
             features=[],
@@ -192,7 +228,7 @@ class ArcGisLoader:
         )
         params = self.get_arcgis_query_params()
         for metadata_table, services in self.layers_to_include.items():
-            url = self.arcgis_url[metadata_table]
+            url = self.arcgis_urls[metadata_table]
             for service_name, layers in services.items():
                 # we have to find out the layer ids from layer names
                 r = requests.get(
@@ -212,28 +248,20 @@ class ArcGisLoader:
                         headers=self.HEADERS,
                     )
                     r.raise_for_status()
-                    layer_features = r.json()["features"]
+                    result = r.json()
+                    layer_features = result["features"]
+                    geometry_type = result["geometryType"]
                     for feature in layer_features:
-                        # geojsonify arcgis json
-                        feature["properties"] = feature.pop("attributes")
+                        feature = self.get_geojson(geometry_type, feature)
                         feature["properties"]["source"] = metadata_table
                         feature["properties"]["service"] = service_name
                         feature["properties"]["layer"] = layer_name
-                        feature["geometry"] = {
-                            "type": "Point",
-                            "coordinates": [
-                                feature["geometry"].pop("x"),
-                                feature["geometry"].pop("y"),
-                            ],
-                        }
-                    data["features"].extend(layer_features)
+                        data["features"].append(feature)
         return data
 
     def clean_props(self, props: Dict[str, Any], table_name: str) -> dict:
         # Get rid of empty fields, they might not go well with the database.
-        cleaned = {
-            key.lower(): value for key, value in props.items() if value is not None
-        }
+        cleaned = {key: value for key, value in props.items() if value is not None}
         # Clean values of extra characters too
         for key, value in cleaned.items():
             if type(value) is str:
@@ -266,12 +294,16 @@ class ArcGisLoader:
         geometry = shape(element["geometry"])
         if isinstance(geometry, Point):
             geom = MultiPoint([geometry])
-        # TODO: these are for future support. Currently, get_arcgis_objects only
-        # generates points.
+        elif isinstance(geometry, MultiPoint):
+            geom = MultiPoint(geometry)
         elif isinstance(geometry, LineString):
             geom = MultiLineString([geometry])
+        elif isinstance(geometry, MultiLineString):
+            geom = MultiLineString(geometry)
         elif isinstance(geometry, Polygon):
             geom = MultiPolygon([geometry])
+        elif isinstance(geometry, MultiPolygon):
+            geom = MultiPolygon(geometry)
         else:
             # Unsupported geometry type
             return None
@@ -311,11 +343,12 @@ class ArcGisLoader:
         return True
 
     def save_timestamp(self, session: Session) -> None:
-        metadata_row = session.query(
-            KoosteBase.classes.museovirastoarcrest_metadata
-        ).first()
-        metadata_row.last_modified = datetime.datetime.now()
-        session.merge(metadata_row)
+        for metadata_table, _data_tables in self.TABLE_NAMES.items():
+            metadata_row = session.query(
+                getattr(KoosteBase.classes, metadata_table)
+            ).first()
+            metadata_row.last_modified = datetime.datetime.now()
+            session.merge(metadata_row)
 
     def create_feature_for_object(
         self, table_cls: Type[KoosteBase], arcgis_object: Dict[str, Any]  # type: ignore # noqa E501
