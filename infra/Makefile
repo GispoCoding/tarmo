@@ -16,6 +16,9 @@ update-osm-loader:
 update-wfs-loader:
 	aws lambda update-function-code --function-name wfs_loader --zip-file fileb://../backend/lambda_functions/wfs_loader.zip
 
+update-arcgis-loader:
+	aws lambda update-function-code --function-name arcgis_loader --zip-file fileb://../backend/lambda_functions/arcgis_loader.zip
+
 log-db-manager:
 	aws logs tail "/aws/lambda/db_manager"
 
@@ -27,6 +30,9 @@ log-osm:
 
 log-wfs:
 	aws logs tail "/aws/lambda/wfs_loader"
+
+log-arcgis:
+	aws logs tail "/aws/lambda/arcgis_loader"
 
 ## Commands to invoke lambda functions
 create-db:
@@ -49,3 +55,6 @@ populate-osm-tre:
 
 populate-wfs-tre:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name wfs_loader --payload '{}' response_wfs.json
+
+populate-arcgis-tre:
+	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name arcgis_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_arcgis.json
