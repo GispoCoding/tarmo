@@ -1513,14 +1513,14 @@ INSERT INTO kooste.tamperewfs_metadata (
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.museovirastoarcrest_rkykohteet CASCADE;
 CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
-	"ID" bigint NOT NULL,
+	"OBJECTID" bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
 	tarmo_category text DEFAULT 'Nähtävyydet',
 	type_name text DEFAULT 'Rakennettu kulttuurikohde',
 	www text,
-	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("ID")
+	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("OBJECTID")
 );
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;

@@ -1,9 +1,4 @@
-ALTER TABLE kooste.museovirastoarcrest_rkykohteet DROP CONSTRAINT museovirastoarcrest_rkykohteet_pk;
-ALTER TABLE kooste.museovirastoarcrest_rkykohteet DROP COLUMN "objectId";
-ALTER TABLE kooste.museovirastoarcrest_rkykohteet
-ADD COLUMN "ID" bigint NOT NULL;
-ALTER TABLE kooste.museovirastoarcrest_rkykohteet
-ADD CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("ID");
+ALTER TABLE kooste.museovirastoarcrest_rkykohteet RENAME COLUMN "objectId" TO "OBJECTID";
 
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet DROP COLUMN geom;
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet

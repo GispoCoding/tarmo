@@ -2901,8 +2901,8 @@ def test_save_arcgis_features(loader, arcgis_data, main_db_params):
                 f"SELECT mjtunnus FROM kooste.museovirastoarcrest_muinaisjaannokset"
             )
             assert cur.fetchone()[0] == 2133
-            cur.execute(f'SELECT "ID" FROM kooste.museovirastoarcrest_rkykohteet')
-            assert cur.fetchone()[0] == 2218
+            cur.execute(f'SELECT "OBJECTID" FROM kooste.museovirastoarcrest_rkykohteet')
+            assert cur.fetchone()[0] == 45
             cur.execute("SELECT last_modified FROM kooste.museovirastoarcrest_metadata")
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20
