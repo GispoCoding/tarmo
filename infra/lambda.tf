@@ -106,3 +106,31 @@ resource "aws_lambda_permission" "cloudwatch_call_wfs_loader" {
     principal = "events.amazonaws.com"
     source_arn = aws_cloudwatch_event_rule.lambda_wfs.arn
 }
+
+resource "aws_lambda_function" "arcgis_loader" {
+  function_name = "arcgis_loader"
+  filename      = "../backend/arcgis_functions/arcgis_loader.zip"
+  runtime       = "python3.8"
+  handler       = "arcgis_loader.handler"
+  memory_size   = 128
+  timeout       = 900
+
+  role = aws_iam_role.lambda_exec.arn
+
+  environment {
+    variables = {
+      AWS_REGION_NAME     = var.AWS_REGION_NAME
+      DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
+      DB_MAIN_NAME        = var.tarmo_db_name
+      DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
+    }
+  }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-arcgis_loader" })
+}
+
+resource "aws_lambda_permission" "cloudwatch_call_arcgis_loader" {
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.arcgis_loader.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lambda_arcgis.arn
+}

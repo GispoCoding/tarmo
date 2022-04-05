@@ -38,3 +38,8 @@ output "lambda_wfs_loader" {
   description = "Name of the wfs Lambda function."
   value       = aws_lambda_function.wfs_loader.function_name
 }
+
+output "lambda_arcgis_loader" {
+  description = "Name of the arcgis Lambda function."
+  value       = aws_lambda_function.arcgis_loader.function_name
+}

@@ -4,6 +4,7 @@ import psycopg2
 import pytest
 import requests
 
+from backend.lambda_functions.arcgis_loader.arcgis_loader import ArcGisLoader
 from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
 from backend.lambda_functions.osm_loader.osm_loader import OSMLoader
 from backend.lambda_functions.wfs_loader.wfs_loader import WFSLoader
@@ -32,6 +33,12 @@ def osm_loader_url(docker_ip, docker_services):
 @pytest.fixture()
 def wfs_loader_url(docker_ip, docker_services):
     port = docker_services.port_for("wfs_loader", 8080)
+    return f"http://{docker_ip}:{port}/2015-03-31/functions/function/invocations"
+
+
+@pytest.fixture()
+def arcgis_loader_url(docker_ip, docker_services):
+    port = docker_services.port_for("arcgis_loader", 8080)
     return f"http://{docker_ip}:{port}/2015-03-31/functions/function/invocations"
 
 
@@ -85,6 +92,20 @@ def populate_closest_parking_lots_of_osm(create_db, main_db_params, osm_loader_u
 def populate_wfs_layers(create_db, main_db_params, wfs_loader_url):
     payload = {}
     r = requests.post(wfs_loader_url, data=json.dumps(payload))
+    data = r.json()
+    assert data["statusCode"] == 200, data["body"]
+
+
+@pytest.fixture()
+def populate_closest_data_to_arcgis_layers(
+    create_db, main_db_params, arcgis_loader_url
+):
+    payload = {
+        "close_to_lon": 23.7634608,
+        "close_to_lat": 61.4976505,
+        "radius": 25,
+    }
+    r = requests.post(arcgis_loader_url, data=json.dumps(payload))
     data = r.json()
     assert data["statusCode"] == 200, data["body"]
 
@@ -153,5 +174,24 @@ def test_populate_wfs(populate_wfs_layers, main_db_params):
                 print(table_name)
                 cur.execute(f"SELECT count(*) FROM kooste.{table_name}")
                 assert cur.fetchone()[0] > 10
+    finally:
+        conn.close()
+
+
+def test_populate_arcgis(populate_closest_data_to_arcgis_layers, main_db_params):
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        with conn.cursor() as cur:
+            print(ArcGisLoader.TABLE_NAMES)
+            for metadata_table, data_tables in ArcGisLoader.TABLE_NAMES.items():
+                for table_name in data_tables.values():
+                    print(table_name)
+                    cur.execute(f"SELECT count(*) FROM kooste.{table_name}")
+                    count = cur.fetchone()[0]
+                    assert count > 0
+                    # Whenever arcgis parameters are slightly wrong, it just
+                    # returns *all* the data. Way to design an API with such
+                    # a baseload. Check that we don't get all 40 000 geometries
+                    assert count < 1000
     finally:
         conn.close()
