@@ -20,7 +20,7 @@ See [instructions](https://www.maanmittauslaitos.fi/rajapinnat/api-avaimen-ohje)
 for acquiring an NLS API key (in Finnish).
 
 1. Build and start the development containers with `docker-compose -f docker-compose.dev.yml up -d`
-2. Populate the database by running `make test-create-db` and `make test-lipas`
+2. Populate the database by running `make test-all-layers`.
 3. Navigate into the `web` directory.
 4. Copy `.env.sample` as `.env` and fill your NLS API key.
 5. Install dependencies:

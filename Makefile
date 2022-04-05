@@ -1,20 +1,28 @@
 test-create-db:
+	@echo "Creating Tarmo database..."
 	curl -XPOST "http://localhost:8081/2015-03-31/functions/function/invocations" -d '{"event_type" : 1}'
 
 test-migrate-db:
+	@echo "Migrating Tarmo database..."
 	curl -XPOST "http://localhost:8081/2015-03-31/functions/function/invocations" -d '{"event_type" : 3}'
 
 test-lipas:
-	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"pages": [1,2]}'
+	@echo "Loading Lipas data..."
+	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 10}'
 
 test-osm:
+	@echo "Loading OSM data..."
 	curl -XPOST "http://localhost:8082/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 10}'
 
 test-wfs:
+	@echo "Loading WFS data..."
 	curl -XPOST "http://localhost:8083/2015-03-31/functions/function/invocations" -d '{}'
 
 test-arcgis:
+	@echo "Loading ArcGIS data..."
 	curl -XPOST "http://localhost:8085/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 50}'
+
+test-all-layers: test-create-db test-lipas test-osm test-wfs test-arcgis
 
 revision:
 	cd backend; \
