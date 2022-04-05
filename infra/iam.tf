@@ -157,7 +157,8 @@ resource "aws_iam_policy" "lambda_update_policy" {
           aws_lambda_function.db_manager.arn,
           aws_lambda_function.lipas_loader.arn,
           aws_lambda_function.osm_loader.arn,
-          aws_lambda_function.wfs_loader.arn
+          aws_lambda_function.wfs_loader.arn,
+          aws_lambda_function.arcgis_loader.arn
           ]
       }
     ]
