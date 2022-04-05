@@ -1,7 +1,7 @@
 build:
 	make build-lambda -C ..
 
-update-lambda: update-db-manager update-lipas-loader update-osm-loader update-wfs-loader
+update-lambda: update-db-manager update-lipas-loader update-osm-loader update-wfs-loader update-arcgis-loader
 	echo "All updated"
 
 update-db-manager:
