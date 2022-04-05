@@ -109,7 +109,7 @@ resource "aws_lambda_permission" "cloudwatch_call_wfs_loader" {
 
 resource "aws_lambda_function" "arcgis_loader" {
   function_name = "arcgis_loader"
-  filename      = "../backend/arcgis_functions/arcgis_loader.zip"
+  filename      = "../backend/lambda_functions/arcgis_loader.zip"
   runtime       = "python3.8"
   handler       = "arcgis_loader.handler"
   memory_size   = 128
