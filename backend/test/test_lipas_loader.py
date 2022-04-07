@@ -142,49 +142,6 @@ def test_get_sport_place_laavu_kota_tai_kammi(loader):
     assert sport_place["tarmo_category"] == "Laavut, majat, ruokailu"
 
 
-# note that consecutive imports will add more objects to point and line tables:
-# @pytest.mark.parametrize(
-#     "sport_place_id, count",
-#     [
-#         (76249, 1),
-#         (513435, 1),
-#         (528808, 2),
-#         (73043, 3),
-#         (92112, 2),
-#         (500285, 4),
-#         (72948, 5),
-#         (72944, 6),
-#     ],
-# )
-# def test_save_lipas_feature(loader, main_db_params, sport_place_id, count):
-#     with loader.Session() as session:
-#         sport_place = loader.get_sport_place(sport_place_id)
-#         succeeded = loader.save_lipas_feature(sport_place, session)
-#         assert succeeded
-#         loader.save_timestamp(session)
-#         session.commit()
-
-#     conn = psycopg2.connect(**main_db_params)
-#     try:
-#         with conn.cursor() as cur:
-#             cur.execute(f"SELECT count(*) FROM lipas.{sport_place['table']}")
-#             assert cur.fetchone() == (1,)
-#         if sport_place["geom"].startswith("MULTILINE"):
-#             table = loader.LINESTRING_TABLE_NAME
-#         else:
-#             table = loader.POINT_TABLE_NAME
-#         with conn.cursor() as cur:
-#             cur.execute(f"SELECT count(*) FROM kooste.{table}")
-#             assert cur.fetchone() == (count,)
-#         with conn.cursor() as cur:
-#             cur.execute("SELECT last_modified FROM lipas.metadata")
-#             assert cur.fetchone()[0].timestamp() == pytest.approx(
-#                 datetime.datetime.now().timestamp(), 20
-#             )
-#     finally:
-#         conn.close()
-
-
 def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
