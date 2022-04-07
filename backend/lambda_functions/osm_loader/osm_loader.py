@@ -9,9 +9,9 @@ from typing import Any, Dict, List, Optional, Type, TypedDict
 import boto3
 import requests
 from shapely.geometry import Point, Polygon
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import MetaData, create_engine, inspect
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.ext.automap import AutomapBase, automap_base
 from sqlalchemy.orm import Session, sessionmaker
 
 KoosteBase = automap_base(metadata=(MetaData(schema="kooste")))
@@ -77,6 +77,51 @@ class DatabaseHelper:
         )
 
 
+class Syncher:
+    def __init__(self, prepared_base: AutomapBase, session: Session):
+        self.base = prepared_base
+        self.session = session
+        self.pk_names: Dict[str, str] = {}
+        self.existing_pks: Dict[str, set] = {}
+        self.pks_to_save: Dict[str, set] = {}
+        for klass in self.base.classes:
+            # We have to use class name as key, even though class is hashable.
+            # Seems like dynamically created sqlalchemy types may not retain
+            # their hash across calls :(
+            self.pk_names[klass.__name__] = inspect(klass).primary_key[0].name
+            existing_pk_rows = session.query(
+                getattr(klass, self.pk_names[klass.__name__])
+            ).all()
+            existing_pk_set = set([row[0] for row in existing_pk_rows])
+            self.existing_pks[klass.__name__] = existing_pk_set
+
+    def mark(self, instance: object):
+        pk = getattr(instance, self.pk_names[type(instance).__name__])
+        if type(instance).__name__ not in self.pks_to_save.keys():
+            self.pks_to_save[type(instance).__name__] = set()
+        self.pks_to_save[type(instance).__name__].add(pk)
+
+    def finish(self, session: Session) -> int:
+        # We only ever delete those tables that are marked by the loader
+        pks_to_delete = {
+            name: self.existing_pks[name] - self.pks_to_save[name]
+            for name in self.pks_to_save.keys()
+        }
+        deleted = 0
+        for klass in self.base.classes:
+            if klass.__name__ in pks_to_delete.keys():
+                pks = pks_to_delete[klass.__name__]
+                objects_to_delete = (
+                    session.query(klass)
+                    .filter(getattr(klass, self.pk_names[klass.__name__]).in_(pks))
+                    .all()
+                )
+                deleted += len(objects_to_delete)
+                for obj in objects_to_delete:
+                    obj.deleted = True
+        return deleted
+
+
 class OSMLoader:
     POINT_TABLE_NAME = "osm_pisteet"
     # TODO: support linestrings later if needed
@@ -111,6 +156,8 @@ class OSMLoader:
             self.api_url = overpass_api_url
 
         with self.Session() as session:
+            self.syncher = Syncher(KoosteBase, session)
+
             # OSM tables have their own metadata table, as they have extra tag filtering
             metadata_row = session.query(KoosteBase.classes.osm_metadata).first()
             self.last_modified = metadata_row.last_modified
@@ -192,12 +239,14 @@ class OSMLoader:
             "geom": geom.wkt,
             "tags": tags,
             "table": table_name,
+            "deleted": False,
         }
         return flattened
 
     def save_osm_feature(self, osm_object: Dict[str, Any], session: Session) -> bool:
         table_cls = getattr(KoosteBase.classes, osm_object["table"])
         new_obj = self.create_feature_for_object(table_cls, osm_object)
+        self.syncher.mark(new_obj)
         try:
             session.merge(new_obj)
         except SQLAlchemyError:
@@ -253,6 +302,32 @@ class OSMLoader:
         vals["geom"] = "SRID=4326;" + vals["geom"]
         return table_cls(**vals)  # type: ignore
 
+    def save_features(
+        self, osm_objects: list, do_not_update_timestamp: Optional[bool] = False
+    ) -> str:
+        successful_actions = 0
+        with self.Session() as session:
+            for i, element in enumerate(osm_objects):
+                if i % 100 == 0:
+                    LOGGER.info(
+                        f"{100 * float(i) / len(osm_objects)}% - {i}/{len(osm_objects)}"
+                    )
+                osm_feature = self.get_osm_feature(element)
+                if osm_feature is not None:
+                    succeeded = self.save_osm_feature(osm_feature, session)
+                    if succeeded:
+                        successful_actions += 1
+                else:
+                    LOGGER.debug(f"OSM feature {osm_feature} empty")
+
+            if not do_not_update_timestamp:
+                self.save_timestamp(session)
+            deleted_items = self.syncher.finish(session)
+            session.commit()
+        msg = f"{successful_actions} inserted or updated. {deleted_items} deleted."
+        LOGGER.info(msg)
+        return msg
+
 
 def handler(event: Event, _) -> Response:
     """Handler which is called when accessing the endpoint."""
@@ -274,25 +349,9 @@ def handler(event: Event, _) -> Response:
         loader = OSMLoader(db_helper.get_connection_string(), **params)
         osm_objects = loader.get_osm_objects()
 
-        successful_actions = 0
-        with loader.Session() as session:
-            for i, element in enumerate(osm_objects):
-                if i % 100 == 0:
-                    LOGGER.info(
-                        f"{100 * float(i) / len(osm_objects)}% - {i}/{len(osm_objects)}"
-                    )
-                osm_feature = loader.get_osm_feature(element)
-                if osm_feature is not None:
-                    succeeded = loader.save_osm_feature(osm_feature, session)
-                    if succeeded:
-                        successful_actions += 1
-                else:
-                    LOGGER.debug(f"OSM feature {osm_feature} empty")
-
-            if not event.get("do_not_update_timestamp", False):
-                loader.save_timestamp(session)
-            session.commit()
-        msg = f"{successful_actions} inserted or updated."
+        msg = loader.save_features(
+            osm_objects, event.get("do_not_update_timestamp", False)
+        )
         LOGGER.info(msg)
         response["body"] = json.dumps(msg)
 

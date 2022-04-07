@@ -1,0 +1,12 @@
+ALTER TABLE lipas.abstract DROP COLUMN deleted;
+ALTER TABLE kooste.lipas_pisteet DROP COLUMN deleted;
+ALTER TABLE kooste.lipas_viivat DROP COLUMN deleted;
+ALTER TABLE kooste.osm_pisteet DROP COLUMN deleted;
+ALTER TABLE kooste.osm_alueet DROP COLUMN deleted;
+ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit DROP COLUMN deleted;
+ALTER TABLE kooste.tamperewfs_luontopolkurastit DROP COLUMN deleted;
+ALTER TABLE kooste.tamperewfs_luontopolkureitit DROP COLUMN deleted;
+ALTER TABLE kooste.museovirastoarcrest_rkykohteet DROP COLUMN deleted;
+ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset DROP COLUMN deleted;
+ALTER TABLE kooste.syke_natura2000 DROP COLUMN deleted;
+ALTER TABLE kooste.syke_valtionluonnonsuojelualueet DROP COLUMN deleted;

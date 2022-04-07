@@ -72,7 +72,8 @@ CREATE TABLE lipas.abstract (
 	location_city_name text,
 	"location_postalOffice" text,
 	"location_postalCode" integer,
-	owner text
+	owner text,
+	deleted boolean NOT NULL DEFAULT false
 
 );
 -- ddl-end --
@@ -1343,8 +1344,10 @@ CREATE TABLE kooste.lipas_pisteet (
 	"trackType" text,
 	"additionalInfo" text,
 	images text,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT lipas_pisteet_pk PRIMARY KEY ("sportsPlaceId")
 );
+CREATE INDEX ON kooste.lipas_pisteet (deleted);
 -- ddl-end --
 COMMENT ON COLUMN kooste.lipas_pisteet.ligthing IS E'Lippaan päässä kirjoitusvirhe';
 -- ddl-end --
@@ -1382,8 +1385,10 @@ CREATE TABLE kooste.lipas_viivat (
 	"shootingPositionsCount" numeric,
 	"additionalInfo" text,
 	images text,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT lipas_viivat_pk PRIMARY KEY ("sportsPlaceId")
 );
+CREATE INDEX ON kooste.lipas_viivat (deleted);
 -- ddl-end --
 ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1398,9 +1403,11 @@ CREATE TABLE kooste.osm_pisteet (
 	tarmo_category text DEFAULT 'Pysäköinti',
 	type_name text DEFAULT 'Pysäköintipaikka',
 	tags jsonb,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT osm_pisteet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
 );
+CREATE INDEX ON kooste.osm_pisteet (deleted);
 ALTER TABLE kooste.osm_pisteet OWNER TO tarmo_admin;
 
 -- object: kooste.osm_alueet | type: TABLE --
@@ -1413,9 +1420,11 @@ CREATE TABLE kooste.osm_alueet (
 	tarmo_category text DEFAULT 'Pysäköinti',
 	type_name text DEFAULT 'Pysäköintialue',
 	tags jsonb,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT osm_alueet_pk PRIMARY KEY (id),
 	UNIQUE (osm_id, osm_type)
 );
+CREATE INDEX ON kooste.osm_alueet (deleted);
 ALTER TABLE kooste.osm_alueet OWNER TO tarmo_admin;
 
 -- object: kooste.osm_metadata | type: TABLE --
@@ -1451,8 +1460,10 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	"infoFi" text,
 	paatosnumero text,
 	paatospaiva date,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
 );
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (deleted);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1470,9 +1481,11 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	rasti integer,
 	"infoFi" text,
 	lisatietoja text,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
 	UNIQUE (tunnus, rasti)
 );
+CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (deleted);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontopolkurastit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1486,8 +1499,10 @@ CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	name text NOT NULL DEFAULT 'Nimitieto puuttuu',
 	tarmo_category text DEFAULT 'Ulkoilureitit',
 	type_name text DEFAULT 'Luontopolku',
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)
 );
+CREATE INDEX ON kooste.tamperewfs_luontopolkureitit (deleted);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontopolkureitit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1520,8 +1535,10 @@ CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
 	tarmo_category text DEFAULT 'Nähtävyydet',
 	type_name text DEFAULT 'Rakennettu kulttuurikohde',
 	www text,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("OBJECTID")
 );
+CREATE INDEX ON kooste.museovirastoarcrest_rkykohteet (deleted);
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1542,9 +1559,11 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 	luontipvm date,
 	muutospvm date,
 	www text,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT museovirastoarcrest_muinaisjaannokset_pk PRIMARY KEY (mjtunnus)
 
 );
+CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (deleted);
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1580,8 +1599,10 @@ CREATE TABLE kooste.syke_natura2000 (
 	"luontiPvm" date,
 	"muutosPvm" date,
 	"paattymisPvm" date,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT syke_natura2000_pk PRIMARY KEY ("naturaTunnus")
 );
+CREATE INDEX ON kooste.syke_natura2000 (deleted);
 -- ddl-end --
 ALTER TABLE kooste.syke_natura2000 OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1600,8 +1621,10 @@ CREATE TABLE kooste.syke_valtionluonnonsuojelualueet (
 	"VoimaantuloPvm" date,
 	"MuutosPvm" date,
 	"LakkautusPvm" date,
+	deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT syke_valtionluonnonsuojelualueet_pk PRIMARY KEY ("LsAlueTunnus")
 );
+CREATE INDEX ON kooste.syke_valtionluonnonsuojelualueet (deleted);
 -- ddl-end --
 ALTER TABLE kooste.syke_valtionluonnonsuojelualueet OWNER TO tarmo_admin;
 -- ddl-end --

@@ -21,9 +21,9 @@ from shapely.geometry.base import BaseGeometry
 
 # mypy doesn't find types-python-slugify for reasons unknown :(
 from slugify import slugify  # type: ignore
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import MetaData, create_engine, inspect
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.ext.automap import AutomapBase, automap_base
 from sqlalchemy.orm import Session, sessionmaker
 
 ID_FIELD = "sportsPlaceId"
@@ -98,6 +98,51 @@ class DatabaseHelper:
         )
 
 
+class Syncher:
+    def __init__(self, prepared_base: AutomapBase, session: Session):
+        self.base = prepared_base
+        self.session = session
+        self.pk_names: Dict[str, str] = {}
+        self.existing_pks: Dict[str, set] = {}
+        self.pks_to_save: Dict[str, set] = {}
+        for klass in self.base.classes:
+            # We have to use class name as key, even though class is hashable.
+            # Seems like dynamically created sqlalchemy types may not retain
+            # their hash across calls :(
+            self.pk_names[klass.__name__] = inspect(klass).primary_key[0].name
+            existing_pk_rows = session.query(
+                getattr(klass, self.pk_names[klass.__name__])
+            ).all()
+            existing_pk_set = set([row[0] for row in existing_pk_rows])
+            self.existing_pks[klass.__name__] = existing_pk_set
+
+    def mark(self, instance: object):
+        pk = getattr(instance, self.pk_names[type(instance).__name__])
+        if type(instance).__name__ not in self.pks_to_save.keys():
+            self.pks_to_save[type(instance).__name__] = set()
+        self.pks_to_save[type(instance).__name__].add(pk)
+
+    def finish(self, session: Session) -> int:
+        # We only ever delete those tables that are marked by the loader
+        pks_to_delete = {
+            name: self.existing_pks[name] - self.pks_to_save[name]
+            for name in self.pks_to_save.keys()
+        }
+        deleted = 0
+        for klass in self.base.classes:
+            if klass.__name__ in pks_to_delete.keys():
+                pks = pks_to_delete[klass.__name__]
+                objects_to_delete = (
+                    session.query(klass)
+                    .filter(getattr(klass, self.pk_names[klass.__name__]).in_(pks))
+                    .all()
+                )
+                deleted += len(objects_to_delete)
+                for obj in objects_to_delete:
+                    obj.deleted = True
+        return deleted
+
+
 class LipasLoader:
     PAGE_SIZE = 100
     SPORT_PLACES = "sports-places"
@@ -134,6 +179,9 @@ class LipasLoader:
             self.api_url = lipas_api_url
 
         with self.Session() as session:
+            self.lipas_syncher = Syncher(LipasBase, session)
+            self.kooste_syncher = Syncher(KoosteBase, session)
+
             metadata_row = session.query(LipasBase.classes.metadata).first()
             self.last_modified = metadata_row.last_modified
             self.type_codes_all_year = (
@@ -236,6 +284,7 @@ class LipasLoader:
             "geom": geom.wkt,
             "table": table_name,
             "season": season,
+            "deleted": False,
             "tarmo_category": tarmo_category,
         }
 
@@ -252,7 +301,10 @@ class LipasLoader:
             )
             return False
         new_obj = create_feature_for_object(table_cls, sport_place)
+        self.lipas_syncher.mark(new_obj)
+
         common_obj = self._create_common_class_object_for_feature(sport_place)
+        self.kooste_syncher.mark(common_obj)
 
         try:
             session.merge(new_obj)
@@ -288,8 +340,11 @@ class LipasLoader:
                 | set(self.type_codes_summer)
                 | set(self.type_codes_winter)
             )
-        if self.last_modified:
-            params["modifiedAfter"] = self.last_modified.strftime(self.DATETIME_FORMAT)
+        # TODO: reinstate this line if we want to use lipas /api/deleted-sports-places
+        # endpoint in the future. That way, we would get modified and deleted objects
+        # with two separate api calls.
+        # if self.last_modified:
+        #     params["modifiedAfter"] = self.last_modified.strftime(self.DATETIME_FORMAT)  # noqa
         if self.point_of_interest and self.point_radius:
             params["closeToLon"] = self.point_of_interest.x
             params["closeToLat"] = self.point_of_interest.y
@@ -298,6 +353,31 @@ class LipasLoader:
 
     def _sport_place_url(self, sports_place_id: int):
         return "/".join((self.api_url, LipasLoader.SPORT_PLACES, str(sports_place_id)))
+
+    def save_features(
+        self, ids: list, do_not_update_timestamp: Optional[bool] = False
+    ) -> str:
+        succesful_actions = 0
+        with self.Session() as session:
+            for i, sports_place_id in enumerate(ids):
+                if i % 10 == 0:
+                    LOGGER.info(f"{100 * float(i) / len(ids)}% - {i}/{len(ids)}")
+                sport_place = self.get_sport_place(sports_place_id)
+                if sport_place is not None:
+                    succeeded = self.save_lipas_feature(sport_place, session)
+                    if succeeded:
+                        succesful_actions += 1
+                else:
+                    LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
+
+            if not do_not_update_timestamp:
+                self.save_timestamp(session)
+            self.lipas_syncher.finish(session)
+            deleted_items = self.kooste_syncher.finish(session)
+            session.commit()
+        msg = f"{succesful_actions} inserted or updated. {deleted_items} deleted."
+        LOGGER.info(msg)
+        return msg
 
 
 def create_feature_for_object(
@@ -334,24 +414,8 @@ def handler(event: Event, _) -> Response:
                 ids += loader.get_sport_place_ids(page)
         else:
             ids = loader.get_sport_place_ids()
-        succesful_actions = 0
-        with loader.Session() as session:
-            for i, sports_place_id in enumerate(ids):
-                if i % 10 == 0:
-                    LOGGER.info(f"{100 * float(i) / len(ids)}% - {i}/{len(ids)}")
-                sport_place = loader.get_sport_place(sports_place_id)
-                if sport_place is not None:
-                    succeeded = loader.save_lipas_feature(sport_place, session)
-                    if succeeded:
-                        succesful_actions += 1
-                else:
-                    LOGGER.debug(f"Sport place {sports_place_id} has no geometry")
 
-            if not event.get("do_not_update_timestamp", False):
-                loader.save_timestamp(session)
-            session.commit()
-        msg = f"{succesful_actions} inserted or updated."
-        LOGGER.info(msg)
+        msg = loader.save_features(ids, event.get("do_not_update_timestamp", False))
         response["body"] = json.dumps(msg)
 
     except Exception:

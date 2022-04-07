@@ -49,7 +49,6 @@ def test__sport_places_url(connection_string, metadata_set):
             "page": 1,
             "pageSize": 100,
             "typeCodes": [1, 2, 3],
-            "modifiedAfter": "2011-02-03 04:05:06.000007",
         },
     )
 
@@ -70,7 +69,6 @@ def test__sport_places_url_point_of_interest(connection_string, metadata_set):
             "closeToLat": 2.0,
             "closeToLon": 1.0,
             "fields": "location.geometries",
-            "modifiedAfter": "2011-02-03 04:05:06.000007",
             "page": 1,
             "pageSize": 100,
             "typeCodes": [1, 2, 3],
@@ -145,40 +143,121 @@ def test_get_sport_place_laavu_kota_tai_kammi(loader):
 
 
 # note that consecutive imports will add more objects to point and line tables:
-@pytest.mark.parametrize(
-    "sport_place_id, count",
-    [
-        (76249, 1),
-        (513435, 1),
-        (528808, 2),
-        (73043, 3),
-        (92112, 2),
-        (500285, 4),
-        (72948, 5),
-        (72944, 6),
-    ],
-)
-def test_save_lipas_feature(loader, main_db_params, sport_place_id, count):
-    with loader.Session() as session:
-        sport_place = loader.get_sport_place(sport_place_id)
-        succeeded = loader.save_lipas_feature(sport_place, session)
-        assert succeeded
-        loader.save_timestamp(session)
-        session.commit()
+# @pytest.mark.parametrize(
+#     "sport_place_id, count",
+#     [
+#         (76249, 1),
+#         (513435, 1),
+#         (528808, 2),
+#         (73043, 3),
+#         (92112, 2),
+#         (500285, 4),
+#         (72948, 5),
+#         (72944, 6),
+#     ],
+# )
+# def test_save_lipas_feature(loader, main_db_params, sport_place_id, count):
+#     with loader.Session() as session:
+#         sport_place = loader.get_sport_place(sport_place_id)
+#         succeeded = loader.save_lipas_feature(sport_place, session)
+#         assert succeeded
+#         loader.save_timestamp(session)
+#         session.commit()
 
+#     conn = psycopg2.connect(**main_db_params)
+#     try:
+#         with conn.cursor() as cur:
+#             cur.execute(f"SELECT count(*) FROM lipas.{sport_place['table']}")
+#             assert cur.fetchone() == (1,)
+#         if sport_place["geom"].startswith("MULTILINE"):
+#             table = loader.LINESTRING_TABLE_NAME
+#         else:
+#             table = loader.POINT_TABLE_NAME
+#         with conn.cursor() as cur:
+#             cur.execute(f"SELECT count(*) FROM kooste.{table}")
+#             assert cur.fetchone() == (count,)
+#         with conn.cursor() as cur:
+#             cur.execute("SELECT last_modified FROM lipas.metadata")
+#             assert cur.fetchone()[0].timestamp() == pytest.approx(
+#                 datetime.datetime.now().timestamp(), 20
+#             )
+#     finally:
+#         conn.close()
+
+
+def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
-            cur.execute(f"SELECT count(*) FROM lipas.{sport_place['table']}")
+            cur.execute(f"SELECT count(*) FROM lipas.luistelukentta")
             assert cur.fetchone() == (1,)
-        if sport_place["geom"].startswith("MULTILINE"):
-            table = loader.LINESTRING_TABLE_NAME
-        else:
-            table = loader.POINT_TABLE_NAME
+            cur.execute(f"SELECT count(*) FROM lipas.latu")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.lahipuisto")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.ulkoilumaja_hiihtomaja")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.kavelyreitti_ulkoilureitti")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.frisbeegolfrata")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.veneilyn_palvelupaikka")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.laavu_kota_tai_kammi")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_pisteet")
+            assert cur.fetchone() == (6,)
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_viivat")
+            assert cur.fetchone() == (2,)
+            cur.execute("SELECT last_modified FROM lipas.metadata")
+            assert cur.fetchone()[0].timestamp() == pytest.approx(
+                datetime.datetime.now().timestamp(), 20
+            )
+    finally:
+        conn.close()
+
+
+def test_save_lipas_features(loader, main_db_params):
+    loader.save_features([76249, 513435, 528808, 73043, 92112, 500285, 72948, 72944])
+    assert_data_is_imported(main_db_params)
+
+
+# A new loader will mark as deleted any objects not provided to it.
+def test_delete_lipas_features(connection_string, main_db_params):
+    assert_data_is_imported(main_db_params)
+    new_loader = LipasLoader(connection_string)
+    new_loader.save_features([76249, 513435])
+    assert_data_is_imported(main_db_params)
+    conn = psycopg2.connect(**main_db_params)
+    try:
         with conn.cursor() as cur:
-            cur.execute(f"SELECT count(*) FROM kooste.{table}")
-            assert cur.fetchone() == (count,)
+            # Lipas tables with no saved features will remain unmarked for deletion.
+            # That doesn't really matter, kooste is what counts.
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_pisteet WHERE NOT deleted")
+            assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_viivat WHERE NOT deleted")
+            assert cur.fetchone() == (1,)
+            cur.execute("SELECT last_modified FROM lipas.metadata")
+            assert cur.fetchone()[0].timestamp() == pytest.approx(
+                datetime.datetime.now().timestamp(), 20
+            )
+    finally:
+        conn.close()
+
+
+# A new loader will mark as undeleted any objects provided to it that were deleted.
+def test_reinstate_lipas_features(connection_string, main_db_params):
+    assert_data_is_imported(main_db_params)
+    new_loader = LipasLoader(connection_string)
+    new_loader.save_features([76249, 513435, 528808, 92112])
+    assert_data_is_imported(main_db_params)
+    conn = psycopg2.connect(**main_db_params)
+    try:
         with conn.cursor() as cur:
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_pisteet WHERE NOT deleted")
+            assert cur.fetchone() == (2,)
+            cur.execute(f"SELECT count(*) FROM kooste.lipas_viivat WHERE NOT deleted")
+            assert cur.fetchone() == (2,)
             cur.execute("SELECT last_modified FROM lipas.metadata")
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20

@@ -258,30 +258,44 @@ def test_get_parking_feature(parking_loader, parking_data):
     assert feature["tags"]
 
 
-def test_save_parking_features(parking_loader, parking_data, main_db_params):
-    with parking_loader.Session() as session:
-        for datum in parking_data:
-            feature = parking_loader.get_osm_feature(datum)
-            if feature:
-                succeeded = parking_loader.save_osm_feature(feature, session)
-                assert succeeded
-        parking_loader.save_timestamp(session)
-        session.commit()
-
+def assert_parking_data(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
-            cur.execute(
-                f"SELECT count(*) FROM kooste.{parking_loader.POINT_TABLE_NAME}"
-            )
+            cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
             assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT count(*) FROM kooste.{parking_loader.POLYGON_TABLE_NAME}"
-            )
+            cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
             assert cur.fetchone()[0] == 2
-            cur.execute(f"SELECT id FROM kooste.{parking_loader.POINT_TABLE_NAME}")
+            cur.execute(f"SELECT id FROM kooste.osm_pisteet")
             assert all("-" in id for id in cur.fetchone())
-            cur.execute(f"SELECT id FROM kooste.{parking_loader.POLYGON_TABLE_NAME}")
+            cur.execute(f"SELECT id FROM kooste.osm_alueet")
+            assert all("-" in id for id in cur.fetchone())
+        with conn.cursor() as cur:
+            cur.execute("SELECT last_modified FROM kooste.osm_metadata")
+            assert cur.fetchone()[0].timestamp() == pytest.approx(
+                datetime.datetime.now().timestamp(), 20
+            )
+    finally:
+        conn.close()
+
+
+def test_save_parking_features(parking_loader, parking_data, main_db_params):
+    parking_loader.save_features(parking_data)
+    assert_parking_data(main_db_params)
+
+
+def assert_ice_cream_and_parking_data(main_db_params):
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        with conn.cursor() as cur:
+            # we should have both parking and ice cream here
+            cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
+            assert cur.fetchone()[0] == 2
+            cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
+            assert cur.fetchone()[0] == 2
+            cur.execute(f"SELECT id FROM kooste.osm_pisteet")
+            assert all("-" in id for id in cur.fetchone())
+            cur.execute(f"SELECT id FROM kooste.osm_alueet")
             assert all("-" in id for id in cur.fetchone())
         with conn.cursor() as cur:
             cur.execute("SELECT last_modified FROM kooste.osm_metadata")
@@ -293,35 +307,43 @@ def test_save_parking_features(parking_loader, parking_data, main_db_params):
 
 
 def test_save_ice_cream_features(ice_cream_loader, ice_cream_data, main_db_params):
-    with ice_cream_loader.Session() as session:
-        for datum in ice_cream_data:
-            feature = ice_cream_loader.get_osm_feature(datum)
-            if feature:
-                succeeded = ice_cream_loader.save_osm_feature(feature, session)
-                assert succeeded
-        ice_cream_loader.save_timestamp(session)
-        session.commit()
+    assert_parking_data(main_db_params)
+    ice_cream_loader.save_features(ice_cream_data)
+    assert_ice_cream_and_parking_data(main_db_params)
 
+
+# A new loader will mark as deleted any objects not provided to it.
+def test_delete_parking_features(ice_cream_data, connection_string, main_db_params):
+    assert_ice_cream_and_parking_data(main_db_params)
+    new_loader = OSMLoader(connection_string)
+    new_loader.save_features(ice_cream_data)
+    assert_ice_cream_and_parking_data(main_db_params)
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
-            # we should have both parking and ice cream here
-            cur.execute(
-                f"SELECT count(*) FROM kooste.{ice_cream_loader.POINT_TABLE_NAME}"
-            )
+            # parking point should be deleted by the new loader
+            cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
+            assert cur.fetchone()[0] == 1
+            # ice cream loader won't touch a table it didn't import anything to
+            cur.execute(f"SELECT count(*) FROM kooste.osm_alueet WHERE NOT deleted")
             assert cur.fetchone()[0] == 2
-            cur.execute(
-                f"SELECT count(*) FROM kooste.{ice_cream_loader.POLYGON_TABLE_NAME}"
-            )
-            assert cur.fetchone()[0] == 2
-            cur.execute(f"SELECT id FROM kooste.{ice_cream_loader.POINT_TABLE_NAME}")
-            assert all("-" in id for id in cur.fetchone())
-            cur.execute(f"SELECT id FROM kooste.{ice_cream_loader.POLYGON_TABLE_NAME}")
-            assert all("-" in id for id in cur.fetchone())
+    finally:
+        conn.close()
+
+
+# A new loader will mark as deleted any objects not provided to it.
+def test_reinstate_parking_features(parking_data, connection_string, main_db_params):
+    assert_ice_cream_and_parking_data(main_db_params)
+    new_loader = OSMLoader(connection_string)
+    new_loader.save_features(parking_data)
+    assert_ice_cream_and_parking_data(main_db_params)
+    conn = psycopg2.connect(**main_db_params)
+    try:
         with conn.cursor() as cur:
-            cur.execute("SELECT last_modified FROM kooste.osm_metadata")
-            assert cur.fetchone()[0].timestamp() == pytest.approx(
-                datetime.datetime.now().timestamp(), 20
-            )
+            # ice cream point should be deleted by the new loader
+            cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
+            assert cur.fetchone()[0] == 1
+            cur.execute(f"SELECT count(*) FROM kooste.osm_alueet WHERE NOT deleted")
+            assert cur.fetchone()[0] == 2
     finally:
         conn.close()
