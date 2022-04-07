@@ -1464,6 +1464,7 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
 );
 CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1486,6 +1487,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	UNIQUE (tunnus, rasti)
 );
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontopolkurastit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1503,6 +1505,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkureitit (
 	CONSTRAINT tamperewfs_luontopolkureitit_pk PRIMARY KEY (tunnus)
 );
 CREATE INDEX ON kooste.tamperewfs_luontopolkureitit (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
 -- ddl-end --
 ALTER TABLE kooste.tamperewfs_luontopolkureitit OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1539,6 +1542,7 @@ CREATE TABLE kooste.museovirastoarcrest_rkykohteet (
 	CONSTRAINT museovirastoarcrest_rkykohteet_pk PRIMARY KEY ("OBJECTID")
 );
 CREATE INDEX ON kooste.museovirastoarcrest_rkykohteet (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_rkykohteet OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1564,6 +1568,7 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 
 );
 CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- ddl-end --

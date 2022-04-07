@@ -88,7 +88,7 @@ export const LIPAS_LINE_STYLE: LayerProps = {
 export const WFS_LUONNONMUISTOMERKKI_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luonnonmuistomerkit/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luonnonmuistomerkit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -97,7 +97,7 @@ export const WFS_LUONNONMUISTOMERKKI_SOURCE: VectorSource = {
 export const WFS_LUONTOPOLKUREITTI_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkureitit/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkureitit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -106,7 +106,7 @@ export const WFS_LUONTOPOLKUREITTI_SOURCE: VectorSource = {
 export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkurastit/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkurastit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -150,7 +150,7 @@ export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
 export const ARCGIS_MUINAISJAANNOS_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -159,7 +159,7 @@ export const ARCGIS_MUINAISJAANNOS_SOURCE: VectorSource = {
 export const ARCGIS_RKYKOHDE_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkykohteet/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkykohteet/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
   ],
   minzoom: 0,
   maxzoom: 22,

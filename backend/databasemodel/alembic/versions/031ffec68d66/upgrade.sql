@@ -21,3 +21,8 @@ CREATE INDEX ON kooste.museovirastoarcrest_rkykohteet (deleted);
 CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (deleted);
 CREATE INDEX ON kooste.syke_natura2000 (deleted);
 CREATE INDEX ON kooste.syke_valtionluonnonsuojelualueet (deleted);
+CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (visibility);
+CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (visibility);
+CREATE INDEX ON kooste.tamperewfs_luontopolkureitit (visibility);
+CREATE INDEX ON kooste.museovirastoarcrest_rkykohteet (visibility);
+CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (visibility);
