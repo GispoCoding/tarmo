@@ -35,7 +35,10 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         <h3>[10 km]</h3>
       </div>
       <h4>{popupInfo.properties["season"]}</h4>
-      <p>[Address], [postcode] [municipality]</p>
+      <p>
+        {popupInfo.properties["address"]}, {popupInfo.properties["postalCode"]}{" "}
+        {popupInfo.properties["cityName"]}
+      </p>
     </div>,
     <div key={2}>
       <h3>Aktiviteetit ja palvelut</h3>
