@@ -9,7 +9,8 @@ import pytest
 import requests
 from shapely.geometry import Point
 
-from backend.lambda_functions.wfs_loader.wfs_loader import DatabaseHelper, WFSLoader
+from backend.lambda_functions.base_loader.base_loader import DatabaseHelper
+from backend.lambda_functions.wfs_loader.wfs_loader import WFSLoader
 
 luonnonmuistomerkki_params = {
     "service": "wfs",
@@ -344,7 +345,7 @@ def connection_string(tarmo_database_created):
 def loader(connection_string):
     return WFSLoader(
         connection_string,
-        wfs_url="http://mock.url",
+        url="http://mock.url",
     )
 
 
@@ -365,27 +366,27 @@ def metadata_set(main_db_params):
 
 @pytest.fixture()
 def wfs_data(mock_wfs, loader, metadata_set):
-    data = loader.get_wfs_objects()
+    data = loader.get_features()
     assert len(data["features"]) == 3
     return data
 
 
 @pytest.fixture()
 def changed_wfs_data(changed_mock_wfs, loader, metadata_set):
-    data = loader.get_wfs_objects()
+    data = loader.get_features()
     assert len(data["features"]) == 3
     return data
 
 
 @pytest.fixture()
 def combined_wfs_data(combined_mock_wfs, loader, metadata_set):
-    data = loader.get_wfs_objects()
+    data = loader.get_features()
     assert len(data["features"]) == 4
     return data
 
 
 def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
-    feature = loader.get_wfs_feature(wfs_data["features"][0])
+    feature = loader.get_feature(wfs_data["features"][0])
     assert feature["sw_member"]
     assert feature["name"] == "Lamminpään Kuusikorvenpuiston kuuset"
     assert (
@@ -397,7 +398,7 @@ def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
 
 
 def test_get_luontopolku_feature(loader, wfs_data):
-    feature = loader.get_wfs_feature(wfs_data["features"][1])
+    feature = loader.get_feature(wfs_data["features"][1])
     assert feature["tunnus"]
     assert feature["name"] == "Viikinsaaren luontopolku"
     assert feature["geom"].startswith("MULTILINESTRING")
@@ -405,7 +406,7 @@ def test_get_luontopolku_feature(loader, wfs_data):
 
 
 def test_get_luontorasti_feature(loader, wfs_data):
-    feature = loader.get_wfs_feature(wfs_data["features"][2])
+    feature = loader.get_feature(wfs_data["features"][2])
     assert feature["mi_prinx"]
     assert feature["name"] == "Metsälehmus - niinipuu"
     assert feature["infoFi"] == "Niinipuun monet kasvot"
@@ -414,7 +415,7 @@ def test_get_luontorasti_feature(loader, wfs_data):
 
 
 def test_get_another_luontorasti_feature(loader, changed_wfs_data):
-    feature = loader.get_wfs_feature(changed_wfs_data["features"][2])
+    feature = loader.get_feature(changed_wfs_data["features"][2])
     assert feature["mi_prinx"]
     assert feature["name"] == "Vuohenputki"
     assert feature["infoFi"] == "Vuohenputki - kovan luokan rikkaruoho"
@@ -493,7 +494,7 @@ def test_delete_wfs_features(changed_wfs_data, connection_string, main_db_params
     assert_data_is_imported(main_db_params)
     loader = WFSLoader(
         connection_string,
-        wfs_url="http://mock.url",
+        url="http://mock.url",
     )
     loader.save_features(changed_wfs_data["features"])
     assert_changed_data_is_imported(main_db_params)
@@ -504,7 +505,7 @@ def test_reinstate_wfs_features(combined_wfs_data, connection_string, main_db_pa
     assert_changed_data_is_imported(main_db_params)
     loader = WFSLoader(
         connection_string,
-        wfs_url="http://mock.url",
+        url="http://mock.url",
     )
     loader.save_features(combined_wfs_data["features"])
     assert_combined_data_is_imported(main_db_params)

@@ -47,7 +47,6 @@ build-lambda:
   	  rm -rf tmp_lambda; \
   	  echo $$func; \
 	  docker cp tarmo_$${func}_1:/var/task tmp_lambda; \
-	  mv tmp_lambda/app.py tmp_lambda/$${func}.py; \
 	  cd tmp_lambda; \
 	  zip -r ../"$${func}.zip" .; \
 	  cd ..; \

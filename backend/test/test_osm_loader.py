@@ -6,7 +6,8 @@ import pytest
 import requests
 from shapely.geometry import Point
 
-from backend.lambda_functions.osm_loader.osm_loader import DatabaseHelper, OSMLoader
+from backend.lambda_functions.lipas_loader.base_loader import DatabaseHelper
+from backend.lambda_functions.osm_loader.osm_loader import OSMLoader
 
 ice_cream_query = (
     "[out:json];\n"
@@ -189,7 +190,7 @@ def ice_cream_loader(connection_string):
         tags_to_exclude={"amenity": ["fast_food"]},
         point_of_interest=Point(24.9424875, 60.1593807),
         point_radius=1,
-        overpass_api_url="http://mock.url",
+        url="http://mock.url",
     )
 
 
@@ -201,7 +202,7 @@ def parking_loader(connection_string):
         tags_to_exclude={"access": ["private", "permit"]},
         point_of_interest=Point(23.7747, 61.4980),
         point_radius=10,
-        overpass_api_url="http://mock.url",
+        url="http://mock.url",
     )
 
 
@@ -230,20 +231,20 @@ def test_get_parking_query(parking_loader, metadata_set):
 
 @pytest.fixture()
 def ice_cream_data(mock_overpass, ice_cream_loader, metadata_set):
-    data = ice_cream_loader.get_osm_objects()
+    data = ice_cream_loader.get_features()
     assert data
     return data
 
 
 @pytest.fixture()
 def parking_data(mock_overpass, parking_loader, metadata_set):
-    data = parking_loader.get_osm_objects()
+    data = parking_loader.get_features()
     assert data
     return data
 
 
 def test_get_ice_cream_feature(ice_cream_loader, ice_cream_data):
-    feature = ice_cream_loader.get_osm_feature(ice_cream_data[0])
+    feature = ice_cream_loader.get_feature(ice_cream_data[0])
     assert feature["osm_id"]
     assert feature["osm_type"] == "node"
     assert feature["geom"].startswith("POINT")
@@ -251,7 +252,7 @@ def test_get_ice_cream_feature(ice_cream_loader, ice_cream_data):
 
 
 def test_get_parking_feature(parking_loader, parking_data):
-    feature = parking_loader.get_osm_feature(parking_data[0])
+    feature = parking_loader.get_feature(parking_data[0])
     assert feature["osm_id"]
     assert feature["osm_type"] in ("node", "way", "relation")
     assert feature["geom"].startswith("POINT") or feature["geom"].startswith("POLYGON")

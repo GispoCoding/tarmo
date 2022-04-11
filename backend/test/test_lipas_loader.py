@@ -4,10 +4,8 @@ import psycopg2
 import pytest
 from shapely.geometry import Point
 
-from backend.lambda_functions.lipas_loader.lipas_loader import (
-    DatabaseHelper,
-    LipasLoader,
-)
+from backend.lambda_functions.lipas_loader.base_loader import DatabaseHelper
+from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
 
 
 @pytest.fixture(scope="module")
@@ -77,7 +75,7 @@ def test__sport_places_url_point_of_interest(connection_string, metadata_set):
 
 
 def test_get_sport_place_point(loader):
-    sport_place = loader.get_sport_place(76249)
+    sport_place = loader.get_feature(76249)
     assert sport_place["geom"] == "MULTIPOINT (27.2258867781278 63.545014556221)"
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "luistelukentta"
@@ -85,7 +83,7 @@ def test_get_sport_place_point(loader):
 
 
 def test_get_sport_place_line(loader):
-    sport_place = loader.get_sport_place(513435)
+    sport_place = loader.get_feature(513435)
     assert sport_place["geom"].startswith("MULTILINESTRING")
     assert len(sport_place["geom"]) > 2000
     assert sport_place["season"] == "Talvi"
@@ -94,7 +92,7 @@ def test_get_sport_place_line(loader):
 
 
 def test_get_sport_place_polygon_centroid(loader):
-    sport_place = loader.get_sport_place(528808)
+    sport_place = loader.get_feature(528808)
     assert sport_place["geom"].startswith("MULTIPOINT")
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "lahipuisto"
@@ -102,7 +100,7 @@ def test_get_sport_place_polygon_centroid(loader):
 
 
 def test_get_sport_place_ulkoilumaja_hiihtomaja(loader):
-    sport_place = loader.get_sport_place(73043)
+    sport_place = loader.get_feature(73043)
     assert sport_place["geom"] == "MULTIPOINT (22.2373969295559 62.4105611192765)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "ulkoilumaja_hiihtomaja"
@@ -110,7 +108,7 @@ def test_get_sport_place_ulkoilumaja_hiihtomaja(loader):
 
 
 def test_get_sport_place_kavelyreitti_ulkoilureitti(loader):
-    sport_place = loader.get_sport_place(92112)
+    sport_place = loader.get_feature(92112)
     assert sport_place["geom"].startswith("MULTILINESTRING")
     assert len(sport_place["geom"]) > 1000
     assert sport_place["season"] == "Koko vuosi"
@@ -119,7 +117,7 @@ def test_get_sport_place_kavelyreitti_ulkoilureitti(loader):
 
 
 def test_get_sport_place_frisbeegolfrata(loader):
-    sport_place = loader.get_sport_place(500285)
+    sport_place = loader.get_feature(500285)
     assert sport_place["geom"] == "MULTIPOINT (27.6580811870223 63.0789878701306)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "frisbeegolfrata"
@@ -127,7 +125,7 @@ def test_get_sport_place_frisbeegolfrata(loader):
 
 
 def test_get_sport_place_veneilyn_palvelupaikka(loader):
-    sport_place = loader.get_sport_place(72948)
+    sport_place = loader.get_feature(72948)
     assert sport_place["geom"] == "MULTIPOINT (24.8293942857947 60.2031118334012)"
     assert sport_place["season"] == "Kesä"
     assert sport_place["table"] == "veneilyn_palvelupaikka"
@@ -135,7 +133,7 @@ def test_get_sport_place_veneilyn_palvelupaikka(loader):
 
 
 def test_get_sport_place_laavu_kota_tai_kammi(loader):
-    sport_place = loader.get_sport_place(72944)
+    sport_place = loader.get_feature(72944)
     assert sport_place["geom"] == "MULTIPOINT (24.9058410960006 63.2442368074224)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "laavu_kota_tai_kammi"

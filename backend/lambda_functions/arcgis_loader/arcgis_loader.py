@@ -1,12 +1,7 @@
 import datetime
 import json
-import logging
-import os
-import sys
-import traceback
-from typing import Any, Dict, List, Optional, Type, TypedDict
+from typing import Any, Dict, Optional
 
-import boto3
 import requests
 from shapely.geometry import (
     LineString,
@@ -17,126 +12,19 @@ from shapely.geometry import (
     Polygon,
     shape,
 )
-from sqlalchemy import MetaData, create_engine, inspect
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.automap import AutomapBase, automap_base
-from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.types import BOOLEAN, DATE
 
-KoosteBase = automap_base(metadata=(MetaData(schema="kooste")))
-
-LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.INFO)
-
-
-class Event(TypedDict):
-    pages: Optional[List[int]]
-
-    # Optional values
-    do_not_update_timestamp: Optional[bool]
-
-    close_to_lon: Optional[float]
-    close_to_lat: Optional[float]
-    radius: Optional[float]
+from .base_loader import (
+    BaseLoader,
+    Event,
+    FeatureCollection,
+    KoosteBase,
+    Response,
+    base_handler,
+)
 
 
-class Response(TypedDict):
-    statusCode: int  # noqa N815
-    body: str
-
-
-class FeatureCollection(TypedDict):
-    features: list
-    crs: dict
-
-
-class DatabaseHelper:
-    def __init__(self):
-        if os.environ.get("READ_FROM_AWS", "1") == "1":
-            session = boto3.session.Session()
-            client = session.client(
-                service_name="secretsmanager",
-                region_name=os.environ.get("AWS_REGION_NAME"),
-            )
-            self._credentials = json.loads(
-                client.get_secret_value(SecretId=os.environ.get("DB_SECRET_RW_ARN"))[
-                    "SecretString"
-                ]
-            )
-        else:
-            self._credentials = {
-                "username": os.environ.get("RW_USER"),
-                "password": os.environ.get("RW_USER"),
-            }
-
-        self._host = os.environ.get("DB_INSTANCE_ADDRESS")
-        self._db = os.environ.get("DB_MAIN_NAME")
-        self._port = os.environ.get("DB_INSTANCE_PORT", "5432")
-        self._region_name = os.environ.get("AWS_REGION_NAME")
-
-    def get_connection_parameters(self) -> Dict[str, str]:
-        return {
-            "host": self._host,
-            "port": self._port,
-            "dbname": self._db,
-            "user": self._credentials["username"],
-            "password": self._credentials["password"],
-        }
-
-    def get_connection_string(self) -> str:
-        db_params = self.get_connection_parameters()
-        return (
-            f'postgresql://{db_params["user"]}:{db_params["password"]}'
-            f'@{db_params["host"]}:{db_params["port"]}/{db_params["dbname"]}'
-        )
-
-
-class Syncher:
-    def __init__(self, prepared_base: AutomapBase, session: Session):
-        self.base = prepared_base
-        self.session = session
-        self.pk_names: Dict[str, str] = {}
-        self.existing_pks: Dict[str, set] = {}
-        self.pks_to_save: Dict[str, set] = {}
-        for klass in self.base.classes:
-            # We have to use class name as key, even though class is hashable.
-            # Seems like dynamically created sqlalchemy types may not retain
-            # their hash across calls :(
-            self.pk_names[klass.__name__] = inspect(klass).primary_key[0].name
-            existing_pk_rows = session.query(
-                getattr(klass, self.pk_names[klass.__name__])
-            ).all()
-            existing_pk_set = set([row[0] for row in existing_pk_rows])
-            self.existing_pks[klass.__name__] = existing_pk_set
-
-    def mark(self, instance: object):
-        pk = getattr(instance, self.pk_names[type(instance).__name__])
-        if type(instance).__name__ not in self.pks_to_save.keys():
-            self.pks_to_save[type(instance).__name__] = set()
-        self.pks_to_save[type(instance).__name__].add(pk)
-
-    def finish(self, session: Session) -> int:
-        # We only ever delete those tables that are marked by the loader
-        pks_to_delete = {
-            name: self.existing_pks[name] - self.pks_to_save[name]
-            for name in self.pks_to_save.keys()
-        }
-        deleted = 0
-        for klass in self.base.classes:
-            if klass.__name__ in pks_to_delete.keys():
-                pks = pks_to_delete[klass.__name__]
-                objects_to_delete = (
-                    session.query(klass)
-                    .filter(getattr(klass, self.pk_names[klass.__name__]).in_(pks))
-                    .all()
-                )
-                deleted += len(objects_to_delete)
-                for obj in objects_to_delete:
-                    obj.deleted = True
-        return deleted
-
-
-class ArcGisLoader:
+class ArcGisLoader(BaseLoader):
     # We must support multiple ArcGIS REST sources, with different urls and different
     # layers to import from each service. Also, data from multiple layers might be
     # joined to the same table, if the schemas fit.
@@ -152,6 +40,8 @@ class ArcGisLoader:
             "SYKE/SYKE_SuojellutAlueet:Valtion maiden luonnonsuojelualueet": "syke_valtionluonnonsuojelualueet",  # noqa
         },
     }
+    # Each metadata table contains the URL of each arcgis source
+    METADATA_TABLE_NAME = list(TABLE_NAMES.keys())
     FIELD_NAMES = {
         "kohdenimi": "name",
         "nimiSuomi": "name",
@@ -163,43 +53,18 @@ class ArcGisLoader:
     }
 
     DEFAULT_PROJECTION = 4326
-    HEADERS = {"User-Agent": "TARMO - Tampere Mobilemap"}
 
     def __init__(
-        self,
-        connection_string: str,
-        arcgis_urls: Optional[dict] = None,
-        layers_to_include: Optional[dict] = None,
-        point_of_interest: Optional[Point] = None,
-        point_radius: Optional[float] = None,
+        self, connection_string: str, layers_to_include: Optional[dict] = None, **kwargs
     ) -> None:
+        super().__init__(connection_string, **kwargs)
 
-        engine = create_engine(connection_string)
-
-        KoosteBase.prepare(engine, reflect=True)
-
-        self.Session = sessionmaker(bind=engine)
-
-        self.point_of_interest = point_of_interest
-        self.point_radius = point_radius
-
-        self.arcgis_urls = arcgis_urls if arcgis_urls else {}
         self.layers_to_include = layers_to_include if layers_to_include else {}
-        self.last_modified = {}
-        with self.Session() as session:
-            self.syncher = Syncher(KoosteBase, session)
-
-            for metadata_table, _data_tables in self.TABLE_NAMES.items():
-                metadata_row = session.query(
-                    getattr(KoosteBase.classes, metadata_table)
-                ).first()
-                self.last_modified[metadata_table] = metadata_row.last_modified
-                if not arcgis_urls:
-                    self.arcgis_urls[metadata_table] = metadata_row.url
-                if not layers_to_include:
-                    self.layers_to_include[
-                        metadata_table
-                    ] = metadata_row.layers_to_include
+        for metadata_table in self.METADATA_TABLE_NAME:
+            if not layers_to_include:
+                self.layers_to_include[metadata_table] = self.metadata_row[
+                    metadata_table
+                ].layers_to_include
 
     def get_arcgis_query_params(self) -> dict:
         params = {
@@ -268,14 +133,14 @@ class ArcGisLoader:
             }
         return geojson
 
-    def get_arcgis_objects(self) -> FeatureCollection:
+    def get_features(self) -> FeatureCollection:  # type: ignore[override]
         data = FeatureCollection(
             features=[],
             crs={"type": "name", "properties": {"name": self.DEFAULT_PROJECTION}},
         )
         params = self.get_arcgis_query_params()
         for metadata_table, services in self.layers_to_include.items():
-            url = self.arcgis_urls[metadata_table]
+            url = self.api_url[metadata_table]
             for service_name, layers in services.items():
                 # we have to find out the layer ids from layer names
                 r = requests.get(
@@ -330,7 +195,7 @@ class ArcGisLoader:
                 cleaned[key] = datetime.date.fromtimestamp(cleaned[key] / 1000)
         return cleaned
 
-    def get_arcgis_feature(self, element: Dict[str, Any]) -> Optional[dict]:
+    def get_feature(self, element: Dict[str, Any]) -> Optional[dict]:  # type: ignore[override] # noqa
         props = element["properties"]
 
         source = props.pop("source")
@@ -379,97 +244,7 @@ class ArcGisLoader:
         }
         return flattened
 
-    def save_arcgis_feature(
-        self, arcgis_object: Dict[str, Any], session: Session
-    ) -> bool:
-        table_cls = getattr(KoosteBase.classes, arcgis_object["table"])
-        new_obj = self.create_feature_for_object(table_cls, arcgis_object)
-        self.syncher.mark(new_obj)
-        try:
-            session.merge(new_obj)
-        except SQLAlchemyError:
-            LOGGER.exception(f"Error occurred while saving feature {arcgis_object}")
-        return True
-
-    def save_timestamp(self, session: Session) -> None:
-        for metadata_table, _data_tables in self.TABLE_NAMES.items():
-            metadata_row = session.query(
-                getattr(KoosteBase.classes, metadata_table)
-            ).first()
-            metadata_row.last_modified = datetime.datetime.now()
-            session.merge(metadata_row)
-
-    def create_feature_for_object(
-        self, table_cls: Type[KoosteBase], arcgis_object: Dict[str, Any]  # type: ignore # noqa E501
-    ) -> KoosteBase:  # type: ignore
-        column_keys = set(table_cls.__table__.columns.keys())  # type: ignore
-        vals = {
-            key: arcgis_object[key]
-            for key in set(arcgis_object.keys()).intersection(column_keys)
-        }
-        vals["geom"] = f"SRID={self.DEFAULT_PROJECTION};" + vals["geom"]
-        return table_cls(**vals)  # type: ignore
-
-    def save_features(
-        self, arcgis_objects: list, do_not_update_timestamp: Optional[bool] = False
-    ) -> str:
-        successful_actions = 0
-        with self.Session() as session:
-            for i, element in enumerate(arcgis_objects):
-                if i % 100 == 0:
-                    LOGGER.info(
-                        f"{100 * float(i) / len(arcgis_objects)}% - {i}/{len(arcgis_objects)}"  # noqa
-                    )
-                arcgis_feature = self.get_arcgis_feature(element)
-                if arcgis_feature is not None:
-                    succeeded = self.save_arcgis_feature(arcgis_feature, session)
-                    if succeeded:
-                        successful_actions += 1
-                else:
-                    LOGGER.debug(f"ArcGIS feature {arcgis_feature} empty")
-
-            if not do_not_update_timestamp:
-                self.save_timestamp(session)
-            deleted_items = self.syncher.finish(session)
-            session.commit()
-        msg = f"{successful_actions} inserted or updated. {deleted_items} deleted."
-        LOGGER.info(msg)
-        return msg
-
 
 def handler(event: Event, _) -> Response:
     """Handler which is called when accessing the endpoint."""
-    response: Response = {"statusCode": 200, "body": json.dumps("")}
-    db_helper = DatabaseHelper()
-    try:
-        params = {}
-        point = (
-            Point(event["close_to_lon"], event["close_to_lat"])
-            if "close_to_lon" in event and "close_to_lat" in event
-            else None
-        )
-        if point:
-            params["point_of_interest"] = point
-        radius = event.get("radius", None)
-        if radius:
-            params["point_radius"] = radius
-
-        loader = ArcGisLoader(db_helper.get_connection_string(), **params)
-        arcgis_objects = loader.get_arcgis_objects()["features"]
-
-        msg = loader.save_features(
-            arcgis_objects, event.get("do_not_update_timestamp", False)
-        )
-        LOGGER.info(msg)
-        response["body"] = json.dumps(msg)
-
-    except Exception:
-        # LOGGER.exception("Uncaught error occurred")
-        response["statusCode"] = 500
-
-        exc_info = sys.exc_info()
-        exc_string = "".join(traceback.format_exception(*exc_info))
-        response["body"] = exc_string
-        LOGGER.exception(exc_string)
-
-    return response
+    return base_handler(event, ArcGisLoader)
