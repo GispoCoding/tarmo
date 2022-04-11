@@ -80,6 +80,15 @@ def test_get_sport_place_point(loader):
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "luistelukentta"
     assert sport_place["tarmo_category"] == "Luistelu"
+    assert sport_place["name"] == "Kangaslammin koulun luistelukenttä"
+    assert sport_place["address"] == "Pajukatu 1"
+    assert sport_place["postalCode"] == "74130"
+    assert sport_place["postalOffice"] == "Iisalmi"
+    assert sport_place["cityName"] == "Iisalmi"
+    assert sport_place["infoFi"]
+    assert sport_place["changingRooms"] == True
+    assert sport_place["toilet"] == True
+    assert sport_place["ligthing"] == True
 
 
 def test_get_sport_place_line(loader):

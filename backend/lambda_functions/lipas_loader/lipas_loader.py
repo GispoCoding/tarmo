@@ -106,11 +106,13 @@ class LipasLoader(BaseLoader):
 
         type = data.pop("type")
         table_name = slugify(type["name"], separator="_")
+
+        # location will be flattened for the kooste table
         location_data = {
-            f"location_{key}": val
-            for key, val in location.items()
-            if key != "geometries"
+            key: val for key, val in location.items() if key != "geometries"
         }
+        location_data["cityName"] = location_data["city"]["name"]
+
         type_data = {f"type_{key}": val for key, val in type.items()}
 
         try:
