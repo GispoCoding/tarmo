@@ -27,7 +27,7 @@ resource "aws_lambda_function" "lipas_loader" {
   function_name = "lipas_loader"
   filename      = "../backend/lambda_functions/lipas_loader.zip"
   runtime       = "python3.8"
-  handler       = "lipas_loader.handler"
+  handler       = "app.lipas_loader.handler"
   memory_size   = 128
   timeout       = 900
 
@@ -55,7 +55,7 @@ resource "aws_lambda_function" "osm_loader" {
   function_name = "osm_loader"
   filename      = "../backend/lambda_functions/osm_loader.zip"
   runtime       = "python3.8"
-  handler       = "osm_loader.handler"
+  handler       = "app.osm_loader.handler"
   memory_size   = 128
   timeout       = 900
 
@@ -83,7 +83,7 @@ resource "aws_lambda_function" "wfs_loader" {
   function_name = "wfs_loader"
   filename      = "../backend/lambda_functions/wfs_loader.zip"
   runtime       = "python3.8"
-  handler       = "wfs_loader.handler"
+  handler       = "app.wfs_loader.handler"
   memory_size   = 128
   timeout       = 900
 
@@ -111,7 +111,7 @@ resource "aws_lambda_function" "arcgis_loader" {
   function_name = "arcgis_loader"
   filename      = "../backend/lambda_functions/arcgis_loader.zip"
   runtime       = "python3.8"
-  handler       = "arcgis_loader.handler"
+  handler       = "app.arcgis_loader.handler"
   memory_size   = 128
   timeout       = 900
 

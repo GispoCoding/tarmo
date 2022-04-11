@@ -230,6 +230,7 @@ def migrate_tarmo_db(db_helper: DatabaseHelper, version: str = "head") -> str:
         alembic_cfg.attributes["connection"] = main_conn_params
         script_dir = ScriptDirectory.from_config(alembic_cfg)
         current_head_version = script_dir.get_current_head()
+        print(current_head_version)
 
         if version == "head":
             version = current_head_version

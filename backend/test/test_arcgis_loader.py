@@ -1,3 +1,4 @@
+import copy
 import datetime
 import json
 
@@ -7,10 +8,8 @@ import requests
 from requests_mock import ANY
 from shapely.geometry import Point
 
-from backend.lambda_functions.arcgis_loader.arcgis_loader import (
-    ArcGisLoader,
-    DatabaseHelper,
-)
+from backend.lambda_functions.arcgis_loader.arcgis_loader import ArcGisLoader
+from backend.lambda_functions.base_loader.base_loader import DatabaseHelper
 
 kulttuuriymparisto_service_response = {
     "currentVersion": 10.6,
@@ -2728,6 +2727,9 @@ valtion_query_response = {
     ],
 }
 
+changed_naturasci_query_response = copy.deepcopy(naturasci_query_response)
+changed_naturasci_query_response["features"] = []
+
 
 def mock_response(request: requests.PreparedRequest, context: object) -> str:
     if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
@@ -2749,9 +2751,34 @@ def mock_response(request: requests.PreparedRequest, context: object) -> str:
     raise NotImplementedError
 
 
+def changed_mock_response(request: requests.PreparedRequest, context: object) -> str:
+    if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
+        return json.dumps(kulttuuriymparisto_service_response)
+    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/1/query"):  # type: ignore
+        return json.dumps(muinaisjaannokset_query_response)
+    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/7/query"):  # type: ignore
+        return json.dumps(rkykohteet_query_response)
+    if request.url == "http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer?f=json":  # type: ignore
+        return json.dumps(suojellutalueet_service_response)
+    if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/2/query"):  # type: ignore
+        return json.dumps(naturasac_query_response)
+    if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/3/query"):  # type: ignore
+        return json.dumps(naturaspa_query_response)
+    if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/4/query"):  # type: ignore
+        return json.dumps(changed_naturasci_query_response)
+    if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/7/query"):  # type: ignore
+        return json.dumps(valtion_query_response)
+    raise NotImplementedError
+
+
 @pytest.fixture()
 def mock_arcgis(requests_mock):
     requests_mock.get(ANY, text=mock_response)
+
+
+@pytest.fixture()
+def changed_mock_arcgis(requests_mock):
+    requests_mock.get(ANY, text=changed_mock_response)
 
 
 @pytest.fixture(scope="module")
@@ -2782,7 +2809,7 @@ def loader(connection_string):
         connection_string,
         point_of_interest=Point(23.7747, 61.4980),
         point_radius=10,
-        arcgis_urls={
+        url={
             "museovirastoarcrest_metadata": "http://mock.url/arcgis/rest/services",
             "syke_metadata": "http://anothermock.url/arcgis/rest/services",
         },
@@ -2821,13 +2848,20 @@ def test_get_geojson(loader, metadata_set):
 
 @pytest.fixture()
 def arcgis_data(mock_arcgis, loader, metadata_set):
-    data = loader.get_arcgis_objects()
+    data = loader.get_features()
     assert len(data["features"]) == 6
     return data
 
 
+@pytest.fixture()
+def changed_arcgis_data(changed_mock_arcgis, loader, metadata_set):
+    data = loader.get_features()
+    assert len(data["features"]) == 5
+    return data
+
+
 def test_get_muinaisjaannokset_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][0])
+    feature = loader.get_feature(arcgis_data["features"][0])
     assert feature["mjtunnus"]
     assert feature["name"] == "Särkänniemi 1"
     assert feature["type_name"] == "Alusten hylyt: hylyt (puu)"
@@ -2838,7 +2872,7 @@ def test_get_muinaisjaannokset_feature(loader, arcgis_data):
 
 
 def test_get_rkykohteet_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][1])
+    feature = loader.get_feature(arcgis_data["features"][1])
     assert feature["ID"]
     assert feature["name"] == "Pyynikin näkötorni"
     assert feature["geom"].startswith("MULTIPOINT")
@@ -2846,7 +2880,7 @@ def test_get_rkykohteet_feature(loader, arcgis_data):
 
 
 def test_get_naturasac_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][2])
+    feature = loader.get_feature(arcgis_data["features"][2])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Siikaneva"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2854,7 +2888,7 @@ def test_get_naturasac_feature(loader, arcgis_data):
 
 
 def test_get_naturaspa_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][3])
+    feature = loader.get_feature(arcgis_data["features"][3])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Kaakkurijärvet"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2862,7 +2896,7 @@ def test_get_naturaspa_feature(loader, arcgis_data):
 
 
 def test_get_naturasci_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][4])
+    feature = loader.get_feature(arcgis_data["features"][4])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Tulliniemen linnustonsuojelualue"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2870,7 +2904,7 @@ def test_get_naturasci_feature(loader, arcgis_data):
 
 
 def test_get_valtion_feature(loader, arcgis_data):
-    feature = loader.get_arcgis_feature(arcgis_data["features"][5])
+    feature = loader.get_feature(arcgis_data["features"][5])
     assert feature["LsAlueTunnus"]
     assert feature["name"] == "Vehoniemenharjun luonnonsuojelualue"
     assert feature["infoFi"] == "Muu luonnonsuojelualue (MH)"
@@ -2878,24 +2912,17 @@ def test_get_valtion_feature(loader, arcgis_data):
     assert feature["table"] == "syke_valtionluonnonsuojelualueet"
 
 
-def test_save_arcgis_features(loader, arcgis_data, main_db_params):
-    with loader.Session() as session:
-        for datum in arcgis_data["features"]:
-            feature = loader.get_arcgis_feature(datum)
-            if feature:
-                succeeded = loader.save_arcgis_feature(feature, session)
-                assert succeeded
-        loader.save_timestamp(session)
-        session.commit()
-
+def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
             cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset"
+                f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
             )
             assert cur.fetchone()[0] == 1
-            cur.execute(f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet")
+            cur.execute(
+                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
+            )
             assert cur.fetchone()[0] == 1
             cur.execute(
                 f"SELECT mjtunnus FROM kooste.museovirastoarcrest_muinaisjaannokset"
@@ -2907,9 +2934,13 @@ def test_save_arcgis_features(loader, arcgis_data, main_db_params):
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20
             )
-            cur.execute(f"SELECT count(*) FROM kooste.syke_natura2000")
+            cur.execute(
+                f"SELECT count(*) FROM kooste.syke_natura2000 WHERE NOT deleted"
+            )
             assert cur.fetchone()[0] == 3
-            cur.execute(f"SELECT count(*) FROM kooste.syke_valtionluonnonsuojelualueet")
+            cur.execute(
+                f"SELECT count(*) FROM kooste.syke_valtionluonnonsuojelualueet WHERE NOT deleted"
+            )
             assert cur.fetchone()[0] == 1
             cur.execute(f'SELECT "naturaTunnus" FROM kooste.syke_natura2000')
             results = cur.fetchone()[0] == "FI0341008"
@@ -2923,3 +2954,60 @@ def test_save_arcgis_features(loader, arcgis_data, main_db_params):
             )
     finally:
         conn.close()
+
+
+def assert_changed_data_is_imported(main_db_params):
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
+            )
+            assert cur.fetchone()[0] == 1
+            cur.execute(
+                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
+            )
+            assert cur.fetchone()[0] == 1
+            cur.execute(
+                f"SELECT count(*) FROM kooste.syke_natura2000 WHERE NOT deleted"
+            )
+            assert cur.fetchone()[0] == 2
+            cur.execute(
+                f"SELECT count(*) FROM kooste.syke_valtionluonnonsuojelualueet WHERE NOT deleted"
+            )
+            assert cur.fetchone()[0] == 1
+    finally:
+        conn.close()
+
+
+def test_save_arcgis_features(loader, arcgis_data, main_db_params):
+    loader.save_features(arcgis_data["features"])
+    assert_data_is_imported(main_db_params)
+
+
+# a new loader should delete one natura area
+def test_delete_arcgis_features(changed_arcgis_data, connection_string, main_db_params):
+    assert_data_is_imported(main_db_params)
+    loader = ArcGisLoader(
+        connection_string,
+        url={
+            "museovirastoarcrest_metadata": "http://mock.url/arcgis/rest/services",
+            "syke_metadata": "http://anothermock.url/arcgis/rest/services",
+        },
+    )
+    loader.save_features(changed_arcgis_data["features"])
+    assert_changed_data_is_imported(main_db_params)
+
+
+# a new loader should undelete the same
+def test_reinstate_arcgis_features(arcgis_data, connection_string, main_db_params):
+    assert_changed_data_is_imported(main_db_params)
+    loader = ArcGisLoader(
+        connection_string,
+        url={
+            "museovirastoarcrest_metadata": "http://mock.url/arcgis/rest/services",
+            "syke_metadata": "http://anothermock.url/arcgis/rest/services",
+        },
+    )
+    loader.save_features(arcgis_data["features"])
+    assert_data_is_imported(main_db_params)

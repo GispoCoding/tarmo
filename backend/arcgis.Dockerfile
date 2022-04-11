@@ -1,8 +1,9 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-# Copy function code
-COPY lambda_functions/arcgis_loader/arcgis_loader.py ${LAMBDA_TASK_ROOT}/app.py
-
+# common code
+COPY lambda_functions/base_loader/__init__.py ${LAMBDA_TASK_ROOT}/app/__init__.py
+COPY lambda_functions/base_loader/base_loader.py ${LAMBDA_TASK_ROOT}/app/base_loader.py
+# common deps
 RUN pip3 install  \
     psycopg2-binary \
     geoalchemy2 \
@@ -10,4 +11,7 @@ RUN pip3 install  \
     shapely==1.8.0  \
     --target "${LAMBDA_TASK_ROOT}"
 
-CMD [ "app.handler" ]
+# this code
+COPY lambda_functions/arcgis_loader/arcgis_loader.py ${LAMBDA_TASK_ROOT}/app/arcgis_loader.py
+
+CMD [ "app.arcgis_loader.handler" ]
