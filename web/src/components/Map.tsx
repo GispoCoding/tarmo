@@ -58,7 +58,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const [showNav, setShowNav] = useState(true);
   const [layerPickerOpen, setLayerPickerOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-  const [zoom, setZoom] = useState(4.5);
+  const [zoom, setZoom] = useState(10);
   const [bounds, setBounds] = useState<Bbox | null>(null);
   const [externalData, setExternalData] =
     useState<Map<LayerId, FeatureCollection>>();
@@ -260,8 +260,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     <MapGL
       ref={mapReference as Ref<MapRef>}
       initialViewState={{
-        latitude: 65,
-        longitude: 27,
+        latitude: 61.498,
+        longitude: 23.7747,
         zoom: zoom,
         bearing: 0,
         pitch: 0,
