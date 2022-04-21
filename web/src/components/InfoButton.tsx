@@ -1,7 +1,7 @@
 import { InfoOutlined } from "@mui/icons-material";
-import { Menu, List, ListItem } from "@mui/material";
+import { List, ListItem } from "@mui/material";
 import * as React from "react";
-import palette from "../theme/palette";
+import StyledMenu from "./StyledMenu";
 
 export default function InfoButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -44,41 +44,12 @@ export default function InfoButton() {
             <InfoOutlined color={open ? "secondary" : "primary"} />
           </button>
         </div>
-        <Menu
+        <StyledMenu
           id="layer-menu"
           aria-labelledby="layer menu"
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              "width": 215,
-              "overflow": "visible",
-              "filter": "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              "mr": 4,
-              "&:before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 15,
-                right: -2,
-                width: 10,
-                height: 10,
-                bgcolor: palette.background.paper,
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
-              },
-            },
-          }}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
         >
           <List>
             <ListItem disablePadding={false} button>
@@ -94,7 +65,7 @@ export default function InfoButton() {
               Palaute
             </ListItem>
           </List>
-        </Menu>
+        </StyledMenu>
       </div>
     </div>
   );

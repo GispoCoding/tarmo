@@ -304,7 +304,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         ? `${addressString}${postalCodeString}${cityString}`
         : "";
 
-    if (locationString || properties["www"] || properties["phone"]) {
+    if (locationString || properties["www"] || properties["phoneNumber"]) {
       return (
         <Stack spacing={2}>
           <List>
