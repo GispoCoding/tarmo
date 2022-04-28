@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Style } from "mapbox-gl";
+import { ListItem } from "@mui/material";
 
 interface LayerButtonProps {
   layer: Style;
@@ -9,5 +10,9 @@ interface LayerButtonProps {
 export default function LayerButton(props: LayerButtonProps) {
   const layer = props.layer;
   const setter = props.setter;
-  return <li onClick={() => setter(layer)}>{layer.name}</li>;
+  return (
+    <ListItem button disablePadding={false} onClick={() => setter(layer)}>
+      {layer.name}
+    </ListItem>
+  );
 }

@@ -21,42 +21,6 @@
     width: 20vw;
   }
 
-  /** ModalSlider */
-
-  .each-slide {
-    .button-slide {
-      position: relative;
-      right: -45%;
-    }
-
-    .titles {
-      width: unset !important;
-      float: none !important;
-    }
-
-    .numbers {
-      width: unset !important;
-      float: none !important;
-    }
-
-    p {
-      text-align: center;
-      max-width: none !important;
-      float: none !important;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      text-align: center;
-      max-width: none !important;
-      float: none !important;
-    }
-  }
-
   /** LayerFilter */
 
   .layerfilter-wrapper {

@@ -2,9 +2,11 @@ import * as React from "react";
 import TarmoMap from "./components/Map";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState } from "react";
-import InfoSlider from "./components/InfoSlider";
+import InfoSlider from "./components/InfoSliderMobile";
 import { PopupInfo } from "./types";
 import LayerFilter from "./components/LayerFilter";
+import SplashScreen from "./components/SplashScreen";
+import { styled } from "@mui/material";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -20,24 +22,23 @@ export default function App() {
     );
     return () => clearTimeout(timer);
   }, []);
+
+  /**
+   * Styled map container
+   */
+  const MapContainer = styled("div")(() => ({
+    position: "absolute",
+    width: "100vw",
+    height: "100vh",
+  }));
+
   return showSplash ? (
-    <div className="splashscreen-container">
-      <div className="splashscreen-heroimg">
-        <img src="/img/tarmo-summer-1.jpg"></img>
-      </div>
-      <div className="splashscreen-heroheader">
-        <h1>Tarmo</h1>
-        <h2>Tampereen kaupunkiseudun retkeilykarttapalvelu.</h2>
-      </div>
-      <div className="splashscreen-copyright">
-        <p>Kuva: Laura Vanzo</p>
-      </div>
-    </div>
+    <SplashScreen />
   ) : (
-    <div className="map-container">
+    <MapContainer>
       <TarmoMap setPopupInfo={setPopupInfo} />
+      <LayerFilter />
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
-      {!popupInfo && <LayerFilter></LayerFilter>}
-    </div>
+    </MapContainer>
   );
 }

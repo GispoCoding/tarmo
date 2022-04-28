@@ -1,7 +1,13 @@
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@mui/material";
 import * as React from "react";
 import { render } from "react-dom";
 import App from "./App";
-import "./App.css";
-import "./main.css";
+import theme from "./theme/theme";
 
-render(<App />, document.getElementById("map"));
+render(
+  <ThemeProvider theme={responsiveFontSizes(theme)}>
+    <CssBaseline />
+    <App />
+  </ThemeProvider>,
+  document.getElementById("map")
+);

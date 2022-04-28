@@ -7,6 +7,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.6.0",
+    "@mui/material": "^5.6.0",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
     "@types/geojson": "^7946.0.8",
     "graphql": "^16.3.0",
@@ -15,6 +19,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-map-gl": "^7.0.6",
+    "react-swipeable-views": "^0.14.0",
     "typescript": "^4.5.2"
   },
   "devDependencies": {
@@ -30,6 +35,7 @@
     "@types/fork-ts-checker-webpack-plugin": "^0.4.5",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "@types/react-swipeable-views": "^0.13.1",
     "@types/webpack-dev-server": "^4.5.0",
     "@typescript-eslint/eslint-plugin": "5.7.0",
     "@typescript-eslint/parser": "5.7.0",
