@@ -76,5 +76,6 @@ export const getCategoryIcon = (category: string) =>
     "Nähtävyydet": "img/camera-light.png",
     "Uinti": "img/swimming-light.png",
     "Pysäköinti": "img/parking-light.png",
+    "Bussipysäkki": "img/bus-light.png",
     "Muinaisjäännökset": "img/camera-light.png",
   }[category]);

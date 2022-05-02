@@ -6,7 +6,7 @@ import InfoSlider from "./components/InfoSliderMobile";
 import { PopupInfo } from "./types";
 import LayerFilter from "./components/LayerFilter";
 import SplashScreen from "./components/SplashScreen";
-import { styled } from "@mui/material";
+import { Box } from "@mui/material";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -23,22 +23,13 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  /**
-   * Styled map container
-   */
-  const MapContainer = styled("div")(() => ({
-    position: "absolute",
-    width: "100vw",
-    height: "100vh",
-  }));
-
   return showSplash ? (
     <SplashScreen />
   ) : (
-    <MapContainer>
+    <Box sx={{ position: "absolute", width: "100vw", height: "100vh" }}>
       <TarmoMap setPopupInfo={setPopupInfo} />
       <LayerFilter />
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
-    </MapContainer>
+    </Box>
   );
 }
