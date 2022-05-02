@@ -1554,7 +1554,7 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
-	tarmo_category text DEFAULT 'Nähtävyydet',
+	tarmo_category text DEFAULT 'Muinaisjäännökset',
 	"cityName" text,
 	type_name text DEFAULT 'Muinaisjäännös',
 	alatyyppi text,
