@@ -36,7 +36,6 @@ import {
   OSM_POINT_LABEL_STYLE,
   NLS_STYLE_URI,
   // NLS_STYLE_LABELS_URI,
-  OSM_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   OSM_IMAGES,
@@ -54,7 +53,7 @@ interface TarmoMapProps {
 }
 
 export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
-  const [mapStyle, setMapStyle] = useState(OSM_STYLE);
+  const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
   const [zoom, setZoom] = useState(10);
   const [bounds, setBounds] = useState<Bbox | null>(null);

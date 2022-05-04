@@ -19,27 +19,6 @@ export enum LayerId {
   DigiTransitPoint = "digitransit-points",
 }
 
-export const OSM_STYLE: Style = {
-  name: "OpenStreetMap",
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap Contributors",
-      maxzoom: 19,
-    },
-  },
-  layers: [
-    {
-      id: "osm",
-      type: "raster",
-      source: "osm",
-    },
-  ],
-};
-
 export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
 export const NLS_STYLE_LABELS_URI = "map-styles/nls-style-labels.json";
@@ -339,7 +318,7 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
 };
 
 export const NLS_TERRAIN_STYLE: Style = {
-  name: "NLS terrain map",
+  name: "Maastokartta",
   version: 8,
   sources: {
     terrain: {
@@ -361,5 +340,28 @@ export const NLS_TERRAIN_STYLE: Style = {
   ],
 };
 
+export const NLS_ORTHOIMAGE_STYLE: Style = {
+  name: "Ilmakuva",
+  version: 8,
+  sources: {
+    orthoimage: {
+      type: "raster",
+      tiles: [
+        "https://avoin-karttakuva.maanmittauslaitos.fi/avoin/wmts/1.0.0/ortokuva/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
+          process.env.API_KEY_NLS,
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+    },
+  },
+  layers: [
+    {
+      id: "orthoimage",
+      type: "raster",
+      source: "orthoimage",
+    },
+  ],
+};
+
 // List of toggleable layers besides default
-export const LAYERS = [OSM_STYLE, NLS_TERRAIN_STYLE];
+export const LAYERS = [NLS_TERRAIN_STYLE, NLS_ORTHOIMAGE_STYLE];
