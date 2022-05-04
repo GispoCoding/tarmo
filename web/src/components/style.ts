@@ -1,5 +1,6 @@
-import { LayerProps } from "react-map-gl";
 import { Style, VectorSource } from "mapbox-gl";
+import { LayerProps } from "react-map-gl";
+import palette from "../theme/palette";
 import { stopType } from "../types";
 
 export enum LayerId {
@@ -61,15 +62,54 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
+const info_image: HTMLImageElement = new Image(24, 24);
+info_image.src = "/img/info-dark.png";
+
+const parking_image: HTMLImageElement = new Image(24, 24);
+parking_image.src = "/img/parking.png";
+
+const cycling_image: HTMLImageElement = new Image(24, 24);
+cycling_image.src = "/img/cycling-dark.png";
+
+const skating_image: HTMLImageElement = new Image(24, 24);
+skating_image.src = "/img/skating-dark.png";
+
+const swimming_image: HTMLImageElement = new Image(24, 24);
+swimming_image.src = "/img/swimming-dark.png";
+
+const activities_image: HTMLImageElement = new Image(24, 24);
+activities_image.src = "/img/jump-dark.png";
+
+export const OSM_IMAGES = [
+  ["skating", skating_image],
+  ["cycling", cycling_image],
+  ["parking", parking_image],
+  ["swimming", swimming_image],
+  ["activities", activities_image],
+  ["info", info_image],
+];
+
 export const LIPAS_POINT_STYLE: LayerProps = {
   "id": LayerId.LipasPoint,
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 8,
-    // Circle color is "darkwater" from the brand book
-    "circle-color": "#00417d",
+  "type": "symbol",
+  "interactive": true,
+  "layout": {
+    "icon-image": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "cycling",
+      "Luistelu",
+      "skating",
+      "Uinti",
+      "swimming",
+      "Ulkoiluaktiviteetit",
+      "activities",
+      "info",
+    ],
+    "icon-size": 1,
   },
 };
 
@@ -80,8 +120,7 @@ export const LIPAS_LINE_STYLE: LayerProps = {
   "type": "line",
   "paint": {
     "line-width": 2,
-    // Line color is "green" from the brand book
-    "line-color": "#abc872",
+    "line-color": palette.success.main,
   },
 };
 
@@ -119,8 +158,7 @@ export const WFS_LUONNONMUISTOMERKKI_STYLE: LayerProps = {
   "type": "circle",
   "paint": {
     "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
-    "circle-color": "#00417d",
+    "circle-color": palette.primary.dark,
   },
 };
 
@@ -131,8 +169,7 @@ export const WFS_LUONTOPOLKUREITTI_STYLE: LayerProps = {
   "type": "line",
   "paint": {
     "line-width": 2,
-    // Line color is "green" from brand book
-    "line-color": "#abc872",
+    "line-color": palette.success.dark,
   },
 };
 
@@ -143,7 +180,7 @@ export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
   "type": "circle",
   "paint": {
     "circle-radius": 8,
-    "circle-color": "#00417d",
+    "circle-color": palette.success.dark,
   },
 };
 
@@ -172,8 +209,8 @@ export const ARCGIS_MUINAISJAANNOS_STYLE: LayerProps = {
   "type": "circle",
   "paint": {
     "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
-    "circle-color": "#00417d",
+    // Circle color is "lilac violet" from brand book
+    "circle-color": "#7361a2",
   },
 };
 
@@ -184,8 +221,8 @@ export const ARCGIS_RKYKOHDE_STYLE: LayerProps = {
   "type": "circle",
   "paint": {
     "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
-    "circle-color": "#00417d",
+    // Circle color is "berry red" from brand book
+    "circle-color": "#ad3963",
   },
 };
 
@@ -246,10 +283,6 @@ export const OSM_AREA_SOURCE: VectorSource = {
   minzoom: 13,
   maxzoom: 22,
 };
-
-const parking_image: HTMLImageElement = new Image(24, 24);
-parking_image.src = "/img/parking.png";
-export const OSM_IMAGES = [["parking", parking_image]];
 
 export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "id": LayerId.OsmPoint,
