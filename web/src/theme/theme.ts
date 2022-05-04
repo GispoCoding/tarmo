@@ -196,6 +196,12 @@ export default createTheme({
           paddingLeft: 0,
           paddingRight: 0,
         },
+        button: {
+          paddingTop: spacing(1),
+          paddingBottom: spacing(1),
+          paddingLeft: spacing(2),
+          paddingRight: spacing(2),
+        },
       },
     },
     MuiListItemText: {
