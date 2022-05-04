@@ -2,7 +2,7 @@ import * as React from "react";
 import TarmoMap from "./components/Map";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState } from "react";
-import InfoSlider from "./components/InfoSliderMobile";
+import InfoSlider from "./components/InfoSlider";
 import { PopupInfo } from "./types";
 import LayerFilter from "./components/LayerFilter";
 import SplashScreen from "./components/SplashScreen";

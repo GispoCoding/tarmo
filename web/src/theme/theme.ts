@@ -42,12 +42,12 @@ export default createTheme({
     h5: {
       fontFamily: "Montserrat, sans-serif",
       fontWeight: 800,
-      fontSize: 16,
+      fontSize: 18,
     },
     h6: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 800,
-      fontSize: 14,
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 500,
+      fontSize: 18,
     },
     body1: {
       fontSize: 18,
@@ -189,11 +189,13 @@ export default createTheme({
       },
     },
     MuiListItem: {
-      defaultProps: {
-        disablePadding: true,
-      },
       styleOverrides: {
-        root: {},
+        root: {
+          paddingTop: spacing(0.5),
+          paddingBottom: spacing(0.5),
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
       },
     },
     MuiListItemText: {
@@ -213,6 +215,16 @@ export default createTheme({
         },
         dotActive: {
           backgroundColor: palette.common.white,
+        },
+      },
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderRightWidth: 5,
+        },
+        vertical: {
+          flexShrink: 1,
         },
       },
     },
