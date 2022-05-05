@@ -77,6 +77,7 @@ jobs:
         env:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TILESERVER_URL }}
+          CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./dist/ s3://${{ secrets.AWS_BUCKET_NAME }} --delete
 
