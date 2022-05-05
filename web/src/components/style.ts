@@ -4,6 +4,8 @@ import { getCategoryIcon } from "../utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 
+const cityFilterParam = `cityName%20IN%20(${process.env.CITIES})`;
+
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
@@ -27,7 +29,7 @@ export const NLS_STYLE_LABELS_URI = "map-styles/nls-style-labels.json";
 export const LIPAS_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.lipas_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.lipas_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20${cityFilterParam}`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -36,7 +38,7 @@ export const LIPAS_POINT_SOURCE: VectorSource = {
 export const LIPAS_LINE_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=deleted=false`,
+    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20${cityFilterParam}`,
   ],
   minzoom: 0,
   maxzoom: 22,
@@ -209,7 +211,7 @@ export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
 export const ARCGIS_MUINAISJAANNOS_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
   ],
   minzoom: 0,
   maxzoom: 22,

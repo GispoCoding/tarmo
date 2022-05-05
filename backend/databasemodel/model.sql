@@ -1348,6 +1348,7 @@ CREATE TABLE kooste.lipas_pisteet (
 	CONSTRAINT lipas_pisteet_pk PRIMARY KEY ("sportsPlaceId")
 );
 CREATE INDEX ON kooste.lipas_pisteet (deleted);
+CREATE INDEX lipas_pisteet_cityname_idx ON kooste.lipas_pisteet ("cityName");
 -- ddl-end --
 COMMENT ON COLUMN kooste.lipas_pisteet.ligthing IS E'Lippaan päässä kirjoitusvirhe';
 -- ddl-end --
@@ -1389,6 +1390,7 @@ CREATE TABLE kooste.lipas_viivat (
 	CONSTRAINT lipas_viivat_pk PRIMARY KEY ("sportsPlaceId")
 );
 CREATE INDEX ON kooste.lipas_viivat (deleted);
+CREATE INDEX lipas_viivat_cityname_idx ON kooste.lipas_viivat ("cityName");
 -- ddl-end --
 ALTER TABLE kooste.lipas_viivat OWNER TO tarmo_admin;
 -- ddl-end --
@@ -1525,7 +1527,7 @@ ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
 INSERT INTO kooste.tamperewfs_metadata (
     layers_to_include
 ) VALUES (
-    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]'
+    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTORASTI"]'
 );
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
@@ -1569,6 +1571,7 @@ CREATE TABLE kooste.museovirastoarcrest_muinaisjaannokset (
 );
 CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (deleted);
 CREATE INDEX ON kooste.museovirastoarcrest_muinaisjaannokset (visibility);
+CREATE INDEX museovirastoarcrest_muinaisjaannokset_cityname_idx ON kooste.museovirastoarcrest_muinaisjaannokset ("cityName");
 -- ddl-end --
 ALTER TABLE kooste.museovirastoarcrest_muinaisjaannokset OWNER TO tarmo_admin;
 -- ddl-end --

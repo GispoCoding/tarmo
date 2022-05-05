@@ -175,7 +175,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const mapReference = useCallback(
     (mapRef: MapRef) => {
       if (mapRef !== null) {
-        mapRef.on("load", () => {
+        mapRef.on("styleimagemissing", () => {
           // Any style images must be passed here, image props are not supported.
           // https://github.com/visgl/react-map-gl/issues/1118
           // Also, [string, HTMLImageElement] typing does not work here, no idea why?
@@ -250,6 +250,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       mapLib={maplibregl}
       mapStyle={mapStyle}
       onResize={toggleNav}
+      styleDiffing={false}
     >
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />

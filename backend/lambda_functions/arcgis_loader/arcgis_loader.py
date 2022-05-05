@@ -50,6 +50,7 @@ class ArcGisLoader(BaseLoader):
         "kunta": "cityName",
         "tyyppi": "type_name",
         "alatyyppi": "type_name",
+        "url": "www",
     }
 
     DEFAULT_PROJECTION = 4326
@@ -232,8 +233,11 @@ class ArcGisLoader(BaseLoader):
                 if tarmo_name in props.keys():
                     props[tarmo_name] += f": {value}"
                 else:
+                    # Seems urls are not always complete urls after all :(
+                    if value.startswith("www."):
+                        value = "https://" + value
                     # Caps may or may not be present, do not override them
-                    if value[0].islower():
+                    if value[0].islower() and not value.startswith("http"):
                         value = value.capitalize()
                     props[tarmo_name] = value
         flattened = {
