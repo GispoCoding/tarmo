@@ -2867,7 +2867,7 @@ def test_get_muinaisjaannokset_feature(loader, arcgis_data):
     assert feature["type_name"] == "Alusten hylyt: hylyt (puu)"
     assert feature["vedenalainen"] is True
     assert feature["cityName"] == "Tampere"
-    assert feature["www"] == "www.kyppi.fi/to.aspx?id=112.2133"
+    assert feature["www"] == "https://www.kyppi.fi/to.aspx?id=112.2133"
     assert feature["geom"].startswith("MULTIPOINT")
     assert feature["table"] == "museovirastoarcrest_muinaisjaannokset"
 
@@ -2876,6 +2876,7 @@ def test_get_rkykohteet_feature(loader, arcgis_data):
     feature = loader.get_feature(arcgis_data["features"][1])
     assert feature["ID"]
     assert feature["name"] == "Pyynikin näkötorni"
+    assert feature["www"] == "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2218"
     assert feature["geom"].startswith("MULTIPOINT")
     assert feature["table"] == "museovirastoarcrest_rkykohteet"
 
