@@ -14,7 +14,8 @@ import {
   LIPAS_LINE_SOURCE,
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
-  LIPAS_POINT_STYLE,
+  LIPAS_POINT_STYLE_SYMBOL,
+  LIPAS_POINT_STYLE_COLOR,
   WFS_LUONNONMUISTOMERKKI_SOURCE,
   WFS_LUONNONMUISTOMERKKI_STYLE,
   WFS_LUONTOPOLKUREITTI_SOURCE,
@@ -257,7 +258,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...SYKE_VALTION_STYLE} />
       </Source>
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...LIPAS_POINT_STYLE} />
+        <Layer {...LIPAS_POINT_STYLE_COLOR} />
+        <Layer {...LIPAS_POINT_STYLE_SYMBOL} />
       </Source>
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />

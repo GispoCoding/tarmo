@@ -1,5 +1,6 @@
 import { Style, VectorSource } from "mapbox-gl";
 import { LayerProps } from "react-map-gl";
+import { getCategoryIcon } from "../utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 
@@ -42,22 +43,28 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
 };
 
 const info_image: HTMLImageElement = new Image(24, 24);
-info_image.src = "/img/info-dark.png";
+info_image.src = "/img/info-light.png";
 
-const parking_image: HTMLImageElement = new Image(24, 24);
+const parking_image: HTMLImageElement = new Image(32, 32);
 parking_image.src = "/img/parking.png";
 
 const cycling_image: HTMLImageElement = new Image(24, 24);
-cycling_image.src = "/img/cycling-dark.png";
+cycling_image.src = `${getCategoryIcon("Pyöräily")}`;
 
 const skating_image: HTMLImageElement = new Image(24, 24);
-skating_image.src = "/img/skating-dark.png";
+skating_image.src = `${getCategoryIcon("Luistelu")}`;
 
 const swimming_image: HTMLImageElement = new Image(24, 24);
-swimming_image.src = "/img/swimming-dark.png";
+swimming_image.src = `${getCategoryIcon("Uinti")}`;
 
 const activities_image: HTMLImageElement = new Image(24, 24);
-activities_image.src = "/img/jump-dark.png";
+activities_image.src = `${getCategoryIcon("Ulkoiluaktiviteetit")}`;
+
+const fireplaces_image: HTMLImageElement = new Image(24, 24);
+fireplaces_image.src = `${getCategoryIcon("Laavut, majat, ruokailu")}`;
+
+const outdoors_image: HTMLImageElement = new Image(24, 24);
+outdoors_image.src = `${getCategoryIcon("Ulkoilupaikat")}`;
 
 export const OSM_IMAGES = [
   ["skating", skating_image],
@@ -65,15 +72,16 @@ export const OSM_IMAGES = [
   ["parking", parking_image],
   ["swimming", swimming_image],
   ["activities", activities_image],
+  ["fireplaces", fireplaces_image],
+  ["outdoors", outdoors_image],
   ["info", info_image],
 ];
 
-export const LIPAS_POINT_STYLE: LayerProps = {
+export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "id": LayerId.LipasPoint,
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
   "type": "symbol",
-  "interactive": true,
   "layout": {
     "icon-image": [
       "match",
@@ -86,9 +94,44 @@ export const LIPAS_POINT_STYLE: LayerProps = {
       "swimming",
       "Ulkoiluaktiviteetit",
       "activities",
+      "Laavut, majat, ruokailu",
+      "fireplaces",
+      "Ulkoilupaikat",
+      "excercise",
       "info",
     ],
-    "icon-size": 1,
+    "icon-size": 0.75,
+  },
+};
+
+export const LIPAS_POINT_STYLE_COLOR: LayerProps = {
+  "id": `${LayerId.LipasPoint}-color`,
+  "source": LayerId.LipasPoint,
+  "source-layer": "kooste.lipas_pisteet",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 14,
+    "circle-color": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "#397368",
+      "Luistelu",
+      palette.primary.light,
+      "Uinti",
+      palette.primary.dark,
+      "Ulkoiluaktiviteetit",
+      palette.primary.dark,
+      "Laavut, majat, ruokailu",
+      "#ae1e20",
+      palette.primary.dark,
+    ],
+    "circle-opacity": [
+      "case",
+      ["boolean", ["feature-state", "hover"], false],
+      1,
+      0.75,
+    ],
   },
 };
 
