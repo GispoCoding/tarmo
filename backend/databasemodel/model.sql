@@ -1525,7 +1525,7 @@ ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
 INSERT INTO kooste.tamperewfs_metadata (
     layers_to_include
 ) VALUES (
-    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTOPOLKU", "luonto:YV_LUONTORASTI"]'
+    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTORASTI"]'
 );
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --

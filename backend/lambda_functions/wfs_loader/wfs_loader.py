@@ -20,7 +20,6 @@ class WFSLoader(BaseLoader):
     # Not really feasible to use original layer names. Map to proper table names.
     TABLE_NAMES = {
         "luonto:YV_LUONNONMUISTOMERKKI": "tamperewfs_luonnonmuistomerkit",
-        "luonto:YV_LUONTOPOLKU": "tamperewfs_luontopolkureitit",
         "luonto:YV_LUONTORASTI": "tamperewfs_luontopolkurastit",
     }
     # Any field names we want to harmonize with other data sources
