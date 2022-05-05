@@ -23,8 +23,6 @@ import {
   IconButton,
   Link,
   List,
-  ListItem,
-  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -40,6 +38,7 @@ import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { PopupInfo } from "../types";
 import { getCategoryIcon } from "../utils";
+import PropertyListItem from "./PropertyListItem";
 
 interface PopupProps {
   popupInfo: PopupInfo;
@@ -135,20 +134,16 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const getSeason = (season: string) =>
     ({
       "Talvi": (
-        <ListItem>
-          <ListItemIcon>
-            <AcUnitOutlined />
-          </ListItemIcon>
-          <ListItemText primary="Auki talvella" />
-        </ListItem>
+        <PropertyListItem
+          title="Auki talvella"
+          iconElement={<AcUnitOutlined />}
+        />
       ),
       "Kesä": (
-        <ListItem>
-          <ListItemIcon>
-            <WbSunnyRounded />
-          </ListItemIcon>
-          <ListItemText primary="Auki kesällä" />
-        </ListItem>
+        <PropertyListItem
+          title="Auki kesällä"
+          iconElement={<WbSunnyRounded />}
+        />
       ),
       "Koko vuosi": <></>,
     }[season]);
@@ -214,121 +209,51 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           <Typography variant="h5">Aktiviteetit ja palvelut</Typography>
           <List>
             {properties["season"] && getSeason(properties["season"])}
-            {properties["tarmo_category"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt={properties["tarmo_category"]}
-                    src={getCategoryIcon(properties["tarmo_category"])}
-                  />
-                </ListItemAvatar>
-                <ListItemText primary={properties["tarmo_category"]} />
-              </ListItem>
-            )}
+            <PropertyListItem
+              title={properties["tarmo_category"]}
+              iconSrc={getCategoryIcon(properties["tarmo_category"])}
+            />
             {properties["toilet"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="WC"
-                    src="img/toilet-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="WC" />
-              </ListItem>
+              <PropertyListItem title="WC" iconSrc="img/toilet-light.png" />
             )}
             {properties["ligthing"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Valaistus"
-                    src="img/light-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Valaistus" />
-              </ListItem>
+              <PropertyListItem
+                title="Valaistus"
+                iconSrc="img/light-light.png"
+              />
             )}
             {properties["pier"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="laigturi"
-                    src="img/pier-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Laituri" />
-              </ListItem>
+              <PropertyListItem title="Laituri" iconSrc="img/pier-light.png" />
             )}
             {properties["sauna"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Sauna"
-                    src="img/sauna-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Sauna" />
-              </ListItem>
+              <PropertyListItem title="Sauna" iconSrc="img/sauna-light.png" />
             )}
             {properties["kiosk"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Kioski"
-                    src="img/kiosk-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Kioski" />
-              </ListItem>
+              <PropertyListItem title="Kioski" iconSrc="img/kiosk-light.png" />
             )}
             {properties["equipmentRental"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <KeyOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Vuokraamo" />
-              </ListItem>
+              <PropertyListItem
+                title="Vuokraamo"
+                iconElement={<KeyOutlined />}
+              />
             )}
             {properties["playground"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Leikkipuisto"
-                    src="img/playground-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Leikkikenttä" />
-              </ListItem>
+              <PropertyListItem
+                title="Leikkipuisto"
+                iconSrc="img/playground-light.png"
+              />
             )}
             {properties["exerciseMachines"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Kuntoilulaitteet"
-                    src="img/barbell-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Kuntoilulaitteet" />
-              </ListItem>
+              <PropertyListItem
+                title="Kuntoilulaitteet"
+                iconSrc="img/barbell-light.png"
+              />
             )}
             {properties["changingRooms"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Pukuhuone"
-                    src="img/swimsuit-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Pukuhuone" />
-              </ListItem>
+              <PropertyListItem
+                title="Pukuhuone"
+                iconSrc="img/swimsuit-light.png"
+              />
             )}
           </List>
         </>
@@ -359,28 +284,22 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           <Typography variant="h5">Yhteystiedot</Typography>
           <List>
             {locationString && (
-              <ListItem>
-                <ListItemIcon>
-                  <PlaceOutlined />
-                </ListItemIcon>
-                <ListItemText primary={locationString} />
-              </ListItem>
+              <PropertyListItem
+                title={locationString}
+                iconElement={<PlaceOutlined />}
+              />
             )}
             {properties["phoneNumber"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <PhoneOutlined />
-                </ListItemIcon>
-                <ListItemText primary={properties["phoneNumber"]} />
-              </ListItem>
+              <PropertyListItem
+                title={properties["phoneNumber"]}
+                iconElement={<PhoneOutlined />}
+              />
             )}
             {properties["email"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <EmailOutlined />
-                </ListItemIcon>
-                <ListItemText primary={properties["email"]} />
-              </ListItem>
+              <PropertyListItem
+                title={properties["email"]}
+                iconElement={<EmailOutlined />}
+              />
             )}
           </List>
           {properties["www"] && (
@@ -419,11 +338,13 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const renderTitle = () => (
     <SliderTitle direction="row">
       <Stack direction="row" alignItems="center" spacing={2}>
-        <img
-          alt={properties["tarmo_category"]}
-          style={{ width: 45, height: 45 }}
-          src={getCategoryIcon(properties["tarmo_category"])}
-        />
+        {getCategoryIcon(properties["tarmo_category"]) && (
+          <img
+            alt={properties["tarmo_category"]}
+            style={{ width: 45, height: 45 }}
+            src={getCategoryIcon(properties["tarmo_category"])}
+          />
+        )}
         {mobile ? (
           <Stack>
             <Typography variant="h4">{properties["name"]}</Typography>
