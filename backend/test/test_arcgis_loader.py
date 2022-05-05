@@ -2867,6 +2867,7 @@ def test_get_muinaisjaannokset_feature(loader, arcgis_data):
     assert feature["type_name"] == "Alusten hylyt: hylyt (puu)"
     assert feature["vedenalainen"] is True
     assert feature["cityName"] == "Tampere"
+    assert feature["www"] == "www.kyppi.fi/to.aspx?id=112.2133"
     assert feature["geom"].startswith("MULTIPOINT")
     assert feature["table"] == "museovirastoarcrest_muinaisjaannokset"
 
