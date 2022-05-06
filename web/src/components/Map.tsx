@@ -15,7 +15,7 @@ import {
   LIPAS_LINE_STYLE,
   LIPAS_POINT_SOURCE,
   LIPAS_POINT_STYLE_SYMBOL,
-  LIPAS_POINT_STYLE_COLOR,
+  LIPAS_POINT_STYLE_CIRCLE,
   WFS_LUONNONMUISTOMERKKI_SOURCE,
   WFS_LUONNONMUISTOMERKKI_STYLE,
   WFS_LUONTOPOLKUREITTI_SOURCE,
@@ -23,7 +23,8 @@ import {
   WFS_LUONTOPOLKURASTI_SOURCE,
   WFS_LUONTOPOLKURASTI_STYLE,
   ARCGIS_MUINAISJAANNOS_SOURCE,
-  ARCGIS_MUINAISJAANNOS_STYLE,
+  ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL,
+  ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE,
   ARCGIS_RKYKOHDE_SOURCE,
   ARCGIS_RKYKOHDE_STYLE,
   SYKE_NATURA_SOURCE,
@@ -259,7 +260,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...SYKE_VALTION_STYLE} />
       </Source>
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...LIPAS_POINT_STYLE_COLOR} />
+        <Layer {...LIPAS_POINT_STYLE_CIRCLE} />
         <Layer {...LIPAS_POINT_STYLE_SYMBOL} />
       </Source>
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
@@ -284,7 +285,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         id={LayerId.ArcGisMuinaisjaannos}
         {...ARCGIS_MUINAISJAANNOS_SOURCE}
       >
-        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE} />
+        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE} />
+        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL} />
       </Source>
       <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
         <Layer {...ARCGIS_RKYKOHDE_STYLE} />

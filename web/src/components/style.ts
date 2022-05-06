@@ -50,6 +50,9 @@ info_image.src = "/img/info-light.png";
 const parking_image: HTMLImageElement = new Image(32, 32);
 parking_image.src = "/img/parking.png";
 
+const historical_image: HTMLImageElement = new Image(24, 24);
+historical_image.src = "/img/muinaismuisto.png";
+
 const cycling_image: HTMLImageElement = new Image(24, 24);
 cycling_image.src = `${getCategoryIcon("Pyöräily")}`;
 
@@ -69,6 +72,7 @@ const outdoors_image: HTMLImageElement = new Image(24, 24);
 outdoors_image.src = `${getCategoryIcon("Ulkoilupaikat")}`;
 
 export const OSM_IMAGES = [
+  ["info", info_image],
   ["skating", skating_image],
   ["cycling", cycling_image],
   ["parking", parking_image],
@@ -76,7 +80,7 @@ export const OSM_IMAGES = [
   ["activities", activities_image],
   ["fireplaces", fireplaces_image],
   ["outdoors", outdoors_image],
-  ["info", info_image],
+  ["historical", historical_image],
 ];
 
 export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
@@ -106,8 +110,8 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   },
 };
 
-export const LIPAS_POINT_STYLE_COLOR: LayerProps = {
-  "id": `${LayerId.LipasPoint}-color`,
+export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.LipasPoint}-circle`,
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
@@ -119,7 +123,7 @@ export const LIPAS_POINT_STYLE_COLOR: LayerProps = {
       "Pyöräily",
       "#397368",
       "Luistelu",
-      palette.primary.light,
+      palette.primary.main,
       "Uinti",
       palette.primary.dark,
       "Ulkoiluaktiviteetit",
@@ -226,15 +230,26 @@ export const ARCGIS_RKYKOHDE_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const ARCGIS_MUINAISJAANNOS_STYLE: LayerProps = {
-  "id": LayerId.ArcGisMuinaisjaannos,
+export const ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.ArcGisMuinaisjaannos}-circle`,
   "source": LayerId.ArcGisMuinaisjaannos,
   "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
+    "circle-radius": 14,
     // Circle color is "lilac violet" from brand book
     "circle-color": "#7361a2",
+  },
+};
+
+export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.ArcGisMuinaisjaannos,
+  "source": LayerId.ArcGisMuinaisjaannos,
+  "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "historical",
+    "icon-size": 0.75,
   },
 };
 
