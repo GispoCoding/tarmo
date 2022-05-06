@@ -163,6 +163,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           onClose: () => setPopupInfo(null),
         });
       } else {
+        // in case topmost feature is not in feature layers (e.g. background map
+        // clicked), close the popup
         setPopupInfo(null);
       }
     },
@@ -186,14 +188,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           );
         });
 
-        // Clearing the feature when clicking a basemap
-        mapRef.on("click", ev => setPopupFeature(ev.lngLat, undefined));
+        // Common click listener for all layers to find the topmost layer clicked
+        mapRef.on("click", ev => {
+          const features = mapRef.queryRenderedFeatures(ev.point);
+          setPopupFeature(ev.lngLat, features);
+        });
 
         for (const source in LayerId) {
           const source_name = LayerId[source];
-          mapRef.on("click", source_name, ev =>
-            setPopupFeature(ev.lngLat, ev.features)
-          );
           mapRef.on("mouseenter", source_name, () => {
             mapRef.getCanvas().style.cursor = "pointer";
           });
