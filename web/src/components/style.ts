@@ -1,5 +1,5 @@
-import { Style, VectorSource } from "mapbox-gl";
 import { LayerProps } from "react-map-gl";
+import { Style, VectorSource } from "mapbox-gl";
 import { getCategoryIcon } from "../utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
@@ -44,14 +44,19 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
+const circleRadius = 12;
+
 const info_image: HTMLImageElement = new Image(24, 24);
 info_image.src = "/img/info-light.png";
 
 const parking_image: HTMLImageElement = new Image(32, 32);
 parking_image.src = "/img/parking.png";
 
-const historical_image: HTMLImageElement = new Image(24, 24);
-historical_image.src = "/img/muinaismuisto.png";
+const historical_image: HTMLImageElement = new Image(20, 20);
+historical_image.src = "/img/historical-light.png";
+
+const trekking_image: HTMLImageElement = new Image(24, 24);
+trekking_image.src = `${getCategoryIcon("Ulkoilureitit")}`;
 
 const cycling_image: HTMLImageElement = new Image(24, 24);
 cycling_image.src = `${getCategoryIcon("Pyöräily")}`;
@@ -71,6 +76,12 @@ fireplaces_image.src = `${getCategoryIcon("Laavut, majat, ruokailu")}`;
 const outdoors_image: HTMLImageElement = new Image(24, 24);
 outdoors_image.src = `${getCategoryIcon("Ulkoilupaikat")}`;
 
+const sights_image: HTMLImageElement = new Image(24, 24);
+sights_image.src = `${getCategoryIcon("Nähtävyydet")}`;
+
+const watersports_image: HTMLImageElement = new Image(24, 24);
+watersports_image.src = `${getCategoryIcon("Vesillä ulkoilu")}`;
+
 export const OSM_IMAGES = [
   ["info", info_image],
   ["skating", skating_image],
@@ -81,8 +92,14 @@ export const OSM_IMAGES = [
   ["fireplaces", fireplaces_image],
   ["outdoors", outdoors_image],
   ["historical", historical_image],
+  ["trekking", trekking_image],
+  ["sights", sights_image],
+  ["watersports", watersports_image],
 ];
 
+/**
+ * Symbols for lipas points
+ */
 export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "id": LayerId.LipasPoint,
   "source": LayerId.LipasPoint,
@@ -100,10 +117,16 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
       "swimming",
       "Ulkoiluaktiviteetit",
       "activities",
+      "Ulkoilureitit",
+      "trekking",
       "Laavut, majat, ruokailu",
       "fireplaces",
       "Ulkoilupaikat",
-      "excercise",
+      "outdoors",
+      "Nähtävyydet",
+      "sights",
+      "Vesillä ulkoilu",
+      "watersports",
       "info",
     ],
     "icon-size": 0.75,
@@ -116,28 +139,25 @@ export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
   "paint": {
-    "circle-radius": 14,
+    "circle-radius": circleRadius,
     "circle-color": [
       "match",
       ["string", ["get", "tarmo_category"]],
       "Pyöräily",
-      "#397368",
+      "#e8b455",
       "Luistelu",
-      palette.primary.main,
+      "#29549a",
       "Uinti",
-      palette.primary.dark,
+      "#39a7d7",
       "Ulkoiluaktiviteetit",
-      palette.primary.dark,
+      "#397368",
       "Laavut, majat, ruokailu",
       "#ae1e20",
+      "Vesillä ulkoilu",
+      "#39a7d7",
       palette.primary.dark,
     ],
-    "circle-opacity": [
-      "case",
-      ["boolean", ["feature-state", "hover"], false],
-      1,
-      0.75,
-    ],
+    "circle-opacity": 0.9,
   },
 };
 
@@ -147,8 +167,20 @@ export const LIPAS_LINE_STYLE: LayerProps = {
   "source-layer": "kooste.lipas_viivat",
   "type": "line",
   "paint": {
-    "line-width": 2,
-    "line-color": palette.success.main,
+    "line-width": 4,
+    "line-color": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "#e8b455",
+      "Ulkoilureitit",
+      "#397368",
+      "Vesillä ulkoilu",
+      "#39a7d7",
+      "Hiihto",
+      "#5390b5",
+      palette.primary.dark,
+    ],
   },
 };
 
@@ -179,14 +211,29 @@ export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const WFS_LUONNONMUISTOMERKKI_STYLE: LayerProps = {
-  "id": LayerId.WFSLuonnonmuistomerkki,
+export const WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.WFSLuonnonmuistomerkki}-circle`,
   "source": LayerId.WFSLuonnonmuistomerkki,
   "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    "circle-color": palette.primary.dark,
+    "circle-radius": circleRadius,
+    "circle-color": "#397368",
+    "circle-opacity": 0.9,
+  },
+};
+
+/**
+ * WFS Luonnonmuistomerkki symbol
+ */
+export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.WFSLuonnonmuistomerkki,
+  "source": LayerId.WFSLuonnonmuistomerkki,
+  "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "sights",
+    "icon-size": 0.7,
   },
 };
 
@@ -201,14 +248,29 @@ export const WFS_LUONTOPOLKUREITTI_STYLE: LayerProps = {
   },
 };
 
-export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
-  "id": LayerId.WFSLuontopolkurasti,
+export const WFS_LUONTOPOLKURASTI_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.WFSLuontopolkurasti}-circle`,
   "source": LayerId.WFSLuontopolkurasti,
   "source-layer": "kooste.tamperewfs_luontopolkurastit",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    "circle-color": palette.success.dark,
+    "circle-radius": circleRadius,
+    "circle-color": "#397368",
+    "circle-opacity": 0.9,
+  },
+};
+
+/**
+ * WFS Luontopolkurasti symbol
+ */
+export const WFS_LUONTOPOLKURASTI_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.WFSLuontopolkurasti,
+  "source": LayerId.WFSLuontopolkurasti,
+  "source-layer": "kooste.tamperewfs_luontopolkurastit",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "trekking",
+    "icon-size": 0.75,
   },
 };
 
@@ -236,12 +298,15 @@ export const ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
   "type": "circle",
   "paint": {
-    "circle-radius": 14,
-    // Circle color is "lilac violet" from brand book
-    "circle-color": "#7361a2",
+    "circle-radius": circleRadius,
+    "circle-color": "#00417d",
+    "circle-opacity": 0.9,
   },
 };
 
+/**
+ * ARCGIS Muinaisjaannos symbol
+ */
 export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
   "id": LayerId.ArcGisMuinaisjaannos,
   "source": LayerId.ArcGisMuinaisjaannos,
@@ -249,19 +314,34 @@ export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
   "type": "symbol",
   "layout": {
     "icon-image": "historical",
-    "icon-size": 0.75,
+    "icon-size": 0.5,
   },
 };
 
-export const ARCGIS_RKYKOHDE_STYLE: LayerProps = {
-  "id": LayerId.ArcGisRKYkohde,
+export const ARCGIS_RKYKOHDE_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.ArcGisRKYkohde}-circle`,
   "source": LayerId.ArcGisRKYkohde,
   "source-layer": "kooste.museovirastoarcrest_rkykohteet",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
+    "circle-radius": circleRadius,
     // Circle color is "berry red" from brand book
     "circle-color": "#ad3963",
+    "circle-opacity": 0.9,
+  },
+};
+
+/**
+ * ARCGIS Rakennettu kulttuurikohde symbol
+ */
+export const ARCGIS_RKYKOHDE_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.ArcGisRKYkohde,
+  "source": LayerId.ArcGisRKYkohde,
+  "source-layer": "kooste.museovirastoarcrest_rkykohteet",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "sights",
+    "icon-size": 0.7,
   },
 };
 

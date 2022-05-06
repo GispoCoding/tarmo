@@ -17,16 +17,19 @@ import {
   LIPAS_POINT_STYLE_SYMBOL,
   LIPAS_POINT_STYLE_CIRCLE,
   WFS_LUONNONMUISTOMERKKI_SOURCE,
-  WFS_LUONNONMUISTOMERKKI_STYLE,
+  WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
+  WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
   WFS_LUONTOPOLKUREITTI_SOURCE,
   WFS_LUONTOPOLKUREITTI_STYLE,
   WFS_LUONTOPOLKURASTI_SOURCE,
-  WFS_LUONTOPOLKURASTI_STYLE,
+  WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
+  WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
   ARCGIS_MUINAISJAANNOS_SOURCE,
   ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL,
   ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE,
   ARCGIS_RKYKOHDE_SOURCE,
-  ARCGIS_RKYKOHDE_STYLE,
+  ARCGIS_RKYKOHDE_STYLE_CIRCLE,
+  ARCGIS_RKYKOHDE_STYLE_SYMBOL,
   SYKE_NATURA_SOURCE,
   SYKE_NATURA_STYLE,
   SYKE_VALTION_SOURCE,
@@ -270,7 +273,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         id={LayerId.WFSLuonnonmuistomerkki}
         {...WFS_LUONNONMUISTOMERKKI_SOURCE}
       >
-        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE} />
+        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE} />
+        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL} />
       </Source>
       <Source
         id={LayerId.WFSLuontopolkureitti}
@@ -279,7 +283,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...WFS_LUONTOPOLKUREITTI_STYLE} />
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
-        <Layer {...WFS_LUONTOPOLKURASTI_STYLE} />
+        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE} />
+        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL} />
       </Source>
       <Source
         id={LayerId.ArcGisMuinaisjaannos}
@@ -289,7 +294,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL} />
       </Source>
       <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
-        <Layer {...ARCGIS_RKYKOHDE_STYLE} />
+        <Layer {...ARCGIS_RKYKOHDE_STYLE_CIRCLE} />
+        <Layer {...ARCGIS_RKYKOHDE_STYLE_SYMBOL} />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer {...OSM_POINT_LABEL_STYLE} />
