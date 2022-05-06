@@ -10,7 +10,6 @@ export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
   WFSLuonnonmuistomerkki = "wfs-luonnonmuistomerkit",
-  WFSLuontopolkureitti = "wfs-luontopolkureitit",
   WFSLuontopolkurasti = "wfs-luontopolkurastit",
   ArcGisMuinaisjaannos = "arcgis-muinaisjaannokset",
   ArcGisRKYkohde = "arcgis-rkykohteet",
@@ -193,15 +192,6 @@ export const WFS_LUONNONMUISTOMERKKI_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const WFS_LUONTOPOLKUREITTI_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkureitit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
-
 export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
@@ -234,17 +224,6 @@ export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
   "layout": {
     "icon-image": "sights",
     "icon-size": 0.7,
-  },
-};
-
-export const WFS_LUONTOPOLKUREITTI_STYLE: LayerProps = {
-  "id": LayerId.WFSLuontopolkureitti,
-  "source": LayerId.WFSLuontopolkureitti,
-  "source-layer": "kooste.tamperewfs_luontopolkureitit",
-  "type": "line",
-  "paint": {
-    "line-width": 2,
-    "line-color": palette.success.dark,
   },
 };
 

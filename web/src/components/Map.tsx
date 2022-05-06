@@ -19,8 +19,6 @@ import {
   WFS_LUONNONMUISTOMERKKI_SOURCE,
   WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
   WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
-  WFS_LUONTOPOLKUREITTI_SOURCE,
-  WFS_LUONTOPOLKUREITTI_STYLE,
   WFS_LUONTOPOLKURASTI_SOURCE,
   WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
   WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
@@ -170,6 +168,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           onClose: () => setPopupInfo(null),
         });
       } else {
+        // in case topmost feature is not in feature layers (e.g. background map
+        // clicked), close the popup
         setPopupInfo(null);
       }
     },
@@ -193,14 +193,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           );
         });
 
-        // Clearing the feature when clicking a basemap
-        mapRef.on("click", ev => setPopupFeature(ev.lngLat, undefined));
+        // Common click listener for all layers to find the topmost layer clicked
+        mapRef.on("click", ev => {
+          const features = mapRef.queryRenderedFeatures(ev.point);
+          setPopupFeature(ev.lngLat, features);
+        });
 
         for (const source in LayerId) {
           const source_name = LayerId[source];
-          mapRef.on("click", source_name, ev =>
-            setPopupFeature(ev.lngLat, ev.features)
-          );
           mapRef.on("mouseenter", source_name, () => {
             mapRef.getCanvas().style.cursor = "pointer";
           });
@@ -256,18 +256,26 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       onResize={toggleNav}
       styleDiffing={false}
     >
+      {/* Area polygons */}
+      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_STYLE} />
+      </Source>
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />
       </Source>
       <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
         <Layer {...SYKE_VALTION_STYLE} />
       </Source>
-      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...LIPAS_POINT_STYLE_CIRCLE} />
-        <Layer {...LIPAS_POINT_STYLE_SYMBOL} />
-      </Source>
+      {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
+      </Source>
+      {/* Clickable points */}
+      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
+        <Layer {...OSM_POINT_LABEL_STYLE} />
+      </Source>
+      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_LABEL_STYLE} />
       </Source>
       <Source
         id={LayerId.WFSLuonnonmuistomerkki}
@@ -275,12 +283,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       >
         <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE} />
         <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL} />
-      </Source>
-      <Source
-        id={LayerId.WFSLuontopolkureitti}
-        {...WFS_LUONTOPOLKUREITTI_SOURCE}
-      >
-        <Layer {...WFS_LUONTOPOLKUREITTI_STYLE} />
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
         <Layer {...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE} />
@@ -297,14 +299,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...ARCGIS_RKYKOHDE_STYLE_CIRCLE} />
         <Layer {...ARCGIS_RKYKOHDE_STYLE_SYMBOL} />
       </Source>
-      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer {...OSM_POINT_LABEL_STYLE} />
-      </Source>
-      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_STYLE} />
-      </Source>
-      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_LABEL_STYLE} />
+      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
+        <Layer {...LIPAS_POINT_STYLE_CIRCLE} />
+        <Layer {...LIPAS_POINT_STYLE_SYMBOL} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
