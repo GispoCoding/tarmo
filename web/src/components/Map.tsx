@@ -17,8 +17,6 @@ import {
   LIPAS_POINT_STYLE,
   WFS_LUONNONMUISTOMERKKI_SOURCE,
   WFS_LUONNONMUISTOMERKKI_STYLE,
-  WFS_LUONTOPOLKUREITTI_SOURCE,
-  WFS_LUONTOPOLKUREITTI_STYLE,
   WFS_LUONTOPOLKURASTI_SOURCE,
   WFS_LUONTOPOLKURASTI_STYLE,
   ARCGIS_MUINAISJAANNOS_SOURCE,
@@ -251,29 +249,32 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       onResize={toggleNav}
       styleDiffing={false}
     >
+      {/* Area polygons */}
+      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_STYLE} />
+      </Source>
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />
       </Source>
       <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
         <Layer {...SYKE_VALTION_STYLE} />
       </Source>
-      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...LIPAS_POINT_STYLE} />
-      </Source>
+      {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
+      </Source>
+      {/* Clickable points */}
+      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
+        <Layer {...OSM_POINT_LABEL_STYLE} />
+      </Source>
+      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
+        <Layer {...OSM_AREA_LABEL_STYLE} />
       </Source>
       <Source
         id={LayerId.WFSLuonnonmuistomerkki}
         {...WFS_LUONNONMUISTOMERKKI_SOURCE}
       >
         <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE} />
-      </Source>
-      <Source
-        id={LayerId.WFSLuontopolkureitti}
-        {...WFS_LUONTOPOLKUREITTI_SOURCE}
-      >
-        <Layer {...WFS_LUONTOPOLKUREITTI_STYLE} />
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
         <Layer {...WFS_LUONTOPOLKURASTI_STYLE} />
@@ -287,14 +288,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
         <Layer {...ARCGIS_RKYKOHDE_STYLE} />
       </Source>
-      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer {...OSM_POINT_LABEL_STYLE} />
-      </Source>
-      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_STYLE} />
-      </Source>
-      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_LABEL_STYLE} />
+      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
+        <Layer {...LIPAS_POINT_STYLE} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
