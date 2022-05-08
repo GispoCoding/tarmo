@@ -1,5 +1,8 @@
 import {
   AcUnitOutlined,
+  ArrowBackRounded,
+  ArrowForwardRounded,
+  ChairOutlined,
   EmailOutlined,
   ExpandLess,
   ExpandMore,
@@ -12,8 +15,6 @@ import {
   UnfoldMore,
   WbSunnyRounded,
 } from "@mui/icons-material";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
   Button,
@@ -36,6 +37,7 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
+import shadows from "../theme/shadows";
 import { PopupInfo } from "../types";
 import { getCategoryIcon } from "../utils";
 import PropertyListItem from "./PropertyListItem";
@@ -45,6 +47,7 @@ interface PopupProps {
 }
 
 const sliderWidth = 500;
+const sliderMobileHeight = 220;
 
 /**
  * Styled sliding drawer
@@ -56,6 +59,7 @@ const SlideDrawer = styled(Collapse)(({ theme }) => ({
   backgroundColor: `${theme.palette.primary.main}f2`,
   color: theme.palette.common.white,
   backdropFilter: "blur(4px)",
+  boxShadow: shadows[15],
   [theme.breakpoints.down("md")]: {
     right: 0,
   },
@@ -89,6 +93,10 @@ const SliderTitle = styled(Stack)(({ theme }) => ({
 const SliderContent = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(3),
   width: sliderWidth,
+  overflow: "auto",
+  [theme.breakpoints.up("md")]: {
+    paddingBottom: theme.spacing(7),
+  },
 }));
 
 /**
@@ -159,7 +167,15 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     if (
       properties["infoFi"] ||
       properties["lisatietoja"] ||
-      properties["routeLenghtKm"]
+      properties["routeLenghtKm"] ||
+      properties["altitudeDifference"] ||
+      properties["climbingRoutesCount"] ||
+      properties["altitudeDifference"] ||
+      properties["climbingWallHeightM"] ||
+      properties["climbingWallWidthM"] ||
+      properties["holesCount"] ||
+      properties["restPlacesCount"] ||
+      properties["trackLengthM"]
     ) {
       return (
         <Stack spacing={1}>
@@ -168,7 +184,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               <InfoOutlined htmlColor="#fff" />
               <Divider orientation="vertical" variant="middle" />
             </Stack>
-            <Stack spacing={2}>
+            <Stack spacing={2} sx={{ maxWidth: "calc(100% - 38px)" }}>
               {properties["infoFi"] && (
                 <Typography variant="h6">{properties["infoFi"]}</Typography>
               )}
@@ -181,6 +197,40 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
             <Typography>
               Reitin pituus: {properties["routeLenghtKm"]}
             </Typography>
+          )}
+          {properties["altitudeDifference"] && (
+            <Typography>
+              Reitin korkeusero: {properties["altitudeDifference"]}
+            </Typography>
+          )}
+          {properties["climbingRoutesCount"] && (
+            <Typography>
+              Kiipeilypaikkoja: {Math.trunc(properties["climbingRoutesCount"])}
+            </Typography>
+          )}
+          {properties["climbingWallHeightM"] && (
+            <Typography>
+              Korkeus: {properties["climbingWallHeightM"]}
+            </Typography>
+          )}
+          {properties["climbingWallWidthM"] && (
+            <Typography>Leveys: {properties["climbingWallWidthM"]}</Typography>
+          )}
+          {properties["holesCount"] && (
+            <Typography>
+              Korien määrä: {Math.trunc(properties["holesCount"])}
+            </Typography>
+          )}
+          {properties["restPlacesCount"] && (
+            <Stack direction="row" spacing={2}>
+              <ChairOutlined htmlColor="#ffffff" />
+              <Typography>
+                Levähdyspaikkoja: {Math.trunc(properties["restPlacesCount"])}
+              </Typography>
+            </Stack>
+          )}
+          {properties["trackLengthM"] && (
+            <Typography>Ladun pituus: {properties["trackLengthM"]}</Typography>
           )}
         </Stack>
       );
@@ -403,7 +453,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <>
       <SwipeableViews
         style={{
-          maxHeight: 250,
+          maxHeight: sliderMobileHeight,
           WebkitOverflowScrolling: "touch", // iOS momentum scrolling
         }}
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
@@ -412,7 +462,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         enableMouseEvents
       >
         {slides.map((slide, index) => (
-          <Box maxHeight={250} p={2} key={index}>
+          <Box maxHeight={sliderMobileHeight} p={3} key={index}>
             {slide}
           </Box>
         ))}
@@ -428,13 +478,15 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               color="inherit"
               onClick={handleNext}
               disabled={activeSlide === slides.length - 1}
+              endIcon={
+                theme.direction === "rtl" ? (
+                  <ArrowBackRounded />
+                ) : (
+                  <ArrowForwardRounded />
+                )
+              }
             >
               Seuraava
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowLeft />
-              ) : (
-                <KeyboardArrowRight />
-              )}
             </Button>
           }
           backButton={
@@ -443,13 +495,15 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               color="inherit"
               onClick={handleBack}
               disabled={activeSlide === 0}
+              startIcon={
+                theme.direction === "rtl" ? (
+                  <ArrowForwardRounded />
+                ) : (
+                  <ArrowBackRounded />
+                )
+              }
             >
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowRight />
-              ) : (
-                <KeyboardArrowLeft />
-              )}
-              Takaisin
+              Edellinen
             </Button>
           }
         />
@@ -463,7 +517,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <SlideDrawer
       in={open}
       orientation={mobile ? "vertical" : "horizontal"}
-      collapsedSize={mobile ? 61 : 76}
+      collapsedSize={mobile ? 64 : 76}
     >
       {renderTitle()}
       {mobile ? renderMobileViews() : renderDesktopViews()}

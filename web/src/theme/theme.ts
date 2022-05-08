@@ -90,16 +90,30 @@ export default createTheme({
         },
 
         ".maplibregl-ctrl": {
-          backgroundColor: palette.background.paper,
+          backgroundColor: `${palette.background.paper}b3`,
+          borderRadius: 50,
+          backdropFilter: "blur(4px)",
         },
 
+        ".mapboxgl-ctrl-group:not(:empty), .maplibregl-ctrl-group:not(:empty)":
+          {
+            boxShadow: shadows[10],
+          },
+
         ".mapboxgl-ctrl-top-right, .maplibregl-ctrl-top-right": {
+          top: 60,
           position: "relative",
           display: "flex",
           flexDirection: "column",
           marginLeft: "auto",
           flexWrap: "nowrap",
           alignItems: "flex-end",
+        },
+
+        ".mapboxgl-ctrl-group button, .maplibregl-ctrl-group button": {
+          width: 40,
+          height: 40,
+          padding: 8,
         },
 
         ".splashscreen-container": {
@@ -155,6 +169,11 @@ export default createTheme({
         root: {
           "&.Mui-disabled": {
             color: palette.primary.dark,
+          },
+        },
+        text: {
+          "&.Mui-disabled": {
+            color: palette.primary.main,
           },
         },
       },
@@ -231,6 +250,15 @@ export default createTheme({
         },
         vertical: {
           flexShrink: 1,
+        },
+      },
+    },
+    MuiCollapse: {
+      styleOverrides: {
+        wrapperInner: {
+          display: "grid",
+          gridTemplateRows: "auto 1fr",
+          overflow: "hidden",
         },
       },
     },

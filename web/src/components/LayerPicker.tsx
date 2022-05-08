@@ -2,7 +2,7 @@ import * as React from "react";
 import { LAYERS } from "./style";
 import LayerButton from "./LayerButton";
 import { Style } from "mapbox-gl";
-import { List, ListItem } from "@mui/material";
+import { IconButton, List, ListItem } from "@mui/material";
 import LayersIcon from "@mui/icons-material/Layers";
 import StyledMenu from "./StyledMenu";
 
@@ -43,22 +43,16 @@ export default function LayerPicker(props: LayerPickerProps) {
     <div className="maplibregl-ctrl-top-right mapboxgl-ctrl-top-right">
       <div className="tarmo-button-wrapper">
         <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
-          <button
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+          <IconButton
             id="layer-button"
             aria-controls={open ? "layer-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
-            type="button"
             title="Valitse taustakartta"
             onClick={handleClick}
           >
             <LayersIcon color={open ? "secondary" : "primary"} />
-          </button>
+          </IconButton>
           <StyledMenu
             id="layer-menu"
             aria-labelledby="layer menu"
