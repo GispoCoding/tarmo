@@ -1,5 +1,6 @@
+import { Box, LinearProgress, styled, Typography } from "@mui/material";
 import * as React from "react";
-import { Box, styled, Typography } from "@mui/material";
+import shadows from "../theme/shadows";
 
 export default function SplashScreen() {
   /**
@@ -7,12 +8,8 @@ export default function SplashScreen() {
    */
   const Container = styled(Box)(() => ({
     position: "relative",
-    display: "flex",
-    flexDirection: "column",
     height: "100vh",
     width: "100vw",
-    justifyContent: "center",
-    alignItems: "center",
     backgroundImage: "url(/img/tarmo-summer-1.jpg)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
@@ -20,11 +17,27 @@ export default function SplashScreen() {
   }));
 
   /**
+   * Styled overlay
+   */
+  const Overlay = styled(Box)(() => ({
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  }));
+
+  /**
    * Styled  hero header
    */
   const HeroHeader = styled(Box)(() => ({
     "textAlign": "center",
-    "textShadow": "2px 2px 10px #333333cc, 2px 2px 20px #33333366",
+    "textShadow": shadows[10],
     "& h1": {
       fontSize: "3em",
       color: "#fbfbfb",
@@ -50,15 +63,20 @@ export default function SplashScreen() {
 
   return (
     <Container>
-      <HeroHeader>
-        <Typography variant="h1">Tarmo</Typography>
-        <Typography variant="h2">
-          Tampereen kaupunkiseudun retkeilykarttapalvelu.
-        </Typography>
-      </HeroHeader>
-      <Copyright>
-        <Typography color="#fff">Kuva: Laura Vanzo</Typography>
-      </Copyright>
+      <Overlay>
+        <HeroHeader>
+          <Typography variant="h1">Tarmo</Typography>
+          <Typography variant="h2" sx={{ mt: 2, mb: 4 }}>
+            Tampereen kaupunkiseudun retkeilykarttapalvelu.
+          </Typography>
+        </HeroHeader>
+        <Box sx={{ width: "50%", maxWidth: 400 }}>
+          <LinearProgress variant="indeterminate" sx={{ color: "#fff" }} />
+        </Box>
+        <Copyright>
+          <Typography color="#fff">Kuva: Laura Vanzo</Typography>
+        </Copyright>
+      </Overlay>
     </Container>
   );
 }

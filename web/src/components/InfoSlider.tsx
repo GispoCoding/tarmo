@@ -1,5 +1,8 @@
 import {
   AcUnitOutlined,
+  ArrowBackRounded,
+  ArrowForwardRounded,
+  ChairOutlined,
   EmailOutlined,
   ExpandLess,
   ExpandMore,
@@ -12,8 +15,6 @@ import {
   UnfoldMore,
   WbSunnyRounded,
 } from "@mui/icons-material";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
   Button,
@@ -23,8 +24,6 @@ import {
   IconButton,
   Link,
   List,
-  ListItem,
-  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -38,14 +37,18 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
+import palette from "../theme/palette";
+import shadows from "../theme/shadows";
 import { PopupInfo } from "../types";
 import { getCategoryIcon } from "../utils";
+import PropertyListItem from "./PropertyListItem";
 
 interface PopupProps {
   popupInfo: PopupInfo;
 }
 
 const sliderWidth = 500;
+const sliderMobileHeight = 220;
 
 /**
  * Styled sliding drawer
@@ -57,6 +60,7 @@ const SlideDrawer = styled(Collapse)(({ theme }) => ({
   backgroundColor: `${theme.palette.primary.main}f2`,
   color: theme.palette.common.white,
   backdropFilter: "blur(4px)",
+  boxShadow: shadows[15],
   [theme.breakpoints.down("md")]: {
     right: 0,
   },
@@ -90,6 +94,10 @@ const SliderTitle = styled(Stack)(({ theme }) => ({
 const SliderContent = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(3),
   width: sliderWidth,
+  overflow: "auto",
+  [theme.breakpoints.up("md")]: {
+    paddingBottom: theme.spacing(7),
+  },
 }));
 
 /**
@@ -135,20 +143,16 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const getSeason = (season: string) =>
     ({
       "Talvi": (
-        <ListItem>
-          <ListItemIcon>
-            <AcUnitOutlined />
-          </ListItemIcon>
-          <ListItemText primary="Auki talvella" />
-        </ListItem>
+        <PropertyListItem
+          title="Auki talvella"
+          iconElement={<AcUnitOutlined />}
+        />
       ),
       "Kesä": (
-        <ListItem>
-          <ListItemIcon>
-            <WbSunnyRounded />
-          </ListItemIcon>
-          <ListItemText primary="Auki kesällä" />
-        </ListItem>
+        <PropertyListItem
+          title="Auki kesällä"
+          iconElement={<WbSunnyRounded />}
+        />
       ),
       "Koko vuosi": <></>,
     }[season]);
@@ -164,16 +168,24 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     if (
       properties["infoFi"] ||
       properties["lisatietoja"] ||
-      properties["routeLenghtKm"]
+      properties["routeLenghtKm"] ||
+      properties["altitudeDifference"] ||
+      properties["climbingRoutesCount"] ||
+      properties["altitudeDifference"] ||
+      properties["climbingWallHeightM"] ||
+      properties["climbingWallWidthM"] ||
+      properties["holesCount"] ||
+      properties["restPlacesCount"] ||
+      properties["trackLengthM"]
     ) {
       return (
         <Stack spacing={1}>
           <Stack direction="row" spacing={2}>
             <Stack alignItems="center" spacing={2}>
-              <InfoOutlined htmlColor="#fff" />
+              <InfoOutlined htmlColor={palette.common.white} />
               <Divider orientation="vertical" variant="middle" />
             </Stack>
-            <Stack spacing={2}>
+            <Stack spacing={2} sx={{ maxWidth: "calc(100% - 38px)" }}>
               {properties["infoFi"] && (
                 <Typography variant="h6">{properties["infoFi"]}</Typography>
               )}
@@ -186,6 +198,40 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
             <Typography>
               Reitin pituus: {properties["routeLenghtKm"]}
             </Typography>
+          )}
+          {properties["altitudeDifference"] && (
+            <Typography>
+              Reitin korkeusero: {properties["altitudeDifference"]}
+            </Typography>
+          )}
+          {properties["climbingRoutesCount"] && (
+            <Typography>
+              Kiipeilypaikkoja: {Math.trunc(properties["climbingRoutesCount"])}
+            </Typography>
+          )}
+          {properties["climbingWallHeightM"] && (
+            <Typography>
+              Korkeus: {properties["climbingWallHeightM"]}
+            </Typography>
+          )}
+          {properties["climbingWallWidthM"] && (
+            <Typography>Leveys: {properties["climbingWallWidthM"]}</Typography>
+          )}
+          {properties["holesCount"] && (
+            <Typography>
+              Korien määrä: {Math.trunc(properties["holesCount"])}
+            </Typography>
+          )}
+          {properties["restPlacesCount"] && (
+            <Stack direction="row" spacing={2}>
+              <ChairOutlined htmlColor={palette.common.white} />
+              <Typography>
+                Levähdyspaikkoja: {Math.trunc(properties["restPlacesCount"])}
+              </Typography>
+            </Stack>
+          )}
+          {properties["trackLengthM"] && (
+            <Typography>Ladun pituus: {properties["trackLengthM"]}</Typography>
           )}
         </Stack>
       );
@@ -214,121 +260,51 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           <Typography variant="h5">Aktiviteetit ja palvelut</Typography>
           <List>
             {properties["season"] && getSeason(properties["season"])}
-            {properties["tarmo_category"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt={properties["tarmo_category"]}
-                    src={getCategoryIcon(properties["tarmo_category"])}
-                  />
-                </ListItemAvatar>
-                <ListItemText primary={properties["tarmo_category"]} />
-              </ListItem>
-            )}
+            <PropertyListItem
+              title={properties["tarmo_category"]}
+              iconSrc={getCategoryIcon(properties["tarmo_category"])}
+            />
             {properties["toilet"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="WC"
-                    src="img/toilet-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="WC" />
-              </ListItem>
+              <PropertyListItem title="WC" iconSrc="img/toilet-light.png" />
             )}
             {properties["ligthing"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Valaistus"
-                    src="img/light-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Valaistus" />
-              </ListItem>
+              <PropertyListItem
+                title="Valaistus"
+                iconSrc="img/light-light.png"
+              />
             )}
             {properties["pier"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="laigturi"
-                    src="img/pier-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Laituri" />
-              </ListItem>
+              <PropertyListItem title="Laituri" iconSrc="img/pier-light.png" />
             )}
             {properties["sauna"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Sauna"
-                    src="img/sauna-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Sauna" />
-              </ListItem>
+              <PropertyListItem title="Sauna" iconSrc="img/sauna-light.png" />
             )}
             {properties["kiosk"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Kioski"
-                    src="img/kiosk-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Kioski" />
-              </ListItem>
+              <PropertyListItem title="Kioski" iconSrc="img/kiosk-light.png" />
             )}
             {properties["equipmentRental"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <KeyOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Vuokraamo" />
-              </ListItem>
+              <PropertyListItem
+                title="Vuokraamo"
+                iconElement={<KeyOutlined />}
+              />
             )}
             {properties["playground"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Leikkipuisto"
-                    src="img/playground-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Leikkikenttä" />
-              </ListItem>
+              <PropertyListItem
+                title="Leikkipuisto"
+                iconSrc="img/playground-light.png"
+              />
             )}
             {properties["exerciseMachines"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Kuntoilulaitteet"
-                    src="img/barbell-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Kuntoilulaitteet" />
-              </ListItem>
+              <PropertyListItem
+                title="Kuntoilulaitteet"
+                iconSrc="img/barbell-light.png"
+              />
             )}
             {properties["changingRooms"] && (
-              <ListItem>
-                <ListItemAvatar>
-                  <img
-                    style={{ width: 24, height: 24 }}
-                    alt="Pukuhuone"
-                    src="img/swimsuit-light.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary="Pukuhuone" />
-              </ListItem>
+              <PropertyListItem
+                title="Pukuhuone"
+                iconSrc="img/swimsuit-light.png"
+              />
             )}
           </List>
         </>
@@ -359,28 +335,22 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           <Typography variant="h5">Yhteystiedot</Typography>
           <List>
             {locationString && (
-              <ListItem>
-                <ListItemIcon>
-                  <PlaceOutlined />
-                </ListItemIcon>
-                <ListItemText primary={locationString} />
-              </ListItem>
+              <PropertyListItem
+                title={locationString}
+                iconElement={<PlaceOutlined />}
+              />
             )}
             {properties["phoneNumber"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <PhoneOutlined />
-                </ListItemIcon>
-                <ListItemText primary={properties["phoneNumber"]} />
-              </ListItem>
+              <PropertyListItem
+                title={properties["phoneNumber"]}
+                iconElement={<PhoneOutlined />}
+              />
             )}
             {properties["email"] && (
-              <ListItem>
-                <ListItemIcon>
-                  <EmailOutlined />
-                </ListItemIcon>
-                <ListItemText primary={properties["email"]} />
-              </ListItem>
+              <PropertyListItem
+                title={properties["email"]}
+                iconElement={<EmailOutlined />}
+              />
             )}
           </List>
           {properties["www"] && (
@@ -419,11 +389,13 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const renderTitle = () => (
     <SliderTitle direction="row">
       <Stack direction="row" alignItems="center" spacing={2}>
-        <img
-          alt={properties["tarmo_category"]}
-          style={{ width: 45, height: 45 }}
-          src={getCategoryIcon(properties["tarmo_category"])}
-        />
+        {getCategoryIcon(properties["tarmo_category"]) && (
+          <img
+            alt={properties["tarmo_category"]}
+            style={{ width: 45, height: 45 }}
+            src={getCategoryIcon(properties["tarmo_category"])}
+          />
+        )}
         {mobile ? (
           <Stack>
             <Typography variant="h4">{properties["name"]}</Typography>
@@ -482,7 +454,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <>
       <SwipeableViews
         style={{
-          maxHeight: 250,
+          maxHeight: sliderMobileHeight,
           WebkitOverflowScrolling: "touch", // iOS momentum scrolling
         }}
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
@@ -491,7 +463,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         enableMouseEvents
       >
         {slides.map((slide, index) => (
-          <Box maxHeight={250} p={2} key={index}>
+          <Box maxHeight={sliderMobileHeight} p={3} key={index}>
             {slide}
           </Box>
         ))}
@@ -507,13 +479,15 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               color="inherit"
               onClick={handleNext}
               disabled={activeSlide === slides.length - 1}
+              endIcon={
+                theme.direction === "rtl" ? (
+                  <ArrowBackRounded />
+                ) : (
+                  <ArrowForwardRounded />
+                )
+              }
             >
               Seuraava
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowLeft />
-              ) : (
-                <KeyboardArrowRight />
-              )}
             </Button>
           }
           backButton={
@@ -522,13 +496,15 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               color="inherit"
               onClick={handleBack}
               disabled={activeSlide === 0}
+              startIcon={
+                theme.direction === "rtl" ? (
+                  <ArrowForwardRounded />
+                ) : (
+                  <ArrowBackRounded />
+                )
+              }
             >
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowRight />
-              ) : (
-                <KeyboardArrowLeft />
-              )}
-              Takaisin
+              Edellinen
             </Button>
           }
         />
@@ -542,7 +518,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <SlideDrawer
       in={open}
       orientation={mobile ? "vertical" : "horizontal"}
-      collapsedSize={mobile ? 61 : 76}
+      collapsedSize={mobile ? 64 : 76}
     >
       {renderTitle()}
       {mobile ? renderMobileViews() : renderDesktopViews()}

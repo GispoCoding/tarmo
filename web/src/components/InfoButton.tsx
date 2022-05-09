@@ -1,5 +1,5 @@
 import { InfoOutlined } from "@mui/icons-material";
-import { List, ListItem } from "@mui/material";
+import { List, ListItem, IconButton } from "@mui/material";
 import * as React from "react";
 import StyledMenu from "./StyledMenu";
 
@@ -27,22 +27,21 @@ export default function InfoButton() {
     <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
       <div className="tarmo-button-wrapper">
         <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
-          <button
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+          <IconButton
+            sx={{
+              backgroundColor: open
+                ? "rgba(255,255,255,9)"
+                : "rgba(255,255,255,0)",
             }}
             id="layer-button"
             aria-controls={open ? "layer-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
-            type="button"
             title="Info"
             onClick={handleClick}
           >
             <InfoOutlined color={open ? "secondary" : "primary"} />
-          </button>
+          </IconButton>
         </div>
         <StyledMenu
           id="layer-menu"

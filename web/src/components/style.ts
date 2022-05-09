@@ -1,5 +1,7 @@
 import { LayerProps } from "react-map-gl";
 import { Style, VectorSource } from "mapbox-gl";
+import { getCategoryIcon } from "../utils";
+import palette from "../theme/palette";
 import { stopType } from "../types";
 
 const cityFilterParam = `cityName%20IN%20(${process.env.CITIES})`;
@@ -41,15 +43,120 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const LIPAS_POINT_STYLE: LayerProps = {
+const circleRadius = 12;
+
+const info_image: HTMLImageElement = new Image(24, 24);
+info_image.src = "/img/info-light.png";
+
+const parking_image: HTMLImageElement = new Image(32, 32);
+parking_image.src = "/img/parking.png";
+
+const historical_image: HTMLImageElement = new Image(24, 24);
+historical_image.src = `${getCategoryIcon("Muinaisjäännökset")}`;
+
+const trekking_image: HTMLImageElement = new Image(24, 24);
+trekking_image.src = `${getCategoryIcon("Ulkoilureitit")}`;
+
+const cycling_image: HTMLImageElement = new Image(24, 24);
+cycling_image.src = `${getCategoryIcon("Pyöräily")}`;
+
+const skating_image: HTMLImageElement = new Image(24, 24);
+skating_image.src = `${getCategoryIcon("Luistelu")}`;
+
+const swimming_image: HTMLImageElement = new Image(24, 24);
+swimming_image.src = `${getCategoryIcon("Uinti")}`;
+
+const activities_image: HTMLImageElement = new Image(24, 24);
+activities_image.src = `${getCategoryIcon("Ulkoiluaktiviteetit")}`;
+
+const fireplaces_image: HTMLImageElement = new Image(24, 24);
+fireplaces_image.src = `${getCategoryIcon("Laavut, majat, ruokailu")}`;
+
+const outdoors_image: HTMLImageElement = new Image(24, 24);
+outdoors_image.src = `${getCategoryIcon("Ulkoilupaikat")}`;
+
+const sights_image: HTMLImageElement = new Image(24, 24);
+sights_image.src = `${getCategoryIcon("Nähtävyydet")}`;
+
+const watersports_image: HTMLImageElement = new Image(24, 24);
+watersports_image.src = `${getCategoryIcon("Vesillä ulkoilu")}`;
+
+export const OSM_IMAGES = [
+  ["info", info_image],
+  ["skating", skating_image],
+  ["cycling", cycling_image],
+  ["parking", parking_image],
+  ["swimming", swimming_image],
+  ["activities", activities_image],
+  ["fireplaces", fireplaces_image],
+  ["outdoors", outdoors_image],
+  ["historical", historical_image],
+  ["trekking", trekking_image],
+  ["sights", sights_image],
+  ["watersports", watersports_image],
+];
+
+/**
+ * Symbols for lipas points
+ */
+export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "id": LayerId.LipasPoint,
+  "source": LayerId.LipasPoint,
+  "source-layer": "kooste.lipas_pisteet",
+  "type": "symbol",
+  "layout": {
+    "icon-image": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "cycling",
+      "Luistelu",
+      "skating",
+      "Uinti",
+      "swimming",
+      "Ulkoiluaktiviteetit",
+      "activities",
+      "Ulkoilureitit",
+      "trekking",
+      "Laavut, majat, ruokailu",
+      "fireplaces",
+      "Ulkoilupaikat",
+      "outdoors",
+      "Nähtävyydet",
+      "sights",
+      "Vesillä ulkoilu",
+      "watersports",
+      "info",
+    ],
+    "icon-size": 0.75,
+  },
+};
+
+export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.LipasPoint}-circle`,
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    // Circle color is "darkwater" from the brand book
-    "circle-color": "#00417d",
+    "circle-radius": circleRadius,
+    "circle-color": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "#e8b455",
+      "Luistelu",
+      "#29549a",
+      "Uinti",
+      "#39a7d7",
+      "Ulkoiluaktiviteetit",
+      "#397368",
+      "Laavut, majat, ruokailu",
+      "#ae1e20",
+      "Vesillä ulkoilu",
+      "#39a7d7",
+      palette.primary.dark,
+    ],
+    "circle-opacity": 0.9,
   },
 };
 
@@ -59,9 +166,20 @@ export const LIPAS_LINE_STYLE: LayerProps = {
   "source-layer": "kooste.lipas_viivat",
   "type": "line",
   "paint": {
-    "line-width": 2,
-    // Line color is "green" from the brand book
-    "line-color": "#abc872",
+    "line-width": 4,
+    "line-color": [
+      "match",
+      ["string", ["get", "tarmo_category"]],
+      "Pyöräily",
+      "#e8b455",
+      "Ulkoilureitit",
+      "#397368",
+      "Vesillä ulkoilu",
+      "#39a7d7",
+      "Hiihto",
+      "#5390b5",
+      palette.primary.dark,
+    ],
   },
 };
 
@@ -83,26 +201,55 @@ export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const WFS_LUONNONMUISTOMERKKI_STYLE: LayerProps = {
-  "id": LayerId.WFSLuonnonmuistomerkki,
+export const WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.WFSLuonnonmuistomerkki}-circle`,
   "source": LayerId.WFSLuonnonmuistomerkki,
   "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
-    "circle-color": "#00417d",
+    "circle-radius": circleRadius,
+    "circle-color": "#397368",
+    "circle-opacity": 0.9,
   },
 };
 
-export const WFS_LUONTOPOLKURASTI_STYLE: LayerProps = {
-  "id": LayerId.WFSLuontopolkurasti,
+/**
+ * WFS Luonnonmuistomerkki symbol
+ */
+export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.WFSLuonnonmuistomerkki,
+  "source": LayerId.WFSLuonnonmuistomerkki,
+  "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "sights",
+    "icon-size": 0.7,
+  },
+};
+
+export const WFS_LUONTOPOLKURASTI_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.WFSLuontopolkurasti}-circle`,
   "source": LayerId.WFSLuontopolkurasti,
   "source-layer": "kooste.tamperewfs_luontopolkurastit",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    "circle-color": "#00417d",
+    "circle-radius": circleRadius,
+    "circle-color": "#397368",
+    "circle-opacity": 0.9,
+  },
+};
+
+/**
+ * WFS Luontopolkurasti symbol
+ */
+export const WFS_LUONTOPOLKURASTI_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.WFSLuontopolkurasti,
+  "source": LayerId.WFSLuontopolkurasti,
+  "source-layer": "kooste.tamperewfs_luontopolkurastit",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "trekking",
+    "icon-size": 0.75,
   },
 };
 
@@ -124,27 +271,56 @@ export const ARCGIS_RKYKOHDE_SOURCE: VectorSource = {
   maxzoom: 22,
 };
 
-export const ARCGIS_MUINAISJAANNOS_STYLE: LayerProps = {
-  "id": LayerId.ArcGisMuinaisjaannos,
+export const ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.ArcGisMuinaisjaannos}-circle`,
   "source": LayerId.ArcGisMuinaisjaannos,
   "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
+    "circle-radius": circleRadius,
     "circle-color": "#00417d",
+    "circle-opacity": 0.9,
   },
 };
 
-export const ARCGIS_RKYKOHDE_STYLE: LayerProps = {
-  "id": LayerId.ArcGisRKYkohde,
+/**
+ * ARCGIS Muinaisjaannos symbol
+ */
+export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.ArcGisMuinaisjaannos,
+  "source": LayerId.ArcGisMuinaisjaannos,
+  "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "historical",
+    "icon-size": 0.5,
+  },
+};
+
+export const ARCGIS_RKYKOHDE_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.ArcGisRKYkohde}-circle`,
   "source": LayerId.ArcGisRKYkohde,
   "source-layer": "kooste.museovirastoarcrest_rkykohteet",
   "type": "circle",
   "paint": {
-    "circle-radius": 8,
-    // Circle color is "darkwater" from brand book
-    "circle-color": "#00417d",
+    "circle-radius": circleRadius,
+    // Circle color is "berry red" from brand book
+    "circle-color": "#ad3963",
+    "circle-opacity": 0.9,
+  },
+};
+
+/**
+ * ARCGIS Rakennettu kulttuurikohde symbol
+ */
+export const ARCGIS_RKYKOHDE_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.ArcGisRKYkohde,
+  "source": LayerId.ArcGisRKYkohde,
+  "source-layer": "kooste.museovirastoarcrest_rkykohteet",
+  "type": "symbol",
+  "layout": {
+    "icon-image": "sights",
+    "icon-size": 0.7,
   },
 };
 
@@ -205,10 +381,6 @@ export const OSM_AREA_SOURCE: VectorSource = {
   minzoom: 13,
   maxzoom: 22,
 };
-
-const parking_image: HTMLImageElement = new Image(24, 24);
-parking_image.src = "/img/parking.png";
-export const OSM_IMAGES = [["parking", parking_image]];
 
 export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "id": LayerId.OsmPoint,
