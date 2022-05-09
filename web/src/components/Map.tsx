@@ -37,11 +37,15 @@ import {
   OSM_AREA_LABEL_STYLE,
   OSM_POINT_SOURCE,
   OSM_POINT_LABEL_STYLE,
-  NLS_STYLE_URI,
-  // NLS_STYLE_LABELS_URI,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   OSM_IMAGES,
+  NLS_STYLE_URI,
+  NLS_LABEL_STYLE,
+  NLS_KUNNAT_LABEL_STYLE,
+  NLS_MAASTO_VEDET_LABEL_STYLE,
+  NLS_LUONNONPUISTOT_LABEL_STYLE,
+  NLS_TIET_LABEL_STYLE,
 } from "./style";
 import maplibregl from "maplibre-gl";
 import { PopupInfo, ExternalSource, Bbox } from "../types";
@@ -154,12 +158,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
   const setPopupFeature = useCallback(
     (lngLat: LngLat, features: MapboxGeoJSONFeature[] | undefined) => {
-      if (
-        features &&
-        features[0] &&
-        Object.values(LayerId).includes(features[0].source as LayerId)
-      ) {
-        const feature = features[0];
+      // The topmost layer might be a background map label, and the actual
+      // clicked feature might be lurking underneath.
+      // Find the topmost *clickable* layer.
+      const clickableFeatures = features?.filter(feature =>
+        Object.values(LayerId).includes(feature.source as LayerId)
+      );
+      if (clickableFeatures && clickableFeatures[0]) {
+        const feature = clickableFeatures[0];
         setPopupInfo({
           layerId: LayerId[feature.source] as LayerId,
           properties: feature.properties,
@@ -168,8 +174,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           onClose: () => setPopupInfo(null),
         });
       } else {
-        // in case topmost feature is not in feature layers (e.g. background map
-        // clicked), close the popup
+        // in case there were no clickable features (e.g. background map
+        // or label clicked), close the popup
         setPopupInfo(null);
       }
     },
@@ -266,10 +272,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
         <Layer {...SYKE_VALTION_STYLE} />
       </Source>
+
       {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
         <Layer {...LIPAS_LINE_STYLE} />
       </Source>
+
       {/* Clickable points */}
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer {...OSM_POINT_LABEL_STYLE} />
@@ -315,6 +323,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             <Layer {...DIGITRANSIT_POINT_STYLE} />
           </Source>
         )}
+
+      {/* Map labels */}
+      <Layer {...NLS_LABEL_STYLE} />
+      <Layer {...NLS_KUNNAT_LABEL_STYLE} />
+      <Layer {...NLS_MAASTO_VEDET_LABEL_STYLE} />
+      <Layer {...NLS_LUONNONPUISTOT_LABEL_STYLE} />
+      <Layer {...NLS_TIET_LABEL_STYLE} />
+
       <FullscreenControl />
       {showNav && (
         <>
