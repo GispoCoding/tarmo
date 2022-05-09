@@ -6,6 +6,7 @@ import { stopType } from "../types";
 
 const cityFilterParam = `cityName%20IN%20(${process.env.CITIES})`;
 
+// These layers are clickable and contain external data
 export enum LayerId {
   LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
@@ -21,9 +22,16 @@ export enum LayerId {
   DigiTransitPoint = "digitransit-points",
 }
 
-export const NLS_STYLE_URI = "map-styles/nls-style.json";
+// These are just labels on top of NLS background style
+enum LabelLayerId {
+  NLSLabel = "nls-labels",
+  NLSKunnatLabel = "nsl-kunnat-labels",
+  NLSMaastoVedetLabel = "nsl-maasto-vedet-labels",
+  NLSLuonnonpuistotLabel = "nsl-luonnonpuistot-labels",
+  NLSTietLabel = "nsl-tiet-labels",
+}
 
-export const NLS_STYLE_LABELS_URI = "map-styles/nls-style-labels.json";
+export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
 export const LIPAS_POINT_SOURCE: VectorSource = {
   type: "vector",
@@ -441,6 +449,192 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
   type: "symbol",
   layout: {
     "icon-image": ["get", "type"],
+  },
+};
+
+export const NLS_LABEL_STYLE: LayerProps = {
+  "id": LabelLayerId.NLSLabel,
+  "type": "symbol",
+  "source": "taustakartta",
+  "source-layer": "nimisto",
+  "filter": [
+    "all",
+    ["!", ["match", ["get", "teema"], ["Maasto", "Vedet"], true, false]],
+    ["!=", ["get", "alaryhma"], "Hallintoalueet"],
+    [
+      "match",
+      ["get", "laji"],
+      ["Kansallispuisto", "Luonnonpuisto"],
+      false,
+      true,
+    ],
+  ],
+  "layout": {
+    "text-transform": [
+      "match",
+      ["get", "alaryhma"],
+      "Rautatieliikennepaikat",
+      "uppercase",
+      "none",
+    ],
+    "text-field": [
+      "coalesce",
+      ["get", "nimi_fin"],
+      ["get", "nimi_swe"],
+      ["get", "nimi_sme"],
+      ["get", "nimi_sms"],
+      ["get", "nimi_smn"],
+    ],
+    "icon-ignore-placement": true,
+    "icon-allow-overlap": true,
+    "text-font": ["Liberation Sans NLSFI"],
+    "text-size": 14,
+    "visibility": "visible",
+    "text-letter-spacing": 0.1,
+  },
+  "paint": {
+    "text-halo-width": 2,
+    "text-halo-color": "rgba(251, 251, 251, 1)",
+    "text-color": "rgba(68, 68, 68, 1)",
+    "text-halo-blur": 1,
+  },
+};
+
+export const NLS_KUNNAT_LABEL_STYLE: LayerProps = {
+  "id": LabelLayerId.NLSKunnatLabel,
+  "type": "symbol",
+  "source": "taustakartta",
+  "source-layer": "nimisto",
+  "filter": [
+    "all",
+    ["==", ["get", "alaryhma"], "Hallintoalueet"],
+    ["==", ["get", "laji"], "Kunta"],
+  ],
+  "layout": {
+    "text-field": [
+      "coalesce",
+      ["get", "nimi_fin"],
+      ["get", "nimi_swe"],
+      ["get", "nimi_sme"],
+      ["get", "nimi_sms"],
+      ["get", "nimi_smn"],
+    ],
+    "icon-ignore-placement": false,
+    "icon-allow-overlap": false,
+    "text-size": 16,
+    "text-font": [
+      "step",
+      ["zoom"],
+      ["literal", ["Liberation Sans NLSFI"]],
+      6,
+      ["literal", ["Liberation Sans NLSFI Bold"]],
+    ],
+    "text-letter-spacing": 0.1,
+    "text-transform": "uppercase",
+    "visibility": "visible",
+    "text-line-height": ["literal", 1.2],
+  },
+  "paint": {
+    "text-halo-width": 1,
+    "text-halo-color": "rgba(251, 251, 251, 1)",
+    "text-color": "rgba(68, 68, 68, 1)",
+    "text-halo-blur": 1,
+  },
+};
+
+export const NLS_MAASTO_VEDET_LABEL_STYLE: LayerProps = {
+  "id": LabelLayerId.NLSMaastoVedetLabel,
+  "type": "symbol",
+  "source": "taustakartta",
+  "source-layer": "nimisto",
+  "filter": ["match", ["get", "teema"], ["Maasto", "Vedet"], true, false],
+  "layout": {
+    "text-field": [
+      "coalesce",
+      ["get", "nimi_fin"],
+      ["get", "nimi_swe"],
+      ["get", "nimi_sme"],
+      ["get", "nimi_sms"],
+      ["get", "nimi_smn"],
+    ],
+    "text-font": [
+      "match",
+      ["get", "teema"],
+      "Vedet",
+      ["literal", ["Liberation Sans NLSFI"]],
+      "Maasto",
+      ["literal", ["Liberation Sans NLSFI"]],
+      ["literal", ["Liberation Sans NLSFI"]],
+    ],
+    "text-size": 14,
+    "visibility": "visible",
+    "text-padding": 2,
+    "text-line-height": 1.2,
+    "text-letter-spacing": 0.1,
+  },
+  "paint": {
+    "text-halo-width": 1,
+    "text-halo-color": "rgba(251, 251, 251, 1)",
+    "text-color": "rgba(68, 68, 68, 1)",
+    "text-halo-blur": 1,
+  },
+};
+
+export const NLS_LUONNONPUISTOT_LABEL_STYLE: LayerProps = {
+  "id": LabelLayerId.NLSLuonnonpuistotLabel,
+  "type": "symbol",
+  "source": "taustakartta",
+  "source-layer": "nimisto",
+  "filter": [
+    "match",
+    ["get", "laji"],
+    ["Kansallispuisto", "Luonnonpuisto"],
+    true,
+    false,
+  ],
+  "layout": {
+    "text-field": [
+      "coalesce",
+      ["get", "nimi_fin"],
+      ["get", "nimi_swe"],
+      ["get", "nimi_sme"],
+      ["get", "nimi_sms"],
+      ["get", "nimi_smn"],
+    ],
+    "icon-ignore-placement": true,
+    "icon-allow-overlap": false,
+    "text-font": ["Liberation Sans NLSFI"],
+    "visibility": "visible",
+    "text-size": 14,
+    "text-letter-spacing": 0.1,
+  },
+  "paint": {
+    "text-halo-color": "rgba(251, 251, 251, 1)",
+    "text-color": "rgba(68, 68, 68, 1)",
+    "text-halo-blur": 1,
+    "text-halo-width": 1,
+  },
+};
+
+export const NLS_TIET_LABEL_STYLE: LayerProps = {
+  "id": LabelLayerId.NLSTietLabel,
+  "type": "symbol",
+  "source": "taustakartta",
+  "source-layer": "liikenne",
+  "filter": ["all", ["<", "tasosijainti", 1]],
+  "layout": {
+    "text-field": "{nimi_suomi}        {nimi_ruotsi}",
+    "text-font": ["Liberation Sans NLSFI"],
+    "symbol-placement": "line",
+    "text-size": 12,
+    "visibility": "visible",
+    "text-letter-spacing": 0.2,
+  },
+  "paint": {
+    "text-color": "rgba(69, 86, 71, 1)",
+    "text-halo-color": "#fff",
+    "text-halo-width": 1,
+    "text-halo-blur": 1,
   },
 };
 
