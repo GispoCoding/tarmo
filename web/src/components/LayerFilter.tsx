@@ -69,6 +69,11 @@ const categories = [
     tooltip: "Pysäkit",
     icon: "bus-darkwater.png",
   },
+  {
+    name: "muinaisjaannokset",
+    tooltip: "Muinaisjäännökset",
+    icon: "historical-dark.png",
+  },
 ];
 
 /**

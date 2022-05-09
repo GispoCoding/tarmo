@@ -37,6 +37,7 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
+import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { PopupInfo } from "../types";
 import { getCategoryIcon } from "../utils";
@@ -181,7 +182,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         <Stack spacing={1}>
           <Stack direction="row" spacing={2}>
             <Stack alignItems="center" spacing={2}>
-              <InfoOutlined htmlColor="#fff" />
+              <InfoOutlined htmlColor={palette.common.white} />
               <Divider orientation="vertical" variant="middle" />
             </Stack>
             <Stack spacing={2} sx={{ maxWidth: "calc(100% - 38px)" }}>
@@ -223,7 +224,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           )}
           {properties["restPlacesCount"] && (
             <Stack direction="row" spacing={2}>
-              <ChairOutlined htmlColor="#ffffff" />
+              <ChairOutlined htmlColor={palette.common.white} />
               <Typography>
                 Levähdyspaikkoja: {Math.trunc(properties["restPlacesCount"])}
               </Typography>
