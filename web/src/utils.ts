@@ -79,5 +79,5 @@ export const getCategoryIcon = (category: string) =>
     "Bussipysäkki": "img/bus-light.png",
     "Rautatieasema": "img/train.png",
     "Ratikkapysäkki": "img/tram.png",
-    "Muinaisjäännökset": "img/camera-light.png",
+    "Muinaisjäännökset": "img/historical-light.png",
   }[category]);

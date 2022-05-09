@@ -52,7 +52,7 @@ const parking_image: HTMLImageElement = new Image(32, 32);
 parking_image.src = "/img/parking.png";
 
 const historical_image: HTMLImageElement = new Image(24, 24);
-historical_image.src = "/img/historical-light.png";
+historical_image.src = `${getCategoryIcon("Muinaisjäännökset")}`;
 
 const trekking_image: HTMLImageElement = new Image(24, 24);
 trekking_image.src = `${getCategoryIcon("Ulkoilureitit")}`;
