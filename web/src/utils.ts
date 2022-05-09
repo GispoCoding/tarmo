@@ -68,7 +68,7 @@ export const getCategoryIcon = (category: string) =>
     "Hiihto": "img/ski-light.png",
     "Luistelu": "img/skating-light.png",
     "Ulkoilupaikat": "img/park-light.png",
-    "Ulkoiluaktiviteetit": "img/jump-light.png",
+    "Ulkoiluaktiviteetit": "img/frisbee-light.png",
     "Ulkoilureitit": "img/trekking-light.png",
     "Pyöräily": "img/cycling-light.png",
     "Laavut, majat, ruokailu": "img/campfire-light.png",

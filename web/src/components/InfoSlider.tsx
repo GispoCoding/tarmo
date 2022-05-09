@@ -8,6 +8,7 @@ import {
   ExpandMore,
   InfoOutlined,
   KeyOutlined,
+  NoiseControlOff,
   PhoneOutlined,
   PlaceOutlined,
   Public,
@@ -162,6 +163,32 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   }
 
   /**
+   * Render info text area
+   */
+  const renderInfo = () => {
+    if (properties["infoFi"] || properties["lisatietoja"]) {
+      return (
+        <Stack direction="row" spacing={2}>
+          <Stack alignItems="center" spacing={2}>
+            <InfoOutlined htmlColor={palette.common.white} />
+            <Divider orientation="vertical" variant="middle" />
+          </Stack>
+          <Stack spacing={2} sx={{ maxWidth: "calc(100% - 38px)" }}>
+            {properties["infoFi"] && (
+              <Typography variant="h6">{properties["infoFi"]}</Typography>
+            )}
+            {properties["lisatietoja"] && (
+              <Typography>{properties["lisatietoja"]}</Typography>
+            )}
+          </Stack>
+        </Stack>
+      );
+    }
+
+    return null;
+  };
+
+  /**
    * Basic information slide
    */
   const basicInfoSlide = () => {
@@ -180,20 +207,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     ) {
       return (
         <Stack spacing={1}>
-          <Stack direction="row" spacing={2}>
-            <Stack alignItems="center" spacing={2}>
-              <InfoOutlined htmlColor={palette.common.white} />
-              <Divider orientation="vertical" variant="middle" />
-            </Stack>
-            <Stack spacing={2} sx={{ maxWidth: "calc(100% - 38px)" }}>
-              {properties["infoFi"] && (
-                <Typography variant="h6">{properties["infoFi"]}</Typography>
-              )}
-              {properties["lisatietoja"] && (
-                <Typography>{properties["lisatietoja"]}</Typography>
-              )}
-            </Stack>
-          </Stack>
+          {renderInfo()}
           {properties["routeLenghtKm"] && (
             <Typography>
               Reitin pituus: {properties["routeLenghtKm"]}
@@ -211,27 +225,35 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           )}
           {properties["climbingWallHeightM"] && (
             <Typography>
-              Korkeus: {properties["climbingWallHeightM"]}
+              Korkeus: {properties["climbingWallHeightM"]}m
             </Typography>
           )}
           {properties["climbingWallWidthM"] && (
-            <Typography>Leveys: {properties["climbingWallWidthM"]}</Typography>
-          )}
-          {properties["holesCount"] && (
-            <Typography>
-              Korien määrä: {Math.trunc(properties["holesCount"])}
-            </Typography>
+            <Typography>Leveys: {properties["climbingWallWidthM"]}m</Typography>
           )}
           {properties["restPlacesCount"] && (
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2} alignItems="center">
               <ChairOutlined htmlColor={palette.common.white} />
               <Typography>
                 Levähdyspaikkoja: {Math.trunc(properties["restPlacesCount"])}
               </Typography>
             </Stack>
           )}
+          {properties["holesCount"] && (
+            <Stack direction="row" spacing={2} alignItems="center">
+              <NoiseControlOff htmlColor="rgba(255,255,255,0.5)" />
+              <Typography>
+                Korien määrä: {Math.trunc(properties["holesCount"])}
+              </Typography>
+            </Stack>
+          )}
           {properties["trackLengthM"] && (
-            <Typography>Ladun pituus: {properties["trackLengthM"]}</Typography>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <NoiseControlOff htmlColor="rgba(255,255,255,0.5)" />
+              <Typography>
+                Pituus: {Math.trunc(properties["trackLengthM"])}m
+              </Typography>
+            </Stack>
           )}
         </Stack>
       );
