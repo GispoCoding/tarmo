@@ -81,6 +81,9 @@ sights_image.src = `${getCategoryIcon("Nähtävyydet")}`;
 const watersports_image: HTMLImageElement = new Image(24, 24);
 watersports_image.src = `${getCategoryIcon("Vesillä ulkoilu")}`;
 
+const skiing_image: HTMLImageElement = new Image(24, 24);
+skiing_image.src = `${getCategoryIcon("Hiihto")}`;
+
 export const OSM_IMAGES = [
   ["info", info_image],
   ["skating", skating_image],
@@ -94,6 +97,7 @@ export const OSM_IMAGES = [
   ["trekking", trekking_image],
   ["sights", sights_image],
   ["watersports", watersports_image],
+  ["skiing", skiing_image],
 ];
 
 /**
@@ -126,6 +130,8 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
       "sights",
       "Vesillä ulkoilu",
       "watersports",
+      "Hiihto",
+      "skiing",
       "info",
     ],
     "icon-size": 0.75,
@@ -149,6 +155,8 @@ export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
       "Uinti",
       "#39a7d7",
       "Ulkoiluaktiviteetit",
+      "#397368",
+      "Ulkoilupaikat",
       "#397368",
       "Laavut, majat, ruokailu",
       "#ae1e20",
