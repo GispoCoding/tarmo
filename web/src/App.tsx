@@ -7,6 +7,7 @@ import { PopupInfo } from "./types";
 import LayerFilter from "./components/LayerFilter";
 import SplashScreen from "./components/SplashScreen";
 import { Box } from "@mui/material";
+import MapFiltersProvider from "./contexts/MapFiltersContext";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -27,8 +28,10 @@ export default function App() {
     <SplashScreen />
   ) : (
     <Box sx={{ position: "absolute", width: "100vw", height: "100vh" }}>
-      <TarmoMap setPopupInfo={setPopupInfo} />
-      <LayerFilter />
+      <MapFiltersProvider>
+        <TarmoMap setPopupInfo={setPopupInfo} />
+        <LayerFilter />
+      </MapFiltersProvider>
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
     </Box>
   );

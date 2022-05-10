@@ -116,15 +116,6 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
   "type": "symbol",
-  "filter": [
-    "match",
-    ["get", "tarmo_category"],
-    ["Luistelu", "Ulkoiluaktiviteetit", "Ulkoilureitit", "Ulkoilupaikat"],
-    true,
-    true,
-    true,
-    true,
-  ],
   "layout": {
     "icon-image": [
       "match",
@@ -666,6 +657,9 @@ export const NLS_TERRAIN_STYLE: Style = {
       id: "terrain",
       type: "raster",
       source: "terrain",
+      paint: {
+        "raster-opacity": 0.5,
+      },
     },
   ],
 };
@@ -693,5 +687,13 @@ export const NLS_ORTHOIMAGE_STYLE: Style = {
   ],
 };
 
+export const BACKGROUND_LAYER: LayerProps = {
+  id: "background",
+  type: "background",
+  paint: {
+    "background-color": "#000",
+    "background-opacity": 0.9,
+  },
+};
 // List of toggleable layers besides default
 export const LAYERS = [NLS_TERRAIN_STYLE, NLS_ORTHOIMAGE_STYLE];
