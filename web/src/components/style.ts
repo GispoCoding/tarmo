@@ -116,6 +116,15 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "source": LayerId.LipasPoint,
   "source-layer": "kooste.lipas_pisteet",
   "type": "symbol",
+  "filter": [
+    "match",
+    ["get", "tarmo_category"],
+    ["Luistelu", "Ulkoiluaktiviteetit", "Ulkoilureitit", "Ulkoilupaikat"],
+    true,
+    true,
+    true,
+    true,
+  ],
   "layout": {
     "icon-image": [
       "match",
