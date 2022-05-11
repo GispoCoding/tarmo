@@ -49,7 +49,6 @@ import {
   NLS_MAASTO_VEDET_LABEL_STYLE,
   NLS_LUONNONPUISTOT_LABEL_STYLE,
   NLS_TIET_LABEL_STYLE,
-  BACKGROUND_LAYER,
 } from "./style";
 import maplibregl from "maplibre-gl";
 import { PopupInfo, ExternalSource, Bbox } from "../types";
@@ -270,7 +269,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       onResize={toggleNav}
       styleDiffing={false}
     >
-      <Layer {...BACKGROUND_LAYER} />
       {/* Area polygons */}
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
         <Layer
@@ -322,12 +320,44 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         id={LayerId.WFSLuonnonmuistomerkki}
         {...WFS_LUONNONMUISTOMERKKI_SOURCE}
       >
-        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE} />
-        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
+            layout: {
+              ...(WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE as CircleLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
+            layout: {
+              ...(WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
-        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE} />
-        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
+            layout: {
+              ...(WFS_LUONTOPOLKURASTI_STYLE_CIRCLE as CircleLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
+            layout: {
+              ...(WFS_LUONTOPOLKURASTI_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
+            },
+          }}
+        />
       </Source>
       <Source
         id={LayerId.ArcGisMuinaisjaannos}

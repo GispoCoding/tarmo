@@ -26,22 +26,6 @@ export const MAP_FILTERS = Object.freeze({
   muinaisjaannokset: true,
 });
 
-// /**
-//  * Filters for map Lipas layer
-//  */
-// type LipasFilters = {
-//   "Pyöräily": boolean;
-//   "Luistelu": boolean;
-//   "Uinti": boolean;
-//   "Ulkoiluaktiviteetit": boolean;
-//   "Ulkoilureitit": boolean;
-//   "Laavut, majat, ruokailu": boolean;
-//   "Ulkoilupaikat": boolean;
-//   "Nähtävyydet": boolean;
-//   "Vesillä ulkoilu": boolean;
-//   "Hiihto": boolean;
-// };
-
 /**
  * Type for Lipas filters
  */
