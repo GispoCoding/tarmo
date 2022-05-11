@@ -7,10 +7,13 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import shadows from "../theme/shadows";
-import { MapFiltersContext, MapFilters } from "../contexts/MapFiltersContext";
+import {
+  MapFiltersContext,
+  CategoryFilters,
+} from "../contexts/MapFiltersContext";
 
 type Category = {
-  name: keyof MapFilters;
+  name: keyof CategoryFilters;
   tooltip: string;
   icon: string;
 };
@@ -67,17 +70,17 @@ const categories: Category[] = [
     icon: "camera-darkwater.png",
   },
   {
-    name: "pysakointi",
+    name: "Pysäköinti",
     tooltip: "Pysäköinti",
     icon: "parking-darkwater.png",
   },
   {
-    name: "pysakit",
+    name: "Pysäkit",
     tooltip: "Pysäkit",
     icon: "bus-darkwater.png",
   },
   {
-    name: "muinaisjaannokset",
+    name: "Muinaisjäännökset",
     tooltip: "Muinaisjäännökset",
     icon: "historical-dark.png",
   },

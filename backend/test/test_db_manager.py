@@ -4,7 +4,9 @@ import psycopg2
 
 
 def assert_database_is_alright(
-    cur: psycopg2.extensions.cursor, expected_kooste_count: int = 16
+    cur: psycopg2.extensions.cursor,
+    expected_kooste_count: int = 16,
+    expected_matview_count: int = 5,
 ):
     cur.execute(
         "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
@@ -21,8 +23,13 @@ def assert_database_is_alright(
         "SELECT table_name FROM information_schema.tables WHERE table_schema='kooste'"
     )
     kooste_tables = cur.fetchall()
-
     assert len(kooste_tables) == expected_kooste_count
+
+    # Check materialized views
+    cur.execute("SELECT matviewname FROM pg_matviews")
+    materialized_views = cur.fetchall()
+    assert len(materialized_views) == expected_matview_count
+
     # Check constraint naming
     for table in kooste_tables:
         table_name = table[0]
@@ -33,7 +40,8 @@ def assert_database_is_alright(
             f"nsp.nspname = 'kooste' AND rel.relname = '{table_name}';"
         )
         constraints = cur.fetchall()
-        assert (f"{table_name}_pk",) in constraints
+        if constraints:
+            assert (f"{table_name}_pk",) in constraints
 
 
 def test_database_creation(main_db_params_with_root_user, tarmo_database_created):
@@ -81,7 +89,9 @@ def test_database_cancel_all_migrations(
     try:
         with conn.cursor() as cur:
             # our initial kooste database only had two tables!
-            assert_database_is_alright(cur, expected_kooste_count=2)
+            assert_database_is_alright(
+                cur, expected_kooste_count=2, expected_matview_count=0
+            )
 
             cur.execute(
                 "SELECT table_name FROM information_schema.tables WHERE table_name='alembic_version'"
