@@ -7,55 +7,62 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import shadows from "../theme/shadows";
+import { MapFiltersContext, MapFilters } from "../contexts/MapFiltersContext";
 
-const categories = [
+type Category = {
+  name: keyof MapFilters;
+  tooltip: string;
+  icon: string;
+};
+
+const categories: Category[] = [
   {
-    name: "ulkoilureitit",
+    name: "Ulkoilureitit",
     tooltip: "Ulkoilureitit",
     icon: "trekking-darkwater.png",
   },
   {
-    name: "ulkoiluaktiviteetit",
+    name: "Ulkoiluaktiviteetit",
     tooltip: "Ulkoiluaktiviteetit",
     icon: "frisbee-darkwater.png",
   },
   {
-    name: "ulkoilupaikat",
+    name: "Ulkoilupaikat",
     tooltip: "Ulkoilupaikat",
     icon: "park-darkwater.png",
   },
   {
-    name: "ruokailu",
+    name: "Laavut, majat, ruokailu",
     tooltip: "Laavut, majat & ruokailu",
     icon: "campfire-darkwater.png",
   },
   {
-    name: "pyoraily",
+    name: "Pyöräily",
     tooltip: "Pyöräily",
     icon: "cycling-darkwater.png",
   },
   {
-    name: "hiihto",
+    name: "Hiihto",
     tooltip: "Hiihto",
     icon: "ski-darkwater.png",
   },
   {
-    name: "luistelu",
+    name: "Luistelu",
     tooltip: "Luistelu",
     icon: "skating-darkwater.png",
   },
   {
-    name: "uinti",
+    name: "Uinti",
     tooltip: "Uinti",
     icon: "swimming-darkwater.png",
   },
   {
-    name: "vesiulkoilu",
+    name: "Vesillä ulkoilu",
     tooltip: "Vesiulkoilu",
     icon: "dinghy-darkwater.png",
   },
   {
-    name: "nahtavyydet",
+    name: "Nähtävyydet",
     tooltip: "Nähtävyydet",
     icon: "camera-darkwater.png",
   },
@@ -131,6 +138,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
  * @returns filter to control the visible layers
  */
 export default function LayerFilter() {
+  const mapFiltersContext = React.useContext(MapFiltersContext);
   const [layers, setLayers] = React.useState(() => categories);
 
   const handleLayer = (event: React.MouseEvent<HTMLElement>, newLayers: []) => {
@@ -146,13 +154,15 @@ export default function LayerFilter() {
           onChange={handleLayer}
           aria-label="map layers"
         >
-          {categories.map((category, idx) => (
-            <Tooltip title={category.tooltip} key={idx}>
-              <ToggleButton size="small" value={category.name} selected={true}>
-                <img
-                  style={{ width: 36, height: 36 }}
-                  src={`/img/${category.icon}`}
-                />
+          {categories.map(({ name, tooltip, icon }) => (
+            <Tooltip title={tooltip} key={name}>
+              <ToggleButton
+                size="small"
+                value={name}
+                selected={mapFiltersContext.getFilterValue(name)}
+                onClick={() => mapFiltersContext.toggleFilter(name)}
+              >
+                <img style={{ width: 36, height: 36 }} src={`/img/${icon}`} />
               </ToggleButton>
             </Tooltip>
           ))}

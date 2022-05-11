@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Ref, useCallback, useEffect, useState } from "react";
+import { Ref, useCallback, useEffect, useState, useContext } from "react";
 import { rawRequest } from "graphql-request";
 import MapGL, {
   FullscreenControl,
@@ -8,6 +8,9 @@ import MapGL, {
   MapRef,
   NavigationControl,
   Source,
+  CircleLayer,
+  SymbolLayer,
+  FillLayer,
 } from "react-map-gl";
 import {
   LayerId,
@@ -54,12 +57,14 @@ import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
 import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection } from "geojson";
+import { MapFiltersContext } from "../contexts/MapFiltersContext";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
 }
 
 export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
+  const mapFiltersContext = useContext(MapFiltersContext);
   const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
   const [zoom, setZoom] = useState(10);
@@ -246,6 +251,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     [setPopupFeature]
   );
 
+  const lipasFilter = mapFiltersContext.getLipasFilter();
+
   return (
     <MapGL
       ref={mapReference as Ref<MapRef>}
@@ -264,7 +271,15 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     >
       {/* Area polygons */}
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_STYLE} />
+        <Layer
+          {...{
+            ...OSM_AREA_STYLE,
+            layout: {
+              ...(OSM_AREA_STYLE as FillLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />
@@ -275,41 +290,123 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
       {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
-        <Layer {...LIPAS_LINE_STYLE} />
+        <Layer {...{ ...LIPAS_LINE_STYLE, filter: lipasFilter }} />
       </Source>
 
       {/* Clickable points */}
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer {...OSM_POINT_LABEL_STYLE} />
+        <Layer
+          {...{
+            ...OSM_POINT_LABEL_STYLE,
+            layout: {
+              ...(OSM_POINT_LABEL_STYLE as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
-        <Layer {...OSM_AREA_LABEL_STYLE} />
+        <Layer
+          {...{
+            ...OSM_AREA_LABEL_STYLE,
+            layout: {
+              ...(OSM_AREA_LABEL_STYLE as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+            },
+          }}
+        />
       </Source>
       <Source
         id={LayerId.WFSLuonnonmuistomerkki}
         {...WFS_LUONNONMUISTOMERKKI_SOURCE}
       >
-        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE} />
-        <Layer {...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
+            layout: {
+              ...(WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE as CircleLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
+            layout: {
+              ...(WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
-        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE} />
-        <Layer {...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
+            layout: {
+              ...(WFS_LUONTOPOLKURASTI_STYLE_CIRCLE as CircleLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
+            layout: {
+              ...(WFS_LUONTOPOLKURASTI_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
+            },
+          }}
+        />
       </Source>
       <Source
         id={LayerId.ArcGisMuinaisjaannos}
         {...ARCGIS_MUINAISJAANNOS_SOURCE}
       >
-        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE} />
-        <Layer {...ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE,
+            layout: {
+              ...(ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE as CircleLayer).layout,
+              visibility:
+                mapFiltersContext.getVisibilityValue("muinaisjaannokset"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL,
+            layout: {
+              ...(ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility:
+                mapFiltersContext.getVisibilityValue("muinaisjaannokset"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
-        <Layer {...ARCGIS_RKYKOHDE_STYLE_CIRCLE} />
-        <Layer {...ARCGIS_RKYKOHDE_STYLE_SYMBOL} />
+        <Layer
+          {...{
+            ...ARCGIS_RKYKOHDE_STYLE_CIRCLE,
+            layout: {
+              ...(ARCGIS_RKYKOHDE_STYLE_CIRCLE as CircleLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...ARCGIS_RKYKOHDE_STYLE_SYMBOL,
+            layout: {
+              ...(ARCGIS_RKYKOHDE_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...LIPAS_POINT_STYLE_CIRCLE} />
-        <Layer {...LIPAS_POINT_STYLE_SYMBOL} />
+        <Layer {...{ ...LIPAS_POINT_STYLE_CIRCLE, filter: lipasFilter }} />
+        <Layer {...{ ...LIPAS_POINT_STYLE_SYMBOL, filter: lipasFilter }} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
@@ -320,7 +417,15 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             type="geojson"
             data={externalData.get(LayerId.DigiTransitPoint)}
           >
-            <Layer {...DIGITRANSIT_POINT_STYLE} />
+            <Layer
+              {...{
+                ...DIGITRANSIT_POINT_STYLE,
+                layout: {
+                  ...(DIGITRANSIT_POINT_STYLE as SymbolLayer).layout,
+                  visibility: mapFiltersContext.getVisibilityValue("pysakit"),
+                },
+              }}
+            />
           </Source>
         )}
 
