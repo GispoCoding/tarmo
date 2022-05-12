@@ -45,6 +45,7 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
       patterns: gqlFeature.patterns,
       type: type,
       tarmo_category: tarmo_category,
+      type_name: tarmo_category,
     },
   };
 };
