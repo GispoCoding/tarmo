@@ -1,9 +1,9 @@
 import React from "react";
 
 /**
- * Lipas filters
+ * Category filters
  */
-export const LIPAS_FILTERS = Object.freeze({
+export const CATEGORY_FILTERS = Object.freeze({
   "Pyöräily": true,
   "Luistelu": true,
   "Uinti": true,
@@ -14,35 +14,23 @@ export const LIPAS_FILTERS = Object.freeze({
   "Nähtävyydet": true,
   "Vesillä ulkoilu": true,
   "Hiihto": true,
+  "Pysäköinti": true,
+  "Pysäkit": true,
+  "Muinaisjäännökset": true,
 });
 
 /**
- * Map filters
+ * Type for category filters
  */
-export const MAP_FILTERS = Object.freeze({
-  ...LIPAS_FILTERS,
-  pysakointi: true,
-  pysakit: true,
-  muinaisjaannokset: true,
-});
+export type CategoryFilters = typeof CATEGORY_FILTERS;
 
 /**
- * Type for Lipas filters
+ * Category map layer filter
  */
-export type LipasFilters = typeof LIPAS_FILTERS;
-
-/**
- * Type for all map filters
- */
-export type MapFilters = typeof MAP_FILTERS;
-
-/**
- * Lipas map layer filter
- */
-type LipasLayerFilter = [
+type CategoryLayerFilter = [
   "match",
   ["get", "tarmo_category"],
-  (keyof LipasFilters | "")[],
+  (keyof CategoryFilters | "")[],
   true,
   false
 ];
@@ -56,12 +44,12 @@ type VisibilityValue = "none" | "visible";
  * Map filters context type
  */
 export interface MapFiltersContextType {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-  toggleFilter: (key: keyof MapFilters) => void;
-  getLipasFilter: () => LipasLayerFilter;
-  getFilterValue: (key: keyof MapFilters) => boolean;
-  getVisibilityValue: (key: keyof MapFilters) => VisibilityValue;
+  filters: CategoryFilters;
+  setFilters: (filters: CategoryFilters) => void;
+  toggleFilter: (key: keyof CategoryFilters) => void;
+  getCategoryFilter: () => CategoryLayerFilter;
+  getFilterValue: (key: keyof CategoryFilters) => boolean;
+  getVisibilityValue: (key: keyof CategoryFilters) => VisibilityValue;
 }
 
 /**
@@ -75,10 +63,16 @@ interface Props {
  * Map filters context initialization
  */
 export const MapFiltersContext = React.createContext<MapFiltersContextType>({
-  filters: MAP_FILTERS,
+  filters: CATEGORY_FILTERS,
   setFilters: () => undefined,
   toggleFilter: () => undefined,
-  getLipasFilter: () => ["match", ["get", "tarmo_category"], [], true, false],
+  getCategoryFilter: () => [
+    "match",
+    ["get", "tarmo_category"],
+    [],
+    true,
+    false,
+  ],
   getFilterValue: () => false,
   getVisibilityValue: () => "visible",
 });
@@ -89,25 +83,27 @@ export const MapFiltersContext = React.createContext<MapFiltersContextType>({
  * @param props component properties
  */
 export default function MapFiltersProvider({ children }: Props) {
-  const [filters, setFilters] = React.useState<MapFilters>({ ...MAP_FILTERS });
+  const [filters, setFilters] = React.useState<CategoryFilters>({
+    ...CATEGORY_FILTERS,
+  });
 
   /**
    * Toggles single filter with given key
    *
    * @param key key
    */
-  const toggleFilter = (key: keyof MapFilters) =>
+  const toggleFilter = (key: keyof CategoryFilters) =>
     setFilters({ ...filters, [key]: !filters[key] });
 
   /**
-   * Returns filter value for Lipas map layer
+   * Returns filter value for all map layers
    */
-  const getLipasFilter = (): LipasLayerFilter => {
-    const lipasFilterEntries = Object.entries(filters);
-    const includedEntries = lipasFilterEntries.filter(([, value]) => !!value);
+  const getCategoryFilter = (): CategoryLayerFilter => {
+    const mapFilterEntries = Object.entries(filters);
+    const includedEntries = mapFilterEntries.filter(([, value]) => !!value);
     const filterLabels = includedEntries.map(
       ([key]) => key
-    ) as (keyof LipasFilters)[];
+    ) as (keyof CategoryFilters)[];
 
     return [
       "match",
@@ -123,14 +119,14 @@ export default function MapFiltersProvider({ children }: Props) {
    *
    * @param key filter key
    */
-  const getFilterValue = (key: keyof MapFilters) => ({ ...filters }[key]);
+  const getFilterValue = (key: keyof CategoryFilters) => ({ ...filters }[key]);
 
   /**
    * Returns value of given filter as layer visibility value
    *
    * @param key filter key
    */
-  const getVisibilityValue = (key: keyof MapFilters): VisibilityValue =>
+  const getVisibilityValue = (key: keyof CategoryFilters): VisibilityValue =>
     ({ ...filters }[key] ? "visible" : "none");
 
   /**
@@ -140,7 +136,7 @@ export default function MapFiltersProvider({ children }: Props) {
     filters: filters,
     setFilters: setFilters,
     toggleFilter: toggleFilter,
-    getLipasFilter: getLipasFilter,
+    getCategoryFilter: getCategoryFilter,
     getFilterValue: getFilterValue,
     getVisibilityValue: getVisibilityValue,
   };

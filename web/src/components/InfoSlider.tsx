@@ -41,7 +41,7 @@ import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { PopupInfo } from "../types";
-import { getCategoryIcon } from "../utils";
+import { getCategoryIcon, getCategoryPlural } from "../utils";
 import PropertyListItem from "./PropertyListItem";
 
 interface PopupProps {
@@ -420,13 +420,25 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         )}
         {mobile ? (
           <Stack>
-            <Typography variant="h4">{properties["name"]}</Typography>
+            <Typography variant="h4">
+              {properties["size"]
+                ? `${properties["size"]} ${getCategoryPlural(
+                    properties["tarmo_category"]
+                  )}`
+                : properties["name"]}
+            </Typography>
             <Typography variant="body2">{properties["type_name"]}</Typography>
           </Stack>
         ) : (
           <Fade in={open}>
             <Stack>
-              <Typography variant="h4">{properties["name"]}</Typography>
+              <Typography variant="h4">
+                {properties["size"]
+                  ? `${properties["size"]} ${getCategoryPlural(
+                      properties["tarmo_category"]
+                    )}`
+                  : properties["name"]}
+              </Typography>
               <Typography variant="body2">{properties["type_name"]}</Typography>
             </Stack>
           </Fade>

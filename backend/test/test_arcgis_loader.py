@@ -2918,6 +2918,7 @@ def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
+            # museovirasto data should be present
             cur.execute(
                 f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
             )
@@ -2936,6 +2937,19 @@ def assert_data_is_imported(main_db_params):
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20
             )
+            # muinaisjaannokset should be clustered
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_8")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_9")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_10")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_11")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_12")
+            assert cur.fetchone()[0] > 0
+
+            # syke data should be present
             cur.execute(
                 f"SELECT count(*) FROM kooste.syke_natura2000 WHERE NOT deleted"
             )

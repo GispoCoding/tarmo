@@ -81,3 +81,27 @@ export const getCategoryIcon = (category: string) =>
     "Ratikkapysäkki": "img/tram.png",
     "Muinaisjäännökset": "img/historical-light.png",
   }[category]);
+
+/**
+ * Get category plural partitive
+ * @param category
+ * @returns category name in plural partitive
+ */
+export const getCategoryPlural = (category: string) =>
+  ({
+    "Hiihto": "hiihtokohdetta",
+    "Luistelu": "luistelupaikkaa",
+    "Ulkoilupaikat": "ulkoilupaikkaa",
+    "Ulkoiluaktiviteetit": "ulkoiluaktiviteettia",
+    "Ulkoilureitit": "ulkoilureittikohdetta",
+    "Pyöräily": "pyöräilykohdetta",
+    "Laavut, majat, ruokailu": "laavua, majaa tai ruokailupaikkaa",
+    "Vesillä ulkoilu": "vesilläulkoilukohdetta",
+    "Nähtävyydet": "nähtävyyttä",
+    "Uinti": "uintipaikkaa",
+    "Pysäköinti": "pysäköintipaikkaa",
+    "Bussipysäkki": "bussipysäkkiä",
+    "Rautatieasema": "rautatieasemaa",
+    "Ratikkapysäkki": "ratikkapysäkkiä",
+    "Muinaisjäännökset": "muinaisjäännöstä",
+  }[category]);
