@@ -1,11 +1,23 @@
 import { InfoOutlined } from "@mui/icons-material";
-import { List, ListItem, IconButton } from "@mui/material";
+import {
+  List,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  ListItemButton,
+  Button,
+  Typography,
+} from "@mui/material";
 import * as React from "react";
 import StyledMenu from "./StyledMenu";
 
 export default function InfoButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   /**
    * Handle click event
@@ -22,6 +34,40 @@ export default function InfoButton() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  /**
+   * Handle click dialog open event
+   */
+  const handleClickOpenDialog = () => {
+    setDialogOpen(true);
+    console.log("Avaa dialogi");
+  };
+
+  /**
+   * Handle dialog close event
+   */
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  /**
+   * Render dialog
+   */
+  const renderDialog = () => (
+    <Dialog open={dialogOpen}>
+      <DialogTitle>
+        <Typography>Dialogi</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Typography>Sisältöä</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="text" onClick={handleCloseDialog}>
+          Sulje
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <div className={"maplibregl-ctrl-top-right mapboxgl-ctrl-top-right"}>
@@ -51,20 +97,21 @@ export default function InfoButton() {
           onClose={handleClose}
         >
           <List>
-            <ListItem disablePadding={false} button>
+            <ListItemButton onClick={handleClickOpenDialog}>
               Palvelun tiedot
-            </ListItem>
-            <ListItem disablePadding={false} button>
+            </ListItemButton>
+            <ListItemButton onClick={handleClickOpenDialog}>
               Lisenssit
-            </ListItem>
-            <ListItem disablePadding={false} button>
+            </ListItemButton>
+            <ListItemButton onClick={handleClickOpenDialog}>
               Tietosuoja
-            </ListItem>
-            <ListItem disablePadding={false} button>
+            </ListItemButton>
+            <ListItemButton onClick={handleClickOpenDialog}>
               Palaute
-            </ListItem>
+            </ListItemButton>
           </List>
         </StyledMenu>
+        {renderDialog()}
       </div>
     </div>
   );
