@@ -42,7 +42,22 @@ import {
   OSM_POINT_LABEL_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
-  OSM_IMAGES,
+  POINT_IMAGES,
+  POINT_CLUSTER_8_SOURCE,
+  POINT_CLUSTER_8_STYLE_CIRCLE,
+  POINT_CLUSTER_8_STYLE_SYMBOL,
+  POINT_CLUSTER_9_SOURCE,
+  POINT_CLUSTER_9_STYLE_CIRCLE,
+  POINT_CLUSTER_9_STYLE_SYMBOL,
+  POINT_CLUSTER_10_SOURCE,
+  POINT_CLUSTER_10_STYLE_CIRCLE,
+  POINT_CLUSTER_10_STYLE_SYMBOL,
+  POINT_CLUSTER_11_SOURCE,
+  POINT_CLUSTER_11_STYLE_CIRCLE,
+  POINT_CLUSTER_11_STYLE_SYMBOL,
+  POINT_CLUSTER_12_SOURCE,
+  POINT_CLUSTER_12_STYLE_CIRCLE,
+  POINT_CLUSTER_12_STYLE_SYMBOL,
   NLS_STYLE_URI,
   NLS_LABEL_STYLE,
   NLS_KUNNAT_LABEL_STYLE,
@@ -77,7 +92,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitPoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
-        zoomThreshold: 13,
+        zoomThreshold: 14,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
           vehicleType
@@ -199,7 +214,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             mapRef.addImage(tuple[0], tuple[1])
           );
           // eslint-disable-next-line
-          OSM_IMAGES.forEach((tuple: any) =>
+          POINT_IMAGES.forEach((tuple: any) =>
             mapRef.addImage(tuple[0], tuple[1])
           );
         });
@@ -251,7 +266,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     [setPopupFeature]
   );
 
-  const lipasFilter = mapFiltersContext.getLipasFilter();
+  const categoryFilter = mapFiltersContext.getCategoryFilter();
 
   return (
     <MapGL
@@ -276,7 +291,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             ...OSM_AREA_STYLE,
             layout: {
               ...(OSM_AREA_STYLE as FillLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
             },
           }}
         />
@@ -290,17 +305,59 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
       {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
-        <Layer {...{ ...LIPAS_LINE_STYLE, filter: lipasFilter }} />
+        <Layer {...{ ...LIPAS_LINE_STYLE, filter: categoryFilter }} />
       </Source>
 
-      {/* Clickable points */}
+      {/* Clusters by zoom level 8-12 */}
+      <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_8_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_8_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+      <Source id={LayerId.PointCluster9} {...POINT_CLUSTER_9_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_9_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_9_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+      <Source id={LayerId.PointCluster10} {...POINT_CLUSTER_10_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_10_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_10_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+      <Source id={LayerId.PointCluster11} {...POINT_CLUSTER_11_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_11_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_11_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+      <Source id={LayerId.PointCluster12} {...POINT_CLUSTER_12_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_12_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_12_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+
+      {/* Single points */}
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer
           {...{
             ...OSM_POINT_LABEL_STYLE,
             layout: {
               ...(OSM_POINT_LABEL_STYLE as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
             },
           }}
         />
@@ -311,7 +368,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             ...OSM_AREA_LABEL_STYLE,
             layout: {
               ...(OSM_AREA_LABEL_STYLE as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("pysakointi"),
+              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
             },
           }}
         />
@@ -369,7 +426,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             layout: {
               ...(ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE as CircleLayer).layout,
               visibility:
-                mapFiltersContext.getVisibilityValue("muinaisjaannokset"),
+                mapFiltersContext.getVisibilityValue("Muinaisjäännökset"),
             },
           }}
         />
@@ -379,7 +436,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             layout: {
               ...(ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL as SymbolLayer).layout,
               visibility:
-                mapFiltersContext.getVisibilityValue("muinaisjaannokset"),
+                mapFiltersContext.getVisibilityValue("Muinaisjäännökset"),
             },
           }}
         />
@@ -405,8 +462,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         />
       </Source>
       <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...{ ...LIPAS_POINT_STYLE_CIRCLE, filter: lipasFilter }} />
-        <Layer {...{ ...LIPAS_POINT_STYLE_SYMBOL, filter: lipasFilter }} />
+        <Layer {...{ ...LIPAS_POINT_STYLE_CIRCLE, filter: categoryFilter }} />
+        <Layer {...{ ...LIPAS_POINT_STYLE_SYMBOL, filter: categoryFilter }} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
@@ -422,7 +479,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
                 ...DIGITRANSIT_POINT_STYLE,
                 layout: {
                   ...(DIGITRANSIT_POINT_STYLE as SymbolLayer).layout,
-                  visibility: mapFiltersContext.getVisibilityValue("pysakit"),
+                  visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
                 },
               }}
             />

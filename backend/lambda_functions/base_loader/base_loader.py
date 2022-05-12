@@ -266,10 +266,22 @@ class BaseLoader:
             # lipas syncher is only used by lipas loader to update extra tables
             self.lipas_syncher.finish(session)
             deleted_items = self.syncher.finish(session)
+            # the data may be included in views that have to be updated
+            self.refresh_views(session)
             session.commit()
         msg = f"{succesful_actions} inserted or updated. {deleted_items} deleted."
         LOGGER.info(msg)
         return msg
+
+    def refresh_views(self, session: Session):
+        """
+        Refresh all materialized database views.
+        """
+        views = session.execute(
+            "select schemaname as schema, matviewname as view from pg_matviews;"
+        )
+        for row in views:
+            session.execute(f"refresh materialized view {row[0]}.{row[1]};")
 
 
 def base_handler(event: Event, loader_cls: type) -> Response:
