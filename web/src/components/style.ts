@@ -142,6 +142,7 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     0.5,
     0.75,
   ],
+  "icon-allow-overlap": true,
 };
 
 /**
