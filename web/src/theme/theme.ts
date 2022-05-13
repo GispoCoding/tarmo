@@ -72,6 +72,18 @@ export default createTheme({
           background: palette.background.default,
         },
 
+        "a": {
+          textDecoration: "none",
+          color: palette.primary.dark,
+          fontWeight: 400,
+        },
+
+        "strong": {
+          fontFamily: "Montserrat, sans-serif",
+          fontWeight: 800,
+          fontSize: 20,
+        },
+
         "#map": {
           width: "100vw",
           height: "100vh",

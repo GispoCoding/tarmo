@@ -135,13 +135,7 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "skiing",
     "info",
   ],
-  "icon-size": [
-    "match",
-    ["string", ["get", "tarmo_category"]],
-    "Muinaisjäännökset",
-    0.5,
-    0.75,
-  ],
+  "icon-size": 0.75,
   "icon-allow-overlap": true,
 };
 
