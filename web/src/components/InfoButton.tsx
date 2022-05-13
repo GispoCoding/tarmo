@@ -1,23 +1,29 @@
-import { InfoOutlined } from "@mui/icons-material";
+import { Close, InfoOutlined } from "@mui/icons-material";
 import {
-  List,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ListItemButton,
   Button,
-  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  List,
+  ListItemButton,
+  useMediaQuery,
 } from "@mui/material";
 import * as React from "react";
+import ReactMarkdown from "react-markdown";
+import feedbackMd from "../../../feedback.md";
+import infoMd from "../../../info.md";
+import licensesMd from "../../../licenses.md";
+import privacyPolicyMd from "../../../privacy-policy.md";
+import theme from "../theme/theme";
 import StyledMenu from "./StyledMenu";
 
 export default function InfoButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [dialogContent, setDialogContent] = React.useState("");
 
   /**
    * Handle click event
@@ -36,11 +42,24 @@ export default function InfoButton() {
   };
 
   /**
-   * Handle click dialog open event
+   * Handle click dialog open
+   * @param content
+   * @returns the corresponding content for the dialog
    */
-  const handleClickOpenDialog = () => {
+  const handleClickOpenDialog = (content: string) => {
     setDialogOpen(true);
-    console.log("Avaa dialogi");
+    switch (content) {
+      case "info":
+        return setDialogContent(infoMd);
+      case "licenses":
+        return setDialogContent(licensesMd);
+      case "privacy-policy":
+        return setDialogContent(privacyPolicyMd);
+      case "feedback":
+        return setDialogContent(feedbackMd);
+      default:
+        return "";
+    }
   };
 
   /**
@@ -54,12 +73,40 @@ export default function InfoButton() {
    * Render dialog
    */
   const renderDialog = () => (
-    <Dialog open={dialogOpen}>
-      <DialogTitle>
-        <Typography>Dialogi</Typography>
-      </DialogTitle>
-      <DialogContent>
-        <Typography>Sisältöä</Typography>
+    <Dialog
+      open={dialogOpen}
+      fullWidth
+      maxWidth="md"
+      fullScreen={fullScreen}
+      onClose={handleCloseDialog}
+      PaperProps={{
+        sx: {
+          backgroundColor: "#ffffffe6",
+          backdropFilter: "blur(4px)",
+        },
+      }}
+    >
+      <IconButton
+        sx={{
+          position: "absolute",
+          right: theme.spacing(2),
+          top: theme.spacing(2),
+        }}
+        onClick={handleCloseDialog}
+      >
+        <Close color="primary" />
+      </IconButton>
+      <DialogContent
+        sx={{
+          "& p:first-child": {
+            mt: 0.5,
+          },
+          "ul": {
+            pl: 2,
+          },
+        }}
+      >
+        <ReactMarkdown>{dialogContent}</ReactMarkdown>
       </DialogContent>
       <DialogActions>
         <Button variant="text" onClick={handleCloseDialog}>
@@ -97,16 +144,18 @@ export default function InfoButton() {
           onClose={handleClose}
         >
           <List>
-            <ListItemButton onClick={handleClickOpenDialog}>
+            <ListItemButton onClick={() => handleClickOpenDialog("info")}>
               Palvelun tiedot
             </ListItemButton>
-            <ListItemButton onClick={handleClickOpenDialog}>
+            <ListItemButton onClick={() => handleClickOpenDialog("licenses")}>
               Lisenssit
             </ListItemButton>
-            <ListItemButton onClick={handleClickOpenDialog}>
+            <ListItemButton
+              onClick={() => handleClickOpenDialog("privacy-policy")}
+            >
               Tietosuoja
             </ListItemButton>
-            <ListItemButton onClick={handleClickOpenDialog}>
+            <ListItemButton onClick={() => handleClickOpenDialog("feedback")}>
               Palaute
             </ListItemButton>
           </List>
