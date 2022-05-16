@@ -8,7 +8,6 @@ import MapGL, {
   MapRef,
   NavigationControl,
   Source,
-  CircleLayer,
   SymbolLayer,
   FillLayer,
 } from "react-map-gl";
@@ -16,21 +15,6 @@ import {
   LayerId,
   LIPAS_LINE_SOURCE,
   LIPAS_LINE_STYLE,
-  LIPAS_POINT_SOURCE,
-  LIPAS_POINT_STYLE_SYMBOL,
-  LIPAS_POINT_STYLE_CIRCLE,
-  WFS_LUONNONMUISTOMERKKI_SOURCE,
-  WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
-  WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
-  WFS_LUONTOPOLKURASTI_SOURCE,
-  WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
-  WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
-  ARCGIS_MUINAISJAANNOS_SOURCE,
-  ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL,
-  ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE,
-  ARCGIS_RKYKOHDE_SOURCE,
-  ARCGIS_RKYKOHDE_STYLE_CIRCLE,
-  ARCGIS_RKYKOHDE_STYLE_SYMBOL,
   SYKE_NATURA_SOURCE,
   SYKE_NATURA_STYLE,
   SYKE_VALTION_SOURCE,
@@ -43,6 +27,9 @@ import {
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   POINT_IMAGES,
+  POINT_SOURCE,
+  POINT_STYLE_SYMBOL,
+  POINT_STYLE_CIRCLE,
   POINT_CLUSTER_8_SOURCE,
   POINT_CLUSTER_8_STYLE_CIRCLE,
   POINT_CLUSTER_8_STYLE_SYMBOL,
@@ -361,7 +348,11 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         />
       </Source>
 
-      {/* Single points */}
+      {/* Points at zoom level 14 and above */}
+      <Source id={LayerId.Point} {...POINT_SOURCE}>
+        <Layer {...{ ...POINT_STYLE_CIRCLE, filter: categoryFilter }} />
+        <Layer {...{ ...POINT_STYLE_SYMBOL, filter: categoryFilter }} />
+      </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer
           {...{
@@ -383,98 +374,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             },
           }}
         />
-      </Source>
-      <Source
-        id={LayerId.WFSLuonnonmuistomerkki}
-        {...WFS_LUONNONMUISTOMERKKI_SOURCE}
-      >
-        <Layer
-          {...{
-            ...WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE,
-            layout: {
-              ...(WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE as CircleLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL,
-            layout: {
-              ...(WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.WFSLuontopolkurasti} {...WFS_LUONTOPOLKURASTI_SOURCE}>
-        <Layer
-          {...{
-            ...WFS_LUONTOPOLKURASTI_STYLE_CIRCLE,
-            layout: {
-              ...(WFS_LUONTOPOLKURASTI_STYLE_CIRCLE as CircleLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...WFS_LUONTOPOLKURASTI_STYLE_SYMBOL,
-            layout: {
-              ...(WFS_LUONTOPOLKURASTI_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Ulkoilureitit"),
-            },
-          }}
-        />
-      </Source>
-      <Source
-        id={LayerId.ArcGisMuinaisjaannos}
-        {...ARCGIS_MUINAISJAANNOS_SOURCE}
-      >
-        <Layer
-          {...{
-            ...ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE,
-            layout: {
-              ...(ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE as CircleLayer).layout,
-              visibility:
-                mapFiltersContext.getVisibilityValue("Muinaisjäännökset"),
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL,
-            layout: {
-              ...(ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility:
-                mapFiltersContext.getVisibilityValue("Muinaisjäännökset"),
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.ArcGisRKYkohde} {...ARCGIS_RKYKOHDE_SOURCE}>
-        <Layer
-          {...{
-            ...ARCGIS_RKYKOHDE_STYLE_CIRCLE,
-            layout: {
-              ...(ARCGIS_RKYKOHDE_STYLE_CIRCLE as CircleLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...ARCGIS_RKYKOHDE_STYLE_SYMBOL,
-            layout: {
-              ...(ARCGIS_RKYKOHDE_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Nähtävyydet"),
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.LipasPoint} {...LIPAS_POINT_SOURCE}>
-        <Layer {...{ ...LIPAS_POINT_STYLE_CIRCLE, filter: categoryFilter }} />
-        <Layer {...{ ...LIPAS_POINT_STYLE_SYMBOL, filter: categoryFilter }} />
       </Source>
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&

@@ -14,18 +14,14 @@ const cityFilterParam = `cityName%20IN%20(${process.env.CITIES})`;
 
 // These layers are clickable and contain external data
 export enum LayerId {
-  LipasPoint = "lipas-points",
   LipasLine = "lipas-lines",
-  WFSLuonnonmuistomerkki = "wfs-luonnonmuistomerkit",
-  WFSLuontopolkurasti = "wfs-luontopolkurastit",
-  ArcGisMuinaisjaannos = "arcgis-muinaisjaannokset",
-  ArcGisRKYkohde = "arcgis-rkykohteet",
   SykeNatura = "syke-natura-alueet",
   SykeValtion = "syke-valtionluonnonsuojelualueet",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
   DigiTransitPoint = "digitransit-points",
+  Point = "points",
   PointCluster8 = "point-clusters-8",
   PointCluster9 = "point-clusters-9",
   PointCluster10 = "point-clusters-10",
@@ -196,16 +192,8 @@ const LINE_PAINT: LinePaint = {
 };
 
 /**
- * Sources for lipas data
+ * Sources for lipas lines
  */
-export const LIPAS_POINT_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.lipas_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20${cityFilterParam}`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
 
 export const LIPAS_LINE_SOURCE: VectorSource = {
   type: "vector",
@@ -217,25 +205,8 @@ export const LIPAS_LINE_SOURCE: VectorSource = {
 };
 
 /**
- * Styles for lipas data
+ * Styles for lipas lines
  */
-export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.LipasPoint,
-  "source": LayerId.LipasPoint,
-  "source-layer": "kooste.lipas_pisteet",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 14,
-};
-
-export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.LipasPoint}-circle`,
-  "source": LayerId.LipasPoint,
-  "source-layer": "kooste.lipas_pisteet",
-  "type": "circle",
-  "paint": CIRCLE_PAINT,
-  "minzoom": 14,
-};
 
 export const LIPAS_LINE_STYLE: LayerProps = {
   "id": LayerId.LipasLine,
@@ -246,127 +217,7 @@ export const LIPAS_LINE_STYLE: LayerProps = {
 };
 
 /**
- * Sources for WFS data
- */
-export const WFS_LUONNONMUISTOMERKKI_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luonnonmuistomerkit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
-
-export const WFS_LUONTOPOLKURASTI_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.tamperewfs_luontopolkurastit/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
-
-/**
- * Styles for WFS data
- */
-export const WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.WFSLuonnonmuistomerkki}-circle`,
-  "source": LayerId.WFSLuonnonmuistomerkki,
-  "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
-  "type": "circle",
-  "paint": CIRCLE_PAINT,
-  "minzoom": 14,
-};
-
-export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.WFSLuonnonmuistomerkki,
-  "source": LayerId.WFSLuonnonmuistomerkki,
-  "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 14,
-};
-
-export const WFS_LUONTOPOLKURASTI_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.WFSLuontopolkurasti}-circle`,
-  "source": LayerId.WFSLuontopolkurasti,
-  "source-layer": "kooste.tamperewfs_luontopolkurastit",
-  "type": "circle",
-  "paint": CIRCLE_PAINT,
-  "minzoom": 14,
-};
-
-export const WFS_LUONTOPOLKURASTI_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.WFSLuontopolkurasti,
-  "source": LayerId.WFSLuontopolkurasti,
-  "source-layer": "kooste.tamperewfs_luontopolkurastit",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 14,
-};
-
-/**
- * Sources for ArcGIS data
- */
-export const ARCGIS_MUINAISJAANNOS_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_muinaisjaannokset/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
-
-export const ARCGIS_RKYKOHDE_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkykohteet/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
-
-/**
- * Styles for ArcGIS data
- */
-export const ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.ArcGisMuinaisjaannos}-circle`,
-  "source": LayerId.ArcGisMuinaisjaannos,
-  "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
-  "type": "circle",
-  "paint": CIRCLE_PAINT,
-  "minzoom": 14,
-};
-
-export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.ArcGisMuinaisjaannos,
-  "source": LayerId.ArcGisMuinaisjaannos,
-  "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 14,
-};
-
-export const ARCGIS_RKYKOHDE_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.ArcGisRKYkohde}-circle`,
-  "source": LayerId.ArcGisRKYkohde,
-  "source-layer": "kooste.museovirastoarcrest_rkykohteet",
-  "type": "circle",
-  "paint": CIRCLE_PAINT,
-  "minzoom": 14,
-};
-
-export const ARCGIS_RKYKOHDE_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.ArcGisRKYkohde,
-  "source": LayerId.ArcGisRKYkohde,
-  "source-layer": "kooste.museovirastoarcrest_rkykohteet",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 14,
-};
-
-/**
- * Sources for Syke data
+ * Sources for Syke areas
  */
 export const SYKE_NATURA_SOURCE: VectorSource = {
   type: "vector",
@@ -387,7 +238,7 @@ export const SYKE_VALTION_SOURCE: VectorSource = {
 };
 
 /**
- * Styles for Syke data
+ * Styles for Syke areas
  */
 export const SYKE_NATURA_STYLE: LayerProps = {
   "id": LayerId.SykeNatura,
@@ -500,7 +351,38 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
 };
 
 /**
- * Point cluster layers by zoom level
+ * Combined point layer at zoom level 14 and above
+ */
+
+export const POINT_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+export const POINT_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.Point,
+  "source": LayerId.Point,
+  "source-layer": "kooste.all_points",
+  "type": "symbol",
+  "layout": SYMBOL_LAYOUT,
+  "minzoom": 14,
+};
+
+export const POINT_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.Point}-circle`,
+  "source": LayerId.Point,
+  "source-layer": "kooste.all_points",
+  "type": "circle",
+  "paint": CIRCLE_PAINT,
+  "minzoom": 14,
+};
+
+/**
+ * Point cluster layers at zoom levels below 14
  */
 const CLUSTER_CIRCLE_PAINT: CirclePaint = {
   // indicate more spread out clusters by increasing the size when zooming in

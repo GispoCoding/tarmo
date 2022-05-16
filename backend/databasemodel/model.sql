@@ -2095,7 +2095,13 @@ select ST_GeometryN(geom,1)::geometry(point,4326) as geom, "cityName", "tarmo_ca
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luonnonmuistomerkit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luontopolkurastit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true;
 
+create index on kooste.all_points ("cityName");
+
 ALTER TABLE kooste.all_points OWNER TO tarmo_read_write;
+
+GRANT SELECT
+   ON TABLE kooste.all_points
+   TO tarmo_read, tarmo_admin;
 
 create function kooste.get_cluster_ids(radius float)
 	returns table(cluster_id int, point_geom geometry, "cityName" text, "tarmo_category" text, table_name text, props jsonb)
