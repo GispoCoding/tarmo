@@ -177,12 +177,18 @@ def assert_data_is_imported(main_db_params):
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20
             )
-            # lipas points should be clustered at levels < 11
+            # cluster layers should be updated
             cur.execute(f"SELECT count(*) FROM kooste.point_clusters_8")
             assert cur.fetchone()[0] > 0
             cur.execute(f"SELECT count(*) FROM kooste.point_clusters_9")
             assert cur.fetchone()[0] > 0
             cur.execute(f"SELECT count(*) FROM kooste.point_clusters_10")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_11")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_12")
+            assert cur.fetchone()[0] > 0
+            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_13")
             assert cur.fetchone()[0] > 0
     finally:
         conn.close()

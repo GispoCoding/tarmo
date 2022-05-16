@@ -421,7 +421,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         {mobile ? (
           <Stack>
             <Typography variant="h4">
-              {properties["size"]
+              {properties["size"] && properties["size"] > 1
                 ? `${properties["size"]} ${getCategoryPlural(
                     properties["tarmo_category"]
                   )}`
@@ -433,7 +433,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           <Fade in={open}>
             <Stack>
               <Typography variant="h4">
-                {properties["size"]
+                {properties["size"] && properties["size"] > 1
                   ? `${properties["size"]} ${getCategoryPlural(
                       properties["tarmo_category"]
                     )}`

@@ -58,6 +58,9 @@ import {
   POINT_CLUSTER_12_SOURCE,
   POINT_CLUSTER_12_STYLE_CIRCLE,
   POINT_CLUSTER_12_STYLE_SYMBOL,
+  POINT_CLUSTER_13_SOURCE,
+  POINT_CLUSTER_13_STYLE_CIRCLE,
+  POINT_CLUSTER_13_STYLE_SYMBOL,
   NLS_STYLE_URI,
   NLS_LABEL_STYLE,
   NLS_KUNNAT_LABEL_STYLE,
@@ -347,6 +350,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         />
         <Layer
           {...{ ...POINT_CLUSTER_12_STYLE_SYMBOL, filter: categoryFilter }}
+        />
+      </Source>
+      <Source id={LayerId.PointCluster13} {...POINT_CLUSTER_13_SOURCE}>
+        <Layer
+          {...{ ...POINT_CLUSTER_13_STYLE_CIRCLE, filter: categoryFilter }}
+        />
+        <Layer
+          {...{ ...POINT_CLUSTER_13_STYLE_SYMBOL, filter: categoryFilter }}
         />
       </Source>
 

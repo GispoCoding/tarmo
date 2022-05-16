@@ -6,7 +6,7 @@ import psycopg2
 def assert_database_is_alright(
     cur: psycopg2.extensions.cursor,
     expected_kooste_count: int = 16,
-    expected_matview_count: int = 5,
+    expected_matview_count: int = 7,
 ):
     cur.execute(
         "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"

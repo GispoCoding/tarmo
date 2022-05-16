@@ -31,6 +31,7 @@ export enum LayerId {
   PointCluster10 = "point-clusters-10",
   PointCluster11 = "point-clusters-11",
   PointCluster12 = "point-clusters-12",
+  PointCluster13 = "point-clusters-13",
 }
 
 // These are just labels on top of NLS background style
@@ -224,7 +225,7 @@ export const LIPAS_POINT_STYLE_SYMBOL: LayerProps = {
   "source-layer": "kooste.lipas_pisteet",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
@@ -233,7 +234,7 @@ export const LIPAS_POINT_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.lipas_pisteet",
   "type": "circle",
   "paint": CIRCLE_PAINT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 export const LIPAS_LINE_STYLE: LayerProps = {
@@ -274,7 +275,7 @@ export const WFS_LUONNONMUISTOMERKKI_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
   "type": "circle",
   "paint": CIRCLE_PAINT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
@@ -283,7 +284,7 @@ export const WFS_LUONNONMUISTOMERKKI_STYLE_SYMBOL: LayerProps = {
   "source-layer": "kooste.tamperewfs_luonnonmuistomerkit",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 export const WFS_LUONTOPOLKURASTI_STYLE_CIRCLE: LayerProps = {
@@ -292,7 +293,7 @@ export const WFS_LUONTOPOLKURASTI_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.tamperewfs_luontopolkurastit",
   "type": "circle",
   "paint": CIRCLE_PAINT,
-  "minzoom": 13,
+  "minzoom": 14,
 };
 
 export const WFS_LUONTOPOLKURASTI_STYLE_SYMBOL: LayerProps = {
@@ -301,7 +302,7 @@ export const WFS_LUONTOPOLKURASTI_STYLE_SYMBOL: LayerProps = {
   "source-layer": "kooste.tamperewfs_luontopolkurastit",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
-  "minzoom": 13,
+  "minzoom": 14,
 };
 
 /**
@@ -334,7 +335,7 @@ export const ARCGIS_MUINAISJAANNOS_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
   "type": "circle",
   "paint": CIRCLE_PAINT,
-  "minzoom": 13,
+  "minzoom": 14,
 };
 
 export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
@@ -343,7 +344,7 @@ export const ARCGIS_MUINAISJAANNOS_STYLE_SYMBOL: LayerProps = {
   "source-layer": "kooste.museovirastoarcrest_muinaisjaannokset",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
-  "minzoom": 13,
+  "minzoom": 14,
 };
 
 export const ARCGIS_RKYKOHDE_STYLE_CIRCLE: LayerProps = {
@@ -352,7 +353,7 @@ export const ARCGIS_RKYKOHDE_STYLE_CIRCLE: LayerProps = {
   "source-layer": "kooste.museovirastoarcrest_rkykohteet",
   "type": "circle",
   "paint": CIRCLE_PAINT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 export const ARCGIS_RKYKOHDE_STYLE_SYMBOL: LayerProps = {
@@ -361,7 +362,7 @@ export const ARCGIS_RKYKOHDE_STYLE_SYMBOL: LayerProps = {
   "source-layer": "kooste.museovirastoarcrest_rkykohteet",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
-  "minzoom": 11,
+  "minzoom": 14,
 };
 
 /**
@@ -501,16 +502,33 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
 /**
  * Point cluster layers by zoom level
  */
-const CLUSTER_CIRCLE_PAINT = {
-  // we want clusters to be more imposing, if not outright humongous
+const CLUSTER_CIRCLE_PAINT: CirclePaint = {
+  // indicate more spread out clusters by increasing the size when zooming in
   ...CIRCLE_PAINT,
-  "circle-radius": 1.7 * circleRadius,
+  "circle-radius": [
+    "interpolate",
+    ["linear"],
+    ["zoom"],
+    8,
+    ["match", ["number", ["get", "size"]], 1, circleRadius, 1.2 * circleRadius],
+    13,
+    ["match", ["number", ["get", "size"]], 1, circleRadius, 2 * circleRadius],
+  ],
+  "circle-opacity": [
+    "interpolate",
+    ["linear"],
+    ["zoom"],
+    8,
+    ["match", ["number", ["get", "size"]], 1, 0.9, 0.9],
+    13,
+    ["match", ["number", ["get", "size"]], 1, 0.9, 0.7],
+  ],
 };
 
 export const POINT_CLUSTER_8_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.point_clusters_8/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_8/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 2,
   maxzoom: 9,
@@ -539,7 +557,7 @@ export const POINT_CLUSTER_8_STYLE_SYMBOL: LayerProps = {
 export const POINT_CLUSTER_9_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.point_clusters_9/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_9/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 9,
   maxzoom: 10,
@@ -568,7 +586,7 @@ export const POINT_CLUSTER_9_STYLE_SYMBOL: LayerProps = {
 export const POINT_CLUSTER_10_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.point_clusters_10/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_10/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 10,
   maxzoom: 11,
@@ -597,7 +615,7 @@ export const POINT_CLUSTER_10_STYLE_SYMBOL: LayerProps = {
 export const POINT_CLUSTER_11_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.point_clusters_11/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_11/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 11,
   maxzoom: 12,
@@ -626,7 +644,7 @@ export const POINT_CLUSTER_11_STYLE_SYMBOL: LayerProps = {
 export const POINT_CLUSTER_12_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.point_clusters_12/{z}/{x}/{y}.pbf?filter=deleted=false%20AND%20visibility=true%20AND%20${cityFilterParam}`,
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_12/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 12,
   maxzoom: 13,
@@ -650,6 +668,35 @@ export const POINT_CLUSTER_12_STYLE_SYMBOL: LayerProps = {
   "layout": SYMBOL_LAYOUT,
   "minzoom": 12,
   "maxzoom": 13,
+};
+
+export const POINT_CLUSTER_13_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.point_clusters_13/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
+  ],
+  minzoom: 13,
+  maxzoom: 14,
+};
+
+export const POINT_CLUSTER_13_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.PointCluster13}-circle`,
+  "source": LayerId.PointCluster13,
+  "source-layer": "kooste.point_clusters_13",
+  "type": "circle",
+  "paint": CLUSTER_CIRCLE_PAINT,
+  "minzoom": 13,
+  "maxzoom": 14,
+};
+
+export const POINT_CLUSTER_13_STYLE_SYMBOL: LayerProps = {
+  "id": `${LayerId.PointCluster13}`,
+  "source": LayerId.PointCluster13,
+  "source-layer": "kooste.point_clusters_13",
+  "type": "symbol",
+  "layout": SYMBOL_LAYOUT,
+  "minzoom": 13,
+  "maxzoom": 14,
 };
 
 /**
