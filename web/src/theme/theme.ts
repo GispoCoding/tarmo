@@ -120,6 +120,12 @@ export default createTheme({
           marginLeft: "auto",
           flexWrap: "nowrap",
           alignItems: "flex-end",
+          [breakpoints.down("md")]: {
+            top: 60,
+          },
+          [breakpoints.up("md")]: {
+            top: 0,
+          },
         },
 
         ".mapboxgl-ctrl-group button, .maplibregl-ctrl-group button": {
