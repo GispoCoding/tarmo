@@ -89,16 +89,21 @@ const categories: Category[] = [
 /**
  * Styled wrapper component
  */
-const Wrapper = styled(Box)(() => ({
+const Wrapper = styled(Box)(({ theme }) => ({
   display: "block",
   position: "fixed",
   left: 0,
-  top: 0,
   right: 0,
   height: "auto",
   backgroundColor: "#fbfbfb90",
   backdropFilter: "blur(4px)",
   boxShadow: shadows[10],
+  [theme.breakpoints.down("md")]: {
+    top: 0,
+  },
+  [theme.breakpoints.up("md")]: {
+    bottom: 0,
+  },
 }));
 
 /**
