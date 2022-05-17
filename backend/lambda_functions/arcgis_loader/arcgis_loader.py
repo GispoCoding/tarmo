@@ -15,6 +15,7 @@ from shapely.geometry import (
 from sqlalchemy.types import BOOLEAN, DATE
 
 from .base_loader import (
+    LOGGER,
     BaseLoader,
     Event,
     FeatureCollection,
@@ -66,6 +67,7 @@ class ArcGisLoader(BaseLoader):
                 self.layers_to_include[metadata_table] = self.metadata_row[
                     metadata_table
                 ].layers_to_include
+        LOGGER.debug("ArcGIS loader initialized")
 
     def get_arcgis_query_params(self) -> dict:
         params = {
@@ -84,6 +86,7 @@ class ArcGisLoader(BaseLoader):
             params["geometry"] = json.dumps(
                 {"x": self.point_of_interest.x, "y": self.point_of_interest.y}
             )
+        LOGGER.debug(f"ArcGIS query params: {params}")
         return params
 
     def get_arcgis_service_url(self, arcgis_url: str, service_name: str) -> str:
@@ -147,7 +150,19 @@ class ArcGisLoader(BaseLoader):
                 r = requests.get(
                     self.get_arcgis_service_url(url, service_name), headers=self.HEADERS
                 )
-                r.raise_for_status()
+                # Some arcgis services might be down for maintenance. Don't let this
+                # get in the way of importing other data.
+                if r.status_code == 503:
+                    LOGGER.warn(
+                        f"ArcGIS service {url}/{service_name} is down at the "
+                        "moment. Skipping this service."
+                    )
+                    continue
+                else:
+                    r.raise_for_status()
+                LOGGER.debug(
+                    f"Service {url}/{service_name} reached, querying layers..."
+                )
                 layer_list = r.json()["layers"]
                 for layer_name in layers:
                     layer_id = [
@@ -155,12 +170,14 @@ class ArcGisLoader(BaseLoader):
                         for layer in layer_list
                         if layer["name"] == layer_name
                     ][0]
+                    LOGGER.debug(f"Querying layer {layer_name}...")
                     r = requests.get(
                         self.get_arcgis_query_url(url, service_name, layer_id),
                         params=params,
                         headers=self.HEADERS,
                     )
                     r.raise_for_status()
+                    LOGGER.debug(f"Got results for layer {layer_name}...")
                     result = r.json()
                     layer_features = result["features"]
                     geometry_type = result["geometryType"]

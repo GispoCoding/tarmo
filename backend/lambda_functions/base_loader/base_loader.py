@@ -185,6 +185,7 @@ class BaseLoader:
                         self.api_url[metadata_table] = self.metadata_row[  # type: ignore # noqa
                             metadata_table
                         ].url
+        LOGGER.info("Base loader initialized")
 
     def get_features(
         self, only_page: Optional[int] = None
@@ -301,6 +302,7 @@ def base_handler(event: Event, loader_cls: type) -> Response:
             point_radius=event.get("radius", None),
         )
         features = []
+        LOGGER.info("Getting features...")
         if "pages" in event and event["pages"] is not None:
             for page in event["pages"]:
                 features += loader.get_features(page)
