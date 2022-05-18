@@ -19,6 +19,9 @@ update-wfs-loader:
 update-arcgis-loader:
 	aws lambda update-function-code --function-name arcgis_loader --zip-file fileb://../backend/lambda_functions/arcgis_loader.zip
 
+update-tileserver:
+	aws ecs update-service --cluster tarmo-pg_tileserv --service pg_tileserv --force-new-deployment
+
 log-db-manager:
 	aws logs tail "/aws/lambda/db_manager"
 
@@ -33,6 +36,12 @@ log-wfs:
 
 log-arcgis:
 	aws logs tail "/aws/lambda/arcgis_loader"
+
+log-tileserver:
+	aws logs tail "/aws/ecs/tarmo-pg_tileserv"
+
+log-db:
+	aws logs tail "/aws/rds/instance/tarmodb/postgresql"
 
 ## Commands to invoke lambda functions
 create-db:

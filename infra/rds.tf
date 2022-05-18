@@ -13,6 +13,7 @@ resource "aws_db_instance" "main_db" {
   identifier             = "tarmodb"
   instance_class         = var.db_instance_type
   allocated_storage      = var.db_storage
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   engine                 = "postgres"
   engine_version         = var.db_postgres_version
   username               = var.su_secrets.username

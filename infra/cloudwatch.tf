@@ -22,6 +22,18 @@ resource "aws_cloudwatch_log_group" "lambda_wfs" {
   tags              = local.default_tags
 }
 
+resource "aws_cloudwatch_log_group" "lambda_arcgis" {
+  name              = "/aws/lambda/${aws_lambda_function.arcgis_loader.function_name}"
+  retention_in_days = 30
+  tags              = local.default_tags
+}
+
+resource "aws_cloudwatch_log_group" "tarmo_tileserver" {
+  name              = "/aws/ecs/${aws_ecs_task_definition.pg_tileserv.family}"
+  retention_in_days = 30
+  tags              = local.default_tags
+}
+
 resource "aws_cloudwatch_event_rule" "lambda_lipas" {
   name        = "Tarmo-lambda-lipas-update"
   description = "Run lipas import every night"

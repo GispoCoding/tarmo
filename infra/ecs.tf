@@ -30,9 +30,18 @@ resource "aws_ecs_task_definition" "pg_tileserv" {
       memory       = var.pg_tileserv_memory
       mountPoints  = []
       volumesFrom  = []
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "/aws/ecs/tarmo-pg_tileserv"
+          awslogs-region = var.AWS_REGION_NAME
+          awslogs-stream-prefix = "ecs"
+        }
+      }
       essential    = true
       portMappings = [
         {
+          hostPort = var.pg_tileserv_port
           # This port is the same that the contained application also uses
           containerPort = var.pg_tileserv_port
           protocol      = "tcp"
