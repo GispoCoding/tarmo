@@ -12,8 +12,6 @@ import {
   PhoneOutlined,
   PlaceOutlined,
   Public,
-  UnfoldLess,
-  UnfoldMore,
   WbSunnyRounded,
 } from "@mui/icons-material";
 import {
@@ -25,9 +23,6 @@ import {
   IconButton,
   Link,
   List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   MobileStepper,
   Stack,
   styled,
@@ -99,17 +94,6 @@ const SliderContent = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     paddingBottom: theme.spacing(7),
   },
-}));
-
-/**
- * Styled collapse control container
- */
-const CollapseControlContainer = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  width: sliderWidth,
-  backgroundColor: `${theme.palette.primary.dark}b3`,
 }));
 
 export default function InfoSlider({ popupInfo }: PopupProps) {
@@ -459,24 +443,10 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     return (
       <SliderContent>
         {slides.map((slide, index) => (
-          <Fade in={open} key={index}>
-            <Box mb={3}>{slide}</Box>
-          </Fade>
+          <Box mb={3} key={index}>
+            {slide}
+          </Box>
         ))}
-        <CollapseControlContainer>
-          <ListItemButton sx={{ pl: 3 }} onClick={toggleDrawer}>
-            <ListItemIcon>
-              {open ? (
-                <UnfoldLess sx={{ transform: "rotate(90deg)" }} />
-              ) : (
-                <UnfoldMore sx={{ transform: "rotate(90deg)" }} />
-              )}
-            </ListItemIcon>
-            <Fade in={open}>
-              <ListItemText color="inherit" primary="Pienennä paneeli" />
-            </Fade>
-          </ListItemButton>
-        </CollapseControlContainer>
       </SliderContent>
     );
   };
