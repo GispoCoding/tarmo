@@ -11,7 +11,7 @@ test-lipas:
 	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 10}'
 
 test-osm:
-	@echo "Loading OSM data..."
+	@echo "Loading Open Street Map data..."
 	curl -XPOST "http://localhost:8082/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 10}'
 
 test-wfs:
