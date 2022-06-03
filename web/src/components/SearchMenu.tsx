@@ -1,13 +1,16 @@
+import { Close } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Avatar,
   Box,
-  Paper,
+  Fade,
+  IconButton,
   InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Paper,
   styled,
   TextField,
 } from "@mui/material";
@@ -66,6 +69,13 @@ export default function SearchMenu(props: SearchMenuProps) {
    */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.stringSetter(event.target.value);
+  };
+
+  /**
+   * Search input clear handler
+   */
+  const handleClear = () => {
+    props.stringSetter("");
   };
 
   /**
@@ -156,9 +166,9 @@ export default function SearchMenu(props: SearchMenuProps) {
         <WithDebounce
           value={props.searchString}
           onChange={handleChange}
-          component={props => (
+          component={inputProps => (
             <TextField
-              {...props}
+              {...inputProps}
               variant="standard"
               sx={{ width: "100%" }}
               placeholder="Hae kohdetta"
@@ -166,6 +176,20 @@ export default function SearchMenu(props: SearchMenuProps) {
                 startAdornment: (
                   <InputAdornment position="start">
                     <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Fade in={!!props.searchString}>
+                      <IconButton
+                        size="small"
+                        aria-label="tyhjennä haku"
+                        title="Tyhjennä haku"
+                        onClick={handleClear}
+                      >
+                        <Close />
+                      </IconButton>
+                    </Fade>
                   </InputAdornment>
                 ),
               }}
