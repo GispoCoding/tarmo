@@ -586,15 +586,15 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       <Layer {...NLS_LUONNONPUISTOT_LABEL_STYLE} />
       <Layer {...NLS_TIET_LABEL_STYLE} />
 
+      <SearchMenu
+        searchString={searchString}
+        searchResults={searchResults}
+        stringSetter={setSearchString}
+        selectedSetter={setSelected}
+      />
       <FullscreenControl />
       {showNav && (
         <>
-          <SearchMenu
-            searchString={searchString}
-            searchResults={searchResults}
-            stringSetter={setSearchString}
-            selectedSetter={setSelected}
-          />
           <LayerPicker setter={setLayer} />
           <InfoButton />
           <NavigationControl />

@@ -1,11 +1,22 @@
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Avatar,
+  Box,
+  Paper,
+  InputAdornment,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  TextField,
+} from "@mui/material";
+import { GeoJsonProperties } from "geojson";
 import * as React from "react";
 import { MapboxGeoJSONFeature } from "react-map-gl";
-import { IconButton, List, ListItem, Stack, styled } from "@mui/material";
-import { TextField, Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { GeoJsonProperties } from "geojson";
-import StyledMenu from "./StyledMenu";
-import { getCategoryIcon } from "../utils";
+import theme from "../theme/theme";
+import { getCategoryColor, getCategoryIcon } from "../utils";
+import WithDebounce from "./WithDebounce";
 
 interface SearchMenuProps {
   searchString: string;
@@ -18,104 +29,151 @@ interface SearchMenuProps {
  * Styled menu component for search field and results
  */
 export default function SearchMenu(props: SearchMenuProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [selectedResult, setSelectedResult] = React.useState(0);
 
   /**
-   * Handle click event
-   * @param event
+   * Search result container
    */
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  /**
-   * Handle menu close event
-   * @param event
-   */
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  /**
-   * Search result wrapper
-   */
-  const SearchResult = styled(ListItem)(({ theme }) => ({
-    backgroundColor: `${theme.palette.primary.dark}b3`,
-    flex: 1,
-    cursor: "pointer",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+  const SearchContainer = styled(Paper)(({ theme }) => ({
+    position: "absolute",
+    top: 72,
+    right: theme.spacing(8),
+    backgroundColor: `${theme.palette.background.paper}e6`,
+    borderRadius: 24,
+    width: "calc(100% - 80px)",
+    backdropFilter: "blur(4px)",
     [theme.breakpoints.up("md")]: {
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
+      top: 12,
+      width: 400,
     },
   }));
 
   /**
+   * Search result list
+   *
+   * TODO: create a hook to get the window height and set the height accordingly
+   * Might need to consider using a full screen dialog since this approach might not be so elegant for mobile use
+   */
+  const ResultList = styled(List)(() => ({
+    maxHeight: 400,
+    overflow: "auto",
+    WebkitOverflowScrolling: "touch", // iOS momentum scrolling
+  }));
+
+  /**
+   * Search input handler
+   * @param event
+   */
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.stringSetter(event.target.value);
+  };
+
+  /**
+   * Search result click handler
+   * @param result
+   * @param index
+   */
+  const handleResultClick = (result: string, index: number) => {
+    props.selectedSetter(result);
+    setSelectedResult(index);
+  };
+
+  /**
    * Render search result
    */
-  const renderResult = (properties: GeoJsonProperties) => (
-    <Stack direction="row" alignItems="center" spacing={2}>
-      {getCategoryIcon(properties!["tarmo_category"]) && (
-        <img
-          alt={properties!["tarmo_category"]}
-          style={{ width: 45, height: 45 }}
-          src={getCategoryIcon(properties!["tarmo_category"])}
+  const renderResult = (properties: GeoJsonProperties) => {
+    if (!properties) {
+      return null;
+    }
+
+    const categoryColor = getCategoryColor(properties["tarmo_category"]);
+    return (
+      <>
+        {getCategoryIcon(properties["tarmo_category"]) && (
+          <ListItemIcon sx={{ mr: 2 }}>
+            <Avatar
+              sx={{
+                backgroundColor: categoryColor
+                  ? categoryColor
+                  : theme.palette.primary.main,
+              }}
+            >
+              <img
+                alt={properties["tarmo_category"]}
+                style={{ width: 25, height: 25 }}
+                src={getCategoryIcon(properties["tarmo_category"])}
+              />
+            </Avatar>
+          </ListItemIcon>
+        )}
+        <ListItemText
+          primary={properties ? properties["name"] : "Nimeä ei löydy"}
+          secondary={properties ? properties["type_name"] : "Tyyppiä ei löydy"}
         />
-      )}
-      (
-      <Stack>
-        <Typography variant="h4">{properties!["name"]}</Typography>
-        <Typography variant="body2">{properties!["type_name"]}</Typography>
-      </Stack>
-    </Stack>
-  );
+      </>
+    );
+  };
+
+  /**
+   * Render result list
+   */
+  const renderResultList = () => {
+    const results = Array.from(props.searchResults.entries());
+
+    if (!props.searchResults || !props.searchString) {
+      return null;
+    }
+
+    if (props.searchString && results.length < 1) {
+      return (
+        <ResultList disablePadding>
+          <ListItemButton disabled>
+            <ListItemText primary="Hakusanallasi ei löytynyt kohteita." />
+          </ListItemButton>
+        </ResultList>
+      );
+    }
+
+    return (
+      <ResultList disablePadding>
+        {results.map((result, index) => (
+          <ListItemButton
+            selected={selectedResult === index}
+            dense
+            key={result[0]}
+            onClick={() => handleResultClick(result[0], index)}
+          >
+            {renderResult(result[1].properties)}
+          </ListItemButton>
+        ))}
+      </ResultList>
+    );
+  };
 
   return (
-    <div className="maplibregl-ctrl-top-right mapboxgl-ctrl-top-right">
-      <div className="tarmo-button-wrapper">
-        <div className="maplibregl-ctrl maplibregl-ctrl-group mapboxgl-ctrl mapboxgl-ctrl-group">
-          <IconButton
-            id="search-button"
-            aria-controls={open ? "search-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            title="Hae kohteita"
-            onClick={handleClick}
-          >
-            <SearchIcon color={open ? "secondary" : "primary"} />
-          </IconButton>
-          <StyledMenu
-            id="search-menu"
-            aria-labelledby="search menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
+    <SearchContainer elevation={6}>
+      <Box sx={{ pl: 2, pr: 2 }}>
+        <WithDebounce
+          value={props.searchString}
+          onChange={handleChange}
+          component={props => (
             <TextField
-              value={props.searchString}
-              onChange={ev => props.stringSetter(ev.target.value)}
+              {...props}
+              variant="standard"
+              sx={{ width: "100%" }}
+              placeholder="Hae kohdetta"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
-            {props.searchResults && (
-              <List>
-                {Array.from(props.searchResults.entries()).map(result => (
-                  <SearchResult
-                    key={result[0]}
-                    onClick={ev => props.selectedSetter(result[0])}
-                  >
-                    {renderResult(result[1].properties)}
-                  </SearchResult>
-                ))}
-              </List>
-            )}
-          </StyledMenu>
-        </div>
-      </div>
-    </div>
+          )}
+        />
+      </Box>
+      {renderResultList()}
+    </SearchContainer>
   );
 }
