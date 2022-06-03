@@ -280,5 +280,12 @@ export default createTheme({
         },
       },
     },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          minHeight: 40,
+        },
+      },
+    },
   },
 });
