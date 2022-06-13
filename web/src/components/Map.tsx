@@ -25,6 +25,7 @@ import {
   OSM_POINT_SOURCE,
   OSM_POINT_LABEL_STYLE,
   DIGITRANSIT_POINT_STYLE,
+  DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   POINT_IMAGES,
   POINT_SOURCE,
@@ -82,7 +83,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitPoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
-        zoomThreshold: 14,
+        zoomThreshold: 12,
+        reload: true,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
           vehicleType
@@ -98,6 +100,23 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           }
         }
       }`,
+      },
+    ],
+    [
+      LayerId.DigiTransitBikePoint,
+      {
+        url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        zoomThreshold: 12,
+        reload: false,
+        gqlQuery: `{
+          bikeRentalStations {
+            stationId
+            name
+            lat
+            lon
+            bikesAvailable
+          }
+        }`,
       },
     ],
   ]);
@@ -121,6 +140,10 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       "User-Agent": "TARMO - Tampere Mobilemap",
     };
     externalSources.forEach((value, key) => {
+      // Do not reload if data does not need to be updated
+      if (!value.reload && externalData && externalData.get(key)) {
+        return;
+      }
       const url = value.url;
       let query = value.gqlQuery ? value.gqlQuery : "";
       if (bounds && query && zoom > value.zoomThreshold) {
@@ -375,6 +398,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           }}
         />
       </Source>
+
+      {/* External data layers */}
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
         // eslint-disable-next-line
@@ -389,6 +414,27 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
                 ...DIGITRANSIT_POINT_STYLE,
                 layout: {
                   ...(DIGITRANSIT_POINT_STYLE as SymbolLayer).layout,
+                  visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
+                },
+              }}
+            />
+          </Source>
+        )}
+      {externalData &&
+        externalData.get(LayerId.DigiTransitBikePoint) &&
+        // eslint-disable-next-line
+        zoom >
+          externalSources.get(LayerId.DigiTransitBikePoint)!.zoomThreshold && (
+          <Source
+            id={LayerId.DigiTransitBikePoint}
+            type="geojson"
+            data={externalData.get(LayerId.DigiTransitBikePoint)}
+          >
+            <Layer
+              {...{
+                ...DIGITRANSIT_BIKE_POINT_STYLE,
+                layout: {
+                  ...(DIGITRANSIT_BIKE_POINT_STYLE as SymbolLayer).layout,
                   visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
                 },
               }}

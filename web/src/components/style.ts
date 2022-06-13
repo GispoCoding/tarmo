@@ -21,6 +21,7 @@ export enum LayerId {
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
   DigiTransitPoint = "digitransit-points",
+  DigiTransitBikePoint = "digitransit-bike-points",
   Point = "points",
   PointCluster8 = "point-clusters-8",
   PointCluster9 = "point-clusters-9",
@@ -347,7 +348,17 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
   layout: {
     "icon-image": ["get", "type"],
   },
-  minzoom: 14,
+  minzoom: 12,
+};
+export const DIGITRANSIT_BIKE_POINT_STYLE: LayerProps = {
+  id: LayerId.DigiTransitBikePoint,
+  source: LayerId.DigiTransitBikePoint,
+  type: "symbol",
+  layout: {
+    "icon-image": "bike",
+    "icon-allow-overlap": true,
+  },
+  minzoom: 12,
 };
 
 /**

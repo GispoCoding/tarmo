@@ -35,7 +35,7 @@ import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
-import { PopupInfo } from "../types";
+import { PopupInfo, gqlPattern } from "../types";
 import { getCategoryIcon, getCategoryPlural } from "../utils";
 import PropertyListItem from "./PropertyListItem";
 
@@ -187,7 +187,9 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
       properties["climbingWallWidthM"] ||
       properties["holesCount"] ||
       properties["restPlacesCount"] ||
-      properties["trackLengthM"]
+      properties["trackLengthM"] ||
+      properties["bikesAvailable"] ||
+      properties["patterns"]
     ) {
       return (
         <Stack spacing={1}>
@@ -237,6 +239,23 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               <Typography>
                 Pituus: {Math.trunc(properties["trackLengthM"])}m
               </Typography>
+            </Stack>
+          )}
+          {properties["bikesAvailable"] && (
+            <Typography>
+              Vapaita kaupunkipyöriä: {properties["bikesAvailable"]}
+            </Typography>
+          )}
+          {properties["patterns"] && (
+            <Stack direction="column">
+              {JSON.parse(properties["patterns"]).map(
+                (value: gqlPattern, index: number) => (
+                  <Typography key={index}>
+                    <strong>{value["route"]["shortName"]}</strong>{" "}
+                    {value["headsign"]}
+                  </Typography>
+                )
+              )}
             </Stack>
           )}
         </Stack>

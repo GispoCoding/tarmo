@@ -1,5 +1,5 @@
 import { FeatureCollection, Feature } from "geojson";
-import { gqlFeature, gqlResponse, stopType } from "./types";
+import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "./types";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -13,7 +13,7 @@ export const buildQuery = (
   return gqlQuery;
 };
 
-export const parseFeature = (gqlFeature: gqlFeature): Feature => {
+export const parseStop = (gqlFeature: gqlStop): Feature => {
   // we have to be a bit creative to find out the stop type in Tampere
   let type: stopType = stopType.Bus;
   let tarmo_category = "Bussipysäkki";
@@ -50,12 +50,45 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
   };
 };
 
+export const parseBikeStation = (gqlFeature: gqlBikeStation): Feature => {
+  const type: stopType = stopType.Bike;
+  const tarmo_category = "Kaupunkipyöräasema";
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Point",
+      coordinates: [gqlFeature.lon, gqlFeature.lat],
+    },
+    properties: {
+      stationId: gqlFeature.stationId,
+      name: gqlFeature.name,
+      type: type,
+      bikesAvailable: gqlFeature.bikesAvailable,
+      tarmo_category: tarmo_category,
+      type_name: tarmo_category,
+    },
+  };
+};
+
 export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
   // convert GraphQL response to GeoJSON for Maplibre
-  const features = gqlResponse.data.stopsByBbox;
+  const stops = gqlResponse.data.stopsByBbox;
+  if (stops) {
+    return {
+      type: "FeatureCollection",
+      features: stops.map(parseStop),
+    };
+  }
+  const bikeStations = gqlResponse.data.bikeRentalStations;
+  if (bikeStations) {
+    return {
+      type: "FeatureCollection",
+      features: bikeStations.map(parseBikeStation),
+    };
+  }
   return {
     type: "FeatureCollection",
-    features: features.map(parseFeature),
+    features: [],
   };
 };
 
