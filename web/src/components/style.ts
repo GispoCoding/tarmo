@@ -6,7 +6,7 @@ import {
   SymbolLayout,
   VectorSource,
 } from "mapbox-gl";
-import { getCategoryIcon } from "../utils";
+import { getCategoryColor, getCategoryIcon } from "../utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 
@@ -29,6 +29,7 @@ export enum LayerId {
   PointCluster11 = "point-clusters-11",
   PointCluster12 = "point-clusters-12",
   PointCluster13 = "point-clusters-13",
+  Search = "search",
 }
 
 // These are just labels on top of NLS background style
@@ -146,27 +147,27 @@ const CIRCLE_PAINT: CirclePaint = {
     "match",
     ["string", ["get", "tarmo_category"]],
     "Pyöräily",
-    "#e8b455",
+    getCategoryColor("Pyöräily"),
     "Luistelu",
-    "#29549a",
+    getCategoryColor("Luistelu"),
     "Uinti",
-    "#39a7d7",
+    getCategoryColor("Uinti"),
     "Ulkoiluaktiviteetit",
-    "#397368",
+    getCategoryColor("Ulkoiluaktiviteetit"),
     "Ulkoilupaikat",
-    "#397368",
+    getCategoryColor("Ulkoilupaikat"),
     "Ulkoilureitit",
-    "#397368",
+    getCategoryColor("Ulkoilureitit"),
     "Laavut, majat, ruokailu",
-    "#ae1e20",
+    getCategoryColor("Laavut, majat, ruokailu"),
     "Vesillä ulkoilu",
-    "#39a7d7",
+    getCategoryColor("Vesillä ulkoilu"),
     "Hiihto",
-    "#5390b5",
+    getCategoryColor("Hiihto"),
     "Nähtävyydet",
-    "#7361A2",
+    getCategoryColor("Nähtävyydet"),
     "Muinaisjäännökset",
-    "#00417d",
+    getCategoryColor("Muinaisjäännökset"),
     palette.primary.dark,
   ],
   "circle-opacity": 0.9,
@@ -181,13 +182,13 @@ const LINE_PAINT: LinePaint = {
     "match",
     ["string", ["get", "tarmo_category"]],
     "Pyöräily",
-    "#e8b455",
+    getCategoryColor("Pyöräily"),
     "Ulkoilureitit",
-    "#397368",
+    getCategoryColor("Ulkoilureitit"),
     "Vesillä ulkoilu",
-    "#39a7d7",
+    getCategoryColor("Vesillä ulkoilu"),
     "Hiihto",
-    "#5390b5",
+    getCategoryColor("Hiihto"),
     palette.primary.dark,
   ],
 };
@@ -393,6 +394,36 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
 };
 
 /**
+ * Dynamic search point layer. Maxzoom defines the size of the tile
+ * used to search for the input string when zoomed in.
+ */
+
+export const SEARCH_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20name%20ILIKE%20`,
+  ],
+  minzoom: 0,
+  maxzoom: 6,
+};
+
+export const SEARCH_STYLE_SYMBOL: LayerProps = {
+  "id": LayerId.Search,
+  "source": LayerId.Search,
+  "source-layer": "kooste.all_points",
+  "type": "symbol",
+  "layout": SYMBOL_LAYOUT,
+};
+
+export const SEARCH_STYLE_CIRCLE: LayerProps = {
+  "id": `${LayerId.Search}-circle`,
+  "source": LayerId.Search,
+  "source-layer": "kooste.all_points",
+  "type": "circle",
+  "paint": CIRCLE_PAINT,
+};
+
+/**
  * Point cluster layers at zoom levels below 14
  */
 const CLUSTER_CIRCLE_PAINT: CirclePaint = {
@@ -424,7 +455,7 @@ export const POINT_CLUSTER_8_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_8/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 2,
-  maxzoom: 9,
+  maxzoom: 8,
 };
 
 export const POINT_CLUSTER_8_STYLE_CIRCLE: LayerProps = {
@@ -453,7 +484,7 @@ export const POINT_CLUSTER_9_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_9/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 9,
-  maxzoom: 10,
+  maxzoom: 9,
 };
 
 export const POINT_CLUSTER_9_STYLE_CIRCLE: LayerProps = {
@@ -482,7 +513,7 @@ export const POINT_CLUSTER_10_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_10/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 10,
-  maxzoom: 11,
+  maxzoom: 10,
 };
 
 export const POINT_CLUSTER_10_STYLE_CIRCLE: LayerProps = {
@@ -511,7 +542,7 @@ export const POINT_CLUSTER_11_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_11/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 11,
-  maxzoom: 12,
+  maxzoom: 11,
 };
 
 export const POINT_CLUSTER_11_STYLE_CIRCLE: LayerProps = {
@@ -540,7 +571,7 @@ export const POINT_CLUSTER_12_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_12/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 12,
-  maxzoom: 13,
+  maxzoom: 12,
 };
 
 export const POINT_CLUSTER_12_STYLE_CIRCLE: LayerProps = {
@@ -569,7 +600,7 @@ export const POINT_CLUSTER_13_SOURCE: VectorSource = {
     `${process.env.TILESERVER_URL}/kooste.point_clusters_13/{z}/{x}/{y}.pbf?filter=${cityFilterParam}`,
   ],
   minzoom: 13,
-  maxzoom: 14,
+  maxzoom: 13,
 };
 
 export const POINT_CLUSTER_13_STYLE_CIRCLE: LayerProps = {
