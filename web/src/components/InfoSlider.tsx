@@ -31,8 +31,9 @@ import {
   useTheme,
 } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SwipeableViews from "react-swipeable-views";
+import { useElementSize } from "../utils/UseElementSize";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { PopupInfo, gqlPattern } from "../types";
@@ -53,6 +54,7 @@ const SlideDrawer = styled(Collapse)(({ theme }) => ({
   position: "fixed",
   bottom: 0,
   left: 0,
+  zIndex: 1000,
   backgroundColor: `${theme.palette.primary.main}f2`,
   color: theme.palette.common.white,
   backdropFilter: "blur(4px)",
@@ -99,23 +101,40 @@ const SliderContent = styled(Stack)(({ theme }) => ({
 export default function InfoSlider({ popupInfo }: PopupProps) {
   const { properties } = popupInfo;
   const theme = useTheme();
+  const { ref, height } = useElementSize();
   const [activeSlide, setActiveSlide] = useState(0);
   const [open, setOpen] = useState(true);
   const mobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  /**
+   * Reset the active slide when info changes
+   */
+  useEffect(() => {
+    setActiveSlide(0), setOpen(true);
+  }, [popupInfo]);
 
   /**
    * Toggle drawer extended
    */
   const toggleDrawer = () => setOpen(!open);
 
+  /**
+   * Handle next slide click
+   */
   const handleNext = () => {
     setActiveSlide(prevActiveSlide => prevActiveSlide + 1);
   };
 
+  /**
+   * Handle back to previous slide click
+   */
   const handleBack = () => {
     setActiveSlide(prevActiveSlide => prevActiveSlide - 1);
   };
 
+  /**
+   * Handle slide change
+   */
   const handleSlideChange = (slide: number) => {
     setActiveSlide(slide);
   };
@@ -356,7 +375,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
 
     if (locationString || properties["www"] || properties["phoneNumber"]) {
       return (
-        <>
+        <Stack direction="column" spacing={2}>
           <Typography variant="h5">Yhteystiedot</Typography>
           <List>
             {locationString && (
@@ -379,19 +398,25 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
             )}
           </List>
           {properties["www"] && (
-            <Link href={properties["www"]} target="_blank">
-              <Button
-                size="medium"
-                sx={{ width: { xs: "100%", sm: "initial" }, mt: 2 }}
-                variant="contained"
-                startIcon={<Public />}
-                color="secondary"
+            <Box sx={{ mb: 2 }}>
+              <Link
+                sx={{ display: "block" }}
+                href={properties["www"]}
+                target="_blank"
               >
-                Siirry verkkosivuille
-              </Button>
-            </Link>
+                <Button
+                  size="medium"
+                  sx={{ width: { xs: "100%", sm: "initial" } }}
+                  variant="contained"
+                  startIcon={<Public />}
+                  color="secondary"
+                >
+                  Siirry verkkosivuille
+                </Button>
+              </Link>
+            </Box>
           )}
-        </>
+        </Stack>
       );
     }
     return null;
@@ -412,28 +437,17 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Render title
    */
   const renderTitle = () => (
-    <SliderTitle direction="row">
-      <Stack direction="row" alignItems="center" spacing={2}>
-        {getCategoryIcon(properties["tarmo_category"]) && (
-          <img
-            alt={properties["tarmo_category"]}
-            style={{ width: 45, height: 45 }}
-            src={getCategoryIcon(properties["tarmo_category"])}
-          />
-        )}
-        {mobile ? (
-          <Stack>
-            <Typography variant="h4">
-              {properties["size"] && properties["size"] > 1
-                ? `${properties["size"]} ${getCategoryPlural(
-                    properties["tarmo_category"]
-                  )}`
-                : properties["name"]}
-            </Typography>
-            <Typography variant="body2">{properties["type_name"]}</Typography>
-          </Stack>
-        ) : (
-          <Fade in={open}>
+    <Box ref={ref}>
+      <SliderTitle direction="row">
+        <Stack direction="row" alignItems="center" spacing={2}>
+          {getCategoryIcon(properties["tarmo_category"]) && (
+            <img
+              alt={properties["tarmo_category"]}
+              style={{ width: 45, height: 45 }}
+              src={getCategoryIcon(properties["tarmo_category"])}
+            />
+          )}
+          {mobile ? (
             <Stack>
               <Typography variant="h4">
                 {properties["size"] && properties["size"] > 1
@@ -444,15 +458,30 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               </Typography>
               <Typography variant="body2">{properties["type_name"]}</Typography>
             </Stack>
-          </Fade>
+          ) : (
+            <Fade in={open}>
+              <Stack>
+                <Typography variant="h4">
+                  {properties["size"] && properties["size"] > 1
+                    ? `${properties["size"]} ${getCategoryPlural(
+                        properties["tarmo_category"]
+                      )}`
+                    : properties["name"]}
+                </Typography>
+                <Typography variant="body2">
+                  {properties["type_name"]}
+                </Typography>
+              </Stack>
+            </Fade>
+          )}
+        </Stack>
+        {mobile && (
+          <IconButton onClick={toggleDrawer} color="inherit">
+            {open ? <ExpandMore /> : <ExpandLess />}
+          </IconButton>
         )}
-      </Stack>
-      {mobile && (
-        <IconButton onClick={toggleDrawer} color="inherit">
-          {open ? <ExpandMore /> : <ExpandLess />}
-        </IconButton>
-      )}
-    </SliderTitle>
+      </SliderTitle>
+    </Box>
   );
 
   /**
@@ -541,7 +570,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     <SlideDrawer
       in={open}
       orientation={mobile ? "vertical" : "horizontal"}
-      collapsedSize={mobile ? 64 : 76}
+      collapsedSize={height}
     >
       {renderTitle()}
       {mobile ? renderMobileViews() : renderDesktopViews()}
