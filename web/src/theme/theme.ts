@@ -213,6 +213,7 @@ export default createTheme({
         root: {
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           minWidth: spacing(5),
         },
       },

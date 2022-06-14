@@ -23,6 +23,9 @@ import {
   IconButton,
   Link,
   List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   MobileStepper,
   Stack,
   styled,
@@ -31,13 +34,13 @@ import {
   useTheme,
 } from "@mui/material";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
-import { useElementSize } from "../utils/UseElementSize";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
-import { PopupInfo, gqlPattern } from "../types";
+import { gqlPattern, PopupInfo } from "../types";
 import { getCategoryIcon, getCategoryPlural } from "../utils";
+import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
 
 interface PopupProps {
@@ -266,16 +269,23 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
             </Typography>
           )}
           {properties["patterns"] && (
-            <Stack direction="column">
-              {JSON.parse(properties["patterns"]).map(
-                (value: gqlPattern, index: number) => (
-                  <Typography key={index}>
-                    <strong>{value["route"]["shortName"]}</strong>{" "}
-                    {value["headsign"]}
-                  </Typography>
-                )
-              )}
-            </Stack>
+            <>
+              <Typography variant="h4">Linjat</Typography>
+              <List>
+                {JSON.parse(properties["patterns"]).map(
+                  (value: gqlPattern, index: number) => (
+                    <ListItem key={index}>
+                      <ListItemAvatar sx={{ mr: 1 }}>
+                        <Typography variant="h4">
+                          {value["route"]["shortName"]}
+                        </Typography>
+                      </ListItemAvatar>
+                      <ListItemText primary={value["headsign"]} />
+                    </ListItem>
+                  )
+                )}
+              </List>
+            </>
           )}
         </Stack>
       );
