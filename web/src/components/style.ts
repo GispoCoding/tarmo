@@ -50,6 +50,9 @@ info_image.src = "/img/info-light.png";
 const parking_image: HTMLImageElement = new Image(32, 32);
 parking_image.src = "/img/parking.png";
 
+const bicycle_parking_image: HTMLImageElement = new Image(32, 32);
+bicycle_parking_image.src = "/img/bicycle_parking.png";
+
 const historical_image: HTMLImageElement = new Image(24, 24);
 historical_image.src = `${getCategoryIcon("Muinaisjäännökset")}`;
 
@@ -91,6 +94,7 @@ export const POINT_IMAGES = [
   ["skating", skating_image],
   ["cycling", cycling_image],
   ["parking", parking_image],
+  ["bicycle_parking", bicycle_parking_image],
   ["swimming", swimming_image],
   ["activities", activities_image],
   ["fireplaces", fireplaces_image],
@@ -293,7 +297,7 @@ export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "source-layer": "kooste.osm_pisteet",
   "type": "symbol",
   "layout": {
-    "icon-image": "parking",
+    "icon-image": ["get", "amenity"],
   },
   "minzoom": 14,
 };
@@ -304,7 +308,7 @@ export const OSM_AREA_LABEL_STYLE: LayerProps = {
   "source-layer": "kooste.osm_alueet",
   "type": "symbol",
   "layout": {
-    "icon-image": "parking",
+    "icon-image": ["get", "amenity"],
   },
   "minzoom": 14,
 };

@@ -12,6 +12,8 @@ class OSMLoader(BaseLoader):
     # TODO: support linestrings later if needed
     # LINE_TABLE_NAME = "osm_viivat"
     POLYGON_TABLE_NAME = "osm_alueet"
+    # map selected amenity names to type_name field too
+    AMENITY_TYPE_NAMES = {"bicycle_parking": "Pyöräpysäköinti"}
 
     api_url = "https://overpass-api.de/api/interpreter"
     default_point = Point(0, 0)
@@ -81,6 +83,12 @@ class OSMLoader(BaseLoader):
             "table": table_name,
             "deleted": False,
         }
+
+        # Map selected amenity names to type_name field too.
+        amenity = tags["amenity"]
+        type_name = self.AMENITY_TYPE_NAMES.get(amenity, None)
+        if type_name:
+            flattened["type_name"] = type_name
         return flattened
 
     def get_overpass_query(self) -> str:
