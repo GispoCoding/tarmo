@@ -2,8 +2,13 @@ name: CI/CD
 
 on:
   pull_request:
+    branches:
+      - "main"
+      - "dev"
   push:
-    branches: [main]
+    branches:
+      - "main"
+      - "dev"
 
 jobs:
   test_frontend:
