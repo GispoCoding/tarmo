@@ -1,5 +1,6 @@
 import { LayerId } from "./components/style";
 import { GeoJsonProperties } from "geojson";
+import { CategoryFilters } from "./contexts/MapFiltersContext";
 
 export interface PopupInfo {
   layerId: LayerId;
@@ -11,8 +12,10 @@ export interface PopupInfo {
 
 export interface ExternalSource {
   url: string;
+  tarmo_category: keyof CategoryFilters;
   zoomThreshold: number;
   gqlQuery?: string;
+  reload?: boolean;
 }
 
 export interface Bbox {
@@ -22,31 +25,43 @@ export interface Bbox {
   maxLon: number;
 }
 
-export interface gqlFeature {
+export interface gqlRoute {
+  shortName: string;
+}
+
+export interface gqlPattern {
+  headsign: string;
+  route: gqlRoute;
+}
+
+export interface gqlStop {
   gtfsId: string;
   lat: number;
   lon: number;
   name: string;
-  patterns: [
-    {
-      headSign: string;
-      route: {
-        shortName: string;
-      };
-    }
-  ];
+  patterns: [gqlPattern];
   vehicleType: number;
+}
+
+export interface gqlBikeStation {
+  stationId: string;
+  lat: number;
+  lon: number;
+  name: string;
+  bikesAvailable: number;
 }
 
 export interface gqlResponse {
   data: {
-    stopsByBbox: Array<gqlFeature>;
+    stopsByBbox?: Array<gqlStop>;
+    bikeRentalStations?: Array<gqlBikeStation>;
   };
-  status: number;
+  status?: number;
 }
 
 export enum stopType {
   Tram = "tram",
   Bus = "bus",
   Train = "train",
+  Bike = "bike",
 }

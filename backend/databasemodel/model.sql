@@ -58,6 +58,10 @@ CREATE EXTENSION postgis
 WITH SCHEMA public;
 -- ddl-end --
 
+-- Use the trigram extension to speed up text search
+CREATE EXTENSION pg_trgm
+WITH SCHEMA public;
+
 -- object: lipas.abstract | type: TABLE --
 -- DROP TABLE IF EXISTS lipas.abstract CASCADE;
 CREATE TABLE lipas.abstract (
@@ -1450,7 +1454,7 @@ INSERT INTO kooste.osm_metadata (
     tags_to_include,
     tags_to_exclude
 ) VALUES (
-    '{"amenity": ["parking"]}',
+    '{"amenity": ["parking", "bicycle_parking"]}',
     '{"access": ["private", "permit"]}'
 );
 
@@ -1490,8 +1494,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	"infoFi" text,
 	lisatietoja text,
 	deleted boolean NOT NULL DEFAULT false,
-	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
-	UNIQUE (tunnus, rasti)
+	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx)
 );
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (deleted);
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (tarmo_category);
@@ -2089,13 +2092,17 @@ GRANT USAGE
 -- ddl-end --
 
 create materialized view kooste.all_points as
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, "cityName", "tarmo_category", 'lipas_pisteet' as table_name, row_to_json(points)::jsonb as props from kooste.lipas_pisteet as points where deleted=false union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, 'Tampere' as "cityName", "tarmo_category", 'museovirastoarcrest_rkykohteet' as table_name, row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, "cityName", "tarmo_category", 'museovirastoarcrest_muinaisjaannokset' as table_name, row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luonnonmuistomerkit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luontopolkurastit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true;
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_pisteet-', "sportsPlaceId") as id, "name", "cityName", "tarmo_category", 'lipas_pisteet' as table_name, row_to_json(points)::jsonb as props from kooste.lipas_pisteet as points where deleted=false union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkykohteet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", 'museovirastoarcrest_rkykohteet' as table_name, row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_muinaisjaannokset-', "mjtunnus") as id, "name", "cityName", "tarmo_category", 'museovirastoarcrest_muinaisjaannokset' as table_name, row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "sw_member") as id, "name", 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luonnonmuistomerkit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luontopolkurastit-', "mi_prinx") as id ,"name", 'Tampere' as "cityName", "tarmo_category", 'tamperewfs_luontopolkurastit' as table_name, row_to_json(points)::jsonb as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true;
 
+create index on kooste.all_points (id);
+-- Use the trigram extension to speed up text search
+create index on kooste.all_points USING gin (name gin_trgm_ops);
 create index on kooste.all_points ("cityName");
+create index on kooste.all_points ("tarmo_category");
 
 ALTER TABLE kooste.all_points OWNER TO tarmo_read_write;
 

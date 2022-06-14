@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Ref, useCallback, useEffect, useState, useContext } from "react";
+import {
+  Ref,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from "react";
 import { rawRequest } from "graphql-request";
 import MapGL, {
   FullscreenControl,
@@ -25,8 +32,12 @@ import {
   OSM_POINT_SOURCE,
   OSM_POINT_LABEL_STYLE,
   DIGITRANSIT_POINT_STYLE,
+  DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   POINT_IMAGES,
+  SEARCH_SOURCE,
+  SEARCH_STYLE_SYMBOL,
+  SEARCH_STYLE_CIRCLE,
   POINT_SOURCE,
   POINT_STYLE_SYMBOL,
   POINT_STYLE_CIRCLE,
@@ -57,12 +68,13 @@ import {
 } from "./style";
 import maplibregl from "maplibre-gl";
 import { PopupInfo, ExternalSource, Bbox } from "../types";
-import { buildQuery, parseResponse } from "../utils";
 import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
+import SearchMenu from "./SearchMenu";
 import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
+import { buildQuery, parseResponse } from "../utils";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
@@ -76,13 +88,21 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const [bounds, setBounds] = useState<Bbox | null>(null);
   const [externalData, setExternalData] =
     useState<Map<LayerId, FeatureCollection>>();
+  const [searchString, setSearchString] = useState("");
+  const [searchResults, setSearchResults] = useState<
+    Map<string, MapboxGeoJSONFeature>
+  >(new Map());
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const actualMapRef = useRef<MapRef | undefined>(undefined);
 
   const externalSources = new Map<LayerId, ExternalSource>([
     [
       LayerId.DigiTransitPoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
-        zoomThreshold: 14,
+        tarmo_category: "Pysäkit",
+        zoomThreshold: 12,
+        reload: true,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
           vehicleType
@@ -98,6 +118,24 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           }
         }
       }`,
+      },
+    ],
+    [
+      LayerId.DigiTransitBikePoint,
+      {
+        url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        tarmo_category: "Pysäkit",
+        zoomThreshold: 12,
+        reload: false,
+        gqlQuery: `{
+          bikeRentalStations {
+            stationId
+            name
+            lat
+            lon
+            bikesAvailable
+          }
+        }`,
       },
     ],
   ]);
@@ -121,6 +159,16 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       "User-Agent": "TARMO - Tampere Mobilemap",
     };
     externalSources.forEach((value, key) => {
+      // Do not reload if data is not visible
+      if (
+        mapFiltersContext.getVisibilityValue(value.tarmo_category) == "none"
+      ) {
+        return;
+      }
+      // Do not reload if data does not need to be updated
+      if (!value.reload && externalData && externalData.get(key)) {
+        return;
+      }
       const url = value.url;
       let query = value.gqlQuery ? value.gqlQuery : "";
       if (bounds && query && zoom > value.zoomThreshold) {
@@ -152,7 +200,30 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   useEffect(() => {
     loadExternalData();
     // eslint-disable-next-line
-  }, [bounds]);
+  }, [bounds, mapFiltersContext]);
+
+  // TODO: at the moment, the user can only select points on the search layer.
+  // Another way of implementing this would be to zoom in when selected, and
+  // then looking for the corresponding id in the all_points layer?
+  useEffect(() => {
+    if (selected) {
+      const feature = searchResults.get(selected);
+      const coords = [
+        feature!.geometry["coordinates"][0] as number,
+        feature!.geometry["coordinates"][1] as number,
+      ];
+      // for reasons unknown, [number, number] typing is not good enough
+      // @ts-ignore
+      actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
+      setPopupInfo({
+        layerId: LayerId[feature!.source] as LayerId,
+        properties: feature!.properties,
+        longitude: feature!.geometry["coordinates"][0],
+        latitude: feature!.geometry["coordinates"][1],
+        onClose: () => setPopupInfo(null),
+      });
+    }
+  }, [selected]);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -195,6 +266,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const mapReference = useCallback(
     (mapRef: MapRef) => {
       if (mapRef !== null) {
+        // Now we can set the actual map ref
+        actualMapRef.current = mapRef;
         mapRef.on("styleimagemissing", () => {
           // Any style images must be passed here, image props are not supported.
           // https://github.com/visgl/react-map-gl/issues/1118
@@ -213,6 +286,23 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         mapRef.on("click", ev => {
           const features = mapRef.queryRenderedFeatures(ev.point);
           setPopupFeature(ev.lngLat, features);
+        });
+
+        // Search layer must update results once they appear
+        mapRef.on("sourcedata", ev => {
+          if (ev.isSourceLoaded && ev.sourceId === LayerId.Search && ev.tile) {
+            const features = mapRef.querySourceFeatures(LayerId.Search, {
+              sourceLayer: "kooste.all_points",
+            });
+            // The search results may contain duplicates, as multiple tiles
+            // may provide the same feature. Therefore, we want to filter the
+            // results before actually showing them.
+            const uniqueFeatures = new Map<string, MapboxGeoJSONFeature>();
+            features.forEach(feature => {
+              uniqueFeatures.set(feature.properties!.id, feature);
+            });
+            setSearchResults(uniqueFeatures);
+          }
         });
 
         for (const source in LayerId) {
@@ -298,60 +388,184 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         <Layer {...{ ...LIPAS_LINE_STYLE, filter: categoryFilter }} />
       </Source>
 
-      {/* Clusters by zoom level 8-12 */}
-      <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
+      {/* Dynamic search layer*/}
+      <Source
+        id={LayerId.Search}
+        {...{
+          ...SEARCH_SOURCE,
+          tiles: [`${SEARCH_SOURCE.tiles![0]}'%25${searchString}%25'`],
+        }}
+      >
         <Layer
-          {...{ ...POINT_CLUSTER_8_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...SEARCH_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "none" : "visible",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_8_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...SEARCH_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(SEARCH_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "none" : "visible",
+            },
+          }}
+        />
+      </Source>
+
+      {/* Clusters below zoom level 14 */}
+      <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
+        <Layer
+          {...{
+            ...POINT_CLUSTER_8_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...POINT_CLUSTER_8_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_8_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
       <Source id={LayerId.PointCluster9} {...POINT_CLUSTER_9_SOURCE}>
         <Layer
-          {...{ ...POINT_CLUSTER_9_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_9_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_9_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_9_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_9_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
       <Source id={LayerId.PointCluster10} {...POINT_CLUSTER_10_SOURCE}>
         <Layer
-          {...{ ...POINT_CLUSTER_10_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_10_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_10_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_10_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_10_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
       <Source id={LayerId.PointCluster11} {...POINT_CLUSTER_11_SOURCE}>
         <Layer
-          {...{ ...POINT_CLUSTER_11_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_11_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_11_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_11_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_11_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
       <Source id={LayerId.PointCluster12} {...POINT_CLUSTER_12_SOURCE}>
         <Layer
-          {...{ ...POINT_CLUSTER_12_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_12_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_12_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_12_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_12_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
       <Source id={LayerId.PointCluster13} {...POINT_CLUSTER_13_SOURCE}>
         <Layer
-          {...{ ...POINT_CLUSTER_13_STYLE_CIRCLE, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_13_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
         <Layer
-          {...{ ...POINT_CLUSTER_13_STYLE_SYMBOL, filter: categoryFilter }}
+          {...{
+            ...POINT_CLUSTER_13_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_CLUSTER_13_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
         />
       </Source>
 
       {/* Points at zoom level 14 and above */}
       <Source id={LayerId.Point} {...POINT_SOURCE}>
-        <Layer {...{ ...POINT_STYLE_CIRCLE, filter: categoryFilter }} />
-        <Layer {...{ ...POINT_STYLE_SYMBOL, filter: categoryFilter }} />
+        <Layer
+          {...{
+            ...POINT_STYLE_CIRCLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
+        />
+        <Layer
+          {...{
+            ...POINT_STYLE_SYMBOL,
+            filter: categoryFilter,
+            layout: {
+              ...(POINT_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "visible" : "none",
+            },
+          }}
+        />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer
@@ -375,6 +589,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           }}
         />
       </Source>
+
+      {/* External data layers */}
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
         // eslint-disable-next-line
@@ -395,6 +611,27 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             />
           </Source>
         )}
+      {externalData &&
+        externalData.get(LayerId.DigiTransitBikePoint) &&
+        // eslint-disable-next-line
+        zoom >
+          externalSources.get(LayerId.DigiTransitBikePoint)!.zoomThreshold && (
+          <Source
+            id={LayerId.DigiTransitBikePoint}
+            type="geojson"
+            data={externalData.get(LayerId.DigiTransitBikePoint)}
+          >
+            <Layer
+              {...{
+                ...DIGITRANSIT_BIKE_POINT_STYLE,
+                layout: {
+                  ...(DIGITRANSIT_BIKE_POINT_STYLE as SymbolLayer).layout,
+                  visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
+                },
+              }}
+            />
+          </Source>
+        )}
 
       {/* Map labels */}
       <Layer {...NLS_LABEL_STYLE} />
@@ -403,6 +640,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       <Layer {...NLS_LUONNONPUISTOT_LABEL_STYLE} />
       <Layer {...NLS_TIET_LABEL_STYLE} />
 
+      <SearchMenu
+        searchString={searchString}
+        searchResults={searchResults}
+        stringSetter={setSearchString}
+        selectedSetter={setSelected}
+      />
       <FullscreenControl />
       {showNav && (
         <>

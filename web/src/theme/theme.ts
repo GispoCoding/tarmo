@@ -213,6 +213,7 @@ export default createTheme({
         root: {
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           minWidth: spacing(5),
         },
       },
@@ -277,6 +278,13 @@ export default createTheme({
           display: "grid",
           gridTemplateRows: "auto 1fr",
           overflow: "hidden",
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          minHeight: 40,
         },
       },
     },

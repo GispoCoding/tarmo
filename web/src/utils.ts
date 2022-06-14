@@ -1,5 +1,6 @@
 import { FeatureCollection, Feature } from "geojson";
-import { gqlFeature, gqlResponse, stopType } from "./types";
+import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "./types";
+import palette from "./theme/palette";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -13,7 +14,7 @@ export const buildQuery = (
   return gqlQuery;
 };
 
-export const parseFeature = (gqlFeature: gqlFeature): Feature => {
+export const parseStop = (gqlFeature: gqlStop): Feature => {
   // we have to be a bit creative to find out the stop type in Tampere
   let type: stopType = stopType.Bus;
   let tarmo_category = "Bussipysäkki";
@@ -50,12 +51,45 @@ export const parseFeature = (gqlFeature: gqlFeature): Feature => {
   };
 };
 
+export const parseBikeStation = (gqlFeature: gqlBikeStation): Feature => {
+  const type: stopType = stopType.Bike;
+  const tarmo_category = "Kaupunkipyöräasema";
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Point",
+      coordinates: [gqlFeature.lon, gqlFeature.lat],
+    },
+    properties: {
+      stationId: gqlFeature.stationId,
+      name: gqlFeature.name,
+      type: type,
+      bikesAvailable: gqlFeature.bikesAvailable,
+      tarmo_category: tarmo_category,
+      type_name: tarmo_category,
+    },
+  };
+};
+
 export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
   // convert GraphQL response to GeoJSON for Maplibre
-  const features = gqlResponse.data.stopsByBbox;
+  const stops = gqlResponse.data.stopsByBbox;
+  if (stops) {
+    return {
+      type: "FeatureCollection",
+      features: stops.map(parseStop),
+    };
+  }
+  const bikeStations = gqlResponse.data.bikeRentalStations;
+  if (bikeStations) {
+    return {
+      type: "FeatureCollection",
+      features: bikeStations.map(parseBikeStation),
+    };
+  }
   return {
     type: "FeatureCollection",
-    features: features.map(parseFeature),
+    features: [],
   };
 };
 
@@ -81,6 +115,30 @@ export const getCategoryIcon = (category: string) =>
     "Rautatieasema": "img/train.png",
     "Ratikkapysäkki": "img/tram.png",
     "Muinaisjäännökset": "img/historical-light.png",
+  }[category]);
+
+/**
+ * Get category color
+ * @param category
+ * @returns proper color for a category
+ */
+export const getCategoryColor = (category: string) =>
+  ({
+    "Hiihto": "#5390b5",
+    "Luistelu": "#29549a",
+    "Ulkoilupaikat": "#397368",
+    "Ulkoiluaktiviteetit": "#397368",
+    "Ulkoilureitit": "#397368",
+    "Pyöräily": "#e8b455",
+    "Laavut, majat, ruokailu": "#ae1e20",
+    "Vesillä ulkoilu": "#39a7d7",
+    "Nähtävyydet": "#7361A2",
+    "Uinti": "#39a7d7",
+    "Pysäköinti": palette.primary.dark,
+    "Bussipysäkki": palette.primary.dark,
+    "Rautatieasema": palette.primary.dark,
+    "Ratikkapysäkki": palette.primary.dark,
+    "Muinaisjäännökset": "#00417d",
   }[category]);
 
 /**
