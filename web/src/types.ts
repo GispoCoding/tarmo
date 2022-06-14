@@ -1,5 +1,6 @@
 import { LayerId } from "./components/style";
 import { GeoJsonProperties } from "geojson";
+import { CategoryFilters } from "./contexts/MapFiltersContext";
 
 export interface PopupInfo {
   layerId: LayerId;
@@ -11,6 +12,7 @@ export interface PopupInfo {
 
 export interface ExternalSource {
   url: string;
+  tarmo_category: keyof CategoryFilters;
   zoomThreshold: number;
   gqlQuery?: string;
   reload?: boolean;

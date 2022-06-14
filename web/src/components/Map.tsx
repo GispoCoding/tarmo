@@ -100,6 +100,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitPoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        tarmo_category: "Pysäkit",
         zoomThreshold: 12,
         reload: true,
         gqlQuery: `{
@@ -123,6 +124,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitBikePoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        tarmo_category: "Pysäkit",
         zoomThreshold: 12,
         reload: false,
         gqlQuery: `{
@@ -157,6 +159,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       "User-Agent": "TARMO - Tampere Mobilemap",
     };
     externalSources.forEach((value, key) => {
+      // Do not reload if data is not visible
+      if (
+        mapFiltersContext.getVisibilityValue(value.tarmo_category) == "none"
+      ) {
+        return;
+      }
       // Do not reload if data does not need to be updated
       if (!value.reload && externalData && externalData.get(key)) {
         return;
@@ -192,7 +200,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   useEffect(() => {
     loadExternalData();
     // eslint-disable-next-line
-  }, [bounds]);
+  }, [bounds, mapFiltersContext]);
 
   // TODO: at the moment, the user can only select points on the search layer.
   // Another way of implementing this would be to zoom in when selected, and
