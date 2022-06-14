@@ -86,7 +86,13 @@ class WFSLoader(BaseLoader):
         layer = props.pop("layer")
         table_name = self.TABLE_NAMES[layer]
 
-        geometry = shape(element["geometry"])
+        # Looks like Tampere WFS now contains leftover duplicate points with no
+        # geometry. No idea why.
+        incoming_geometry = element["geometry"]
+        if not incoming_geometry:
+            return None
+
+        geometry = shape(incoming_geometry)
         if isinstance(geometry, Point):
             geom = MultiPoint([geometry])
         elif isinstance(geometry, LineString):

@@ -1494,8 +1494,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	"infoFi" text,
 	lisatietoja text,
 	deleted boolean NOT NULL DEFAULT false,
-	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx),
-	UNIQUE (tunnus, rasti)
+	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx)
 );
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (deleted);
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (tarmo_category);
