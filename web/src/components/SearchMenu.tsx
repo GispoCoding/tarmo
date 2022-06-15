@@ -164,6 +164,8 @@ export default function SearchMenu(props: SearchMenuProps) {
     <SearchContainer elevation={6}>
       <Box sx={{ pl: 2, pr: 2 }}>
         <WithDebounce
+          debounceTimeout={1000}
+          key="haku"
           value={props.searchString}
           onChange={handleChange}
           component={inputProps => (

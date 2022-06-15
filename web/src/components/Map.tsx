@@ -78,9 +78,13 @@ import { buildQuery, parseResponse } from "../utils";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
+  viewHeight: number;
 }
 
-export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
+export default function TarmoMap({
+  setPopupInfo,
+  viewHeight,
+}: TarmoMapProps): JSX.Element {
   const mapFiltersContext = useContext(MapFiltersContext);
   const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
@@ -358,7 +362,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         bearing: 0,
         pitch: 0,
       }}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: `${viewHeight}px` }}
       mapLib={maplibregl}
       mapStyle={mapStyle}
       onResize={toggleNav}
