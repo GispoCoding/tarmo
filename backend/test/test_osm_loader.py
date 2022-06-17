@@ -55,7 +55,7 @@ parking_query = (
     "[out:json];\n"
     "(\n"
     "   (\n"
-    '   nwr[amenity~"^parking$"](around:10000,61.498,23.7747);\n'
+    '   nwr[amenity~"^parking$|^bicycle_parking$"](around:10000,61.498,23.7747);\n'
     "   ); - (\n"
     '   nwr[access~"^private$|^permit$"](around:10000,61.498,23.7747);\n'
     "   );\n"
@@ -86,6 +86,22 @@ parking_response = {
             },
         },
         {
+            "type": "node",
+            "id": 32893834,
+            "lat": 61.5178651,
+            "lon": 23.5797684,
+            "tags": {
+                "amenity": "bicycle_parking",
+            },
+        },
+        {
+            "type": "node",
+            "id": 32893844,
+            "lat": 61.5278651,
+            "lon": 23.5897684,
+            "tags": {"amenity": "parking", "fee": "no"},
+        },
+        {
             "type": "way",
             "id": 948598167,
             "bounds": {
@@ -102,7 +118,7 @@ parking_response = {
                 {"lat": 61.5055019, "lon": 23.6055158},
                 {"lat": 61.5054804, "lon": 23.6051983},
             ],
-            "tags": {"amenity": "parking"},
+            "tags": {"amenity": "parking", "fee": "yes"},
         },
         {
             "type": "relation",
@@ -158,7 +174,7 @@ parking_response = {
                     ],
                 },
             ],
-            "tags": {"amenity": "parking", "type": "multipolygon"},
+            "tags": {"amenity": "parking", "type": "multipolygon", "access": "yes"},
         },
     ],
 }
@@ -198,7 +214,7 @@ def ice_cream_loader(connection_string):
 def parking_loader(connection_string):
     return OSMLoader(
         connection_string,
-        tags_to_include={"amenity": ["parking"]},
+        tags_to_include={"amenity": ["parking", "bicycle_parking"]},
         tags_to_exclude={"access": ["private", "permit"]},
         point_of_interest=Point(23.7747, 61.4980),
         point_radius=10,
@@ -251,12 +267,49 @@ def test_get_ice_cream_feature(ice_cream_loader, ice_cream_data):
     assert feature["tags"]
 
 
-def test_get_parking_feature(parking_loader, parking_data):
-    feature = parking_loader.get_feature(parking_data[0])
-    assert feature["osm_id"]
-    assert feature["osm_type"] in ("node", "way", "relation")
-    assert feature["geom"].startswith("POINT") or feature["geom"].startswith("POLYGON")
-    assert feature["tags"]
+def test_get_customer_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[0])
+    assert customer_parking["osm_id"]
+    assert customer_parking["osm_type"] == "node"
+    assert customer_parking["geom"].startswith("POINT")
+    assert customer_parking["tags"]
+    assert customer_parking["type_name"] == "Asiakaspysäköinti"
+
+
+def test_get_bike_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[1])
+    assert customer_parking["osm_id"]
+    assert customer_parking["osm_type"] == "node"
+    assert customer_parking["geom"].startswith("POINT")
+    assert customer_parking["tags"]
+    assert customer_parking["type_name"] == "Pyöräpysäköinti"
+
+
+def test_get_free_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[2])
+    assert customer_parking["osm_id"]
+    assert customer_parking["osm_type"] == "node"
+    assert customer_parking["geom"].startswith("POINT")
+    assert customer_parking["tags"]
+    assert customer_parking["type_name"] == "Maksuton pysäköinti"
+
+
+def test_get_way_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[3])
+    assert customer_parking["osm_id"]
+    assert customer_parking["osm_type"] == "way"
+    assert customer_parking["geom"].startswith("POLYGON")
+    assert customer_parking["tags"]
+    assert customer_parking["type_name"] == "Maksullinen pysäköinti"
+
+
+def test_get_relation_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[4])
+    assert customer_parking["osm_id"]
+    assert customer_parking["osm_type"] == "relation"
+    assert customer_parking["geom"].startswith("POLYGON")
+    assert customer_parking["tags"]
+    assert customer_parking["type_name"] == "Yleinen pysäköinti"
 
 
 def assert_parking_data(main_db_params):
@@ -264,7 +317,7 @@ def assert_parking_data(main_db_params):
     try:
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
-            assert cur.fetchone()[0] == 1
+            assert cur.fetchone()[0] == 3
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
             assert cur.fetchone()[0] == 2
             cur.execute(f"SELECT id FROM kooste.osm_pisteet")
@@ -291,7 +344,7 @@ def assert_ice_cream_and_parking_data(main_db_params):
         with conn.cursor() as cur:
             # we should have both parking and ice cream here
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
-            assert cur.fetchone()[0] == 2
+            assert cur.fetchone()[0] == 4
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
             assert cur.fetchone()[0] == 2
             cur.execute(f"SELECT id FROM kooste.osm_pisteet")
@@ -322,7 +375,7 @@ def test_delete_parking_features(ice_cream_data, connection_string, main_db_para
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
-            # parking point should be deleted by the new loader
+            # parking points should be deleted by the new loader
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
             assert cur.fetchone()[0] == 1
             # ice cream loader won't touch a table it didn't import anything to
@@ -343,7 +396,7 @@ def test_reinstate_parking_features(parking_data, connection_string, main_db_par
         with conn.cursor() as cur:
             # ice cream point should be deleted by the new loader
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
-            assert cur.fetchone()[0] == 1
+            assert cur.fetchone()[0] == 3
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet WHERE NOT deleted")
             assert cur.fetchone()[0] == 2
     finally:
