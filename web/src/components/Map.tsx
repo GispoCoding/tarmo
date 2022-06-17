@@ -14,6 +14,7 @@ import MapGL, {
   Layer,
   MapRef,
   NavigationControl,
+  ScaleControl,
   Source,
   SymbolLayer,
   FillLayer,
@@ -651,6 +652,10 @@ export default function TarmoMap({
         selectedSetter={setSelected}
       />
       <FullscreenControl />
+      <ScaleControl
+        maxWidth={200}
+        style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
+      />
       {showNav && (
         <>
           <LayerPicker setter={setLayer} />
