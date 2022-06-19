@@ -10,16 +10,18 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Paper,
   styled,
+  SwipeableDrawer,
   TextField,
 } from "@mui/material";
 import { GeoJsonProperties } from "geojson";
 import * as React from "react";
+import { useState } from "react";
 import { MapboxGeoJSONFeature } from "react-map-gl";
 import theme from "../theme/theme";
-import { getCategoryColor, getCategoryIcon } from "../utils";
-import WithDebounce from "./WithDebounce";
+import { getCategoryColor, getCategoryIcon } from "../utils/utils";
+import RightSidePanel from "./RightSidePanel";
+import WithDebounce from "../utils/WithDebounce";
 
 interface SearchMenuProps {
   searchString: string;
@@ -32,23 +34,33 @@ interface SearchMenuProps {
  * Styled menu component for search field and results
  */
 export default function SearchMenu(props: SearchMenuProps) {
-  const [selectedResult, setSelectedResult] = React.useState(0);
+  const [selectedResult, setSelectedResult] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const toggleDrawer =
+    (showSearch: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setShowSearch(showSearch);
+    };
 
   /**
-   * Search result container
+   * Styled toggle search button
    */
-  const SearchContainer = styled(Paper)(({ theme }) => ({
-    position: "absolute",
-    top: 72,
-    right: theme.spacing(8),
-    backgroundColor: `${theme.palette.background.paper}e6`,
-    borderRadius: 24,
-    width: "calc(100% - 80px)",
+  const ToggleSearch = styled(IconButton)(({ theme }) => ({
+    position: "fixed",
+    top: theme.spacing(2),
+    right: 16,
+    backgroundColor: "#fbfbfb90",
     backdropFilter: "blur(4px)",
-    [theme.breakpoints.up("md")]: {
-      top: 12,
-      width: 400,
-    },
+    boxShadow: theme.shadows[10],
   }));
 
   /**
@@ -58,7 +70,6 @@ export default function SearchMenu(props: SearchMenuProps) {
    * Might need to consider using a full screen dialog since this approach might not be so elegant for mobile use
    */
   const ResultList = styled(List)(() => ({
-    maxHeight: 400,
     overflow: "auto",
     WebkitOverflowScrolling: "touch", // iOS momentum scrolling
   }));
@@ -86,6 +97,7 @@ export default function SearchMenu(props: SearchMenuProps) {
   const handleResultClick = (result: string, index: number) => {
     props.selectedSetter(result);
     setSelectedResult(index);
+    setShowSearch(false);
   };
 
   /**
@@ -161,45 +173,72 @@ export default function SearchMenu(props: SearchMenuProps) {
   };
 
   return (
-    <SearchContainer elevation={6}>
-      <Box sx={{ pl: 2, pr: 2 }}>
-        <WithDebounce
-          debounceTimeout={1000}
-          key="haku"
-          value={props.searchString}
-          onChange={handleChange}
-          component={inputProps => (
-            <TextField
-              {...inputProps}
-              variant="standard"
-              sx={{ width: "100%" }}
-              placeholder="Hae kohdetta"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Fade in={!!props.searchString}>
-                      <IconButton
-                        size="small"
-                        aria-label="tyhjennä haku"
-                        title="Tyhjennä haku"
-                        onClick={handleClear}
-                      >
-                        <Close />
-                      </IconButton>
-                    </Fade>
-                  </InputAdornment>
-                ),
-              }}
+    <>
+      <ToggleSearch onClick={toggleDrawer(true)}>
+        <SearchIcon color="primary" />
+      </ToggleSearch>
+      <SwipeableDrawer
+        ModalProps={{
+          keepMounted: true,
+        }}
+        anchor="right"
+        variant="temporary"
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+        open={showSearch}
+        PaperProps={{
+          sx: {
+            backgroundColor: "rgba(255,255,255,0.9)",
+            backdropFilter: "blur(4px)",
+            boxShadow: theme.shadows[10],
+          },
+        }}
+      >
+        <RightSidePanel
+          title="Haku"
+          onClose={toggleDrawer(false)}
+          disablePadding
+        >
+          <Box pl={3} pr={3}>
+            <WithDebounce
+              debounceTimeout={1000}
+              key="haku"
+              value={props.searchString}
+              onChange={handleChange}
+              component={inputProps => (
+                <TextField
+                  {...inputProps}
+                  variant="standard"
+                  sx={{ width: "100%" }}
+                  placeholder="Hae kohdetta"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Fade in={!!props.searchString}>
+                          <IconButton
+                            size="small"
+                            aria-label="tyhjennä haku"
+                            title="Tyhjennä haku"
+                            onClick={handleClear}
+                          >
+                            <Close />
+                          </IconButton>
+                        </Fade>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
             />
-          )}
-        />
-      </Box>
-      {renderResultList()}
-    </SearchContainer>
+          </Box>
+          {renderResultList()}
+        </RightSidePanel>
+      </SwipeableDrawer>
+    </>
   );
 }

@@ -114,20 +114,20 @@ export default createTheme({
           },
 
         ".mapboxgl-ctrl-top-right, .maplibregl-ctrl-top-right": {
-          top: 60,
+          top: 120,
           position: "relative",
           display: "flex",
           flexDirection: "column",
           marginLeft: "auto",
           flexWrap: "nowrap",
           alignItems: "flex-end",
-          [breakpoints.down("md")]: {
-            top: 60,
-          },
-          [breakpoints.up("md")]: {
-            top: 0,
-          },
         },
+
+        ".mapboxgl-ctrl-top-right .mapboxgl-ctrl, .maplibregl-ctrl-top-right .maplibregl-ctrl":
+          {
+            float: "right",
+            margin: "16px 16px 0 0",
+          },
 
         ".mapboxgl-ctrl-group button, .maplibregl-ctrl-group button": {
           width: 40,
@@ -250,6 +250,13 @@ export default createTheme({
         },
       },
     },
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+        },
+      },
+    },
     MuiMobileStepper: {
       styleOverrides: {
         root: {
@@ -287,6 +294,11 @@ export default createTheme({
         root: {
           minHeight: 40,
         },
+      },
+    },
+    MuiSwitch: {
+      defaultProps: {
+        color: "secondary",
       },
     },
   },
