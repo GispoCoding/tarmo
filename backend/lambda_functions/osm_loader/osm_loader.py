@@ -12,8 +12,13 @@ class OSMLoader(BaseLoader):
     # TODO: support linestrings later if needed
     # LINE_TABLE_NAME = "osm_viivat"
     POLYGON_TABLE_NAME = "osm_alueet"
-    # map selected amenity names to type_name field too
-    AMENITY_TYPE_NAMES = {"bicycle_parking": "Pyöräpysäköinti"}
+    # Map selected tags to type_name field too. Tags later in the list
+    # take precedence.
+    TAGS_TO_TYPE_NAMES = {
+        "fee": {"no": "Maksuton pysäköinti", "yes": "Maksullinen pysäköinti"},
+        "access": {"customers": "Asiakaspysäköinti", "yes": "Yleinen pysäköinti"},
+        "amenity": {"bicycle_parking": "Pyöräpysäköinti"},
+    }
 
     api_url = "https://overpass-api.de/api/interpreter"
     default_point = Point(0, 0)
@@ -44,7 +49,7 @@ class OSMLoader(BaseLoader):
     def get_feature(self, element: Dict[str, Any]) -> Optional[dict]:  # type: ignore[override]  # noqa
         osm_id = element["id"]
         type = element["type"]
-        tags = element["tags"]
+        tags: dict = element["tags"]
 
         # TODO: support ways that are not polygons
         if type == "node":
@@ -84,11 +89,13 @@ class OSMLoader(BaseLoader):
             "deleted": False,
         }
 
-        # Map selected amenity names to type_name field too.
-        amenity = tags["amenity"]
-        type_name = self.AMENITY_TYPE_NAMES.get(amenity, None)
-        if type_name:
-            flattened["type_name"] = type_name
+        # Map selected tags to type_name field too. Latter tags take precedence.
+        type_name = None
+        for tag, value_map in self.TAGS_TO_TYPE_NAMES.items():
+            value = tags.get(tag, None)
+            if value and value in value_map.keys():
+                type_name = value_map[value]
+        flattened["type_name"] = type_name
         return flattened
 
     def get_overpass_query(self) -> str:
