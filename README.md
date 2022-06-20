@@ -78,4 +78,5 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
 
 ## Architecture
 
+[Tarmo infra documentation](./infra/README.md)
 ![Tarmo app architecture](architecture.png)
