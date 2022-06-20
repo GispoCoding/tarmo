@@ -1,0 +1,14 @@
+# .tbls.yml
+
+# DSN (Database Source Name) to connect database
+dsn: postgres://tarmo_read:tarmo_read@localhost:5434/tarmo?sslmode=disable
+
+# Path to generate document
+# Default is `dbdoc`
+docPath: backend/databasemodel/dbdoc
+include:
+  - kooste.*
+
+templates:
+  md:
+    index: "backend/databasemodel/dbdoc/templates/index.md.tmpl"

@@ -27,6 +27,7 @@ repos:
     rev: v2.5.1
     hooks:
       - id: prettier
+        types_or: [css, javascript]
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
