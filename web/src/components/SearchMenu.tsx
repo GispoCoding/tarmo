@@ -13,6 +13,7 @@ import {
   styled,
   SwipeableDrawer,
   TextField,
+  useMediaQuery,
 } from "@mui/material";
 import { GeoJsonProperties } from "geojson";
 import * as React from "react";
@@ -36,6 +37,7 @@ interface SearchMenuProps {
 export default function SearchMenu(props: SearchMenuProps) {
   const [selectedResult, setSelectedResult] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
+  const mobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const toggleDrawer =
     (showSearch: boolean) =>
@@ -97,7 +99,7 @@ export default function SearchMenu(props: SearchMenuProps) {
   const handleResultClick = (result: string, index: number) => {
     props.selectedSetter(result);
     setSelectedResult(index);
-    setShowSearch(false);
+    if (mobile) setShowSearch(false);
   };
 
   /**
@@ -182,7 +184,7 @@ export default function SearchMenu(props: SearchMenuProps) {
           keepMounted: true,
         }}
         anchor="right"
-        variant="temporary"
+        variant={mobile ? "temporary" : "persistent"}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
         open={showSearch}

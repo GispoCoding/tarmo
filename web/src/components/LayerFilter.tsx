@@ -10,6 +10,7 @@ import {
   SwipeableDrawer,
   Switch,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import * as React from "react";
 import shadows from "../theme/shadows";
@@ -19,6 +20,7 @@ import {
 } from "../contexts/MapFiltersContext";
 import RightSidePanel from "./RightSidePanel";
 import { FilterList } from "@mui/icons-material";
+import theme from "../theme/theme";
 
 type Category = {
   name: keyof CategoryFilters;
@@ -91,6 +93,7 @@ const winterCategories: Category[] = [
 export default function LayerFilter() {
   const mapFiltersContext = React.useContext(MapFiltersContext);
   const [open, setOpen] = React.useState(false);
+  const mobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -184,7 +187,7 @@ export default function LayerFilter() {
           keepMounted: true,
         }}
         anchor="right"
-        variant="temporary"
+        variant={mobile ? "temporary" : "persistent"}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
         open={open}

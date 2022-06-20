@@ -1,5 +1,13 @@
-import { Close } from "@mui/icons-material";
-import { Box, IconButton, styled, Toolbar, Typography } from "@mui/material";
+import { ChevronRight, Close } from "@mui/icons-material";
+import {
+  Box,
+  IconButton,
+  styled,
+  Toolbar,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import * as React from "react";
 import theme from "../theme/theme";
 import palette from "../theme/palette";
@@ -59,15 +67,25 @@ export default function RightSidePanel({
   title,
   onClose,
 }: Props) {
+  const mobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <Wrapper>
       <StyledToolbar>
         <Typography variant="h4" color={palette.primary.dark}>
           {title}
         </Typography>
-        <IconButton onClick={onClose} color="primary" sx={{ mr: -1 }}>
-          <Close />
-        </IconButton>
+        {mobile ? (
+          <IconButton onClick={onClose} color="primary" sx={{ mr: -1 }}>
+            <Close />
+          </IconButton>
+        ) : (
+          <Tooltip title="Piilota paneeli">
+            <IconButton onClick={onClose} color="primary" sx={{ mr: -1 }}>
+              <ChevronRight />
+            </IconButton>
+          </Tooltip>
+        )}
       </StyledToolbar>
       <Container sx={{ padding: disablePadding ? 0 : theme.spacing(3) }}>
         {children}
