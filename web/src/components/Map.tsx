@@ -75,7 +75,8 @@ import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
-import { buildQuery, parseResponse } from "../utils";
+import { buildQuery, parseResponse } from "../utils/utils";
+import LayerFilter from "./LayerFilter";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
@@ -662,6 +663,7 @@ export default function TarmoMap({
           <InfoButton />
           <NavigationControl />
           <GeolocateControl trackUserLocation={true} />
+          <LayerFilter />
         </>
       )}
     </MapGL>

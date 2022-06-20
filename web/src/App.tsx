@@ -1,13 +1,12 @@
-import * as React from "react";
-import TarmoMap from "./components/Map";
+import { Box } from "@mui/material";
 import "maplibre-gl/dist/maplibre-gl.css";
+import * as React from "react";
 import { useEffect, useState } from "react";
 import InfoSlider from "./components/InfoSlider";
-import { PopupInfo } from "./types";
-import LayerFilter from "./components/LayerFilter";
+import TarmoMap from "./components/Map";
 import SplashScreen from "./components/SplashScreen";
-import { Box } from "@mui/material";
 import MapFiltersProvider from "./contexts/MapFiltersContext";
+import { PopupInfo } from "./types";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -31,7 +30,6 @@ export default function App() {
     <Box sx={{ position: "fixed", width: "100%", height: "100%" }}>
       <MapFiltersProvider>
         <TarmoMap setPopupInfo={setPopupInfo} viewHeight={viewHeight} />
-        <LayerFilter />
       </MapFiltersProvider>
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
     </Box>

@@ -6,7 +6,7 @@ import {
   SymbolLayout,
   VectorSource,
 } from "mapbox-gl";
-import { getCategoryColor, getCategoryIcon } from "../utils";
+import { getCategoryColor, getCategoryIcon } from "../utils/utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 

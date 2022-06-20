@@ -39,7 +39,7 @@ import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { gqlPattern, PopupInfo } from "../types";
-import { getCategoryIcon, getCategoryPlural } from "../utils";
+import { getCategoryIcon, getCategoryPlural } from "../utils/utils";
 import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
 

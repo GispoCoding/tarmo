@@ -1,6 +1,6 @@
 import { FeatureCollection, Feature } from "geojson";
-import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "./types";
-import palette from "./theme/palette";
+import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
+import palette from "../theme/palette";
 
 export const buildQuery = (
   gqlQuery: string,
