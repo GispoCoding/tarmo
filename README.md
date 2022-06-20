@@ -12,6 +12,7 @@ Tarmo - Tampere Mobilemap
   - [Backend](#backend)
   - [Database migrations](#database-migrations)
 - [Data model](#data-model)
+- [Architecture](#architecture)
 
 ## Development
 
@@ -74,3 +75,7 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
 ## Data model
 
 [Database documentation](./backend/databasemodel/dbdoc/README.md)
+
+## Architecture
+
+![Tarmo app architecture](architecture.png)
