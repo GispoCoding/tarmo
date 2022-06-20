@@ -5,6 +5,8 @@
 
 Tarmo - Tampere Mobilemap
 
+![Sample screenshot](tarmo.png)
+
 - [Development](#development)
   - [Frontend](#frontend)
   - [Backend](#backend)
