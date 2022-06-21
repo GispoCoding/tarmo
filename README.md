@@ -68,7 +68,7 @@ docker network ls --format {{.Name}} |grep pytest | awk '{print $1}' | xargs -I 
 4. Add the needed difference SQL (generated e.g. manually or with pgdiff) as `upgrade.sql` inside the new `uuid` directory.
 5. Add a `downgrade.sql` that will cancel the `upgrade.sql` operations in the same directory.
 6. Run tests with `make pytest` to check that your new model.sql, upgrade.sql and downgrade.sql run properly.
-7. Migrate your local development database to the new revision by running `make test-migrate-db`, or just `make rebuild` and `make test-create-db` to start a new development instance.
+7. Run `make rebuild` and `make test-create-db` to start development instance with the new model.
 8. To update the [database documentation](./backend/databasemodel/dbdoc/README.md) to reflect the changes, install [tbls](https://github.com/k1LoW/tbls) and run `tbls doc --force`.
 9. Commit `model.sql`, the `uuid_your_message.py` file and `uuid` directory content, as well as the documentation changes in `dbdoc` directory, to Github.
 
