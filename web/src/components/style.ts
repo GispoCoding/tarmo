@@ -44,6 +44,7 @@ enum LabelLayerId {
 export const NLS_STYLE_URI = "map-styles/nls-style.json";
 
 const circleRadius = 12;
+const lineWidth = 4;
 
 const info_image: HTMLImageElement = new Image(24, 24);
 info_image.src = "/img/info-light.png";
@@ -181,7 +182,15 @@ const CIRCLE_PAINT: CirclePaint = {
  * Paint object for all line layers
  */
 const LINE_PAINT: LinePaint = {
-  "line-width": 4,
+  "line-width": [
+    "interpolate",
+    ["linear"],
+    ["zoom"],
+    10,
+    lineWidth,
+    13,
+    2 * lineWidth,
+  ],
   "line-color": [
     "match",
     ["string", ["get", "tarmo_category"]],
