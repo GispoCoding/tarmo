@@ -83,6 +83,10 @@ const winterCategories: Category[] = [
     name: "Luistelu",
     icon: "skating-darkwater.png",
   },
+  {
+    name: "Talviuinti",
+    icon: "ice-dark.png",
+  },
 ];
 
 /**

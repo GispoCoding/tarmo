@@ -70,6 +70,9 @@ skating_image.src = `${getCategoryIcon("Luistelu")}`;
 const swimming_image: HTMLImageElement = new Image(24, 24);
 swimming_image.src = `${getCategoryIcon("Uinti")}`;
 
+const ice_swimming_image: HTMLImageElement = new Image(24, 24);
+ice_swimming_image.src = `${getCategoryIcon("Talviuinti")}`;
+
 const activities_image: HTMLImageElement = new Image(24, 24);
 activities_image.src = `${getCategoryIcon("Ulkoiluaktiviteetit")}`;
 
@@ -98,6 +101,7 @@ export const POINT_IMAGES = [
   ["parking", parking_image],
   ["bicycle_parking", bicycle_parking_image],
   ["swimming", swimming_image],
+  ["ice_swimming", ice_swimming_image],
   ["activities", activities_image],
   ["fireplaces", fireplaces_image],
   ["outdoors", outdoors_image],
@@ -137,6 +141,8 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "watersports",
     "Hiihto",
     "skiing",
+    "Talviuinti",
+    "ice_swimming",
     "info",
   ],
   "icon-size": 0.75,
@@ -157,6 +163,8 @@ const CIRCLE_PAINT: CirclePaint = {
     getCategoryColor("Luistelu"),
     "Uinti",
     getCategoryColor("Uinti"),
+    "Talviuinti",
+    getCategoryColor("Talviuinti"),
     "Ulkoiluaktiviteetit",
     getCategoryColor("Ulkoiluaktiviteetit"),
     "Ulkoilupaikat",

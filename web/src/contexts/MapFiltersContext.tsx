@@ -7,6 +7,7 @@ export const CATEGORY_FILTERS = Object.freeze({
   "Pyöräily": true,
   "Luistelu": true,
   "Uinti": true,
+  "Talviuinti": true,
   "Ulkoiluaktiviteetit": true,
   "Ulkoilureitit": true,
   "Laavut, majat, ruokailu": true,

@@ -149,6 +149,14 @@ def test_get_sport_place_laavu_kota_tai_kammi(loader):
     assert sport_place["tarmo_category"] == "Laavut, majat, ruokailu"
 
 
+def test_get_sport_place_talviuintipaikka(loader):
+    sport_place = loader.get_feature(510087)
+    assert sport_place["geom"] == "MULTIPOINT (23.7865148394527 61.5154325183404)"
+    assert sport_place["season"] == "Talvi"
+    assert sport_place["table"] == "talviuintipaikka"
+    assert sport_place["tarmo_category"] == "Talviuinti"
+
+
 def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
@@ -169,8 +177,10 @@ def assert_data_is_imported(main_db_params):
             assert cur.fetchone() == (1,)
             cur.execute(f"SELECT count(*) FROM lipas.laavu_kota_tai_kammi")
             assert cur.fetchone() == (1,)
+            cur.execute(f"SELECT count(*) FROM lipas.talviuintipaikka")
+            assert cur.fetchone() == (1,)
             cur.execute(f"SELECT count(*) FROM kooste.lipas_pisteet")
-            assert cur.fetchone() == (6,)
+            assert cur.fetchone() == (7,)
             cur.execute(f"SELECT count(*) FROM kooste.lipas_viivat")
             assert cur.fetchone() == (2,)
             cur.execute("SELECT last_modified FROM lipas.metadata")
@@ -195,7 +205,9 @@ def assert_data_is_imported(main_db_params):
 
 
 def test_save_lipas_features(loader, main_db_params):
-    loader.save_features([76249, 513435, 528808, 73043, 92112, 500285, 72948, 72944])
+    loader.save_features(
+        [76249, 513435, 528808, 73043, 92112, 500285, 72948, 72944, 510087]
+    )
     assert_data_is_imported(main_db_params)
 
 
