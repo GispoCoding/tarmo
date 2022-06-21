@@ -19,6 +19,8 @@ class OSMLoader(BaseLoader):
         "access": {"customers": "Asiakaspysäköinti", "yes": "Yleinen pysäköinti"},
         "amenity": {"bicycle_parking": "Pyöräpysäköinti"},
     }
+    # Allow other tarmo_categories than the database default
+    TAGS_TO_TARMO_CATEGORY = {"amenity": {"bicycle_parking": "Pyöräily"}}
 
     api_url = "https://overpass-api.de/api/interpreter"
     default_point = Point(0, 0)
@@ -89,13 +91,25 @@ class OSMLoader(BaseLoader):
             "deleted": False,
         }
 
-        # Map selected tags to type_name field too. Latter tags take precedence.
+        # Map selected tags to tarmo_category and type_name.
+        # Latter tags take precedence.
         type_name = None
         for tag, value_map in self.TAGS_TO_TYPE_NAMES.items():
             value = tags.get(tag, None)
             if value and value in value_map.keys():
                 type_name = value_map[value]
-        flattened["type_name"] = type_name
+        # Do not override default with None
+        if type_name:
+            flattened["type_name"] = type_name
+        tarmo_category = None
+        for tag, value_map in self.TAGS_TO_TARMO_CATEGORY.items():
+            value = tags.get(tag, None)
+            if value and value in value_map.keys():
+                tarmo_category = value_map[value]
+        # Do not override default with None
+        if tarmo_category:
+            flattened["tarmo_category"] = tarmo_category
+
         return flattened
 
     def get_overpass_query(self) -> str:

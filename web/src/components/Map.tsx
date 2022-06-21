@@ -17,7 +17,6 @@ import MapGL, {
   ScaleControl,
   Source,
   SymbolLayer,
-  FillLayer,
 } from "react-map-gl";
 import {
   LayerId,
@@ -372,15 +371,7 @@ export default function TarmoMap({
     >
       {/* Area polygons */}
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
-        <Layer
-          {...{
-            ...OSM_AREA_STYLE,
-            layout: {
-              ...(OSM_AREA_STYLE as FillLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
-            },
-          }}
-        />
+        <Layer {...{ ...OSM_AREA_STYLE, filter: categoryFilter }} />
       </Source>
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />
@@ -574,26 +565,10 @@ export default function TarmoMap({
         />
       </Source>
       <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer
-          {...{
-            ...OSM_POINT_LABEL_STYLE,
-            layout: {
-              ...(OSM_POINT_LABEL_STYLE as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
-            },
-          }}
-        />
+        <Layer {...{ ...OSM_POINT_LABEL_STYLE, filter: categoryFilter }} />
       </Source>
       <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
-        <Layer
-          {...{
-            ...OSM_AREA_LABEL_STYLE,
-            layout: {
-              ...(OSM_AREA_LABEL_STYLE as SymbolLayer).layout,
-              visibility: mapFiltersContext.getVisibilityValue("Pysäköinti"),
-            },
-          }}
-        />
+        <Layer {...{ ...OSM_AREA_LABEL_STYLE, filter: categoryFilter }} />
       </Source>
 
       {/* External data layers */}
