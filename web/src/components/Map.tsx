@@ -106,7 +106,7 @@ export default function TarmoMap({
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
         tarmo_category: "Pysäkit",
-        zoomThreshold: 12,
+        zoomThreshold: 13,
         reload: true,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
@@ -130,7 +130,7 @@ export default function TarmoMap({
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
         tarmo_category: "Pysäkit",
-        zoomThreshold: 12,
+        zoomThreshold: 13,
         reload: false,
         gqlQuery: `{
           bikeRentalStations {
@@ -638,7 +638,7 @@ export default function TarmoMap({
           <InfoButton />
           <NavigationControl />
           <GeolocateControl trackUserLocation={true} />
-          <LayerFilter />
+          <LayerFilter zoom={zoom}/>
         </>
       )}
     </MapGL>

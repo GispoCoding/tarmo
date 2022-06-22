@@ -317,7 +317,7 @@ export const OSM_POINT_LABEL_STYLE: LayerProps = {
   "layout": {
     "icon-image": ["get", "amenity"],
   },
-  "minzoom": 14,
+  "minzoom": 13,
 };
 
 export const OSM_AREA_LABEL_STYLE: LayerProps = {
@@ -328,7 +328,7 @@ export const OSM_AREA_LABEL_STYLE: LayerProps = {
   "layout": {
     "icon-image": ["get", "amenity"],
   },
-  "minzoom": 14,
+  "minzoom": 13,
 };
 
 export const OSM_AREA_STYLE: LayerProps = {
@@ -340,7 +340,7 @@ export const OSM_AREA_STYLE: LayerProps = {
     "fill-color": "#0a47a9",
     "fill-opacity": 0.2,
   },
-  "minzoom": 14,
+  "minzoom": 13,
 };
 
 /**
@@ -370,7 +370,7 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
   layout: {
     "icon-image": ["get", "type"],
   },
-  minzoom: 12,
+  minzoom: 13,
 };
 export const DIGITRANSIT_BIKE_POINT_STYLE: LayerProps = {
   id: LayerId.DigiTransitBikePoint,
@@ -380,7 +380,7 @@ export const DIGITRANSIT_BIKE_POINT_STYLE: LayerProps = {
     "icon-image": "bike",
     "icon-allow-overlap": true,
   },
-  minzoom: 12,
+  minzoom: 13,
 };
 
 /**
