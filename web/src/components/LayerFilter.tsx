@@ -22,9 +22,14 @@ import RightSidePanel from "./RightSidePanel";
 import { FilterList } from "@mui/icons-material";
 import theme from "../theme/theme";
 
+interface LayerFilterProps {
+  zoom: number;
+}
+
 type Category = {
   name: keyof CategoryFilters;
   icon: string;
+  zoomThreshold?: number;
 };
 
 const categories: Category[] = [
@@ -61,16 +66,18 @@ const categories: Category[] = [
     icon: "camera-darkwater.png",
   },
   {
+    name: "Muinaisjäännökset",
+    icon: "historical-dark.png",
+  },
+  {
     name: "Pysäköinti",
     icon: "parking-darkwater.png",
+    zoomThreshold: 13,
   },
   {
     name: "Pysäkit",
     icon: "bus-darkwater.png",
-  },
-  {
-    name: "Muinaisjäännökset",
-    icon: "historical-dark.png",
+    zoomThreshold: 13,
   },
 ];
 
@@ -90,7 +97,7 @@ const winterCategories: Category[] = [
  *
  * @returns filter to control the visible layers
  */
-export default function LayerFilter() {
+export default function LayerFilter(props: LayerFilterProps) {
   const mapFiltersContext = React.useContext(MapFiltersContext);
   const [open, setOpen] = React.useState(false);
   const mobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -126,7 +133,8 @@ export default function LayerFilter() {
    * @param icon Category icon
    * @returns
    */
-  const renderCategoryFilter = (name: keyof CategoryFilters, icon: string) => {
+  const renderCategoryFilter = (name: keyof CategoryFilters, icon: string, zoomThreshold?: number) => {
+    const disabled = !!zoomThreshold && props.zoom < zoomThreshold
     return (
       <ListItem key={name} divider>
         <ListItemAvatar>
@@ -137,8 +145,9 @@ export default function LayerFilter() {
             flex: 1,
             justifyContent: "space-between",
           }}
-          label={name}
+          label={name + (zoomThreshold ? " lähialueella" : "")}
           labelPlacement="start"
+          disabled={disabled}
           control={
             <Switch
               name={name}
@@ -158,7 +167,7 @@ export default function LayerFilter() {
   const renderCategories = () => {
     return (
       <>
-        {categories.map(({ name, icon }) => renderCategoryFilter(name, icon))}
+        {categories.map(({ name, icon, zoomThreshold }) => renderCategoryFilter(name, icon, zoomThreshold))}
       </>
     );
   };
