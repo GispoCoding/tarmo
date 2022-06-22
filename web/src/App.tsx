@@ -27,9 +27,9 @@ export default function App() {
   return showSplash ? (
     <SplashScreen />
   ) : (
-    <Box sx={{ position: "fixed", width: "100%", height: "100%" }}>
+    <Box sx={{ position: "fixed", width: "100%", height: viewHeight }}>
       <MapFiltersProvider>
-        <TarmoMap setPopupInfo={setPopupInfo} viewHeight={viewHeight} />
+        <TarmoMap setPopupInfo={setPopupInfo} />
       </MapFiltersProvider>
       {popupInfo && <InfoSlider popupInfo={popupInfo} />}
     </Box>
