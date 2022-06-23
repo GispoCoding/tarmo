@@ -26,7 +26,8 @@ import WithDebounce from "../utils/WithDebounce";
 
 interface SearchMenuProps {
   searchString: string;
-  searchResults: Map<string, MapboxGeoJSONFeature>;
+  searchPoints: Map<string, MapboxGeoJSONFeature>;
+  searchLines: Map<string, MapboxGeoJSONFeature>;
   stringSetter: (string: string) => void;
   selectedSetter: (string: string) => void;
 }
@@ -142,11 +143,13 @@ export default function SearchMenu(props: SearchMenuProps) {
    * Render result list
    */
   const renderResultList = () => {
-    const results = Array.from(props.searchResults.entries());
-
-    if (!props.searchResults || !props.searchString) {
+    if (!props.searchString) {
       return null;
     }
+
+    const points = Array.from(props.searchPoints.entries());
+    const lines = Array.from(props.searchLines.entries());
+    const results = [...lines, ...points]
 
     if (props.searchString && results.length < 1) {
       return (

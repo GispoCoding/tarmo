@@ -29,7 +29,8 @@ export enum LayerId {
   PointCluster11 = "point-clusters-11",
   PointCluster12 = "point-clusters-12",
   PointCluster13 = "point-clusters-13",
-  Search = "search",
+  SearchPoint = "search-points",
+  SearchLine = "search-lines",
 }
 
 // These are just labels on top of NLS background style
@@ -419,29 +420,51 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
  * used to search for the input string when zoomed in.
  */
 
-export const SEARCH_SOURCE: VectorSource = {
+export const SEARCH_POINT_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20name%20ILIKE%20`,
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20(name%20ILIKE%20'%25{searchString}%25'%20OR%20type_name%20ILIKE%20'%25{searchString}%25'%20OR%20tarmo_category%20ILIKE%20'%25{searchString}%25')`,
   ],
   minzoom: 0,
   maxzoom: 6,
 };
 
 export const SEARCH_STYLE_SYMBOL: LayerProps = {
-  "id": LayerId.Search,
-  "source": LayerId.Search,
+  "id": LayerId.SearchPoint,
+  "source": LayerId.SearchPoint,
   "source-layer": "kooste.all_points",
   "type": "symbol",
   "layout": SYMBOL_LAYOUT,
 };
 
 export const SEARCH_STYLE_CIRCLE: LayerProps = {
-  "id": `${LayerId.Search}-circle`,
-  "source": LayerId.Search,
+  "id": `${LayerId.SearchPoint}-circle`,
+  "source": LayerId.SearchPoint,
   "source-layer": "kooste.all_points",
   "type": "circle",
   "paint": CIRCLE_PAINT,
+};
+
+/**
+ * Dynamic search line layer. Maxzoom defines the size of the tile
+ * used to search for the input string when zoomed in.
+ */
+
+ export const SEARCH_LINE_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20(name%20ILIKE%20'%25{searchString}%25'%20OR%20type_name%20ILIKE%20'%25{searchString}%25'%20OR%20tarmo_category%20ILIKE%20'%25{searchString}%25')`,
+  ],
+  minzoom: 0,
+  maxzoom: 8,
+};
+
+export const SEARCH_LINE_STYLE: LayerProps = {
+  "id": LayerId.SearchLine,
+  "source": LayerId.SearchLine,
+  "source-layer": "kooste.lipas_viivat",
+  "type": "line",
+  "paint": LINE_PAINT,
 };
 
 /**
