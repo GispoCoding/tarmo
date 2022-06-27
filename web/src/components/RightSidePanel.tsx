@@ -1,6 +1,7 @@
-import { ChevronRight, Close } from "@mui/icons-material";
+import { ChevronRight } from "@mui/icons-material";
 import {
   Box,
+  Button,
   IconButton,
   styled,
   Toolbar,
@@ -38,6 +39,8 @@ const StyledToolbar = styled(Toolbar)(() => ({
 const Wrapper = styled(Box)(({ theme }) => ({
   position: "relative",
   overflow: "hidden",
+  width: "100vw",
+  height: "100vh",
   [theme.breakpoints.up("md")]: {
     width: 400,
   },
@@ -53,6 +56,7 @@ const Container = styled(Box)(() => ({
   maxWidth: "100%",
   maxHeight: "calc(100% - 64px)",
   overflowX: "auto",
+  flex: 1,
   WebkitOverflowScrolling: "touch", // iOS momentum scrolling
 }));
 
@@ -76,9 +80,15 @@ export default function RightSidePanel({
           {title}
         </Typography>
         {mobile ? (
-          <IconButton onClick={onClose} color="primary" sx={{ mr: -1 }}>
-            <Close />
-          </IconButton>
+          <Button
+            onClick={onClose}
+            color="primary"
+            variant="text"
+            endIcon={<ChevronRight /> }
+            sx={{ mr: -1 }}
+          >
+            Piilota
+          </Button>
         ) : (
           <Tooltip title="Piilota paneeli">
             <IconButton onClick={onClose} color="primary" sx={{ mr: -1 }}>
