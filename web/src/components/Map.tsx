@@ -359,7 +359,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         bearing: 0,
         pitch: 0,
       }}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100vw", height: "100vh" }}
       mapLib={maplibregl}
       mapStyle={mapStyle}
       onResize={toggleNav}
