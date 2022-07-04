@@ -159,22 +159,16 @@ export default function LayerFilter(props: LayerFilterProps) {
 
       return (
         <Stack
-          direction={ mobile ? "column" : "row" }
-          spacing={mobile ? 1 : 2}
-          justifyContent="space-between"
+          direction="row"
+          spacing={2}
+          alignItems="center"
         >
           <Typography>{name}</Typography>
-          { mobile ?
-            <Fade in={ notVisible }>
-              <Typography variant="body2" color={ grey[400] }>Näkyvissä vain lähialueella</Typography>
-            </Fade>
-            :
-            <Fade in={ notVisible }>
-              <Tooltip title="Näkyvissä vain lähialueella">
-                <VisibilityOff htmlColor={ grey[400] }/>
-              </Tooltip>
-            </Fade>
-          }
+          <Fade in={ notVisible }>
+            <Tooltip title="Näkyvissä vain lähialueella">
+              <VisibilityOff htmlColor={ grey[400] }/>
+            </Tooltip>
+          </Fade>
         </Stack>
       );
     }
@@ -239,7 +233,9 @@ export default function LayerFilter(props: LayerFilterProps) {
   return (
     <>
       <ToggleLayerFilter onClick={toggleDrawer(true)}>
-        <FilterList color={ mapFiltersContext.isActive ? "secondary" : "primary"} />
+        <Tooltip title={mapFiltersContext.isActive ? "Kohteita on piilotettu näkyvistä" : ""}>
+          <FilterList color={mapFiltersContext.isActive ? "secondary" : "primary"} />
+        </Tooltip>
       </ToggleLayerFilter>
       <SwipeableDrawer
         ModalProps={{
