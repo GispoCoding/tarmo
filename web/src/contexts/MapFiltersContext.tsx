@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 
 /**
  * Category filters
@@ -19,6 +20,11 @@ export const CATEGORY_FILTERS = Object.freeze({
   "Pysäkit": true,
   "Muinaisjäännökset": true,
 });
+
+/**
+ * localStorage key for category filters
+ */
+const CATEGORY_FILTERS_KEY = "category_filters";
 
 /**
  * Type for category filters
@@ -46,6 +52,7 @@ type VisibilityValue = "none" | "visible";
  */
 export interface MapFiltersContextType {
   filters: CategoryFilters;
+  isActive: boolean;
   setFilters: (filters: CategoryFilters) => void;
   toggleFilter: (key: keyof CategoryFilters) => void;
   getCategoryFilter: () => CategoryLayerFilter;
@@ -65,6 +72,7 @@ interface Props {
  */
 export const MapFiltersContext = React.createContext<MapFiltersContextType>({
   filters: CATEGORY_FILTERS,
+  isActive: false,
   setFilters: () => undefined,
   toggleFilter: () => undefined,
   getCategoryFilter: () => [
@@ -87,14 +95,47 @@ export default function MapFiltersProvider({ children }: Props) {
   const [filters, setFilters] = React.useState<CategoryFilters>({
     ...CATEGORY_FILTERS,
   });
+  const [isActive, setIsActive] = React.useState(false);
 
   /**
-   * Toggles single filter with given key
+   * Initialize filters from local storage
+   */
+  useEffect(() => {
+    const filters = localStorage.getItem(CATEGORY_FILTERS_KEY)
+    if (!filters) {
+      localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(CATEGORY_FILTERS))
+      setFilters({
+        ...CATEGORY_FILTERS,
+      });
+    } else {
+      const filtersObject = JSON.parse(filters);
+      setFilters(filtersObject);
+      updateIsActive(filtersObject);
+    }
+  },[]);
+
+  /**
+   * Update filters active state
+   */
+  const updateIsActive = (filters: CategoryFilters) => {
+    const filterList = Object.values(filters)
+    setIsActive(filterList.some(value => !value));
+  }
+
+  /**
+   * Toggles single filter with given key and stores it to local storage
    *
    * @param key key
    */
-  const toggleFilter = (key: keyof CategoryFilters) =>
-    setFilters({ ...filters, [key]: !filters[key] });
+  const toggleFilter = (key: keyof CategoryFilters) => {
+
+    const updatedFilters = { ...filters, [key]: !filters[key] }
+
+    localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters))
+    setFilters(updatedFilters);
+    updateIsActive(updatedFilters);
+  }
+
 
   /**
    * Returns filter value for all map layers
@@ -135,6 +176,7 @@ export default function MapFiltersProvider({ children }: Props) {
    */
   const contextValue: MapFiltersContextType = {
     filters: filters,
+    isActive: isActive,
     setFilters: setFilters,
     toggleFilter: toggleFilter,
     getCategoryFilter: getCategoryFilter,

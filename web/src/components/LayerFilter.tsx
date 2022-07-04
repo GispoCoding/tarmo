@@ -1,4 +1,5 @@
 import {
+  Fade,
   FormControlLabel,
   FormGroup,
   IconButton,
@@ -6,9 +7,11 @@ import {
   ListItem,
   ListItemAvatar,
   ListSubheader,
+  Stack,
   styled,
   SwipeableDrawer,
   Switch,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -19,8 +22,9 @@ import {
   MapFiltersContext,
 } from "../contexts/MapFiltersContext";
 import RightSidePanel from "./RightSidePanel";
-import { FilterList } from "@mui/icons-material";
+import { FilterList, VisibilityOff } from "@mui/icons-material";
 import theme from "../theme/theme";
+import { grey } from "@mui/material/colors";
 
 interface LayerFilterProps {
   zoom: number;
@@ -138,20 +142,62 @@ export default function LayerFilter(props: LayerFilterProps) {
    * @returns
    */
   const renderCategoryFilter = (name: keyof CategoryFilters, icon: string, zoomThreshold?: number) => {
-    const disabled = !!zoomThreshold && props.zoom < zoomThreshold
+    const notVisible = !!zoomThreshold && props.zoom < zoomThreshold
+
+    const renderLabel = () => {
+
+      if (mobile) {
+        return (
+          <Stack>
+            <Typography>{name}</Typography>
+            { notVisible &&
+              <Typography variant="body2" color={ grey[500] }>Näkyvissä vain lähialueella</Typography>
+            }
+          </Stack>
+        );
+      }
+
+      return (
+        <Stack
+          direction={ mobile ? "column" : "row" }
+          spacing={mobile ? 1 : 2}
+          justifyContent="space-between"
+        >
+          <Typography>{name}</Typography>
+          { mobile ?
+            <Fade in={ notVisible }>
+              <Typography variant="body2" color={ grey[400] }>Näkyvissä vain lähialueella</Typography>
+            </Fade>
+            :
+            <Fade in={ notVisible }>
+              <Tooltip title="Näkyvissä vain lähialueella">
+                <VisibilityOff htmlColor={ grey[400] }/>
+              </Tooltip>
+            </Fade>
+          }
+        </Stack>
+      );
+    }
+
     return (
       <ListItem key={name} divider>
         <ListItemAvatar>
-          <img style={{ width: 26, height: 26 }} src={`/img/${icon}`} />
+          <img
+            style={{
+              width: 26,
+              height: 26,
+              opacity: notVisible ? 0.5 : 1,
+              }}
+            src={`/img/${icon}`}
+          />
         </ListItemAvatar>
         <FormControlLabel
           sx={{
             flex: 1,
             justifyContent: "space-between",
           }}
-          label={name + (zoomThreshold ? " lähialueella" : "")}
+          label={renderLabel()}
           labelPlacement="start"
-          disabled={disabled}
           control={
             <Switch
               name={name}
@@ -193,7 +239,7 @@ export default function LayerFilter(props: LayerFilterProps) {
   return (
     <>
       <ToggleLayerFilter onClick={toggleDrawer(true)}>
-        <FilterList color="primary" />
+        <FilterList color={ mapFiltersContext.isActive ? "secondary" : "primary"} />
       </ToggleLayerFilter>
       <SwipeableDrawer
         ModalProps={{
