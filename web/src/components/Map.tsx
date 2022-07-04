@@ -35,9 +35,11 @@ import {
   DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   POINT_IMAGES,
-  SEARCH_SOURCE,
+  SEARCH_POINT_SOURCE,
   SEARCH_STYLE_SYMBOL,
   SEARCH_STYLE_CIRCLE,
+  SEARCH_LINE_SOURCE,
+  SEARCH_LINE_STYLE,
   POINT_SOURCE,
   POINT_STYLE_SYMBOL,
   POINT_STYLE_CIRCLE,
@@ -72,7 +74,7 @@ import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
 import SearchMenu from "./SearchMenu";
 import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
-import { FeatureCollection } from "geojson";
+import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
 import { buildQuery, parseResponse } from "../utils/utils";
 import LayerFilter from "./LayerFilter";
@@ -90,7 +92,10 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   const [externalData, setExternalData] =
     useState<Map<LayerId, FeatureCollection>>();
   const [searchString, setSearchString] = useState("");
-  const [searchResults, setSearchResults] = useState<
+  const [searchPoints, setSearchPoints] = useState<
+    Map<string, MapboxGeoJSONFeature>
+  >(new Map());
+  const [searchLines, setSearchLines] = useState<
     Map<string, MapboxGeoJSONFeature>
   >(new Map());
   const [selected, setSelected] = useState<string | undefined>(undefined);
@@ -203,26 +208,46 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     // eslint-disable-next-line
   }, [bounds, mapFiltersContext]);
 
+  /* Returns the center point of a coordinate array */
+  const getCenterCoords = (coordinates: Position[]):Position => {
+    const x_coords = coordinates.map(coord => coord[0])
+    const y_coords = coordinates.map(coord => coord[1])
+    return [
+      (Math.max(...x_coords) + Math.min(...x_coords))/2,
+      (Math.max(...y_coords) + Math.min(...y_coords))/2,
+    ]
+  }
+
   // TODO: at the moment, the user can only select points on the search layer.
   // Another way of implementing this would be to zoom in when selected, and
   // then looking for the corresponding id in the all_points layer?
   useEffect(() => {
     if (selected) {
-      const feature = searchResults.get(selected);
-      const coords = [
-        feature!.geometry["coordinates"][0] as number,
-        feature!.geometry["coordinates"][1] as number,
-      ];
-      // for reasons unknown, [number, number] typing is not good enough
-      // @ts-ignore
-      actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
-      setPopupInfo({
-        layerId: LayerId[feature!.source] as LayerId,
-        properties: feature!.properties,
-        longitude: feature!.geometry["coordinates"][0],
-        latitude: feature!.geometry["coordinates"][1],
-        onClose: () => setPopupInfo(null),
-      });
+      // the user may select a point *or* a line
+      const feature = searchPoints.get(selected) || searchLines.get(selected);
+      let coords: Position | undefined
+      if (feature!.geometry.type == "Point") {
+        coords = [
+          feature!.geometry.coordinates[0] as number,
+          feature!.geometry.coordinates[1] as number,
+        ];
+      } else if (feature!.geometry.type == "LineString") {
+        coords = getCenterCoords(feature!.geometry.coordinates)
+      } else if (feature!.geometry.type == "MultiLineString") {
+        coords = getCenterCoords(feature!.geometry.coordinates.flat())
+      }
+      if (coords) {
+        // for reasons unknown, [number, number] typing is not good enough
+        // @ts-ignore
+        actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
+        setPopupInfo({
+          layerId: LayerId[feature!.source] as LayerId,
+          properties: feature!.properties,
+          longitude: coords[0],
+          latitude: coords[1],
+          onClose: () => setPopupInfo(null),
+        });
+      }
     }
   }, [selected]);
 
@@ -291,18 +316,27 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
         // Search layer must update results once they appear
         mapRef.on("sourcedata", ev => {
-          if (ev.isSourceLoaded && ev.sourceId === LayerId.Search && ev.tile) {
-            const features = mapRef.querySourceFeatures(LayerId.Search, {
+          if (ev.isSourceLoaded) {
+            // these will be empty if search layers are not visible
+            const points = mapRef.querySourceFeatures(LayerId.SearchPoint, {
               sourceLayer: "kooste.all_points",
+            });
+            const lines = mapRef.querySourceFeatures(LayerId.SearchLine, {
+              sourceLayer: "kooste.lipas_viivat",
             });
             // The search results may contain duplicates, as multiple tiles
             // may provide the same feature. Therefore, we want to filter the
             // results before actually showing them.
-            const uniqueFeatures = new Map<string, MapboxGeoJSONFeature>();
-            features.forEach(feature => {
-              uniqueFeatures.set(feature.properties!.id, feature);
+            const uniquePoints = new Map<string, MapboxGeoJSONFeature>();
+            const uniqueLines = new Map<string, MapboxGeoJSONFeature>();
+            points.forEach(feature => {
+              uniquePoints.set(feature.properties!.id, feature);
             });
-            setSearchResults(uniqueFeatures);
+            lines.forEach(feature => {
+              uniqueLines.set(feature.properties!.sportsPlaceId, feature);
+            });
+            setSearchPoints(uniquePoints);
+            setSearchLines(uniqueLines);
           }
         });
 
@@ -378,15 +412,19 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
       {/* Linestrings */}
       <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
-        <Layer {...{ ...LIPAS_LINE_STYLE, filter: categoryFilter }} />
+        <Layer {...{ ...LIPAS_LINE_STYLE,
+            filter: categoryFilter,
+            layout: {
+              visibility: searchString === "" ? "visible" : "none",
+            }, }} />
       </Source>
 
       {/* Dynamic search layer*/}
       <Source
-        id={LayerId.Search}
+        id={LayerId.SearchPoint}
         {...{
-          ...SEARCH_SOURCE,
-          tiles: [`${SEARCH_SOURCE.tiles![0]}'%25${searchString}%25'`],
+          ...SEARCH_POINT_SOURCE,
+          tiles: [SEARCH_POINT_SOURCE.tiles![0].replaceAll('{searchString}', searchString)],
         }}
       >
         <Layer
@@ -404,6 +442,23 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             filter: categoryFilter,
             layout: {
               ...(SEARCH_STYLE_SYMBOL as SymbolLayer).layout,
+              visibility: searchString === "" ? "none" : "visible",
+            },
+          }}
+        />
+      </Source>
+      <Source
+        id={LayerId.SearchLine}
+        {...{
+          ...SEARCH_LINE_SOURCE,
+          tiles: [SEARCH_LINE_SOURCE.tiles![0].replaceAll('{searchString}', searchString)],
+        }}
+      >
+        <Layer
+          {...{
+            ...SEARCH_LINE_STYLE,
+            filter: categoryFilter,
+            layout: {
               visibility: searchString === "" ? "none" : "visible",
             },
           }}
@@ -619,7 +674,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
       <SearchMenu
         searchString={searchString}
-        searchResults={searchResults}
+        searchPoints={searchPoints}
+        searchLines={searchLines}
         stringSetter={setSearchString}
         selectedSetter={setSelected}
       />
