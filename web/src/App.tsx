@@ -11,7 +11,6 @@ import { PopupInfo } from "./types";
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null);
-  const viewHeight = window.innerHeight;
 
   useEffect(() => {
     // Show splash screen for 2s on startup
@@ -27,7 +26,7 @@ export default function App() {
   return showSplash ? (
     <SplashScreen />
   ) : (
-    <Box sx={{ position: "fixed", width: "100%", height: viewHeight }}>
+    <Box sx={{ width: "100vw", height: "100vh" }}>
       <MapFiltersProvider>
         <TarmoMap setPopupInfo={setPopupInfo} />
       </MapFiltersProvider>
