@@ -55,6 +55,7 @@ export interface MapFiltersContextType {
   isActive: boolean;
   setFilters: (filters: CategoryFilters) => void;
   toggleFilter: (key: keyof CategoryFilters) => void;
+  toggleAll: () => void;
   getCategoryFilter: () => CategoryLayerFilter;
   getFilterValue: (key: keyof CategoryFilters) => boolean;
   getVisibilityValue: (key: keyof CategoryFilters) => VisibilityValue;
@@ -75,6 +76,7 @@ export const MapFiltersContext = React.createContext<MapFiltersContextType>({
   isActive: false,
   setFilters: () => undefined,
   toggleFilter: () => undefined,
+  toggleAll: () => undefined,
   getCategoryFilter: () => [
     "match",
     ["get", "tarmo_category"],
@@ -136,6 +138,18 @@ export default function MapFiltersProvider({ children }: Props) {
     updateIsActive(updatedFilters);
   }
 
+  /**
+   * Toggles all filters and stores it to local storage
+   */
+  const toggleAll = () => {
+    const filterEntries = Object.entries(filters);
+    const updatedEntries = filterEntries.map(([ _key ]) => ([ _key, isActive ]));
+    const updatedFilters = Object.fromEntries(updatedEntries);
+
+    localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters));
+    setFilters(updatedFilters);
+    updateIsActive(updatedFilters);
+  }
 
   /**
    * Returns filter value for all map layers
@@ -179,6 +193,7 @@ export default function MapFiltersProvider({ children }: Props) {
     isActive: isActive,
     setFilters: setFilters,
     toggleFilter: toggleFilter,
+    toggleAll: toggleAll,
     getCategoryFilter: getCategoryFilter,
     getFilterValue: getFilterValue,
     getVisibilityValue: getVisibilityValue,

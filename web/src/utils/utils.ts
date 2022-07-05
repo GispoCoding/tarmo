@@ -1,6 +1,5 @@
 import { FeatureCollection, Feature } from "geojson";
 import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
-import palette from "../theme/palette";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -110,7 +109,7 @@ export const getCategoryIcon = (category: string) =>
     "Vesillä ulkoilu": "img/dinghy-light.png",
     "Nähtävyydet": "img/camera-light.png",
     "Uinti": "img/swimming-light.png",
-    "Talviuinti": "img/ice-light.png",
+    "Talviuinti": "img/ice-swimming-light.png",
     "Pysäköinti": "img/parking-light.png",
     "Bussipysäkki": "img/bus-light.png",
     "Rautatieasema": "img/train.png",
@@ -135,11 +134,11 @@ export const getCategoryColor = (category: string) =>
     "Vesillä ulkoilu": "#39a7d7",
     "Nähtävyydet": "#7361A2",
     "Uinti": "#39a7d7",
-    "Talviuinti": "#5390b5",
-    "Pysäköinti": palette.primary.dark,
-    "Bussipysäkki": palette.primary.dark,
-    "Rautatieasema": palette.primary.dark,
-    "Ratikkapysäkki": palette.primary.dark,
+    "Talviuinti": "#39a7d7",
+    "Pysäköinti": "#005eb8",
+    "Bussipysäkki": "#7362a2",
+    "Rautatieasema": "#7362a2",
+    "Ratikkapysäkki": "#7362a2",
     "Muinaisjäännökset": "#00417d",
   }[category]);
 

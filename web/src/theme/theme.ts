@@ -254,6 +254,7 @@ export default createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "transparent",
+          fontSize: 18,
         },
       },
     },
