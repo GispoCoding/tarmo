@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Fade,
   FormControlLabel,
   FormGroup,
@@ -25,6 +26,7 @@ import RightSidePanel from "./RightSidePanel";
 import { FilterList, VisibilityOff } from "@mui/icons-material";
 import theme from "../theme/theme";
 import { grey } from "@mui/material/colors";
+import { getCategoryIcon, getCategoryColor } from "../utils/utils";
 
 interface LayerFilterProps {
   zoom: number;
@@ -32,55 +34,55 @@ interface LayerFilterProps {
 
 type Category = {
   name: keyof CategoryFilters;
-  icon: string;
+  category: string;
   zoomThreshold?: number;
 };
 
 const categories: Category[] = [
   {
     name: "Ulkoilureitit",
-    icon: "trekking-darkwater.png",
+    category: "Ulkoilureitit",
   },
   {
     name: "Ulkoiluaktiviteetit",
-    icon: "frisbee-darkwater.png",
+    category: "Ulkoiluaktiviteetit",
   },
   {
     name: "Ulkoilupaikat",
-    icon: "park-darkwater.png",
+    category: "Ulkoilupaikat",
   },
   {
     name: "Laavut, majat, ruokailu",
-    icon: "campfire-darkwater.png",
+    category: "Laavut, majat, ruokailu",
   },
   {
     name: "Pyöräily",
-    icon: "cycling-darkwater.png",
+    category: "Pyöräily",
   },
   {
     name: "Uinti",
-    icon: "swimming-darkwater.png",
+    category: "Uinti",
   },
   {
     name: "Vesillä ulkoilu",
-    icon: "dinghy-darkwater.png",
+    category: "Vesillä ulkoilu",
   },
   {
     name: "Nähtävyydet",
-    icon: "camera-darkwater.png",
+    category: "Nähtävyydet",
   },
   {
     name: "Muinaisjäännökset",
-    icon: "historical-dark.png",
+    category: "Muinaisjäännökset",
   },
   {
     name: "Pysäköinti",
-    icon: "parking-darkwater.png",
+    category: "Pysäköinti",
     zoomThreshold: 13,
   },
   {
     name: "Pysäkit",
-    icon: "bus-darkwater.png",
+    category: "Bussipysäkki",
     zoomThreshold: 13,
   },
 ];
@@ -88,15 +90,15 @@ const categories: Category[] = [
 const winterCategories: Category[] = [
   {
     name: "Hiihto",
-    icon: "ski-darkwater.png",
+    category: "Hiihto",
   },
   {
     name: "Luistelu",
-    icon: "skating-darkwater.png",
+    category: "Luistelu",
   },
   {
     name: "Talviuinti",
-    icon: "ice-dark.png",
+    category: "Talviuinti",
   },
 ];
 
@@ -134,6 +136,39 @@ export default function LayerFilter(props: LayerFilterProps) {
     backdropFilter: "blur(4px)",
     boxShadow: shadows[10],
   }));
+
+  /**
+   * Render show all categories
+   */
+  const renderShowAll = () => {
+    return (
+      <ListItem divider>
+        <FormControlLabel
+          sx={{
+            ml: 0,
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+          label="Näytä kaikki kohteet"
+          labelPlacement="start"
+          componentsProps={{
+            typography: {
+              variant: "button"
+            }
+          }}
+          control={
+            <Switch
+              name="show all"
+              inputProps={{ role: "show all points switch" }}
+              checked={!mapFiltersContext.isActive}
+              onChange={() => mapFiltersContext.toggleAll()}
+            />
+          }
+        />
+      </ListItem>
+    );
+  }
+
   /**
    * Render category filter selection item
    *
@@ -141,7 +176,7 @@ export default function LayerFilter(props: LayerFilterProps) {
    * @param icon Category icon
    * @returns
    */
-  const renderCategoryFilter = (name: keyof CategoryFilters, icon: string, zoomThreshold?: number) => {
+  const renderCategoryFilter = (name: keyof CategoryFilters, category: string, zoomThreshold?: number) => {
     const notVisible = !!zoomThreshold && props.zoom < zoomThreshold
 
     const renderLabel = () => {
@@ -176,14 +211,20 @@ export default function LayerFilter(props: LayerFilterProps) {
     return (
       <ListItem key={name} divider>
         <ListItemAvatar>
-          <img
-            style={{
-              width: 26,
-              height: 26,
+          <Avatar
+            sx={{
               opacity: notVisible ? 0.5 : 1,
-              }}
-            src={`/img/${icon}`}
-          />
+              backgroundColor: getCategoryColor(category),
+            }}
+          >
+            <img
+              style={{
+                width: 26,
+                height: 26,
+                }}
+              src={`/${getCategoryIcon(category)}`}
+            />
+          </Avatar>
         </ListItemAvatar>
         <FormControlLabel
           sx={{
@@ -211,7 +252,7 @@ export default function LayerFilter(props: LayerFilterProps) {
   const renderCategories = () => {
     return (
       <>
-        {categories.map(({ name, icon, zoomThreshold }) => renderCategoryFilter(name, icon, zoomThreshold))}
+        {categories.map(({ name, category, zoomThreshold }) => renderCategoryFilter(name, category, zoomThreshold))}
       </>
     );
   };
@@ -222,9 +263,9 @@ export default function LayerFilter(props: LayerFilterProps) {
   const renderWinterCategories = () => {
     return (
       <>
-        <ListSubheader color="primary">Talviulkoilu</ListSubheader>
-        {winterCategories.map(({ name, icon }) =>
-          renderCategoryFilter(name, icon)
+        <ListSubheader sx={{ pl: 7, mt: 1 }}>Talviulkoilu</ListSubheader>
+        {winterCategories.map(({ name, category }) =>
+          renderCategoryFilter(name, category)
         )}
       </>
     );
@@ -264,6 +305,7 @@ export default function LayerFilter(props: LayerFilterProps) {
             </Typography>
             <FormGroup sx={{ flex: 1 }}>
               <List>
+                {renderShowAll()}
                 {renderCategories()}
                 {renderWinterCategories()}
               </List>

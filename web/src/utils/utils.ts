@@ -135,7 +135,7 @@ export const getCategoryColor = (category: string) =>
     "Vesillä ulkoilu": "#39a7d7",
     "Nähtävyydet": "#7361A2",
     "Uinti": "#39a7d7",
-    "Talviuinti": "#5390b5",
+    "Talviuinti": "#39a7d7",
     "Pysäköinti": palette.primary.dark,
     "Bussipysäkki": palette.primary.dark,
     "Rautatieasema": palette.primary.dark,
