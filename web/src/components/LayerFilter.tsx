@@ -216,6 +216,7 @@ export default function LayerFilter(props: LayerFilterProps) {
               opacity: notVisible ? 0.5 : 1,
               backgroundColor: getCategoryColor(category),
             }}
+            variant={category === "Bussipysäkki" || category === "Pysäköinti" ? "rounded" : "circular"}
           >
             <img
               style={{

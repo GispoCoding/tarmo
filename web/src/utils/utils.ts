@@ -1,6 +1,5 @@
 import { FeatureCollection, Feature } from "geojson";
 import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
-import palette from "../theme/palette";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -136,10 +135,10 @@ export const getCategoryColor = (category: string) =>
     "Nähtävyydet": "#7361A2",
     "Uinti": "#39a7d7",
     "Talviuinti": "#39a7d7",
-    "Pysäköinti": palette.primary.dark,
-    "Bussipysäkki": palette.primary.dark,
-    "Rautatieasema": palette.primary.dark,
-    "Ratikkapysäkki": palette.primary.dark,
+    "Pysäköinti": "#005eb8",
+    "Bussipysäkki": "#7362a2",
+    "Rautatieasema": "#7362a2",
+    "Ratikkapysäkki": "#7362a2",
     "Muinaisjäännökset": "#00417d",
   }[category]);
 
