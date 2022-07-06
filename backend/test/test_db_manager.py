@@ -20,20 +20,34 @@ def assert_database_is_alright(
 
     # Check kooste tables
     cur.execute(
-        "SELECT table_name FROM information_schema.tables WHERE table_schema='kooste'"
+        "SELECT tablename, tableowner FROM pg_tables WHERE schemaname='kooste';"
     )
     kooste_tables = cur.fetchall()
     assert len(kooste_tables) == expected_kooste_count
 
-    # Check materialized views
-    cur.execute("SELECT matviewname FROM pg_matviews")
-    materialized_views = cur.fetchall()
-    assert len(materialized_views) == expected_matview_count
-
-    # Check constraint naming
     for table in kooste_tables:
         table_name = table[0]
-        print(table_name)
+        owner = table[1]
+
+        # Check table owner and read permissions
+        assert owner == os.environ.get("ADMIN_USER", "")
+        cur.execute(
+            f"SELECT grantee, privilege_type FROM information_schema.role_table_grants WHERE table_name='{table_name}';"
+        )
+        grants = cur.fetchall()
+        if "metadata" in table_name:
+            assert (os.environ.get("R_USER"), "SELECT") not in grants
+        else:
+            assert (os.environ.get("R_USER"), "SELECT") in grants
+        assert (os.environ.get("R_USER"), "INSERT") not in grants
+        assert (os.environ.get("R_USER"), "UPDATE") not in grants
+        assert (os.environ.get("R_USER"), "DELETE") not in grants
+        assert (os.environ.get("RW_USER"), "SELECT") in grants
+        assert (os.environ.get("RW_USER"), "INSERT") in grants
+        assert (os.environ.get("RW_USER"), "UPDATE") in grants
+        assert (os.environ.get("RW_USER"), "DELETE") in grants
+
+        # Check constraint naming
         cur.execute(
             "SELECT con.conname FROM pg_catalog.pg_constraint con INNER JOIN pg_catalog.pg_class rel ON rel.oid = con.conrelid "
             "INNER JOIN pg_catalog.pg_namespace nsp ON nsp.oid = connamespace WHERE "
@@ -42,6 +56,27 @@ def assert_database_is_alright(
         constraints = cur.fetchall()
         if constraints:
             assert (f"{table_name}_pk",) in constraints
+
+    # Check materialized views
+    cur.execute(
+        "SELECT matviewname, matviewowner FROM pg_matviews WHERE schemaname='kooste';"
+    )
+    materialized_views = cur.fetchall()
+    assert len(materialized_views) == expected_matview_count
+
+    for view in materialized_views:
+        view_name = view[0]
+        owner = view[1]
+
+        # Check view owner and read permissions
+        # Materialized views must be owned by the read_write user so they can be updated automatically!
+        assert owner == os.environ.get("RW_USER", "")
+        # Materialized views permissions are only stored in psql specific tables
+        cur.execute(f"SELECT relacl FROM pg_class WHERE relname='{view_name}';")
+        permission_string = cur.fetchall()[0][0]
+        assert f"{os.environ.get('R_USER')}=r/" in permission_string
+        assert f"{os.environ.get('RW_USER')}=arwdDxt/" in permission_string
+        assert f"{os.environ.get('ADMIN_USER')}=arwdDxt/" in permission_string
 
 
 def test_database_creation(main_db_params_with_root_user, tarmo_database_created):

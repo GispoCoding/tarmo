@@ -143,6 +143,10 @@ def upgrade_sql():
         "CREATE TABLE kooste.new_table (id bigint NOT NULL, "
         "geom geometry(MULTIPOINT, 4326) NOT NULL, CONSTRAINT "
         "new_table_pk PRIMARY KEY (id));"
+        "ALTER TABLE kooste.new_table OWNER TO tarmo_admin;"
+        "GRANT SELECT ON TABLE kooste.new_table TO tarmo_read;"
+        "GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE kooste.new_table TO "
+        "tarmo_read_write;"
     )
 
 

@@ -2112,7 +2112,11 @@ ALTER TABLE kooste.all_points OWNER TO tarmo_read_write;
 
 GRANT SELECT
    ON TABLE kooste.all_points
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.all_points
+   TO tarmo_admin;
 
 create function kooste.get_cluster_ids(radius float)
 	returns table(cluster_id int, point_geom geometry, "cityName" text, "tarmo_category" text, table_name text, props jsonb)
@@ -2188,24 +2192,48 @@ ALTER TABLE kooste.point_clusters_13 OWNER TO tarmo_read_write;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_8
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_8
+   TO tarmo_admin;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_9
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_9
+   TO tarmo_admin;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_10
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_10
+   TO tarmo_admin;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_11
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_11
+   TO tarmo_admin;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_12
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_12
+   TO tarmo_admin;
 
 GRANT SELECT
    ON TABLE kooste.point_clusters_13
-   TO tarmo_read, tarmo_admin;
+   TO tarmo_read;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
+   ON TABLE kooste.point_clusters_13
+   TO tarmo_admin;
