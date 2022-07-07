@@ -10,6 +10,11 @@ export interface PopupInfo {
   onClose: () => void;
 }
 
+export interface DataSource {
+  name: string,
+  url: string
+}
+
 export interface ExternalSource {
   url: string;
   tarmo_category: keyof CategoryFilters;
