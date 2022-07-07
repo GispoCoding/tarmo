@@ -241,7 +241,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         // @ts-ignore
         actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
         setPopupInfo({
-          layerId: LayerId[feature!.source] as LayerId,
+          layerId: feature!.source as LayerId,
           properties: feature!.properties,
           longitude: coords[0],
           latitude: coords[1],
@@ -274,7 +274,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       if (clickableFeatures && clickableFeatures[0]) {
         const feature = clickableFeatures[0];
         setPopupInfo({
-          layerId: LayerId[feature.source] as LayerId,
+          layerId: feature.source as LayerId,
           properties: feature.properties,
           longitude: lngLat.lng,
           latitude: lngLat.lat,
