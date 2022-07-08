@@ -6,7 +6,7 @@ import {
   SymbolLayout,
   VectorSource,
 } from "mapbox-gl";
-import { getCategoryColor, getCategoryIcon } from "../utils/utils";
+import { getCategoryColor, getCategoryIcon, minZoomByCategory } from "../utils/utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 
@@ -289,14 +289,14 @@ export const SYKE_VALTION_STYLE: LayerProps = {
 /**
  * Sources for OSM data
  */
-export const OSM_POINT_SOURCE: VectorSource = {
-  type: "vector",
-  tiles: [
-    `${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false`,
-  ],
-  minzoom: 0,
-  maxzoom: 22,
-};
+// export const OSM_POINT_SOURCE: VectorSource = {
+//   type: "vector",
+//   tiles: [
+//     `${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false`,
+//   ],
+//   minzoom: 0,
+//   maxzoom: 22,
+// };
 
 export const OSM_AREA_SOURCE: VectorSource = {
   type: "vector",
@@ -369,7 +369,7 @@ export const DIGITRANSIT_POINT_STYLE: LayerProps = {
   layout: {
     "icon-image": ["get", "type"],
   },
-  minzoom: 13,
+  minzoom: minZoomByCategory.get("Pysäkit"),
 };
 export const DIGITRANSIT_BIKE_POINT_STYLE: LayerProps = {
   id: LayerId.DigiTransitBikePoint,
@@ -379,7 +379,7 @@ export const DIGITRANSIT_BIKE_POINT_STYLE: LayerProps = {
     "icon-image": "bike",
     "icon-allow-overlap": true,
   },
-  minzoom: 13,
+  minzoom: minZoomByCategory.get("Pysäkit"),
 };
 
 /**
