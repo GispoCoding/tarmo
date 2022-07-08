@@ -310,25 +310,23 @@ export const OSM_AREA_SOURCE: VectorSource = {
 /**
  * Styles for OSM data
  */
-export const OSM_POINT_LABEL_STYLE: LayerProps = {
-  "id": LayerId.OsmPoint,
-  "source": LayerId.OsmPoint,
-  "source-layer": "kooste.osm_pisteet",
-  "type": "symbol",
-  "layout": {
-    "icon-image": ["get", "amenity"],
-  },
-  "minzoom": 13,
-};
+// export const OSM_POINT_LABEL_STYLE: LayerProps = {
+//   "id": LayerId.OsmPoint,
+//   "source": LayerId.OsmPoint,
+//   "source-layer": "kooste.osm_pisteet",
+//   "type": "symbol",
+//   "layout": {
+//     "icon-image": ["get", "amenity"],
+//   },
+//   "minzoom": 13,
+// };
 
 export const OSM_AREA_LABEL_STYLE: LayerProps = {
   "id": LayerId.OsmAreaLabel,
   "source": LayerId.OsmArea,
   "source-layer": "kooste.osm_alueet",
   "type": "symbol",
-  "layout": {
-    "icon-image": ["get", "amenity"],
-  },
+  "layout": SYMBOL_LAYOUT,
   "minzoom": 13,
 };
 

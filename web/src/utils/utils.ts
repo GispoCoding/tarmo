@@ -1,5 +1,5 @@
 import { FeatureCollection, Feature } from "geojson";
-import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
+import { Category, gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -91,6 +91,91 @@ export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
     features: [],
   };
 };
+
+// /**
+//  * Categories that should only display on high zoom levels
+//  */
+// export const localCategories = [
+//   "Pysäköinti", "Bussipysäkki", "Rautatieasema", "Ratikapysäkki", "Kaupunkipyöräasema"
+// ]
+// export const localZoom = 13
+
+export const categories: Category[] = [
+  {
+    name: "Ulkoilureitit",
+    category: "Ulkoilureitit",
+  },
+  {
+    name: "Ulkoiluaktiviteetit",
+    category: "Ulkoiluaktiviteetit",
+  },
+  {
+    name: "Ulkoilupaikat",
+    category: "Ulkoilupaikat",
+  },
+  {
+    name: "Laavut, majat, ruokailu",
+    category: "Laavut, majat, ruokailu",
+  },
+  {
+    name: "Pyöräily",
+    category: "Pyöräily",
+  },
+  {
+    name: "Uinti",
+    category: "Uinti",
+  },
+  {
+    name: "Vesillä ulkoilu",
+    category: "Vesillä ulkoilu",
+  },
+  {
+    name: "Nähtävyydet",
+    category: "Nähtävyydet",
+  },
+  {
+    name: "Muinaisjäännökset",
+    category: "Muinaisjäännökset",
+  },
+  {
+    name: "Pysäköinti",
+    category: "Pysäköinti",
+    zoomThreshold: 13,
+  },
+  {
+    name: "Pysäkit",
+    category: "Bussipysäkki",
+    zoomThreshold: 13,
+  },
+];
+
+export const winterCategories: Category[] = [
+  {
+    name: "Hiihto",
+    category: "Hiihto",
+  },
+  {
+    name: "Luistelu",
+    category: "Luistelu",
+  },
+  {
+    name: "Talviuinti",
+    category: "Talviuinti",
+  },
+];
+
+export const allCategories: Category[] = [...categories, ...winterCategories]
+export const categoriesByZoom = allCategories.reduce<Map<number, Category[]>>((differentZooms, category) => {
+  const zoomThreshold = category.zoomThreshold ? category.zoomThreshold : 0;
+  const categories = differentZooms.get(zoomThreshold)
+  if (categories) {
+    differentZooms.set(zoomThreshold, [category, ...categories])
+  }
+  else {
+    differentZooms.set(zoomThreshold, [category])
+  }
+  return differentZooms
+}, new Map())
 
 /**
  * Get category icon

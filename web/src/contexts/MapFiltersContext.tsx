@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
+import { categoriesByZoom } from "../utils/utils";
 
 /**
  * Category filters
@@ -32,13 +33,27 @@ const CATEGORY_FILTERS_KEY = "category_filters";
 export type CategoryFilters = typeof CATEGORY_FILTERS;
 
 /**
+ * Category zoom level filter
+ */
+const minZoomLevels: Array<[string[], number]> = []
+categoriesByZoom.forEach((categories, minzoom) => {
+  minZoomLevels.push([categories.map((category) => category.name), minzoom])
+})
+type ZoomLevelFilter = [
+  "match",
+  ["get", "tarmo_category"],
+  ...typeof minZoomLevels,
+  number
+];
+
+/**
  * Category map layer filter
  */
 type CategoryLayerFilter = [
   "match",
   ["get", "tarmo_category"],
   (keyof CategoryFilters | "")[],
-  true,
+  [">=", ["zoom"], ZoomLevelFilter]|true,
   false
 ];
 
@@ -152,6 +167,18 @@ export default function MapFiltersProvider({ children }: Props) {
   }
 
   /**
+   * Returns filter that sets minimum zoom level per category
+   */
+  const getZoomLevelFilter = (): ZoomLevelFilter => {
+    return [
+      "match",
+      ["get", "tarmo_category"],
+      ...minZoomLevels,
+      0
+    ]
+  }
+
+  /**
    * Returns filter value for all map layers
    */
   const getCategoryFilter = (): CategoryLayerFilter => {
@@ -160,12 +187,24 @@ export default function MapFiltersProvider({ children }: Props) {
     const filterLabels = includedEntries.map(
       ([key]) => key
     ) as (keyof CategoryFilters)[];
+    console.log('returning filter')
+    console.log([
+      "match",
+      ["get", "tarmo_category"],
+      filterLabels.length ? filterLabels : [""],
+        [">=",
+        ["zoom"],
+        getZoomLevelFilter()],
+      false,
+    ])
 
     return [
       "match",
       ["get", "tarmo_category"],
       filterLabels.length ? filterLabels : [""],
-      true,
+        [">=",
+        ["zoom"],
+        getZoomLevelFilter()],
       false,
     ];
   };
