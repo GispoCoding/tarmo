@@ -176,6 +176,9 @@ export const categoriesByZoom = allCategories.reduce<Map<number, Category[]>>((d
   }
   return differentZooms
 }, new Map())
+export const minZoomByCategory = new Map<string, number>(
+  allCategories.map((category) => [category.name, category.zoomThreshold ? category.zoomThreshold : 0])
+  )
 
 /**
  * Get category icon

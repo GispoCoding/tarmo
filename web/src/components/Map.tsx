@@ -76,7 +76,7 @@ import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
-import { buildQuery, parseResponse } from "../utils/utils";
+import { buildQuery, parseResponse, minZoomByCategory } from "../utils/utils";
 import LayerFilter from "./LayerFilter";
 
 interface TarmoMapProps {
@@ -107,7 +107,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
         tarmo_category: "Pysäkit",
-        zoomThreshold: 13,
+        zoomThreshold: minZoomByCategory.get("Pysäkit")!,
         reload: true,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
@@ -131,7 +131,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
         tarmo_category: "Pysäkit",
-        zoomThreshold: 13,
+        zoomThreshold: minZoomByCategory.get("Pysäkit")!,
         reload: false,
         gqlQuery: `{
           bikeRentalStations {
