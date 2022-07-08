@@ -26,81 +26,81 @@ import RightSidePanel from "./RightSidePanel";
 import { FilterList, VisibilityOff } from "@mui/icons-material";
 import theme from "../theme/theme";
 import { grey } from "@mui/material/colors";
-import { getCategoryIcon, getCategoryColor } from "../utils/utils";
+import { categories, winterCategories, getCategoryIcon, getCategoryColor } from "../utils/utils";
 
 interface LayerFilterProps {
   zoom: number;
 }
 
-type Category = {
-  name: keyof CategoryFilters;
-  category: string;
-  zoomThreshold?: number;
-};
+// type Category = {
+//   name: keyof CategoryFilters;
+//   category: string;
+//   zoomThreshold?: number;
+// };
 
-const categories: Category[] = [
-  {
-    name: "Ulkoilureitit",
-    category: "Ulkoilureitit",
-  },
-  {
-    name: "Ulkoiluaktiviteetit",
-    category: "Ulkoiluaktiviteetit",
-  },
-  {
-    name: "Ulkoilupaikat",
-    category: "Ulkoilupaikat",
-  },
-  {
-    name: "Laavut, majat, ruokailu",
-    category: "Laavut, majat, ruokailu",
-  },
-  {
-    name: "Pyöräily",
-    category: "Pyöräily",
-  },
-  {
-    name: "Uinti",
-    category: "Uinti",
-  },
-  {
-    name: "Vesillä ulkoilu",
-    category: "Vesillä ulkoilu",
-  },
-  {
-    name: "Nähtävyydet",
-    category: "Nähtävyydet",
-  },
-  {
-    name: "Muinaisjäännökset",
-    category: "Muinaisjäännökset",
-  },
-  {
-    name: "Pysäköinti",
-    category: "Pysäköinti",
-    zoomThreshold: 13,
-  },
-  {
-    name: "Pysäkit",
-    category: "Bussipysäkki",
-    zoomThreshold: 13,
-  },
-];
+// const categories: Category[] = [
+//   {
+//     name: "Ulkoilureitit",
+//     category: "Ulkoilureitit",
+//   },
+//   {
+//     name: "Ulkoiluaktiviteetit",
+//     category: "Ulkoiluaktiviteetit",
+//   },
+//   {
+//     name: "Ulkoilupaikat",
+//     category: "Ulkoilupaikat",
+//   },
+//   {
+//     name: "Laavut, majat, ruokailu",
+//     category: "Laavut, majat, ruokailu",
+//   },
+//   {
+//     name: "Pyöräily",
+//     category: "Pyöräily",
+//   },
+//   {
+//     name: "Uinti",
+//     category: "Uinti",
+//   },
+//   {
+//     name: "Vesillä ulkoilu",
+//     category: "Vesillä ulkoilu",
+//   },
+//   {
+//     name: "Nähtävyydet",
+//     category: "Nähtävyydet",
+//   },
+//   {
+//     name: "Muinaisjäännökset",
+//     category: "Muinaisjäännökset",
+//   },
+//   {
+//     name: "Pysäköinti",
+//     category: "Pysäköinti",
+//     zoomThreshold: 13,
+//   },
+//   {
+//     name: "Pysäkit",
+//     category: "Bussipysäkki",
+//     zoomThreshold: 13,
+//   },
+// ];
 
-const winterCategories: Category[] = [
-  {
-    name: "Hiihto",
-    category: "Hiihto",
-  },
-  {
-    name: "Luistelu",
-    category: "Luistelu",
-  },
-  {
-    name: "Talviuinti",
-    category: "Talviuinti",
-  },
-];
+// const winterCategories: Category[] = [
+//   {
+//     name: "Hiihto",
+//     category: "Hiihto",
+//   },
+//   {
+//     name: "Luistelu",
+//     category: "Luistelu",
+//   },
+//   {
+//     name: "Talviuinti",
+//     category: "Talviuinti",
+//   },
+// ];
 
 /**
  * Layer filter

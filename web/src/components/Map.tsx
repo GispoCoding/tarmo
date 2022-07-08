@@ -29,8 +29,8 @@ import {
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
   OSM_AREA_LABEL_STYLE,
-  OSM_POINT_SOURCE,
-  OSM_POINT_LABEL_STYLE,
+  // OSM_POINT_SOURCE,
+  // OSM_POINT_LABEL_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
@@ -618,9 +618,10 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           }}
         />
       </Source>
-      <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
+      {/* OSM points are now displayed clustered on the all points layer */}
+      {/* <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
         <Layer {...{ ...OSM_POINT_LABEL_STYLE, filter: categoryFilter }} />
-      </Source>
+      </Source> */}
       <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
         <Layer {...{ ...OSM_AREA_LABEL_STYLE, filter: categoryFilter }} />
       </Source>

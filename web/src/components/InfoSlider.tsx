@@ -331,18 +331,6 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Activities and services slide
    */
   const activitiesAndServicesSlide = () => {
-    if (
-      properties["toilet"] ||
-      properties["kiosk"] ||
-      properties["sauna"] ||
-      properties["equipmentRental"] ||
-      properties["playground"] ||
-      properties["exerciseMachines"] ||
-      properties["ligthing"] ||
-      properties["pier"] ||
-      properties["changingRooms"] ||
-      properties["season"]
-    ) {
       return (
         <>
           <Typography variant="h5">Aktiviteetit ja palvelut</Typography>
@@ -397,8 +385,6 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           </List>
         </>
       );
-    }
-    return null;
   };
 
   /**

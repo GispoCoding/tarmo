@@ -17,10 +17,54 @@ class OSMLoader(BaseLoader):
     TAGS_TO_TYPE_NAMES = {
         "fee": {"no": "Maksuton pysäköinti", "yes": "Maksullinen pysäköinti"},
         "access": {"customers": "Asiakaspysäköinti", "yes": "Yleinen pysäköinti"},
-        "amenity": {"bicycle_parking": "Pyöräpysäköinti"},
+        "amenity": {
+            "bench": "Penkki",
+            "bicycle_parking": "Pyöräpysäköinti",
+            "bbq": "Grillipaikka",
+            "recycling": "Kierrätyspiste",
+            "shelter": "Katos",
+            "toilets": "WC",
+            "waste_basket": "Jäteastia",
+        },
+        "tourism": {
+            "picnic_site": "Ruokailupaikka",
+            "information": "Info",
+            "museum": "Museo",
+            "viewpoint": "Näköalapaikka",
+        },
+        "leisure": {
+            "bird_hide": "Lintutorni",
+            "picnic_table": "Ruokailupaikka",
+            "sauna": "Sauna",
+        },
+        "fireplace": {"yes": "Ruoanlaittopaikka"},
+        "shelter_type": {"lean_to": "Laavu"},
+        "information": {"board": "Opastaulu", "map": "Opaskartta"},
     }
     # Allow other tarmo_categories than the database default
-    TAGS_TO_TARMO_CATEGORY = {"amenity": {"bicycle_parking": "Pyöräily"}}
+    TAGS_TO_TARMO_CATEGORY = {
+        "amenity": {
+            "bench": "Penkit",
+            "bbq": "Laavut, majat, ruokailu",
+            "bicycle_parking": "Pysäköinti",
+            "parking": "Pysäköinti",
+            "recycling": "Roskikset",
+            "shelter": "Laavut, majat, ruokailu",
+            "toilets": "WC:t",
+            "waste_basket": "Roskikset",
+        },
+        "tourism": {
+            "picnic_site": "Laavut, majat, ruokailu",
+            "information": "Ulkoilureitit",
+            "museum": "Nähtävyydet",
+            "viewpoint": "Nähtävyydet",
+        },
+        "leisure": {
+            "bird_hide": "Ulkoilureitit",
+            "picnic_table": "Laavut, majat, ruokailu",
+            "sauna": "Laavut, majat, ruokailu",
+        },
+    }
 
     api_url = "https://overpass-api.de/api/interpreter"
     default_point = Point(0, 0)

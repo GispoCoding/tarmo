@@ -2,6 +2,12 @@ import { LayerId } from "./components/style";
 import { GeoJsonProperties } from "geojson";
 import { CategoryFilters } from "./contexts/MapFiltersContext";
 
+export type Category = {
+  name: keyof CategoryFilters;
+  category: string;
+  zoomThreshold?: number;
+};
+
 export interface PopupInfo {
   layerId: LayerId;
   properties: GeoJsonProperties;
