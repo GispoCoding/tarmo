@@ -35,9 +35,10 @@ export type CategoryFilters = typeof CATEGORY_FILTERS;
 /**
  * Category zoom level filter
  */
-const minZoomLevels: Array<[string[], number]> = []
+const minZoomLevels: Array<string[]|number> = []
 categoriesByZoom.forEach((categories, minzoom) => {
-  minZoomLevels.push([categories.map((category) => category.name), minzoom])
+  minZoomLevels.push(categories.map((category) => category.name))
+  minZoomLevels.push(minzoom)
 })
 type ZoomLevelFilter = [
   "match",
