@@ -218,30 +218,33 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     ]
   }
 
-  // TODO: at the moment, the user can only select points on the search layer.
   // Another way of implementing this would be to zoom in when selected, and
-  // then looking for the corresponding id in the all_points layer?
+  // then looking for the corresponding id in the all_points or lines layer?
   useEffect(() => {
     if (selected) {
       // the user may select a point *or* a line
       const feature = searchPoints.get(selected) || searchLines.get(selected);
       let coords: Position | undefined
+      let layerId: LayerId | undefined
       if (feature!.geometry.type == "Point") {
         coords = [
           feature!.geometry.coordinates[0] as number,
           feature!.geometry.coordinates[1] as number,
         ];
+        layerId = LayerId.SearchPoint
       } else if (feature!.geometry.type == "LineString") {
         coords = getCenterCoords(feature!.geometry.coordinates)
+        layerId = LayerId.SearchLine
       } else if (feature!.geometry.type == "MultiLineString") {
         coords = getCenterCoords(feature!.geometry.coordinates.flat())
+        layerId = LayerId.SearchLine
       }
-      if (coords) {
+      if (layerId && coords) {
         // for reasons unknown, [number, number] typing is not good enough
         // @ts-ignore
         actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
         setPopupInfo({
-          layerId: LayerId[feature!.source] as LayerId,
+          layerId: layerId,
           properties: feature!.properties,
           longitude: coords[0],
           latitude: coords[1],
@@ -274,7 +277,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       if (clickableFeatures && clickableFeatures[0]) {
         const feature = clickableFeatures[0];
         setPopupInfo({
-          layerId: LayerId[feature.source] as LayerId,
+          layerId: feature.source as LayerId,
           properties: feature.properties,
           longitude: lngLat.lng,
           latitude: lngLat.lat,

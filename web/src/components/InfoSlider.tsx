@@ -38,10 +38,12 @@ import { useEffect, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
-import { gqlPattern, PopupInfo } from "../types";
+import { DataSource, gqlPattern, PopupInfo } from "../types";
 import { getCategoryIcon, getCategoryPlural } from "../utils/utils";
 import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
+import { LayerId } from "./style";
+import { GeoJsonProperties } from "geojson";
 
 interface PopupProps {
   popupInfo: PopupInfo;
@@ -102,7 +104,7 @@ const SliderContent = styled(Stack)(({ theme }) => ({
 }));
 
 export default function InfoSlider({ popupInfo }: PopupProps) {
-  const { properties } = popupInfo;
+  const { layerId, properties } = popupInfo;
   const theme = useTheme();
   const { ref, height } = useElementSize();
   const [activeSlide, setActiveSlide] = useState(0);
@@ -141,6 +143,38 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const handleSlideChange = (slide: number) => {
     setActiveSlide(slide);
   };
+
+  const dataSources: {[prefix:string]: DataSource} = {
+    "lipas": {name: "LIPAS", url: "https://www.lipas.fi/"},
+    "museovirastoarcrest": {name: "Museovirasto", url: "https://www.kyppi.fi/"},
+    "tamperewfs": {name: "Tampereen kaupunki", url: "https://data.tampere.fi/"},
+    "osm": {name: "OpenStreetMap", url: "https://www.openstreetmap.org/"},
+    "syke": {name: "Suomen ympäristökeskus", url: "https://www.syke.fi/"},
+    "digitransit": {name: "Digitransit", url: "https://digitransit.fi"}
+  }
+
+  /**
+   * Get data source string and url
+   * @param properties
+   * @returns data source to display to the user
+   */
+   const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
+    let prefix: string;
+    if (layerId.startsWith("point") || layerId == LayerId.SearchPoint) {
+      // in combined point layers, the original table name is known
+      prefix = properties!["table_name"].split("_")[0]
+    } else if (layerId == LayerId.SearchLine) {
+      // all lines are lipas
+      prefix = "lipas"
+    } else {
+      // other layers come from a single data source
+      prefix = layerId.split("-")[0]
+    }
+    const {name, url} = dataSources[prefix];
+    return <Typography variant="h6">
+      Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
+    </Typography>
+   }
 
   /**
    * Get season icon
@@ -426,10 +460,11 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
               </Link>
             </Box>
           )}
+          {getDataSource(layerId, properties)}
         </Stack>
       );
     }
-    return null;
+    return getDataSource(layerId, properties);
   };
 
   /**
