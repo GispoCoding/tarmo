@@ -160,9 +160,12 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    */
    const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
     let prefix: string;
-    if (layerId.startsWith("point")) {
-      // in combined layers, the original table name is known
+    if (layerId.startsWith("point") || layerId == LayerId.SearchPoint) {
+      // in combined point layers, the original table name is known
       prefix = properties!["table_name"].split("_")[0]
+    } else if (layerId == LayerId.SearchLine) {
+      // all lines are lipas
+      prefix = "lipas"
     } else {
       // other layers come from a single data source
       prefix = layerId.split("-")[0]
