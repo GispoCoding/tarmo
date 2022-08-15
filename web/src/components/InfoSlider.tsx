@@ -157,24 +157,35 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Get data source string and url
    * @param properties
    * @returns data source to display to the user
-   */
-   const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
+  */
+  const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
+    // Check if there's properties to begin with
+    if (!properties) {
+      return null;
+    }
+
     let prefix: string;
-    if (layerId.startsWith("point") || layerId == LayerId.SearchPoint) {
-      // in combined point layers, the original table name is known
-      prefix = properties!["table_name"].split("_")[0]
-    } else if (layerId == LayerId.SearchLine) {
-      // all lines are lipas
-      prefix = "lipas"
+
+    if (layerId.startsWith("point")) {
+      // Check if there's properties to begin with
+      if (!properties["table_name"]) {
+        return null;
+      }
+      // in combined layers, the original table name is known
+      prefix = properties["table_name"].split("_")[0]
     } else {
       // other layers come from a single data source
       prefix = layerId.split("-")[0]
     }
+
     const {name, url} = dataSources[prefix];
-    return <Typography variant="h6">
-      Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
-    </Typography>
-   }
+
+    return (
+      <Typography variant="h6">
+        Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
+      </Typography>
+    );
+  }
 
   /**
    * Get season icon
