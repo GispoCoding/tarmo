@@ -282,7 +282,7 @@ def test_get_bike_parking_feature(parking_loader, parking_data):
     assert customer_parking["osm_type"] == "node"
     assert customer_parking["geom"].startswith("POINT")
     assert customer_parking["tags"]
-    assert customer_parking["tarmo_category"] == "Pyöräily"
+    assert customer_parking["tarmo_category"] == "Pysäköinti"
     assert customer_parking["type_name"] == "Pyöräpysäköinti"
 
 

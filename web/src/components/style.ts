@@ -1,6 +1,8 @@
 import { LayerProps } from "react-map-gl";
 import {
   CirclePaint,
+  Expression,
+  FillPaint,
   LinePaint,
   Style,
   SymbolLayout,
@@ -92,6 +94,15 @@ watersports_image.src = `${getCategoryIcon("Vesillä ulkoilu")}`;
 const skiing_image: HTMLImageElement = new Image(24, 24);
 skiing_image.src = `${getCategoryIcon("Hiihto")}`;
 
+const cottage_image: HTMLImageElement = new Image(24, 24);
+cottage_image.src = `${getCategoryIcon("Leirintä ja majoitus")}`;
+
+const cafe_image: HTMLImageElement = new Image(24, 24);
+cafe_image.src = `${getCategoryIcon("Kahvilat ja kioskit")}`;
+
+const compost_image: HTMLImageElement = new Image(24, 24);
+compost_image.src = `${getCategoryIcon("Vessat ja roskikset")}`;
+
 /**
  * Images for all symbol layers
  */
@@ -111,6 +122,9 @@ export const POINT_IMAGES = [
   ["sights", sights_image],
   ["watersports", watersports_image],
   ["skiing", skiing_image],
+  ["cottage", cottage_image],
+  ["cafe", cafe_image],
+  ["compost", compost_image],
 ];
 
 /**
@@ -144,47 +158,83 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "skiing",
     "Talviuinti",
     "ice_swimming",
-    "info",
+    "Leirintä ja majoitus",
+    "cottage",
+    "Kahvilat ja kioskit",
+    "cafe",
+    "Vessat ja roskikset",
+    "compost",
+    /* In some categories (looking at you, parking) icons are determined by osm tags */
+    /* We could also select icon based on type_name, but this will do for now */
+    ["get", "amenity"],
   ],
-  "icon-size": 0.75,
+  "icon-size": [
+    "match",
+    ["string", ["get", "tarmo_category"]],
+    "Pysäköinti",
+    1,
+    0.75
+  ],
   "icon-allow-overlap": true,
 };
+
+const COLOR_MATCH: Expression = [
+  "match",
+  ["string", ["get", "tarmo_category"]],
+  "Pyöräily",
+  getCategoryColor("Pyöräily"),
+  "Luistelu",
+  getCategoryColor("Luistelu"),
+  "Uinti",
+  getCategoryColor("Uinti"),
+  "Talviuinti",
+  getCategoryColor("Talviuinti"),
+  "Ulkoiluaktiviteetit",
+  getCategoryColor("Ulkoiluaktiviteetit"),
+  "Ulkoilupaikat",
+  getCategoryColor("Ulkoilupaikat"),
+  "Ulkoilureitit",
+  getCategoryColor("Ulkoilureitit"),
+  "Laavut, majat, ruokailu",
+  getCategoryColor("Laavut, majat, ruokailu"),
+  "Vesillä ulkoilu",
+  getCategoryColor("Vesillä ulkoilu"),
+  "Hiihto",
+  getCategoryColor("Hiihto"),
+  "Nähtävyydet",
+  getCategoryColor("Nähtävyydet"),
+  "Muinaisjäännökset",
+  getCategoryColor("Muinaisjäännökset"),
+  "Leirintä ja majoitus",
+  getCategoryColor("Leirintä ja majoitus"),
+  "Kahvilat ja kioskit",
+  getCategoryColor("Kahvilat ja kioskit"),
+  "Vessat ja roskikset",
+  getCategoryColor("Vessat ja roskikset"),
+  palette.primary.dark,
+]
 
 /**
  * Paint object for all circle layers
  */
 const CIRCLE_PAINT: CirclePaint = {
   "circle-radius": circleRadius,
-  "circle-color": [
+  "circle-color": COLOR_MATCH,
+  "circle-opacity": [
     "match",
     ["string", ["get", "tarmo_category"]],
-    "Pyöräily",
-    getCategoryColor("Pyöräily"),
-    "Luistelu",
-    getCategoryColor("Luistelu"),
-    "Uinti",
-    getCategoryColor("Uinti"),
-    "Talviuinti",
-    getCategoryColor("Talviuinti"),
-    "Ulkoiluaktiviteetit",
-    getCategoryColor("Ulkoiluaktiviteetit"),
-    "Ulkoilupaikat",
-    getCategoryColor("Ulkoilupaikat"),
-    "Ulkoilureitit",
-    getCategoryColor("Ulkoilureitit"),
-    "Laavut, majat, ruokailu",
-    getCategoryColor("Laavut, majat, ruokailu"),
-    "Vesillä ulkoilu",
-    getCategoryColor("Vesillä ulkoilu"),
-    "Hiihto",
-    getCategoryColor("Hiihto"),
-    "Nähtävyydet",
-    getCategoryColor("Nähtävyydet"),
-    "Muinaisjäännökset",
-    getCategoryColor("Muinaisjäännökset"),
-    palette.primary.dark,
+    "Pysäköinti",
+    0,
+    0.9
   ],
-  "circle-opacity": 0.9,
+};
+
+/**
+ * Paint object for all area layers
+ */
+ const FILL_PAINT: FillPaint = {
+  "fill-color": COLOR_MATCH,
+  "fill-opacity": 0.2,
 };
 
 /**
@@ -200,19 +250,7 @@ const LINE_PAINT: LinePaint = {
     13,
     2 * lineWidth,
   ],
-  "line-color": [
-    "match",
-    ["string", ["get", "tarmo_category"]],
-    "Pyöräily",
-    getCategoryColor("Pyöräily"),
-    "Ulkoilureitit",
-    getCategoryColor("Ulkoilureitit"),
-    "Vesillä ulkoilu",
-    getCategoryColor("Vesillä ulkoilu"),
-    "Hiihto",
-    getCategoryColor("Hiihto"),
-    palette.primary.dark,
-  ],
+  "line-color": COLOR_MATCH,
 };
 
 /**
@@ -308,37 +346,15 @@ export const OSM_AREA_SOURCE: VectorSource = {
 };
 
 /**
- * Styles for OSM data
+ * Styles for OSM areas
  */
-// export const OSM_POINT_LABEL_STYLE: LayerProps = {
-//   "id": LayerId.OsmPoint,
-//   "source": LayerId.OsmPoint,
-//   "source-layer": "kooste.osm_pisteet",
-//   "type": "symbol",
-//   "layout": {
-//     "icon-image": ["get", "amenity"],
-//   },
-//   "minzoom": 13,
-// };
-
-export const OSM_AREA_LABEL_STYLE: LayerProps = {
-  "id": LayerId.OsmAreaLabel,
-  "source": LayerId.OsmArea,
-  "source-layer": "kooste.osm_alueet",
-  "type": "symbol",
-  "layout": SYMBOL_LAYOUT,
-  "minzoom": 13,
-};
 
 export const OSM_AREA_STYLE: LayerProps = {
   "id": LayerId.OsmArea,
   "source": LayerId.OsmArea,
   "source-layer": "kooste.osm_alueet",
   "type": "fill",
-  "paint": {
-    "fill-color": "#0a47a9",
-    "fill-opacity": 0.2,
-  },
+  "paint": FILL_PAINT,
   "minzoom": 13,
 };
 

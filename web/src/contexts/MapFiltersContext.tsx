@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { categoriesByZoom } from "../utils/utils";
+import { winterCategories, serviceCategories, categoriesByZoom } from "../utils/utils";
 
 /**
  * Category filters
@@ -20,6 +20,9 @@ export const CATEGORY_FILTERS = Object.freeze({
   "Pysäköinti": true,
   "Pysäkit": true,
   "Muinaisjäännökset": true,
+  "Leirintä ja majoitus": true,
+  "Kahvilat ja kioskit": true,
+  "Vessat ja roskikset": true
 });
 
 /**
@@ -69,9 +72,13 @@ type VisibilityValue = "none" | "visible";
 export interface MapFiltersContextType {
   filters: CategoryFilters;
   isActive: boolean;
+  serviceFilterActive: boolean;
+  winterFilterActive: boolean;
   setFilters: (filters: CategoryFilters) => void;
   toggleFilter: (key: keyof CategoryFilters) => void;
   toggleAll: () => void;
+  toggleServices: () => void;
+  toggleWinter: () => void;
   getCategoryFilter: () => CategoryLayerFilter;
   getFilterValue: (key: keyof CategoryFilters) => boolean;
   getVisibilityValue: (key: keyof CategoryFilters) => VisibilityValue;
@@ -90,9 +97,13 @@ interface Props {
 export const MapFiltersContext = React.createContext<MapFiltersContextType>({
   filters: CATEGORY_FILTERS,
   isActive: false,
+  serviceFilterActive: false,
+  winterFilterActive: false,
   setFilters: () => undefined,
   toggleFilter: () => undefined,
   toggleAll: () => undefined,
+  toggleServices: () => undefined,
+  toggleWinter: () => undefined,
   getCategoryFilter: () => [
     "match",
     ["get", "tarmo_category"],
@@ -113,7 +124,16 @@ export default function MapFiltersProvider({ children }: Props) {
   const [filters, setFilters] = React.useState<CategoryFilters>({
     ...CATEGORY_FILTERS,
   });
+  // all the state below depends on filters and needs not be set separately
+  const [serviceEntries, setServiceEntries] = React.useState(Object.keys(filters).filter(
+    (name) => serviceCategories.some((serviceCategory) => (serviceCategory.name === name))
+    ).map((name) => [name, filters[name]]));
+  const [winterEntries, setWinterEntries] = React.useState(Object.keys(filters).filter(
+    (name) => winterCategories.some((winterCategory) => (winterCategory.name === name))
+    ).map((name) => [name, filters[name]]));
   const [isActive, setIsActive] = React.useState(false);
+  const [serviceFilterActive, setServiceFilterActive] = React.useState(false);
+  const [winterFilterActive, setWinterFilterActive] = React.useState(false);
 
   /**
    * Initialize filters from local storage
@@ -128,17 +148,27 @@ export default function MapFiltersProvider({ children }: Props) {
     } else {
       const filtersObject = JSON.parse(filters);
       setFilters(filtersObject);
-      updateIsActive(filtersObject);
     }
   },[]);
 
   /**
-   * Update filters active state
+   * Update dependent state
    */
-  const updateIsActive = (filters: CategoryFilters) => {
-    const filterList = Object.values(filters)
+  useEffect(() => {
+    const filterList = Object.values(filters);
     setIsActive(filterList.some(value => !value));
-  }
+    setServiceEntries(Object.keys(filters).filter(
+      (name) => serviceCategories.some((serviceCategory) => (serviceCategory.name === name))
+      ).map((name) => [name, filters[name]]));
+    setWinterEntries(Object.keys(filters).filter(
+      (name) => winterCategories.some((winterCategory) => (winterCategory.name === name))
+      ).map((name) => [name, filters[name]]));
+  }, [filters]);
+
+  useEffect(() => {
+    setServiceFilterActive(serviceEntries.some(entry => !entry[1]));
+    setWinterFilterActive(winterEntries.some(entry => !entry[1]));
+  }, [serviceEntries, winterEntries])
 
   /**
    * Toggles single filter with given key and stores it to local storage
@@ -151,7 +181,6 @@ export default function MapFiltersProvider({ children }: Props) {
 
     localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters))
     setFilters(updatedFilters);
-    updateIsActive(updatedFilters);
   }
 
   /**
@@ -164,7 +193,31 @@ export default function MapFiltersProvider({ children }: Props) {
 
     localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters));
     setFilters(updatedFilters);
-    updateIsActive(updatedFilters);
+  }
+
+  /**
+   * Toggle winter categories
+   */
+   const toggleWinter = () => {
+    const filterEntries = Object.entries(filters);
+    const updatedEntries = [...filterEntries, ...winterEntries.map(([ _key ]) => ([ _key, winterFilterActive ]))];
+    console.log(updatedEntries)
+    const updatedFilters = Object.fromEntries(updatedEntries);
+
+    localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters));
+    setFilters(updatedFilters);
+  }
+
+  /**
+   * Toggle service categories
+   */
+   const toggleServices = () => {
+    const filterEntries = Object.entries(filters);
+    const updatedEntries = [...filterEntries, ...serviceEntries.map(([ _key ]) => ([ _key, serviceFilterActive ]))];
+    const updatedFilters = Object.fromEntries(updatedEntries);
+
+    localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters));
+    setFilters(updatedFilters);
   }
 
   /**
@@ -188,16 +241,6 @@ export default function MapFiltersProvider({ children }: Props) {
     const filterLabels = includedEntries.map(
       ([key]) => key
     ) as (keyof CategoryFilters)[];
-    console.log('returning filter')
-    console.log([
-      "match",
-      ["get", "tarmo_category"],
-      filterLabels.length ? filterLabels : [""],
-        [">=",
-        ["zoom"],
-        getZoomLevelFilter()],
-      false,
-    ])
 
     return [
       "match",
@@ -231,9 +274,13 @@ export default function MapFiltersProvider({ children }: Props) {
   const contextValue: MapFiltersContextType = {
     filters: filters,
     isActive: isActive,
+    serviceFilterActive: serviceFilterActive,
+    winterFilterActive: winterFilterActive,
     setFilters: setFilters,
     toggleFilter: toggleFilter,
     toggleAll: toggleAll,
+    toggleServices: toggleServices,
+    toggleWinter: toggleWinter,
     getCategoryFilter: getCategoryFilter,
     getFilterValue: getFilterValue,
     getVisibilityValue: getVisibilityValue,

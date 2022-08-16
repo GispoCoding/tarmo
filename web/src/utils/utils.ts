@@ -92,14 +92,6 @@ export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
   };
 };
 
-// /**
-//  * Categories that should only display on high zoom levels
-//  */
-// export const localCategories = [
-//   "Pysäköinti", "Bussipysäkki", "Rautatieasema", "Ratikapysäkki", "Kaupunkipyöräasema"
-// ]
-// export const localZoom = 13
-
 export const categories: Category[] = [
   {
     name: "Ulkoilureitit",
@@ -137,16 +129,6 @@ export const categories: Category[] = [
     name: "Muinaisjäännökset",
     category: "Muinaisjäännökset",
   },
-  {
-    name: "Pysäköinti",
-    category: "Pysäköinti",
-    zoomThreshold: 13,
-  },
-  {
-    name: "Pysäkit",
-    category: "Bussipysäkki",
-    zoomThreshold: 13,
-  },
 ];
 
 export const winterCategories: Category[] = [
@@ -164,7 +146,33 @@ export const winterCategories: Category[] = [
   },
 ];
 
-export const allCategories: Category[] = [...categories, ...winterCategories]
+export const serviceCategories: Category[] = [
+  {
+    name: "Leirintä ja majoitus",
+    category: "Leirintä ja majoitus",
+  },
+  {
+    name: "Kahvilat ja kioskit",
+    category: "Kahvilat ja kioskit",
+  },
+  {
+    name: "Vessat ja roskikset",
+    category: "Vessat ja roskikset",
+    zoomThreshold: 14,
+  },
+  {
+    name: "Pysäköinti",
+    category: "Pysäköinti",
+    zoomThreshold: 14,
+  },
+  {
+    name: "Pysäkit",
+    category: "Bussipysäkki",
+    zoomThreshold: 13,
+  },
+]
+
+export const allCategories: Category[] = [...categories, ...winterCategories, ...serviceCategories]
 export const categoriesByZoom = allCategories.reduce<Map<number, Category[]>>((differentZooms, category) => {
   const zoomThreshold = category.zoomThreshold ? category.zoomThreshold : 0;
   const categories = differentZooms.get(zoomThreshold)
@@ -203,6 +211,9 @@ export const getCategoryIcon = (category: string) =>
     "Rautatieasema": "img/train.png",
     "Ratikkapysäkki": "img/tram.png",
     "Muinaisjäännökset": "img/historical-light.png",
+    "Leirintä ja majoitus": "img/cottage-light.png",
+    "Kahvilat ja kioskit": "img/cafe-light.png",
+    "Vessat ja roskikset": "img/compost-light.png"
   }[category]);
 
 /**
@@ -228,6 +239,9 @@ export const getCategoryColor = (category: string) =>
     "Rautatieasema": "#7362a2",
     "Ratikkapysäkki": "#7362a2",
     "Muinaisjäännökset": "#00417d",
+    "Leirintä ja majoitus": "#397368",
+    "Kahvilat ja kioskit": "#397368",
+    "Vessat ja roskikset": "#85c466",
   }[category]);
 
 /**
@@ -248,9 +262,12 @@ export const getCategoryPlural = (category: string) =>
     "Nähtävyydet": "nähtävyyttä",
     "Uinti": "uintipaikkaa",
     "Talviuinti": "talviuintipaikkaa",
-    "Pysäköinti": "pysäköintipaikkaa",
+    "Pysäköinti": "pysäköintialuetta",
     "Bussipysäkki": "bussipysäkkiä",
     "Rautatieasema": "rautatieasemaa",
     "Ratikkapysäkki": "ratikkapysäkkiä",
     "Muinaisjäännökset": "muinaisjäännöstä",
+    "Leirintä ja majoitus": "leirintä- ja majoituspaikkaa",
+    "Kahvilat ja kioskit": "kahvilaa ja kioskia",
+    "Vessat ja roskikset": "vessaa ja roskista"
   }[category]);
