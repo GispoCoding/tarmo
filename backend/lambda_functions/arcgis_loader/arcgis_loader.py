@@ -33,6 +33,7 @@ class ArcGisLoader(BaseLoader):
         "museovirastoarcrest_metadata": {
             "WFS/MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_piste": "museovirastoarcrest_muinaisjaannokset",  # noqa
             "WFS/MV_KulttuuriymparistoSuojellut:RKY_piste": "museovirastoarcrest_rkykohteet",  # noqa
+            "WFS/MV_KulttuuriymparistoSuojellut:RKY_alue": "museovirastoarcrest_rkyalueet",  # noqa
         },
         "syke_metadata": {
             "SYKE/SYKE_SuojellutAlueet:Natura 2000 - SAC Manner-Suomi aluemaiset": "syke_natura2000",  # noqa
@@ -46,6 +47,7 @@ class ArcGisLoader(BaseLoader):
     FIELD_NAMES = {
         "kohdenimi": "name",
         "nimiSuomi": "name",
+        "nimi": "name",
         "Nimi": "name",
         "TyyppiNimi": "infoFi",
         "kunta": "cityName",
@@ -247,7 +249,10 @@ class ArcGisLoader(BaseLoader):
         for origin_name, tarmo_name in self.FIELD_NAMES.items():
             if origin_name in props.keys():
                 value = props.pop(origin_name)
-                if tarmo_name in props.keys():
+                if not value:
+                    # Some RKY names and/or subnames are empty, don't combine them
+                    continue
+                elif tarmo_name in props.keys():
                     props[tarmo_name] += f": {value}"
                 else:
                     # Seems urls are not always complete urls after all :(

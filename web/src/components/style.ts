@@ -19,6 +19,7 @@ export enum LayerId {
   LipasLine = "lipas-lines",
   SykeNatura = "syke-natura-alueet",
   SykeValtion = "syke-valtionluonnonsuojelualueet",
+  MuseovirastoArea = "museovirastoarcrest-rkyalueet",
   OsmPoint = "osm-points",
   OsmArea = "osm-areas",
   OsmAreaLabel = "osm-areas-labels",
@@ -325,16 +326,31 @@ export const SYKE_VALTION_STYLE: LayerProps = {
 };
 
 /**
- * Sources for OSM data
+ * Sources for Museovirasto areas
  */
-// export const OSM_POINT_SOURCE: VectorSource = {
-//   type: "vector",
-//   tiles: [
-//     `${process.env.TILESERVER_URL}/kooste.osm_pisteet/{z}/{x}/{y}.pbf?filter=deleted=false`,
-//   ],
-//   minzoom: 0,
-//   maxzoom: 22,
-// };
+ export const MUSEOVIRASTO_AREA_SOURCE: VectorSource = {
+  type: "vector",
+  tiles: [
+    `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkyalueet/{z}/{x}/{y}.pbf?filter=deleted=false`,
+  ],
+  minzoom: 0,
+  maxzoom: 22,
+};
+
+/**
+ * Styles for Museovirasto areas
+ */
+export const MUSEOVIRASTO_AREA_STYLE: LayerProps = {
+  "id": LayerId.MuseovirastoArea,
+  "source": LayerId.MuseovirastoArea,
+  "source-layer": "kooste.museovirastoarcrest_rkyalueet",
+  "type": "fill",
+  "paint": FILL_PAINT,
+};
+
+/**
+ * Sources for OSM areas
+ */
 
 export const OSM_AREA_SOURCE: VectorSource = {
   type: "vector",

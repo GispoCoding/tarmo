@@ -26,11 +26,10 @@ import {
   SYKE_NATURA_STYLE,
   SYKE_VALTION_SOURCE,
   SYKE_VALTION_STYLE,
+  MUSEOVIRASTO_AREA_SOURCE,
+  MUSEOVIRASTO_AREA_STYLE,
   OSM_AREA_SOURCE,
   OSM_AREA_STYLE,
-  OSM_AREA_LABEL_STYLE,
-  // OSM_POINT_SOURCE,
-  // OSM_POINT_LABEL_STYLE,
   DIGITRANSIT_POINT_STYLE,
   DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
@@ -406,6 +405,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
         <Layer {...{ ...OSM_AREA_STYLE, filter: categoryFilter }} />
       </Source>
+      <Source id={LayerId.MuseovirastoArea} {...MUSEOVIRASTO_AREA_SOURCE}>
+        <Layer {...{ ...MUSEOVIRASTO_AREA_STYLE, filter: categoryFilter }} />
+      </Source>
       <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
         <Layer {...SYKE_NATURA_STYLE} />
       </Source>
@@ -617,13 +619,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             },
           }}
         />
-      </Source>
-      {/* OSM points are now displayed clustered on the all points layer */}
-      {/* <Source id={LayerId.OsmPoint} {...OSM_POINT_SOURCE}>
-        <Layer {...{ ...OSM_POINT_LABEL_STYLE, filter: categoryFilter }} />
-      </Source> */}
-      <Source id={LayerId.OsmAreaLabel} {...OSM_AREA_SOURCE}>
-        <Layer {...{ ...OSM_AREA_LABEL_STYLE, filter: categoryFilter }} />
       </Source>
 
       {/* External data layers */}

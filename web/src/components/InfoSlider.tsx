@@ -160,9 +160,13 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    */
    const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
     let prefix: string;
+    // clusters have multiple data sources combined
+    if (layerId.startsWith("point-clusters") && properties!["size"] > 1) {
+      return null
+    }
     if (layerId.startsWith("point") || layerId == LayerId.SearchPoint) {
-      // in combined point layers, the original table name is known
-      prefix = properties!["table_name"].split("_")[0]
+      // in combined point layers, the original table name is given by the id
+      prefix = properties!["id"].split("_")[0]
     } else if (layerId == LayerId.SearchLine) {
       // all lines are lipas
       prefix = "lipas"
@@ -331,15 +335,20 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Activities and services slide
    */
   const activitiesAndServicesSlide = () => {
+      console.log(properties)
+      if (!properties["type_name"]) {
+        return null
+      }
       return (
         <>
           <Typography variant="h5">Aktiviteetit ja palvelut</Typography>
           <List>
             {properties["season"] && getSeason(properties["season"])}
-            <PropertyListItem
-              title={properties["tarmo_category"]}
+            {properties["type_name"] && (<PropertyListItem
+              title={properties["type_name"]}
               iconSrc={getCategoryIcon(properties["tarmo_category"])}
             />
+            )}
             {properties["toilet"] && (
               <PropertyListItem title="WC" iconSrc="img/toilet-light.png" />
             )}
