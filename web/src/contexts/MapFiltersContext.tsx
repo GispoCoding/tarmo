@@ -201,7 +201,6 @@ export default function MapFiltersProvider({ children }: Props) {
    const toggleWinter = () => {
     const filterEntries = Object.entries(filters);
     const updatedEntries = [...filterEntries, ...winterEntries.map(([ _key ]) => ([ _key, winterFilterActive ]))];
-    console.log(updatedEntries)
     const updatedFilters = Object.fromEntries(updatedEntries);
 
     localStorage.setItem(CATEGORY_FILTERS_KEY, JSON.stringify(updatedFilters));

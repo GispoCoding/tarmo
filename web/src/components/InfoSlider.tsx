@@ -335,7 +335,6 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Activities and services slide
    */
   const activitiesAndServicesSlide = () => {
-      console.log(properties)
       if (!properties["type_name"]) {
         return null
       }
