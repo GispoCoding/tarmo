@@ -5,7 +5,7 @@ import psycopg2
 
 def assert_database_is_alright(
     cur: psycopg2.extensions.cursor,
-    expected_kooste_count: int = 16,
+    expected_kooste_count: int = 17,
     expected_matview_count: int = 7,
 ):
     cur.execute(
@@ -145,7 +145,7 @@ def test_database_upgrade(main_db_params_with_root_user, tarmo_database_upgraded
     try:
         with conn.cursor() as cur:
             # we added an extra table
-            assert_database_is_alright(cur, expected_kooste_count=17)
+            assert_database_is_alright(cur, expected_kooste_count=18)
 
             cur.execute("SELECT version_num FROM alembic_version")
             assert cur.fetchall() == [(tarmo_database_upgraded,)]

@@ -7,7 +7,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListSubheader,
   Stack,
   styled,
   SwipeableDrawer,
@@ -26,81 +25,11 @@ import RightSidePanel from "./RightSidePanel";
 import { FilterList, VisibilityOff } from "@mui/icons-material";
 import theme from "../theme/theme";
 import { grey } from "@mui/material/colors";
-import { getCategoryIcon, getCategoryColor } from "../utils/utils";
+import { categories, winterCategories, serviceCategories, getCategoryIcon, getCategoryColor } from "../utils/utils";
 
 interface LayerFilterProps {
   zoom: number;
 }
-
-type Category = {
-  name: keyof CategoryFilters;
-  category: string;
-  zoomThreshold?: number;
-};
-
-const categories: Category[] = [
-  {
-    name: "Ulkoilureitit",
-    category: "Ulkoilureitit",
-  },
-  {
-    name: "Ulkoiluaktiviteetit",
-    category: "Ulkoiluaktiviteetit",
-  },
-  {
-    name: "Ulkoilupaikat",
-    category: "Ulkoilupaikat",
-  },
-  {
-    name: "Laavut, majat, ruokailu",
-    category: "Laavut, majat, ruokailu",
-  },
-  {
-    name: "Pyöräily",
-    category: "Pyöräily",
-  },
-  {
-    name: "Uinti",
-    category: "Uinti",
-  },
-  {
-    name: "Vesillä ulkoilu",
-    category: "Vesillä ulkoilu",
-  },
-  {
-    name: "Nähtävyydet",
-    category: "Nähtävyydet",
-  },
-  {
-    name: "Muinaisjäännökset",
-    category: "Muinaisjäännökset",
-  },
-  {
-    name: "Pysäköinti",
-    category: "Pysäköinti",
-    zoomThreshold: 13,
-  },
-  {
-    name: "Pysäkit",
-    category: "Bussipysäkki",
-    zoomThreshold: 13,
-  },
-];
-
-const winterCategories: Category[] = [
-  {
-    name: "Hiihto",
-    category: "Hiihto",
-  },
-  {
-    name: "Luistelu",
-    category: "Luistelu",
-  },
-  {
-    name: "Talviuinti",
-    category: "Talviuinti",
-  },
-];
 
 /**
  * Layer filter
@@ -264,14 +193,77 @@ export default function LayerFilter(props: LayerFilterProps) {
   const renderWinterCategories = () => {
     return (
       <>
-        <ListSubheader sx={{ pl: 7, mt: 1 }}>Talviulkoilu</ListSubheader>
-        {winterCategories.map(({ name, category }) =>
-          renderCategoryFilter(name, category)
+        <ListItem divider>
+          <FormControlLabel
+            sx={{
+              ml: 0,
+              flex: 1,
+              pl: 7,
+              mt: 1,
+              justifyContent: "space-between",
+            }}
+            label="Talviulkoilu"
+            labelPlacement="start"
+            componentsProps={{
+              typography: {
+                variant: "button"
+              }
+            }}
+            control={
+              <Switch
+                name="show winter"
+                inputProps={{ role: "show winter points switch" }}
+                checked={!mapFiltersContext.winterFilterActive}
+                onChange={() => mapFiltersContext.toggleWinter()}
+              />
+            }
+          />
+        </ListItem>
+        {winterCategories.map(({ name, category, zoomThreshold }) =>
+          renderCategoryFilter(name, category, zoomThreshold)
+        )}
+    </>
+    );
+  };
+
+  /**
+   * Renders service categories
+   */
+   const renderServiceCategories = () => {
+    return (
+      <>
+        <ListItem divider>
+          <FormControlLabel
+              sx={{
+                ml: 0,
+                flex: 1,
+                pl: 7,
+                mt: 1,
+                justifyContent: "space-between",
+              }}
+              label="Palvelut"
+              labelPlacement="start"
+              componentsProps={{
+                typography: {
+                  variant: "button"
+                }
+              }}
+              control={
+                <Switch
+                  name="show services"
+                  inputProps={{ role: "show service points switch" }}
+                  checked={!mapFiltersContext.serviceFilterActive}
+                  onChange={() => mapFiltersContext.toggleServices()}
+                />
+              }
+            />
+        </ListItem>
+        {serviceCategories.map(({ name, category, zoomThreshold}) =>
+          renderCategoryFilter(name, category, zoomThreshold)
         )}
       </>
     );
   };
-
   return (
     <>
       <ToggleLayerFilter onClick={toggleDrawer(true)}>
@@ -309,6 +301,7 @@ export default function LayerFilter(props: LayerFilterProps) {
                 {renderShowAll()}
                 {renderCategories()}
                 {renderWinterCategories()}
+                {renderServiceCategories()}
               </List>
             </FormGroup>
           </>

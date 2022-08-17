@@ -1,5 +1,5 @@
 import { FeatureCollection, Feature } from "geojson";
-import { gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
+import { Category, gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
 
 export const buildQuery = (
   gqlQuery: string,
@@ -92,6 +92,102 @@ export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
   };
 };
 
+export const categories: Category[] = [
+  {
+    name: "Ulkoilureitit",
+    category: "Ulkoilureitit",
+  },
+  {
+    name: "Ulkoiluaktiviteetit",
+    category: "Ulkoiluaktiviteetit",
+  },
+  {
+    name: "Ulkoilupaikat",
+    category: "Ulkoilupaikat",
+  },
+  {
+    name: "Laavut, majat, ruokailu",
+    category: "Laavut, majat, ruokailu",
+  },
+  {
+    name: "Pyöräily",
+    category: "Pyöräily",
+  },
+  {
+    name: "Uinti",
+    category: "Uinti",
+  },
+  {
+    name: "Vesillä ulkoilu",
+    category: "Vesillä ulkoilu",
+  },
+  {
+    name: "Nähtävyydet",
+    category: "Nähtävyydet",
+  },
+  {
+    name: "Muinaisjäännökset",
+    category: "Muinaisjäännökset",
+  },
+];
+
+export const winterCategories: Category[] = [
+  {
+    name: "Hiihto",
+    category: "Hiihto",
+  },
+  {
+    name: "Luistelu",
+    category: "Luistelu",
+  },
+  {
+    name: "Talviuinti",
+    category: "Talviuinti",
+  },
+];
+
+export const serviceCategories: Category[] = [
+  {
+    name: "Leirintä ja majoitus",
+    category: "Leirintä ja majoitus",
+  },
+  {
+    name: "Kahvilat ja kioskit",
+    category: "Kahvilat ja kioskit",
+  },
+  {
+    name: "Vessat ja roskikset",
+    category: "Vessat ja roskikset",
+    zoomThreshold: 14,
+  },
+  {
+    name: "Pysäköinti",
+    category: "Pysäköinti",
+    zoomThreshold: 14,
+  },
+  {
+    name: "Pysäkit",
+    category: "Bussipysäkki",
+    zoomThreshold: 13,
+  },
+]
+
+export const allCategories: Category[] = [...categories, ...winterCategories, ...serviceCategories]
+export const categoriesByZoom = allCategories.reduce<Map<number, Category[]>>((differentZooms, category) => {
+  const zoomThreshold = category.zoomThreshold ? category.zoomThreshold : 0;
+  const categories = differentZooms.get(zoomThreshold)
+  if (categories) {
+    differentZooms.set(zoomThreshold, [category, ...categories])
+  }
+  else {
+    differentZooms.set(zoomThreshold, [category])
+  }
+  return differentZooms
+}, new Map())
+export const minZoomByCategory = new Map<string, number>(
+  allCategories.map((category) => [category.name, category.zoomThreshold ? category.zoomThreshold : 0])
+  )
+
 /**
  * Get category icon
  * @param category
@@ -115,6 +211,9 @@ export const getCategoryIcon = (category: string) =>
     "Rautatieasema": "img/train.png",
     "Ratikkapysäkki": "img/tram.png",
     "Muinaisjäännökset": "img/historical-light.png",
+    "Leirintä ja majoitus": "img/cottage-light.png",
+    "Kahvilat ja kioskit": "img/cafe-light.png",
+    "Vessat ja roskikset": "img/compost-light.png"
   }[category]);
 
 /**
@@ -140,6 +239,9 @@ export const getCategoryColor = (category: string) =>
     "Rautatieasema": "#7362a2",
     "Ratikkapysäkki": "#7362a2",
     "Muinaisjäännökset": "#00417d",
+    "Leirintä ja majoitus": "#397368",
+    "Kahvilat ja kioskit": "#397368",
+    "Vessat ja roskikset": "#85c466",
   }[category]);
 
 /**
@@ -160,9 +262,12 @@ export const getCategoryPlural = (category: string) =>
     "Nähtävyydet": "nähtävyyttä",
     "Uinti": "uintipaikkaa",
     "Talviuinti": "talviuintipaikkaa",
-    "Pysäköinti": "pysäköintipaikkaa",
+    "Pysäköinti": "pysäköintialuetta",
     "Bussipysäkki": "bussipysäkkiä",
     "Rautatieasema": "rautatieasemaa",
     "Ratikkapysäkki": "ratikkapysäkkiä",
     "Muinaisjäännökset": "muinaisjäännöstä",
+    "Leirintä ja majoitus": "leirintä- ja majoituspaikkaa",
+    "Kahvilat ja kioskit": "kahvilaa ja kioskia",
+    "Vessat ja roskikset": "vessaa ja roskista"
   }[category]);

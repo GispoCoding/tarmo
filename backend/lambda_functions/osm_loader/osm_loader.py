@@ -17,10 +17,84 @@ class OSMLoader(BaseLoader):
     TAGS_TO_TYPE_NAMES = {
         "fee": {"no": "Maksuton pysäköinti", "yes": "Maksullinen pysäköinti"},
         "access": {"customers": "Asiakaspysäköinti", "yes": "Yleinen pysäköinti"},
-        "amenity": {"bicycle_parking": "Pyöräpysäköinti"},
+        "amenity": {
+            "bench": "Penkki",
+            "bicycle_parking": "Pyöräpysäköinti",
+            "bbq": "Grillauspaikka",
+            "cafe": "Kahvila",
+            "ice_cream": "Jäätelökioski",
+            "recycling": "Kierrätyspiste",
+            "restaurant": "Ravintola",
+            "shelter": "Katos",
+            "toilets": "WC",
+            "waste_basket": "Jäteastia",
+        },
+        "tourism": {
+            "camp_site": "Leirintäalue",
+            "caravan_site": "Karavaanialue",
+            "chalet": "Vuokramökki",
+            "guest_house": "Majatalo",
+            "information": "Info",
+            "hostel": "Hostelli",
+            "hotel": "Hotelli",
+            "motel": "Motelli",
+            "museum": "Museo",
+            "picnic_site": "Ruokailupaikka",
+            "viewpoint": "Näköalapaikka",
+            "wilderness_hut": "Varaustupa",
+        },
+        "leisure": {
+            "bird_hide": "Lintutorni",
+            "picnic_table": "Ruokailupaikka",
+            "sauna": "Sauna",
+        },
+        "fireplace": {"yes": "Ruoanlaittopaikka"},
+        "shop": {"kiosk": "Kioski"},
+        "building": {"church": "Kirkko"},
+        "shelter_type": {"lean_to": "Laavu"},
+        "information": {"board": "Opastaulu", "map": "Opaskartta"},
     }
     # Allow other tarmo_categories than the database default
-    TAGS_TO_TARMO_CATEGORY = {"amenity": {"bicycle_parking": "Pyöräily"}}
+    TAGS_TO_TARMO_CATEGORY = {
+        "amenity": {
+            "bench": "Penkit",
+            "bbq": "Laavut, majat, ruokailu",
+            "bicycle_parking": "Pysäköinti",
+            "cafe": "Kahvilat ja kioskit",
+            "ice_cream": "Kahvilat ja kioskit",
+            "parking": "Pysäköinti",
+            "recycling": "Vessat ja roskikset",
+            "restaurant": "Kahvilat ja kioskit",
+            "shelter": "Laavut, majat, ruokailu",
+            "toilets": "Vessat ja roskikset",
+            "waste_basket": "Vessat ja roskikset",
+        },
+        "tourism": {
+            "camp_site": "Leirintä ja majoitus",
+            "caravan_site": "Leirintä ja majoitus",
+            "chalet": "Leirintä ja majoitus",
+            "guest_house": "Leirintä ja majoitus",
+            "information": "Ulkoilureitit",
+            "hostel": "Leirintä ja majoitus",
+            "hotel": "Leirintä ja majoitus",
+            "motel": "Leirintä ja majoitus",
+            "museum": "Nähtävyydet",
+            "picnic_site": "Laavut, majat, ruokailu",
+            "viewpoint": "Nähtävyydet",
+            "wilderness_hut": "Leirintä ja majoitus",
+        },
+        "leisure": {
+            "bird_hide": "Ulkoilureitit",
+            "picnic_table": "Laavut, majat, ruokailu",
+            "sauna": "Leirintä ja majoitus",
+        },
+        "shop": {
+            "kiosk": "Kahvilat ja kioskit",
+        },
+        "building": {
+            "church": "Nähtävyydet",
+        },
+    }
 
     api_url = "https://overpass-api.de/api/interpreter"
     default_point = Point(0, 0)
