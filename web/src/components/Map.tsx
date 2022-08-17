@@ -79,7 +79,9 @@ import { buildQuery, parseResponse, minZoomByCategory } from "../utils/utils";
 import LayerFilter from "./LayerFilter";
 import DrawControl from "./DrawControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import length from "@turf/length";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import { Typography } from "@mui/material";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
@@ -101,6 +103,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     Map<string, MapboxGeoJSONFeature>
   >(new Map());
   const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [drawnFeature, setDrawnFeature] = useState<MapboxGeoJSONFeature | undefined>(undefined);
   const actualMapRef = useRef<MapRef | undefined>(undefined);
 
   const modes = {
@@ -699,6 +702,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           <LayerFilter zoom={zoom}/>
           <DrawControl
             position="bottom-right"
+            onCreate={(event) => setDrawnFeature(event.features[0])}
+            onUpdate={(event) => setDrawnFeature(event.features[0])}
+            onDelete={(event) => setDrawnFeature(undefined)}
             displayControlsDefault={false}
             controls={{
               line_string: true,
@@ -707,6 +713,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           />
         </>
       )}
+      {drawnFeature &&
+        <Typography>Matka: {length(drawnFeature)} km</Typography>
+      }
     </MapGL>
   );
 }

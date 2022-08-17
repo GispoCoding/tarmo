@@ -1,15 +1,16 @@
 // https://github.com/visgl/react-map-gl/blob/7.0-release/examples/draw-polygon/src/draw-control.ts
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import { useControl } from "react-map-gl";
+import { MapboxGeoJSONFeature } from "react-map-gl";
 
 import type { MapRef, ControlPosition } from "react-map-gl";
 
 type DrawControlProps = ConstructorParameters<typeof MapboxDraw>[0] & {
   position?: ControlPosition;
 
-  onCreate?: (evt: { features: object[] }) => void;
-  onUpdate?: (evt: { features: object[]; action: string }) => void;
-  onDelete?: (evt: { features: object[] }) => void;
+  onCreate: (evt: { features: MapboxGeoJSONFeature[] }) => void;
+  onUpdate: (evt: { features: MapboxGeoJSONFeature[]; action: string }) => void;
+  onDelete: (evt: { features: MapboxGeoJSONFeature[] }) => void;
 };
 
 export default function DrawControl(props: DrawControlProps) {
