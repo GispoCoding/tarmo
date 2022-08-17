@@ -56,7 +56,7 @@ resource "aws_lambda_function" "osm_loader" {
   filename      = "../backend/lambda_functions/osm_loader.zip"
   runtime       = "python3.8"
   handler       = "app.osm_loader.handler"
-  memory_size   = 128
+  memory_size   = 256
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
