@@ -77,6 +77,9 @@ import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
 import { buildQuery, parseResponse, minZoomByCategory } from "../utils/utils";
 import LayerFilter from "./LayerFilter";
+import DrawControl from "./DrawControl";
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
@@ -99,6 +102,10 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
   >(new Map());
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const actualMapRef = useRef<MapRef | undefined>(undefined);
+
+  const modes = {
+    ...MapboxDraw.modes
+  };
 
   const externalSources = new Map<LayerId, ExternalSource>([
     [
@@ -690,6 +697,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           <NavigationControl />
           <GeolocateControl trackUserLocation={true} />
           <LayerFilter zoom={zoom}/>
+          <DrawControl
+            position="bottom-right"
+            displayControlsDefault={false}
+            controls={{
+              line_string: true,
+            }}
+            modes={modes}
+          />
         </>
       )}
     </MapGL>
