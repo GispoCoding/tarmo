@@ -57,9 +57,9 @@ class DatabaseHelper:
             )
             self._users = {
                 user: json.loads(
-                    client.get_secret_value(
-                        SecretId=os.environ.get("DB_SECRET_SU_ARN")
-                    )["SecretString"]
+                    client.get_secret_value(SecretId=os.environ.get(user))[
+                        "SecretString"
+                    ]
                 )
                 for user in User
             }
@@ -75,7 +75,7 @@ class DatabaseHelper:
                 },
                 User.READ_WRITE: {
                     "username": os.environ.get("RW_USER"),
-                    "password": os.environ.get("RW_USER"),
+                    "password": os.environ.get("RW_USER_PW"),
                 },
                 User.READ: {
                     "username": os.environ.get("R_USER"),
