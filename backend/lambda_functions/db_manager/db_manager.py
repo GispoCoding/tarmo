@@ -57,7 +57,7 @@ class DatabaseHelper:
             )
             self._users = {
                 user: json.loads(
-                    client.get_secret_value(SecretId=os.environ.get(user))[
+                    client.get_secret_value(SecretId=os.environ.get(user.value))[
                         "SecretString"
                     ]
                 )
