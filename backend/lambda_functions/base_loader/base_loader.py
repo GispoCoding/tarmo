@@ -64,7 +64,7 @@ class DatabaseHelper:
         else:
             self._credentials = {
                 "username": os.environ.get("RW_USER"),
-                "password": os.environ.get("RW_USER"),
+                "password": os.environ.get("RW_USER_PW"),
             }
 
         self._host = os.environ.get("DB_INSTANCE_ADDRESS")

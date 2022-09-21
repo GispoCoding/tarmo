@@ -39,6 +39,7 @@ resource "aws_lambda_function" "lipas_loader" {
       AWS_REGION_NAME     = var.AWS_REGION_NAME
       DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
       DB_MAIN_NAME        = var.tarmo_db_name
+      READ_FROM_AWS       = 1
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
@@ -67,6 +68,7 @@ resource "aws_lambda_function" "osm_loader" {
       AWS_REGION_NAME     = var.AWS_REGION_NAME
       DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
       DB_MAIN_NAME        = var.tarmo_db_name
+      READ_FROM_AWS       = 1
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
@@ -95,6 +97,7 @@ resource "aws_lambda_function" "wfs_loader" {
       AWS_REGION_NAME     = var.AWS_REGION_NAME
       DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
       DB_MAIN_NAME        = var.tarmo_db_name
+      READ_FROM_AWS       = 1
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
@@ -123,6 +126,7 @@ resource "aws_lambda_function" "arcgis_loader" {
       AWS_REGION_NAME     = var.AWS_REGION_NAME
       DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
       DB_MAIN_NAME        = var.tarmo_db_name
+      READ_FROM_AWS       = 1
       DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
     }
   }
