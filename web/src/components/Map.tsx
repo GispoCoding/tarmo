@@ -77,6 +77,8 @@ import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
 import { buildQuery, parseResponse, minZoomByCategory } from "../utils/utils";
 import LayerFilter from "./LayerFilter";
+import SetupDialog from "./SetupDialog";
+import SplashScreen from "./SplashScreen";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
@@ -692,6 +694,8 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           <LayerFilter zoom={zoom}/>
         </>
       )}
+      <SplashScreen />
+      <SetupDialog zoom={zoom} />
     </MapGL>
   );
 }
