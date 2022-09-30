@@ -100,3 +100,10 @@ services:
       - db
     volumes:
       - ./backend/lambda_functions/db_manager/db_manager.py:/var/task/app.py
+
+  notifier:
+    build:
+      context: backend
+      dockerfile: notifier.Dockerfile
+    volumes:
+      - ./backend/lambda_functions/notifier/notifier.py:/var/task/app.py

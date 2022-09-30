@@ -40,10 +40,10 @@ rebuild:
 	docker-compose -f docker-compose.dev.yml up -d
 
 build-lambda:
-	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
-	docker-compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader arcgis_loader
+	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
+	docker-compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
 	cd backend/lambda_functions; \
-	for func in db_manager lipas_loader osm_loader wfs_loader arcgis_loader ; do \
+	for func in db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier ; do \
   	  rm -rf tmp_lambda; \
   	  echo $$func; \
 	  docker cp tarmo_$${func}_1:/var/task tmp_lambda; \

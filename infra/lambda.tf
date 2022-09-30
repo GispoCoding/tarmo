@@ -159,3 +159,26 @@ resource "aws_lambda_permission" "cloudwatch_call_arcgis_loader" {
     principal = "events.amazonaws.com"
     source_arn = aws_cloudwatch_event_rule.lambda_arcgis.arn
 }
+
+resource "aws_lambda_function" "notifier" {
+  count = var.SLACK_HOOK_URL == "" ? 0 : 1
+  function_name = "${var.prefix}-notifier"
+  filename      = "../backend/lambda_functions/notifier.zip"
+  runtime       = "python3.8"
+  handler       = "app.notifier.handler"
+  memory_size   = 128
+  timeout       = 900
+
+  role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
+
+  environment {
+    variables = {
+      SLACK_HOOK_URL = var.SLACK_HOOK_URL
+    }
+  }
+  tags = merge(local.default_tags, { Name = "${var.prefix}-notifier" })
+}
