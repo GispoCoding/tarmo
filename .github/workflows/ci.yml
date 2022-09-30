@@ -116,9 +116,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_LAMBDA_UPLOAD_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Update dev lambda functions
-        run: make prefix=tarmo update-lambda -C infra
+        run: make prefix=tarmo-dev update-lambda -C infra
       - name: Update dev database
-        run: make prefix=tarmo migrate-db -C infra
+        run: make prefix=tarmo-dev migrate-db -C infra
       - name: Update production lambda functions
         if: startsWith(github.ref, 'refs/tags/release')
         run: make prefix=tarmo-tampere update-lambda -C infra
