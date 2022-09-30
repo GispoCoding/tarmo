@@ -18,7 +18,7 @@ luonnonmuistomerkki_params = {
     "request": "getFeature",
     "outputFormat": "application/json",
     "srsName": "EPSG:4326",
-    "typeNames": "luonto:YV_LUONNONMUISTOMERKKI",
+    "typeNames": "ymparisto_ja_terveys:yv_luonnonmuistomerkki",
 }
 
 luontorasti_params = {
@@ -27,7 +27,7 @@ luontorasti_params = {
     "request": "getFeature",
     "outputFormat": "application/json",
     "srsName": "EPSG:4326",
-    "typeNames": "luonto:YV_LUONTORASTI",
+    "typeNames": "ymparisto_ja_terveys:yv_luontorasti",
 }
 
 luonnonmuistomerkki_response = {
@@ -35,18 +35,17 @@ luonnonmuistomerkki_response = {
     "features": [
         {
             "type": "Feature",
-            "id": "YV_LUONNONMUISTOMERKKI.73",
+            "id": "yv_luonnonmuistomerkki.1",
             "geometry": {"type": "Point", "coordinates": [23.6283, 61.5185]},
-            "geometry_name": "GEOLOC",
+            "geometry_name": "geom",
             "properties": {
-                "SW_MEMBER": 73,
-                "LISATIEDOT1": None,
-                "LISATIEDOT2": None,
-                "KOHTEENKUVAUS1": "Lamminpäässä kasvavat viisi kuusta on rauhoitettu juurineen.",
-                "KOHTEENKUVAUS2": None,
-                "NIMI": "Lamminpään Kuusikorvenpuiston kuuset",
-                "PAATOSNUMERO": "LH:n päätösnro 139/VI",
-                "PAATOSPAIVA": "30.1.1968",
+                "lisatiedot1": None,
+                "kohteenkuvaus1": "Lamminpäässä kasvavat viisi kuusta on rauhoitettu juurineen.",
+                "kohteenkuvaus2": None,
+                "nimi": "Lamminpään Kuusikorvenpuiston kuuset",
+                "paatosnumero": "LH:n päätösnro 139/VI",
+                "paatospaiva": "1968-01-29Z",
+                "id": 1,
             },
         },
     ],
@@ -58,16 +57,16 @@ luontorasti_response = {
     "features": [
         {
             "type": "Feature",
-            "id": "YV_LUONTORASTI.1",
+            "id": "yv_luontorasti.1",
             "geometry": {"type": "Point", "coordinates": [23.6993, 61.4844]},
-            "geometry_name": "GEOLOC",
+            "geometry_name": "geom",
             "properties": {
-                "TUNNUS": 1,
-                "NIMI": "Metsälehmus - niinipuu",
-                "RASTI": 1,
-                "KOHTEENKUVAUS": "Niinipuun monet kasvot",
-                "LISATIETOJA": "Lehmusta on kutsuttu myös niinipuuksi, koska puun kuoren alla on niintä, pitkää kuitua. Niini oli aikoinaan arvokas tarve-esineiden valmistusaine.",
-                "MI_PRINX": 1,
+                "tunnus": 1,
+                "nimi": "Metsälehmus - niinipuu",
+                "rasti": 1,
+                "kohteenkuvaus": "Niinipuun monet kasvot",
+                "lisatietoja": "Lehmusta on kutsuttu myös niinipuuksi, koska puun kuoren alla on niintä, pitkää kuitua. Niini oli aikoinaan arvokas tarve-esineiden valmistusaine.",
+                "id": 1,
             },
         },
     ],
@@ -79,16 +78,16 @@ another_luontorasti_response = {
     "features": [
         {
             "type": "Feature",
-            "id": "YV_LUONTORASTI.2",
+            "id": "yv_luontorasti.2",
             "geometry": {"type": "Point", "coordinates": [23.6962, 61.4845]},
-            "geometry_name": "GEOLOC",
+            "geometry_name": "geom",
             "properties": {
-                "TUNNUS": 1,
-                "NIMI": "Vuohenputki",
-                "RASTI": 2,
-                "KOHTEENKUVAUS": "Vuohenputki - kovan luokan rikkaruoho",
-                "LISATIETOJA": "Pienikin juurenpätkä, joka kulkeutuu vaikkapa maan mukana puutarhaan, riittää vuohenputkelle uuden kasvupaikan valtaukseen. Se muodostaa nopeasti laajoja kasvustoja.",
-                "MI_PRINX": 2,
+                "tunnus": 1,
+                "nimi": "Vuohenputki",
+                "rasti": 2,
+                "kohteenkuvaus": "Vuohenputki - kovan luokan rikkaruoho",
+                "lisatietoja": "Pienikin juurenpätkä, joka kulkeutuu vaikkapa maan mukana puutarhaan, riittää vuohenputkelle uuden kasvupaikan valtaukseen. Se muodostaa nopeasti laajoja kasvustoja.",
+                "id": 2,
             },
         }
     ],
@@ -202,7 +201,7 @@ def combined_wfs_data(combined_mock_wfs, loader, metadata_set):
 
 def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
     feature = loader.get_feature(wfs_data["features"][0])
-    assert feature["sw_member"]
+    assert feature["id"]
     assert feature["name"] == "Lamminpään Kuusikorvenpuiston kuuset"
     assert (
         feature["infoFi"]
@@ -214,7 +213,7 @@ def test_get_luonnonmuistomerkki_feature(loader, wfs_data):
 
 def test_get_luontorasti_feature(loader, wfs_data):
     feature = loader.get_feature(wfs_data["features"][1])
-    assert feature["mi_prinx"]
+    assert feature["id"]
     assert feature["name"] == "Metsälehmus - niinipuu"
     assert feature["infoFi"] == "Niinipuun monet kasvot"
     assert feature["geom"].startswith("MULTIPOINT")
@@ -223,7 +222,7 @@ def test_get_luontorasti_feature(loader, wfs_data):
 
 def test_get_another_luontorasti_feature(loader, changed_wfs_data):
     feature = loader.get_feature(changed_wfs_data["features"][1])
-    assert feature["mi_prinx"]
+    assert feature["id"]
     assert feature["name"] == "Vuohenputki"
     assert feature["infoFi"] == "Vuohenputki - kovan luokan rikkaruoho"
     assert feature["geom"].startswith("MULTIPOINT")
@@ -240,9 +239,9 @@ def assert_data_is_imported(main_db_params):
             assert cur.fetchone()[0] == 0
             cur.execute(f"SELECT count(*) FROM kooste.tamperewfs_luontopolkurastit")
             assert cur.fetchone()[0] == 1
-            cur.execute(f"SELECT sw_member FROM kooste.tamperewfs_luonnonmuistomerkit")
-            assert cur.fetchone()[0] == 73
-            cur.execute(f"SELECT mi_prinx FROM kooste.tamperewfs_luontopolkurastit")
+            cur.execute(f"SELECT id FROM kooste.tamperewfs_luonnonmuistomerkit")
+            assert cur.fetchone()[0] == 1
+            cur.execute(f"SELECT id FROM kooste.tamperewfs_luontopolkurastit")
             assert cur.fetchone()[0] == 1
         with conn.cursor() as cur:
             cur.execute("SELECT last_modified FROM kooste.tamperewfs_metadata")

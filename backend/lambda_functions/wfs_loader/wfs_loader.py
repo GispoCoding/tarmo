@@ -19,8 +19,8 @@ class WFSLoader(BaseLoader):
     METADATA_TABLE_NAME = "tamperewfs_metadata"
     # Not really feasible to use original layer names. Map to proper table names.
     TABLE_NAMES = {
-        "luonto:YV_LUONNONMUISTOMERKKI": "tamperewfs_luonnonmuistomerkit",
-        "luonto:YV_LUONTORASTI": "tamperewfs_luontopolkurastit",
+        "ymparisto_ja_terveys:yv_luonnonmuistomerkki": "tamperewfs_luonnonmuistomerkit",
+        "ymparisto_ja_terveys:yv_luontorasti": "tamperewfs_luontopolkurastit",
     }
     # Any field names we want to harmonize with other data sources
     FIELD_NAMES = {
