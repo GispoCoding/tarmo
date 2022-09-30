@@ -40,6 +40,27 @@ variable "backend_subdomain" {
   type        = string
 }
 
+variable "alternate_domains" {
+  description = "Domains outside Route53 to map the frontend to. Only applied if enable_route_53_record is false."
+  type        = list
+  default     = []
+}
+
+variable "alternate_domain_certificate_arn" {
+  description = "Existing certificate in AWS to use for the alternate domains. Only applied if enable_route_53_record is false."
+  type        = string
+}
+
+variable "SLACK_HOOK_URL" {
+  description = "Slack URL to post cloudwatch notifications to"
+  type        = string
+}
+
+variable "bastion_public_key" {
+  description = "Public ssh key to access the bastion EC2 instance"
+  type        = string
+}
+
 variable "db_storage" {
   description = "DB Storage in GB"
   type        = number
@@ -150,5 +171,5 @@ locals {
 }
 
 locals {
-  s3_origin_id = "tarmo-react-app"
+  s3_origin_id = "${var.prefix}-react-app"
 }

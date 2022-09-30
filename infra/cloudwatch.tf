@@ -35,55 +35,55 @@ resource "aws_cloudwatch_log_group" "tarmo_tileserver" {
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_lipas" {
-  name        = "Tarmo-lambda-lipas-update"
+  name        = "${var.prefix}-lambda-lipas-update"
   description = "Run lipas import every night"
   schedule_expression = "cron(0 4 * * ? *)"
   tags              = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_lipas" {
-  target_id = "load_lipas"
+  target_id = "${var.prefix}_load_lipas"
   rule      = aws_cloudwatch_event_rule.lambda_lipas.name
   arn       = aws_lambda_function.lipas_loader.arn
   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 100}"
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_wfs" {
-  name        = "Tarmo-lambda-wfs-update"
+  name        = "${var.prefix}-lambda-wfs-update"
   description = "Run wfs import every night"
   schedule_expression = "cron(15 4 * * ? *)"
   tags              = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_wfs" {
-  target_id = "load_wfs"
+  target_id = "${var.prefix}_load_wfs"
   rule      = aws_cloudwatch_event_rule.lambda_wfs.name
   arn       = aws_lambda_function.wfs_loader.arn
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_osm" {
-  name        = "Tarmo-lambda-osm-update"
+  name        = "${var.prefix}-lambda-osm-update"
   description = "Run osm import every night"
   schedule_expression = "cron(30 4 * * ? *)"
   tags              = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_osm" {
-  target_id = "load_osm"
+  target_id = "${var.prefix}_load_osm"
   rule      = aws_cloudwatch_event_rule.lambda_osm.name
   arn       = aws_lambda_function.osm_loader.arn
   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 100}"
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_arcgis" {
-  name        = "Tarmo-lambda-arcgis-update"
+  name        = "${var.prefix}-lambda-arcgis-update"
   description = "Run arcgis import every night"
   schedule_expression = "cron(45 4 * * ? *)"
   tags              = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_arcgis" {
-  target_id = "load_arcgis"
+  target_id = "${var.prefix}_load_arcgis"
   rule      = aws_cloudwatch_event_rule.lambda_arcgis.name
   arn       = aws_lambda_function.arcgis_loader.arn
   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 100}"

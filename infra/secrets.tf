@@ -1,7 +1,7 @@
 # Database secrets
 resource "aws_secretsmanager_secret" "tarmo-db-su" {
   name = "${var.prefix}-postgres-database-su"
-  tags = local.default_tags
+  tags = merge(local.default_tags, {Name = "${var.prefix}-postgres-database-su"})
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-su" {
@@ -11,7 +11,7 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-su" {
 
 resource "aws_secretsmanager_secret" "tarmo-db-admin" {
   name = "${var.prefix}-postgres-database-admin"
-  tags = local.default_tags
+  tags = merge(local.default_tags, {Name = "${var.prefix}-postgres-database-admin"})
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-admin" {
@@ -21,7 +21,7 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-admin" {
 
 resource "aws_secretsmanager_secret" "tarmo-db-rw" {
   name = "${var.prefix}-postgres-database-rw"
-  tags = local.default_tags
+  tags = merge(local.default_tags, {Name = "${var.prefix}-postgres-database-rw"})
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-rw" {
@@ -31,7 +31,7 @@ resource "aws_secretsmanager_secret_version" "tarmo-db-rw" {
 
 resource "aws_secretsmanager_secret" "tarmo-db-r" {
   name = "${var.prefix}-postgres-database-r"
-  tags = local.default_tags
+  tags = merge(local.default_tags, {Name = "${var.prefix}-postgres-database-r"})
 }
 
 resource "aws_secretsmanager_secret_version" "tarmo-db-r" {

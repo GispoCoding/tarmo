@@ -8,6 +8,7 @@ provider "aws" {
 resource "aws_acm_certificate" "frontend" {
   count             = var.enable_route53_record ? 1 : 0
   domain_name       = local.frontend_dns_alias
+  subject_alternative_names = var.alternate_domains
   validation_method = "DNS"
   tags              = merge(local.default_tags, { Name = "${var.prefix}-frontend-acm" })
 
@@ -15,7 +16,8 @@ resource "aws_acm_certificate" "frontend" {
 }
 
 resource "aws_acm_certificate" "tileserver" {
-  count             = var.enable_route53_record ? 1 : 0
+  # Always create the tile server certificate, no matter what the frontend domain
+  count             = 1
   domain_name       = local.tileserver_dns_alias
   validation_method = "DNS"
   tags              = merge(local.default_tags, { Name = "${var.prefix}-tileserver-acm" })
@@ -30,7 +32,8 @@ resource "aws_acm_certificate_validation" "frontend" {
 }
 
 resource "aws_acm_certificate_validation" "tileserver" {
-  count                   = var.enable_route53_record ? 1 : 0
+  # Always create the tile server certificate, no matter what the frontend domain
+  count                   = 1
   certificate_arn         = aws_acm_certificate.tileserver[0].arn
   validation_record_fqdns = [for record in aws_route53_record.tileserver_validation : record.fqdn]
 }

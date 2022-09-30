@@ -1,5 +1,5 @@
 resource "aws_db_parameter_group" "tarmo" {
-  name   = "education"
+  name   = "${var.prefix}-params"
   family = "postgres13"
 
   parameter {
@@ -10,7 +10,7 @@ resource "aws_db_parameter_group" "tarmo" {
 }
 
 resource "aws_db_instance" "main_db" {
-  identifier             = "tarmodb"
+  identifier             = "${var.tarmo_db_name}db"
   instance_class         = var.db_instance_type
   allocated_storage      = var.db_storage
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
@@ -22,8 +22,9 @@ resource "aws_db_instance" "main_db" {
   vpc_security_group_ids = [aws_security_group.rds.id]
   parameter_group_name   = aws_db_parameter_group.tarmo.name
   multi_az               = false
-  apply_immediately      = true # TODO: remove when in "production"
-  publicly_accessible    = true
+  apply_immediately      = false
+  publicly_accessible    = false
   skip_final_snapshot    = true
+  deletion_protection    = true
   tags                   = local.default_tags
 }

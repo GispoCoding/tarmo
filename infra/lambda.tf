@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "db_manager" {
-  function_name = "db_manager"
+  function_name = "${var.prefix}-db_manager"
   filename      = "../backend/lambda_functions/db_manager.zip"
   runtime       = "python3.8"
   handler       = "db_manager.handler"
@@ -7,6 +7,10 @@ resource "aws_lambda_function" "db_manager" {
   timeout       = 120
 
   role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
 
   environment {
     variables = {
@@ -25,7 +29,7 @@ resource "aws_lambda_function" "db_manager" {
 }
 
 resource "aws_lambda_function" "lipas_loader" {
-  function_name = "lipas_loader"
+  function_name = "${var.prefix}-lipas_loader"
   filename      = "../backend/lambda_functions/lipas_loader.zip"
   runtime       = "python3.8"
   handler       = "app.lipas_loader.handler"
@@ -33,6 +37,10 @@ resource "aws_lambda_function" "lipas_loader" {
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
 
   environment {
     variables = {
@@ -54,7 +62,7 @@ resource "aws_lambda_permission" "cloudwatch_call_lipas_loader" {
 }
 
 resource "aws_lambda_function" "osm_loader" {
-  function_name = "osm_loader"
+  function_name = "${var.prefix}-osm_loader"
   filename      = "../backend/lambda_functions/osm_loader.zip"
   runtime       = "python3.8"
   handler       = "app.osm_loader.handler"
@@ -62,6 +70,10 @@ resource "aws_lambda_function" "osm_loader" {
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
 
   environment {
     variables = {
@@ -83,7 +95,7 @@ resource "aws_lambda_permission" "cloudwatch_call_osm_loader" {
 }
 
 resource "aws_lambda_function" "wfs_loader" {
-  function_name = "wfs_loader"
+  function_name = "${var.prefix}-wfs_loader"
   filename      = "../backend/lambda_functions/wfs_loader.zip"
   runtime       = "python3.8"
   handler       = "app.wfs_loader.handler"
@@ -91,6 +103,10 @@ resource "aws_lambda_function" "wfs_loader" {
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
 
   environment {
     variables = {
@@ -112,7 +128,7 @@ resource "aws_lambda_permission" "cloudwatch_call_wfs_loader" {
 }
 
 resource "aws_lambda_function" "arcgis_loader" {
-  function_name = "arcgis_loader"
+  function_name = "${var.prefix}-arcgis_loader"
   filename      = "../backend/lambda_functions/arcgis_loader.zip"
   runtime       = "python3.8"
   handler       = "app.arcgis_loader.handler"
@@ -120,6 +136,10 @@ resource "aws_lambda_function" "arcgis_loader" {
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
+  vpc_config {
+    subnet_ids         = data.aws_subnet_ids.private.ids
+    security_group_ids = [aws_security_group.lambda.id]
+  }
 
   environment {
     variables = {
