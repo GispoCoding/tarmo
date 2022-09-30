@@ -60,13 +60,13 @@ populate-lipas:
 	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name $(prefix)-lipas_loader --payload '{"pages": [98,99], "do_not_update_timestamp": true}' response_lipas.json
 
 populate-lipas-tre:
-	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name $(prefix)-lipas_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_lipas.json
+	aws lambda invoke --cli-binary-format raw-in-base64-out --cli-read-timeout 900 --cli-connect-timeout 900 --function-name $(prefix)-lipas_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_lipas.json
 
 populate-osm-tre:
-	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name $(prefix)-osm_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_osm.json
+	aws lambda invoke --cli-binary-format raw-in-base64-out --cli-read-timeout 900 --cli-connect-timeout 900 --function-name $(prefix)-osm_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_osm.json
 
 populate-wfs-tre:
-	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name $(prefix)-wfs_loader --payload '{}' response_wfs.json
+	aws lambda invoke --cli-binary-format raw-in-base64-out --cli-read-timeout 900 --cli-connect-timeout 900 --function-name $(prefix)-wfs_loader --payload '{}' response_wfs.json
 
 populate-arcgis-tre:
-	aws lambda invoke --cli-binary-format raw-in-base64-out --function-name $(prefix)-arcgis_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_arcgis.json
+	aws lambda invoke --cli-binary-format raw-in-base64-out --cli-read-timeout 900 --cli-connect-timeout 900 --function-name $(prefix)-arcgis_loader --payload '{"close_to_lon": 23.7634608, "close_to_lat":61.4976505, "radius": 100}' response_arcgis.json

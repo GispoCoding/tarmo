@@ -8,7 +8,7 @@ test-migrate-db:
 
 test-lipas:
 	@echo "Loading Lipas data..."
-	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 50}'
+	curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 20}' --connect-timeout 900
 
 test-osm:
 	@echo "Loading OSM data..."
