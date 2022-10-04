@@ -151,7 +151,12 @@ def test_populate_lipas(populate_two_pages_of_lipas, main_db_params):
     try:
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.{LipasLoader.POINT_TABLE_NAME}")
-            assert cur.fetchone()[0] > 2
+            point_count = cur.fetchone()[0]
+            cur.execute(
+                f"SELECT count(*) FROM kooste.{LipasLoader.LINESTRING_TABLE_NAME}"
+            )
+            line_count = cur.fetchone()[0]
+            assert point_count + line_count == 200
     finally:
         conn.close()
 
