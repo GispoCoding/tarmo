@@ -1,4 +1,3 @@
-import datetime
 from typing import Any, Dict, Optional
 
 import requests
@@ -19,8 +18,8 @@ class WFSLoader(BaseLoader):
     METADATA_TABLE_NAME = "tamperewfs_metadata"
     # Not really feasible to use original layer names. Map to proper table names.
     TABLE_NAMES = {
-        "luonto:YV_LUONNONMUISTOMERKKI": "tamperewfs_luonnonmuistomerkit",
-        "luonto:YV_LUONTORASTI": "tamperewfs_luontopolkurastit",
+        "ymparisto_ja_terveys:yv_luonnonmuistomerkki": "tamperewfs_luonnonmuistomerkit",
+        "ymparisto_ja_terveys:yv_luontorasti": "tamperewfs_luontopolkurastit",
     }
     # Any field names we want to harmonize with other data sources
     FIELD_NAMES = {
@@ -106,13 +105,6 @@ class WFSLoader(BaseLoader):
         # Do not save any invalid or empty features
         if geom.is_empty:
             return None
-
-        # Date field needs iso format
-        if "paatospaiva" in cleaned_props.keys():
-            day, month, year = cleaned_props["paatospaiva"].split(".")
-            cleaned_props["paatospaiva"] = datetime.date(
-                year=int(year), month=int(month), day=int(day)
-            )
 
         # Rename desired fields
         for origin_name, tarmo_name in self.FIELD_NAMES.items():
