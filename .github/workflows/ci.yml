@@ -80,13 +80,22 @@ jobs:
       - name: Install
         run: yarn
       - name: Build dev deployment
+        if: github.ref == 'refs/heads/main'
         run: yarn run build
         env:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TILESERVER_URL }}
           CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
       - name: Deploy app build to dev S3 bucket
+        if: github.ref == 'refs/heads/main'
         run: aws s3 sync ./dist/ s3://${{ secrets.AWS_BUCKET_NAME }} --delete
+      - name: Report to slack
+        if: github.ref == 'refs/heads/main'
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "${{github.sha}} deployed to dev frontend"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Build production deployment
         if: startsWith(github.ref, 'refs/tags/release')
         run: yarn run build
@@ -97,6 +106,13 @@ jobs:
       - name: Deploy app build to production S3 bucket
         if: startsWith(github.ref, 'refs/tags/release')
         run: aws s3 sync ./dist/ s3://${{ secrets.TAMPERE_AWS_BUCKET_NAME }} --delete
+      - name: Report to slack
+        if: startsWith(github.ref, 'refs/tags/release')
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "${{github.sha}} deployed to TAMPERE frontend"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build-and-deploy-lambda-functions:
     runs-on: ubuntu-latest
@@ -116,12 +132,42 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_LAMBDA_UPLOAD_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Update dev lambda functions
+        if: github.ref == 'refs/heads/main'
         run: make prefix=tarmo-dev update-lambda -C infra
+      - name: Report to slack
+        if: github.ref == 'refs/heads/main'
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "dev lambda functions updated to ${{github.sha}}"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Update dev database
+        if: github.ref == 'refs/heads/main'
         run: make prefix=tarmo-dev migrate-db -C infra
+      - name: Report to slack
+        if: github.ref == 'refs/heads/main'
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "dev database updated to ${{github.sha}}"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Update production lambda functions
         if: startsWith(github.ref, 'refs/tags/release')
         run: make prefix=tarmo-tampere update-lambda -C infra
+      - name: Report to slack
+        if: startsWith(github.ref, 'refs/tags/release')
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "TAMPERE lambda functions updated to ${{github.sha}}"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Update production database
         if: startsWith(github.ref, 'refs/tags/release')
         run: make prefix=tarmo-tampere migrate-db -C infra
+      - name: Report to slack
+        if: startsWith(github.ref, 'refs/tags/release')
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          payload: {"success": "TAMPERE database updated to ${{github.sha}}"}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
