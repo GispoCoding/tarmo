@@ -52,7 +52,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
   is_ipv6_enabled = true
 
   default_root_object = "index.html"
-  aliases             = var.enable_route53_record ? [local.frontend_dns_alias] : var.alternate_domains
+  aliases             = var.enable_route53_record ? concat([local.frontend_dns_alias], var.alternate_domains) : var.alternate_domains
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
