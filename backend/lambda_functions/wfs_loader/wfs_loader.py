@@ -1,4 +1,3 @@
-import datetime
 from typing import Any, Dict, Optional
 
 import requests
@@ -106,13 +105,6 @@ class WFSLoader(BaseLoader):
         # Do not save any invalid or empty features
         if geom.is_empty:
             return None
-
-        # Date field needs iso format
-        if "paatospaiva" in cleaned_props.keys():
-            day, month, year = cleaned_props["paatospaiva"].split(".")
-            cleaned_props["paatospaiva"] = datetime.date(
-                year=int(year), month=int(month), day=int(day)
-            )
 
         # Rename desired fields
         for origin_name, tarmo_name in self.FIELD_NAMES.items():
