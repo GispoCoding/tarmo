@@ -1,6 +1,8 @@
 # Cluster is a collection of compute resources that can run tasks and services (docker containers in the end)
 resource "aws_ecs_cluster" "pg_tileserv" {
-  name = "tarmo-pg_tileserv"
+  # Separate even the clusters from each other. If we want to deploy and destroy deployments independently,
+  # they cannot have common resources.
+  name = "${var.prefix}-pg_tileserv"
 
   setting {
     name  = "containerInsights"
@@ -12,7 +14,7 @@ resource "aws_ecs_cluster" "pg_tileserv" {
 
 # Task definition is a description of parameters given to docker daemon, in order to run a container
 resource "aws_ecs_task_definition" "pg_tileserv" {
-  family                   = "tarmo-pg_tileserv"
+  family                   = "${var.prefix}-pg_tileserv"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   # This is the IAM role that the docker daemon will use, e.g. for pulling the image from ECR (AWS's own docker repository)
@@ -33,7 +35,7 @@ resource "aws_ecs_task_definition" "pg_tileserv" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group = "/aws/ecs/tarmo-pg_tileserv"
+          awslogs-group = "/aws/ecs/${var.prefix}-pg_tileserv"
           awslogs-region = var.AWS_REGION_NAME
           awslogs-stream-prefix = "ecs"
         }
@@ -63,7 +65,7 @@ resource "aws_ecs_task_definition" "pg_tileserv" {
 
 # Service can also be attached to a load balancer for HTTP, TCP or UDP traffic
 resource "aws_ecs_service" "pg_tileserv" {
-  name            = "pg_tileserv"
+  name            = "${var.prefix}_pg_tileserv"
   cluster         = aws_ecs_cluster.pg_tileserv.id
   task_definition = aws_ecs_task_definition.pg_tileserv.arn
   desired_count   = 1

@@ -9,9 +9,10 @@ data "aws_iam_user" "lambda_update" {
 
 # Create the policy to access the S3 bucket
 resource "aws_iam_policy" "ci_policy" {
-  name        = "github-ci-policy"
+  # We need a separate policy for each tarmo instance if they have separate buckets
+  name        = "${var.prefix}-github-ci-policy"
   path        = "/"
-  description = "Github CI policy"
+  description = "${var.prefix} Github CI policy"
 
   policy = jsonencode({
     Version   = "2012-10-17"
@@ -45,7 +46,7 @@ resource "aws_iam_policy" "ci_policy" {
 
 # Attach the policy to the user
 resource "aws_iam_policy_attachment" "github_ci_attachment" {
-  name       = "github-ci-attachment"
+  name       = "${var.prefix}-github-ci-attachment"
   users      = [data.aws_iam_user.s3.user_name]
   policy_arn = aws_iam_policy.ci_policy.arn
 }
@@ -53,6 +54,7 @@ resource "aws_iam_policy_attachment" "github_ci_attachment" {
 
 # Lambda role
 resource "aws_iam_role" "lambda_exec" {
+  # Separate roles for each tarmo instance
   name               = "${var.prefix}_serverless_lambda"
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
@@ -70,11 +72,13 @@ resource "aws_iam_role" "lambda_exec" {
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  # Lambda must have rights to connect to VPC
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 # Create the policy to access secrets manager in the region
 resource "aws_iam_policy" "secrets-policy" {
+  # We need a separate policy for each tarmo instance, since they have separate secrets
   name        = "${var.prefix}-lambda-secrets-policy"
   path        = "/"
   description = "Lambda db secrets policy"
@@ -138,6 +142,7 @@ resource "aws_iam_role_policy_attachment" "backend" {
 
 # Create the policy to update lambda functions
 resource "aws_iam_policy" "lambda_update_policy" {
+  # We need a separate policy for each tarmo instance, since they have separate lambda functions
   name        = "${var.prefix}-lambda_update_policy"
   path        = "/"
   description = "Github CI lambda update policy"
@@ -167,7 +172,46 @@ resource "aws_iam_policy" "lambda_update_policy" {
 }
 
 resource "aws_iam_policy_attachment" "lambda_update_attachment" {
-  name       = "lambda_update_attachment"
+  name       = "${var.prefix}-lambda_update_attachment"
   users      = [data.aws_iam_user.lambda_update.user_name]
   policy_arn = aws_iam_policy.lambda_update_policy.arn
+}
+
+#
+# Bastion
+#
+
+# Adding a role for the EC2 machine allows making AWS service APIs available via IAM policies
+resource "aws_iam_role" "ec2-role" {
+  name               = "${var.prefix}-ec2-iam-role"
+  path               = "/"
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+
+  tags = merge(local.default_tags, {
+    Name = "${var.prefix}-ec2-iam-role"
+  })
+}
+
+resource "aws_iam_instance_profile" "ec2-iam-profile" {
+  name = "${var.prefix}-ec2-iam-profile"
+  role = aws_iam_role.ec2-role.name
+}
+
+resource "aws_iam_role_policy_attachment" "ssm-policy-attachment" {
+  role       = aws_iam_role.ec2-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }

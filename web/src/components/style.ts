@@ -233,7 +233,7 @@ const CIRCLE_PAINT: CirclePaint = {
 /**
  * Paint object for all area layers
  */
- const FILL_PAINT: FillPaint = {
+const FILL_PAINT: FillPaint = {
   "fill-color": COLOR_MATCH,
   "fill-opacity": 0.2,
 };
@@ -328,7 +328,7 @@ export const SYKE_VALTION_STYLE: LayerProps = {
 /**
  * Sources for Museovirasto areas
  */
- export const MUSEOVIRASTO_AREA_SOURCE: VectorSource = {
+export const MUSEOVIRASTO_AREA_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
     `${process.env.TILESERVER_URL}/kooste.museovirastoarcrest_rkyalueet/{z}/{x}/{y}.pbf?filter=deleted=false`,
@@ -480,7 +480,7 @@ export const SEARCH_STYLE_CIRCLE: LayerProps = {
  * used to search for the input string when zoomed in.
  */
 
- export const SEARCH_LINE_SOURCE: VectorSource = {
+export const SEARCH_LINE_SOURCE: VectorSource = {
   type: "vector",
   tiles: [
     `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20(name%20ILIKE%20'%25{searchString}%25'%20OR%20type_name%20ILIKE%20'%25{searchString}%25'%20OR%20tarmo_category%20ILIKE%20'%25{searchString}%25')`,

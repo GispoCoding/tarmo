@@ -1,5 +1,6 @@
 # S3 bucket
 resource "aws_s3_bucket" "static_react_bucket" {
+  # okay, let's have one bucket for each distribution and deployment
   bucket = var.AWS_BUCKET_NAME
   acl    = "private"
 
@@ -33,12 +34,13 @@ data "aws_cloudfront_cache_policy" "ManagedCachingDisabled" {
 
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = "tarmo-react-app OAI"
+  comment = "${var.prefix}-react-app OAI"
 }
 
 resource "aws_cloudfront_distribution" "cf_distribution" {
   origin {
     domain_name = aws_s3_bucket.static_react_bucket.bucket_regional_domain_name
+    # here the origin id is different for each deployment (workspace)
     origin_id   = local.s3_origin_id
 
     s3_origin_config {
@@ -50,7 +52,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
   is_ipv6_enabled = true
 
   default_root_object = "index.html"
-  aliases             = compact([var.enable_route53_record ? local.frontend_dns_alias : ""])
+  aliases             = var.enable_route53_record ? concat([local.frontend_dns_alias], var.alternate_domains) : var.alternate_domains
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -93,8 +95,8 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
   price_class = "PriceClass_100"
 
   viewer_certificate {
-    cloudfront_default_certificate = var.enable_route53_record ? false : true
-    acm_certificate_arn            = var.enable_route53_record ? aws_acm_certificate.frontend[0].arn : ""
+    cloudfront_default_certificate = false
+    acm_certificate_arn            = var.enable_route53_record ? aws_acm_certificate.frontend[0].arn : var.alternate_domain_certificate_arn
     ssl_support_method             = "sni-only"
   }
 

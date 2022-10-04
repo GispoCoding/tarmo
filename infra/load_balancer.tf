@@ -1,5 +1,6 @@
 # The application will be reachable from public internet via a publi Application Load Balancer
 resource "aws_lb" "tileserver" {
+  # separate load balancer for each deployment
   name               = "${var.prefix}-tileserver"
   internal           = false
   # We use Application Load Balancer: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
@@ -49,10 +50,11 @@ resource "aws_lb_target_group" "tileserver" {
 # The default route will point all traffic to the target group
 resource "aws_lb_listener" "tileserver" {
   load_balancer_arn = aws_lb.tileserver.arn
-  port              = var.enable_route53_record ? 443: 80
-  protocol          = var.enable_route53_record ? "HTTPS" : "HTTP"
-  ssl_policy        = var.enable_route53_record  ? "ELBSecurityPolicy-2016-08" : null
-  certificate_arn   = var.enable_route53_record  ? aws_acm_certificate.tileserver[0].arn : null
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  # always create tileserver record
+  certificate_arn   =  aws_acm_certificate.tileserver[0].arn
 
   default_action {
     type             = "forward"
@@ -62,7 +64,8 @@ resource "aws_lb_listener" "tileserver" {
 }
 
 resource "aws_lb_listener" "http" {
-  count             = var.enable_route53_record ? 1 : 0
+  # we want a listener even if we don't use route53
+  count             = 1
   load_balancer_arn = aws_lb.tileserver.arn
   port              = 80
   protocol          = "HTTP"

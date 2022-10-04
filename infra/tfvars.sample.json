@@ -2,7 +2,34 @@
   "AWS_REGION_NAME": "<AWS Region name>",
   "AWS_BUCKET_NAME": "<AWS S3 bucket name>",
   "AWS_S3_USER": "<AWS S3 user name>",
-  "AWS_HOSTED_DOMAIN": "<Domain for create route53 record>",
-  "enable_route53_record": false,
-  "frontend_subdomain": "<Name of the site, used for example in <SITE_NAME>.domain.com>"
+  "AWS_HOSTED_DOMAIN": "<Domain for route53 record>",
+  "enable_route53_record": true,
+  "frontend_subdomain": "<Name of the site, used for example in <SITE_NAME>.domain.com>",
+  "backend_subdomain": "<Name of the tile server, e.g. <SITE_NAME>-tilerserver.domain.com. Tile server record is always created, even if enable_route53_record is false.>",
+  "alternate_domains": ["<Externally registered domain for the frontend (only if enable_route53_record is false)>"],
+  "alternate_domain_certificate_arn": "<ARN for an imported external certificate (only if enable_route53_record is false)>",
+  "tarmo_db_name": "<Name of the database to create>",
+  "su_secrets": {
+    "username": "<Superuser name>",
+    "password": "<Superuser password>"
+  },
+  "tarmo_admin_secrets": {
+    "username": "<Admin user name>",
+    "password": "<Admin user password>"
+  },
+  "tarmo_r_secrets": {
+    "username": "<Read user name>",
+    "password": "<Read user password>"
+  },
+  "tarmo_rw_secrets": {
+    "username": "<Read & write user name>",
+    "password": "<Read & write user password>"
+  },
+  "prefix": "<Name of the deployment in case of multiple parallel deploys>",
+  "extra_tags": {
+    "Customer": "<AWS customer tag>",
+    "Project": "<AWS project tag>",
+    "wrike_task_id": "<AWS task id tag>"
+  },
+  "bastion_public_key": "<Public key you want to use to access the vpc with ssh>"
 }
