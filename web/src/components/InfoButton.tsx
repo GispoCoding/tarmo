@@ -22,7 +22,7 @@ export default function InfoButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [dialogContent, setDialogContent] = React.useState("");
 
   /**
@@ -77,7 +77,7 @@ export default function InfoButton() {
       open={dialogOpen}
       fullWidth
       maxWidth="md"
-      fullScreen={fullScreen}
+      fullScreen={isMobile}
       onClose={handleCloseDialog}
       PaperProps={{
         sx: {

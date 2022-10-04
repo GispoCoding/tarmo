@@ -158,7 +158,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * @param properties
    * @returns data source to display to the user
    */
-   const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
+  const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
     let prefix: string;
     // clusters have multiple data sources combined
     if (layerId.startsWith("point-clusters") && properties!["size"] > 1) {
@@ -175,10 +175,14 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
       prefix = layerId.split("-")[0]
     }
     const {name, url} = dataSources[prefix];
-    return <Typography variant="h6">
-      Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
-    </Typography>
-   }
+    return (
+      <Box pb={2}>
+        <Typography variant="h6">
+          Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
+        </Typography>
+      </Box>
+    );
+  }
 
   /**
    * Get season icon
