@@ -1468,7 +1468,7 @@ INSERT INTO kooste.osm_metadata (
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luonnonmuistomerkit CASCADE;
 CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
-	sw_member bigint NOT NULL,
+	id bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
@@ -1478,7 +1478,7 @@ CREATE TABLE kooste.tamperewfs_luonnonmuistomerkit (
 	paatosnumero text,
 	paatospaiva date,
 	deleted boolean NOT NULL DEFAULT false,
-	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (sw_member)
+	CONSTRAINT tamperewfs_luonnonmuistomerkit_pk PRIMARY KEY (id)
 );
 CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (deleted);
 CREATE INDEX ON kooste.tamperewfs_luonnonmuistomerkit (tarmo_category);
@@ -1490,7 +1490,7 @@ ALTER TABLE kooste.tamperewfs_luonnonmuistomerkit OWNER TO tarmo_admin;
 -- object: kooste.tamperewfs_luontopolkurastit | type: TABLE --
 -- DROP TABLE IF EXISTS kooste.tamperewfs_luontopolkurastit CASCADE;
 CREATE TABLE kooste.tamperewfs_luontopolkurastit (
-	mi_prinx bigint NOT NULL,
+	id bigint NOT NULL,
 	geom geometry(MULTIPOINT, 4326) NOT NULL,
 	visibility boolean DEFAULT True,
 	name text NOT NULL,
@@ -1501,7 +1501,7 @@ CREATE TABLE kooste.tamperewfs_luontopolkurastit (
 	"infoFi" text,
 	lisatietoja text,
 	deleted boolean NOT NULL DEFAULT false,
-	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (mi_prinx)
+	CONSTRAINT tamperewfs_luontopolkurastit_pk PRIMARY KEY (id)
 );
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (deleted);
 CREATE INDEX ON kooste.tamperewfs_luontopolkurastit (tarmo_category);
@@ -1544,7 +1544,7 @@ ALTER TABLE kooste.tamperewfs_metadata OWNER TO tarmo_admin;
 INSERT INTO kooste.tamperewfs_metadata (
     layers_to_include
 ) VALUES (
-    '["luonto:YV_LUONNONMUISTOMERKKI", "luonto:YV_LUONTORASTI"]'
+    '["ymparisto_ja_terveys:yv_luonnonmuistomerkki", "ymparisto_ja_terveys:yv_luontorasti"]'
 );
 
 -- object: kooste.museovirastoarcrest_rkykohteet | type: TABLE --
@@ -2135,8 +2135,8 @@ create materialized view kooste.all_points as
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_pisteet-', "sportsPlaceId") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.lipas_pisteet as points where deleted=false union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkykohteet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_muinaisjaannokset-', "mjtunnus") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "sw_member") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luontopolkurastit-', "mi_prinx") as id ,"name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "id") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luontopolkurastit-', "id") as id ,"name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('osm_pisteet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags || jsonb_build_object('type_name', type_name) as props from kooste.osm_pisteet as points where deleted=false union all
 select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('osm_alueet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags || jsonb_build_object('type_name', type_name) as props from kooste.osm_alueet as areas where deleted=false union all
 select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkyalueet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(areas)::jsonb as props from kooste.museovirastoarcrest_rkyalueet as areas where deleted=false and visibility=true;
