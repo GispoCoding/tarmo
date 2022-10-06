@@ -6,7 +6,7 @@
 
 [_Tampereen kaupungin WFS-rajapinta_](https://geodata.tampere.fi/geoserver/web/)
 
-- Avoimen datan lisenssi?
+- Aineiston lisenssi [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Luontopolkurastit
 - Luonnonmuistomerkit
 
