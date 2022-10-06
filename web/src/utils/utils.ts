@@ -92,7 +92,9 @@ export const parseResponse = (gqlResponse: gqlResponse): FeatureCollection => {
   };
 };
 
-export const categories: Category[] = [
+export const disabledCategories = process.env.DISABLED_LAYERS ? process.env.DISABLED_LAYERS.split(";") : []
+
+const possibleCategories: Category[] = [
   {
     name: "Ulkoilureitit",
     category: "Ulkoilureitit",
@@ -130,8 +132,9 @@ export const categories: Category[] = [
     category: "Muinaisjäännökset",
   },
 ];
+export const categories = possibleCategories.filter((category) => !disabledCategories.includes(category.name))
 
-export const winterCategories: Category[] = [
+const possibleWinterCategories: Category[] = [
   {
     name: "Hiihto",
     category: "Hiihto",
@@ -145,8 +148,9 @@ export const winterCategories: Category[] = [
     category: "Talviuinti",
   },
 ];
+export const winterCategories = possibleWinterCategories.filter((category) => !disabledCategories.includes(category.name))
 
-export const serviceCategories: Category[] = [
+const possibleServiceCategories: Category[] = [
   {
     name: "Leirintä ja majoitus",
     category: "Leirintä ja majoitus",
@@ -156,8 +160,13 @@ export const serviceCategories: Category[] = [
     category: "Kahvilat ja kioskit",
   },
   {
-    name: "Vessat ja roskikset",
-    category: "Vessat ja roskikset",
+    name: "Vessat",
+    category: "Vessat",
+    zoomThreshold: 14,
+  },
+  {
+    name: "Roskikset",
+    category: "Roskikset",
     zoomThreshold: 14,
   },
   {
@@ -171,6 +180,7 @@ export const serviceCategories: Category[] = [
     zoomThreshold: 13,
   },
 ]
+export const serviceCategories = possibleServiceCategories.filter((category) => !disabledCategories.includes(category.name))
 
 export const allCategories: Category[] = [...categories, ...winterCategories, ...serviceCategories]
 export const categoriesByZoom = allCategories.reduce<Map<number, Category[]>>((differentZooms, category) => {
@@ -213,7 +223,8 @@ export const getCategoryIcon = (category: string) =>
     "Muinaisjäännökset": "img/historical-light.png",
     "Leirintä ja majoitus": "img/cottage-light.png",
     "Kahvilat ja kioskit": "img/cafe-light.png",
-    "Vessat ja roskikset": "img/compost-light.png"
+    "Vessat": "img/toilet-light.png",
+    "Roskikset": "img/compost-light.png"
   }[category]);
 
 /**
@@ -241,7 +252,8 @@ export const getCategoryColor = (category: string) =>
     "Muinaisjäännökset": "#76280f",
     "Leirintä ja majoitus": "#76280f",
     "Kahvilat ja kioskit": "#c83e36",
-    "Vessat ja roskikset": "#22437b",
+    "Vessat": "#22437b",
+    "Roskikset": "#22437b",
   }[category]);
 
 /**
@@ -269,5 +281,6 @@ export const getCategoryPlural = (category: string) =>
     "Muinaisjäännökset": "muinaisjäännöstä",
     "Leirintä ja majoitus": "leirintä- ja majoituspaikkaa",
     "Kahvilat ja kioskit": "kahvilaa ja kioskia",
-    "Vessat ja roskikset": "vessaa ja roskista"
+    "Vessat": "vessaa",
+    "Roskikset": "roskista"
   }[category]);

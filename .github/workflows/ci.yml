@@ -106,6 +106,7 @@ jobs:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TAMPERE_TILESERVER_URL }}
           CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
+          DISABLED_LAYERS: "Roskikset"
       - name: Deploy app build to production S3 bucket
         if: startsWith(github.ref, 'refs/tags/release')
         run: aws s3 sync ./dist/ s3://${{ secrets.TAMPERE_AWS_BUCKET_NAME }} --delete

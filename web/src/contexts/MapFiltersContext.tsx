@@ -22,7 +22,8 @@ export const CATEGORY_FILTERS = Object.freeze({
   "Muinaisjäännökset": true,
   "Leirintä ja majoitus": true,
   "Kahvilat ja kioskit": true,
-  "Vessat ja roskikset": true
+  "Vessat": true,
+  "Roskikset": true
 });
 
 /**

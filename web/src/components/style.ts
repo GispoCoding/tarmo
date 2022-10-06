@@ -101,8 +101,11 @@ cottage_image.src = `${getCategoryIcon("Leirintä ja majoitus")}`;
 const cafe_image: HTMLImageElement = new Image(24, 24);
 cafe_image.src = `${getCategoryIcon("Kahvilat ja kioskit")}`;
 
+const toilet_image: HTMLImageElement = new Image(24, 24);
+toilet_image.src = `${getCategoryIcon("Vessat")}`;
+
 const compost_image: HTMLImageElement = new Image(24, 24);
-compost_image.src = `${getCategoryIcon("Vessat ja roskikset")}`;
+compost_image.src = `${getCategoryIcon("Roskikset")}`;
 
 /**
  * Images for all symbol layers
@@ -163,7 +166,9 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "cottage",
     "Kahvilat ja kioskit",
     "cafe",
-    "Vessat ja roskikset",
+    "Vessat",
+    "toilet",
+    "Roskikset",
     "compost",
     /* In some categories (looking at you, parking) icons are determined by osm tags */
     /* We could also select icon based on type_name, but this will do for now */
@@ -210,8 +215,10 @@ const COLOR_MATCH: Expression = [
   getCategoryColor("Leirintä ja majoitus"),
   "Kahvilat ja kioskit",
   getCategoryColor("Kahvilat ja kioskit"),
-  "Vessat ja roskikset",
-  getCategoryColor("Vessat ja roskikset"),
+  "Vessat",
+  getCategoryColor("Vessat"),
+  "Roskikset",
+  getCategoryColor("Roskikset"),
   palette.primary.dark,
 ]
 
