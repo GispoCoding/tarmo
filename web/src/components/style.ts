@@ -180,6 +180,8 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     ["string", ["get", "tarmo_category"]],
     "Pysäköinti",
     1,
+    "Vessat",
+    0.9,
     0.75
   ],
   "icon-allow-overlap": true,
