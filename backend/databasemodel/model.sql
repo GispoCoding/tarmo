@@ -2134,15 +2134,16 @@ GRANT USAGE
 -- We must take care that the jsonb field must not contain *any* keys that are the same as the column names in the view.
 -- Identical keys (e.g. "id" in both columns and inside props json) will mess up pg_tileserv, as it will merge the column keys with
 -- the jsonb props keys. Will result in different fields overwriting each other randomly at each tile request.
+-- For this reason, we may not store name or type_name *both* as a column and inside props json.
 create materialized view kooste.all_points as
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_pisteet-', "sportsPlaceId") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.lipas_pisteet as points where deleted=false union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkykohteet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_muinaisjaannokset-', "mjtunnus") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "id") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'id' as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luontopolkurastit-', "id") as id ,"name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'id' as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true union all
-select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('osm_pisteet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags || jsonb_build_object('type_name', type_name) as props from kooste.osm_pisteet as points where deleted=false union all
-select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('osm_alueet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags || jsonb_build_object('type_name', type_name) as props from kooste.osm_alueet as areas where deleted=false union all
-select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkyalueet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(areas)::jsonb as props from kooste.museovirastoarcrest_rkyalueet as areas where deleted=false and visibility=true;
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_pisteet-', "sportsPlaceId") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.lipas_pisteet as points where deleted=false union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkykohteet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_muinaisjaannokset-', "mjtunnus") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "id") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'id' - 'name' as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luontopolkurastit-', "id") as id ,"name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'id' - 'name' as props from kooste.tamperewfs_luontopolkurastit as points where deleted=false and visibility=true union all
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('osm_pisteet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags - 'name' as props from kooste.osm_pisteet as points where deleted=false union all
+select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('osm_alueet-', "id") as id , tags ->> 'name' as "name", 'Tampere' as "cityName", "tarmo_category", "type_name", tags - 'name' as props from kooste.osm_alueet as areas where deleted=false union all
+select ST_Centroid(geom)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkyalueet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(areas)::jsonb - 'name' as props from kooste.museovirastoarcrest_rkyalueet as areas where deleted=false and visibility=true;
 
 create index on kooste.all_points (id);
 -- Use the trigram extension to speed up text search
@@ -2165,12 +2166,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
 -- https://postgis.net/docs/ST_ClusterDBSCAN.html
 -- "Note that border geometries may be within eps distance of core geometries in more than one cluster; in this case, either assignment would be correct, and the border geometry will be arbitrarily asssigned to one of the available clusters. In these cases, it is possible for a correct cluster to be generated with fewer than minpoints geometries."
 create function kooste.get_cluster_ids(radius float)
-	returns table(cluster_id int, id text, point_geom geometry, "cityName" text, "tarmo_category" text, props jsonb)
+	returns table(cluster_id int, id text, point_geom geometry, "cityName" text, "tarmo_category" text, name text, type_name text, props jsonb)
 	as $$
 	begin
 		return query select ST_ClusterDBSCAN(points.geom,radius,2) over (
 			partition by points."cityName", points."tarmo_category"
-		) as cluster_id, points.id, points.geom, points."cityName", points."tarmo_category", points.props
+		) as cluster_id, points.id, points.geom, points."cityName", points."tarmo_category", points.name, points.type_name, points.props
 		from kooste.all_points as points;
 	end; $$
 language 'plpgsql';
@@ -2187,6 +2188,7 @@ language 'plpgsql';
 -- 	end; $$
 -- language 'plpgsql';
 
+-- This function will return all clusters and all single points not belonging to any cluster
 create function kooste.get_clusters(radius float)
 	returns table(id text, size bigint, cluster_geom geometry(point,4326), "cityName" text, "tarmo_category" text, props jsonb)
 	as $$
@@ -2194,12 +2196,14 @@ create function kooste.get_clusters(radius float)
 		return query with cluster_ids as (
 			select * from kooste.get_cluster_ids(radius)
 		), clusters as (
+			-- clusters do have any extra props atm
 			select points.cluster_id::text, count(*) as size, ST_Centroid(ST_Collect(point_geom)) as cluster_geom, points."cityName", points."tarmo_category", row_to_json(null)::jsonb as props
 			from cluster_ids as points where points.cluster_id is not null
 			group by points.cluster_id, points."cityName", points."tarmo_category"
 			order by points."cityName", points."tarmo_category"
 		), non_clusters as (
-			select points.id, 1 as size, point_geom as cluster_geom, points."cityName", points."tarmo_category", points.props
+			-- any all_points fields needed in single tarmo points must be added back to props json
+			select points.id, 1 as size, point_geom as cluster_geom, points."cityName", points."tarmo_category", points.props || jsonb_build_object('name', points.name,'type_name', points.type_name) as props
 			from cluster_ids as points where points.cluster_id is null
 		) select * from clusters union all select * from non_clusters;
 	end; $$
