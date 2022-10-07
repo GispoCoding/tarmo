@@ -254,6 +254,10 @@ class BaseLoader:
         if isinstance(objects, dict):
             objects = objects["features"]
         succesful_actions = 0
+        if not objects:
+            msg = "API returned no features. Database left untouched."
+            LOGGER.warning(msg)
+            return msg
         with self.Session() as session:
             for i, element in enumerate(objects):
                 if i % 10 == 0:
