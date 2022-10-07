@@ -105,7 +105,7 @@ export default function FilterComponent(props: LayerFilterProps) {
             variant={category === "Bussipysäkki" || category === "Pysäköinti" ? "rounded" : "circular"}
           >
             <img
-              style={category === "Vessat" ? {width: 44, height: 44} : {width: 26, height: 26}}
+              style={category === "Bussipysäkki" || category === "Pysäköinti" || category === "Vessat" ? {width: 38, height: 38} : {width: 26, height: 26}}
               src={`/${getCategoryIcon(category)}`}
             />
           </Avatar>

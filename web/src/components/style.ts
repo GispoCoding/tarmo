@@ -101,7 +101,7 @@ cottage_image.src = `${getCategoryIcon("Leirintä ja majoitus")}`;
 const cafe_image: HTMLImageElement = new Image(24, 24);
 cafe_image.src = `${getCategoryIcon("Kahvilat ja kioskit")}`;
 
-const toilet_image: HTMLImageElement = new Image(24, 24);
+const toilet_image: HTMLImageElement = new Image(32, 32);
 toilet_image.src = `${getCategoryIcon("Vessat")}`;
 
 const recycle_image: HTMLImageElement = new Image(24, 24);
@@ -180,8 +180,6 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     ["string", ["get", "tarmo_category"]],
     "Pysäköinti",
     1,
-    "Vessat",
-    0.9,
     0.75
   ],
   "icon-allow-overlap": true,
