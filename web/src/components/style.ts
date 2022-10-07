@@ -107,6 +107,9 @@ toilet_image.src = `${getCategoryIcon("Vessat")}`;
 const recycle_image: HTMLImageElement = new Image(24, 24);
 recycle_image.src = `${getCategoryIcon("Roskikset")}`;
 
+const bench_image: HTMLImageElement = new Image(24, 24);
+bench_image.src = `${getCategoryIcon("Penkit ja pöydät")}`;
+
 /**
  * Images for all symbol layers
  */
@@ -130,6 +133,7 @@ export const POINT_IMAGES = [
   ["cafe", cafe_image],
   ["toilet", toilet_image],
   ["recycle", recycle_image],
+  ["bench", bench_image],
 ];
 
 /**
@@ -171,6 +175,8 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "toilet",
     "Roskikset",
     "recycle",
+    "Penkit ja pöydät",
+    "bench",
     /* In some categories (looking at you, parking) icons are determined by osm tags */
     /* We could also select icon based on type_name, but this will do for now */
     ["get", "amenity"],
@@ -220,6 +226,8 @@ const COLOR_MATCH: Expression = [
   getCategoryColor("Vessat"),
   "Roskikset",
   getCategoryColor("Roskikset"),
+  "Penkit ja pöydät",
+  getCategoryColor("Penkit ja pöydät"),
   palette.primary.dark,
 ]
 

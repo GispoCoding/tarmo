@@ -57,7 +57,7 @@ class OSMLoader(BaseLoader):
     # Allow other tarmo_categories than the database default
     TAGS_TO_TARMO_CATEGORY = {
         "amenity": {
-            "bench": "Penkit",
+            "bench": "Penkit ja pöydät",
             "bbq": "Laavut, majat, ruokailu",
             "bicycle_parking": "Pysäköinti",
             "cafe": "Kahvilat ja kioskit",
@@ -79,13 +79,13 @@ class OSMLoader(BaseLoader):
             "hotel": "Leirintä ja majoitus",
             "motel": "Leirintä ja majoitus",
             "museum": "Nähtävyydet",
-            "picnic_site": "Laavut, majat, ruokailu",
+            "picnic_site": "Penkit ja pöydät",
             "viewpoint": "Nähtävyydet",
             "wilderness_hut": "Leirintä ja majoitus",
         },
         "leisure": {
             "bird_hide": "Ulkoilureitit",
-            "picnic_table": "Laavut, majat, ruokailu",
+            "picnic_table": "Penkit ja pöydät",
             "sauna": "Leirintä ja majoitus",
         },
         "shop": {

@@ -170,6 +170,11 @@ const possibleServiceCategories: Category[] = [
     zoomThreshold: 14,
   },
   {
+    name: "Penkit ja pöydät",
+    category: "Penkit ja pöydät",
+    zoomThreshold: 14,
+  },
+  {
     name: "Pysäköinti",
     category: "Pysäköinti",
     zoomThreshold: 14,
@@ -224,7 +229,8 @@ export const getCategoryIcon = (category: string) =>
     "Leirintä ja majoitus": "img/cottage-light.png",
     "Kahvilat ja kioskit": "img/cafe-light.png",
     "Vessat": "img/toilet-light.png",
-    "Roskikset": "img/recycle-light.png"
+    "Roskikset": "img/recycle-light.png",
+    "Penkit ja pöydät": "img/bench-light.png"
   }[category]);
 
 /**
@@ -254,6 +260,7 @@ export const getCategoryColor = (category: string) =>
     "Kahvilat ja kioskit": "#c83e36",
     "Vessat": "#22437b",
     "Roskikset": "#22437b",
+    "Penkit ja pöydät": "#22437b",
   }[category]);
 
 /**
@@ -282,5 +289,6 @@ export const getCategoryPlural = (category: string) =>
     "Leirintä ja majoitus": "leirintä- ja majoituspaikkaa",
     "Kahvilat ja kioskit": "kahvilaa ja kioskia",
     "Vessat": "vessaa",
-    "Roskikset": "roskista"
+    "Roskikset": "roskista",
+    "Penkit ja pöydät": "penkkiä ja pöytää"
   }[category]);

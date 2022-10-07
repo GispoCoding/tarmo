@@ -23,7 +23,8 @@ export const CATEGORY_FILTERS = Object.freeze({
   "Leirintä ja majoitus": true,
   "Kahvilat ja kioskit": true,
   "Vessat": true,
-  "Roskikset": true
+  "Roskikset": true,
+  "Penkit ja pöydät": true
 });
 
 /**
