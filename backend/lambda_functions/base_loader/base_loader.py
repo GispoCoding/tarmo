@@ -115,6 +115,12 @@ class Syncher:
 
     def finish(self, session: Session) -> int:
         # We only ever delete those tables that are marked by the loader
+        # This is essential because
+        # 1) every now and then, we might only update some of the tables,
+        # leaving others intact, and
+        # 2) some apis might fail by returning an empty dataset. In case of
+        # an empty dataset, no objects will be marked and no objects will be
+        # deleted.
         pks_to_delete = {
             name: self.existing_pks[name] - self.pks_to_save[name]
             for name in self.pks_to_save.keys()
