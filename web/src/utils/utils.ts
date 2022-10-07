@@ -224,7 +224,7 @@ export const getCategoryIcon = (category: string) =>
     "Leirintä ja majoitus": "img/cottage-light.png",
     "Kahvilat ja kioskit": "img/cafe-light.png",
     "Vessat": "img/toilet-light.png",
-    "Roskikset": "img/compost-light.png"
+    "Roskikset": "img/recycle-light.png"
   }[category]);
 
 /**

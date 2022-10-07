@@ -104,8 +104,8 @@ cafe_image.src = `${getCategoryIcon("Kahvilat ja kioskit")}`;
 const toilet_image: HTMLImageElement = new Image(24, 24);
 toilet_image.src = `${getCategoryIcon("Vessat")}`;
 
-const compost_image: HTMLImageElement = new Image(24, 24);
-compost_image.src = `${getCategoryIcon("Roskikset")}`;
+const recycle_image: HTMLImageElement = new Image(24, 24);
+recycle_image.src = `${getCategoryIcon("Roskikset")}`;
 
 /**
  * Images for all symbol layers
@@ -128,7 +128,8 @@ export const POINT_IMAGES = [
   ["skiing", skiing_image],
   ["cottage", cottage_image],
   ["cafe", cafe_image],
-  ["compost", compost_image],
+  ["toilet", toilet_image],
+  ["recycle", recycle_image],
 ];
 
 /**
@@ -169,7 +170,7 @@ const SYMBOL_LAYOUT: SymbolLayout = {
     "Vessat",
     "toilet",
     "Roskikset",
-    "compost",
+    "recycle",
     /* In some categories (looking at you, parking) icons are determined by osm tags */
     /* We could also select icon based on type_name, but this will do for now */
     ["get", "amenity"],
