@@ -149,6 +149,12 @@ class OSMLoader(BaseLoader):
         if geom.is_empty:
             return None
 
+        # validate/fix URL!
+        if "website" in tags:
+            tags["www"] = tags.pop("website")
+            if tags["www"] and not tags["www"].startswith("http"):
+                tags["www"] = "https://" + tags["www"]
+
         # OSM ids are *only* unique *within* each type!
         # SQLAlchemy merge() doesn't know how to handle unique constraints that are not
         # pk. Therefore, we will have to specify the primary key here (not generated in

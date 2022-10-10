@@ -83,6 +83,7 @@ parking_response = {
                 "amenity": "parking",
                 "capacity": "5",
                 "parking": "surface",
+                "website": "www.parkkipaikka.fi",
             },
         },
         {
@@ -273,6 +274,7 @@ def test_get_customer_parking_feature(parking_loader, parking_data):
     assert customer_parking["osm_type"] == "node"
     assert customer_parking["geom"].startswith("POINT")
     assert customer_parking["tags"]
+    assert customer_parking["tags"]["www"] == "https://www.parkkipaikka.fi"
     assert customer_parking["type_name"] == "Asiakaspysäköinti"
 
 

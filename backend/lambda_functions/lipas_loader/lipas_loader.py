@@ -145,6 +145,10 @@ class LipasLoader(BaseLoader):
             season = Season.ALL_YEAR.value
         tarmo_category = self.category_from_code[type_code]
 
+        # validate/fix URL!
+        if "www" in data and data["www"] and not data["www"].startswith("http"):
+            data["www"] = "https://" + data["www"]
+
         flattened = {
             **data,
             **props,

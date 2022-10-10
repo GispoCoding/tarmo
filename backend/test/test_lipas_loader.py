@@ -157,6 +157,15 @@ def test_get_sport_place_talviuintipaikka(loader):
     assert sport_place["tarmo_category"] == "Talviuinti"
 
 
+def test_get_sport_place_incomplete_url_fixed(loader):
+    sport_place = loader.get_feature(506521)
+    assert sport_place["geom"] == "MULTIPOINT (23.7443451904576 61.3050219780947)"
+    assert sport_place["season"] == "Koko vuosi"
+    assert sport_place["table"] == "lahiliikuntapaikka"
+    assert sport_place["tarmo_category"] == "Ulkoilupaikat"
+    assert sport_place["www"] == "https://www.lempaala.fi"
+
+
 def assert_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
