@@ -154,7 +154,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       .then(nlsStyleString =>
         setMapStyle(
           JSON.parse(
-            nlsStyleString.replaceAll("{api-key}", `${process.env.API_KEY_NLS}`)
+            nlsStyleString.replaceAll("{api-key}", `${process.env.API_KEY_NLS}`).replaceAll("{nls-tileserver-url}", `${process.env.NLS_TILESERVER_URL}`)
           )
         )
       );

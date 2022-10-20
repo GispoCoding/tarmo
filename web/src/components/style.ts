@@ -913,7 +913,7 @@ export const NLS_TERRAIN_STYLE: Style = {
     terrain: {
       type: "raster",
       tiles: [
-        "https://avoin-karttakuva.maanmittauslaitos.fi/avoin/wmts/1.0.0/maastokartta/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
+        process.env.NLS_TILESERVER_URL + "/avoin/wmts/1.0.0/maastokartta/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
           process.env.API_KEY_NLS,
       ],
       tileSize: 256,
@@ -939,7 +939,7 @@ export const NLS_ORTHOIMAGE_STYLE: Style = {
     orthoimage: {
       type: "raster",
       tiles: [
-        "https://avoin-karttakuva.maanmittauslaitos.fi/avoin/wmts/1.0.0/ortokuva/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
+        process.env.NLS_TILESERVER_URL + "/avoin/wmts/1.0.0/ortokuva/default/WGS84_Pseudo-Mercator/{z}/{y}/{x}.png?api-key=" +
           process.env.API_KEY_NLS,
       ],
       tileSize: 256,

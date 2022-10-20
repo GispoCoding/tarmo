@@ -85,6 +85,7 @@ jobs:
         env:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TILESERVER_URL }}
+          NLS_TILESERVER_URL: ${{ secrets.NLS_TILESERVER_URL }}
           CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
       - name: Deploy app build to dev S3 bucket
         if: github.ref == 'refs/heads/main'
@@ -105,6 +106,7 @@ jobs:
         env:
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TAMPERE_TILESERVER_URL }}
+          NLS_TILESERVER_URL: ${{ secrets.TAMPERE_NLS_TILESERVER_URL }}
           CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
           DISABLED_LAYERS: "Roskikset;Penkit ja pöydät"
       - name: Deploy app build to production S3 bucket
