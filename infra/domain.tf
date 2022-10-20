@@ -71,6 +71,32 @@ resource "aws_route53_record" "tileserver" {
   ttl     = "60"
 }
 
+resource "aws_route53_record" "tilecache" {
+  count = 1
+
+  zone_id = data.aws_route53_zone.zone[0].id
+  name    = local.tile_cache_dns_alias
+  type    = "CNAME"
+
+  records = [
+    aws_lb.tileserver.dns_name
+  ]
+  ttl     = "60"
+}
+
+resource "aws_route53_record" "mmlcache" {
+  count = 1
+
+  zone_id = data.aws_route53_zone.zone[0].id
+  name    = local.mml_cache_dns_alias
+  type    = "CNAME"
+
+  records = [
+    aws_lb.tileserver.dns_name
+  ]
+  ttl     = "60"
+}
+
 resource "aws_route53_record" "tileserver_validation" {
 
   for_each = {

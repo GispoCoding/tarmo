@@ -34,6 +34,12 @@ resource "aws_cloudwatch_log_group" "tarmo_tileserver" {
   tags              = local.default_tags
 }
 
+resource "aws_cloudwatch_log_group" "tarmo_tilecache" {
+  name              = "/aws/ecs/${aws_ecs_task_definition.tileserv_cache.family}"
+  retention_in_days = 30
+  tags              = local.default_tags
+}
+
 resource "aws_cloudwatch_event_rule" "lambda_lipas" {
   name        = "${var.prefix}-lambda-lipas-update"
   description = "Run lipas import every night"

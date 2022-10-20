@@ -19,6 +19,7 @@ resource "aws_acm_certificate" "tileserver" {
   # Always create the tile server certificate, no matter what the frontend domain
   count             = 1
   domain_name       = local.tileserver_dns_alias
+  subject_alternative_names = [local.tile_cache_dns_alias, local.mml_cache_dns_alias]
   validation_method = "DNS"
   tags              = merge(local.default_tags, { Name = "${var.prefix}-tileserver-acm" })
 }

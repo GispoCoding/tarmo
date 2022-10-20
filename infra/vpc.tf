@@ -187,18 +187,11 @@ resource "aws_security_group_rule" "lb-egress" {
 }
 
 # Security group for the backends that run the application.
-# Allows traffic from the load balancer
+# Allows traffic from the load balancer to tile server and tile cache
 resource "aws_security_group" "backend" {
   name        = "${var.prefix} tile server"
   description = "${var.prefix} tile server security group"
   vpc_id      = aws_vpc.main.id
-
-  ingress {
-    from_port       = var.pg_tileserv_port
-    to_port         = var.pg_tileserv_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.lb.id]
-  }
 
   egress {
     from_port   = 0
@@ -212,6 +205,58 @@ resource "aws_security_group" "backend" {
   })
 }
 
+# Access to tile server from tile cache
+resource "aws_security_group_rule" "tilecache-tileserv" {
+  description = "Tile server allow traffic from tile cache"
+  type        = "ingress"
+
+  from_port   = 0
+  to_port     = 0
+  protocol    = -1
+  self = true
+
+  security_group_id = aws_security_group.backend.id
+}
+
+# Debug access to tile cache from bastion
+resource "aws_security_group_rule" "tilecache-bastion" {
+  description       = "Tile cache allow traffic from bastion"
+  type              = "ingress"
+
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+
+  source_security_group_id = aws_security_group.bastion.id
+  security_group_id = aws_security_group.backend.id
+}
+
+# Access to tile server from lb
+resource "aws_security_group_rule" "lb-tileserv" {
+  description = "Tile server allow traffic from lb"
+  type        = "ingress"
+
+  from_port   = var.pg_tileserv_port
+  to_port     = var.pg_tileserv_port
+  protocol    = "tcp"
+
+  source_security_group_id = aws_security_group.lb.id
+  security_group_id = aws_security_group.backend.id
+}
+
+# Access to tile cache from lb
+resource "aws_security_group_rule" "lb-varnish" {
+  description = "Tile cache allow traffic from lb"
+  type        = "ingress"
+
+  from_port   = var.varnish_port
+  to_port     = var.varnish_port
+  protocol    = "tcp"
+
+  source_security_group_id = aws_security_group.lb.id
+  security_group_id = aws_security_group.backend.id
+}
+
 # Allows traffic to db and wherever lambdas need
 resource "aws_security_group" "lambda" {
   name        = "${var.prefix} lambda"
@@ -219,7 +264,7 @@ resource "aws_security_group" "lambda" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    # allow traffic from the same vpc
+    # allow traffic from the same security group
     protocol  = -1
     self      = true
     from_port = 0

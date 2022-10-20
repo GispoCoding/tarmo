@@ -36,7 +36,19 @@ variable "frontend_subdomain" {
 
 variable "backend_subdomain" {
   description = "Name of the backend tileserver, used for example in  <SITE_NAME>.domain.com"
-  default     = "tarmo"
+  default     = "tarmo-tilerserver"
+  type        = string
+}
+
+variable "backend_cache_subdomain" {
+  description = "Name of the backend tile cache, used for example in  <SITE_NAME>.domain.com"
+  default     = "tarmo-tile-cache"
+  type        = string
+}
+
+variable "mml_cache_subdomain" {
+  description = "Name of the mml tile cache, used for example in  <SITE_NAME>.domain.com"
+  default     = "tarmo-mml-cache"
   type        = string
 }
 
@@ -120,6 +132,12 @@ variable "pg_tileserv_port" {
   default     = 7800
 }
 
+variable "varnish_port" {
+  description = "Backend cache port"
+  type        = number
+  default     = 80
+}
+
 variable "public-subnet-count" {
   description = "TODO"
   type        = number
@@ -149,6 +167,23 @@ variable "pg_tileserv_image" {
   default     = "docker.io/pramsey/pg_tileserv:latest"
 }
 
+variable "varnish_cpu" {
+  description = "CPU of the varnish cache"
+  type        = number
+  default     = 512
+}
+
+variable "varnish_memory" {
+  description = "Memory of the varnish cache"
+  type        = number
+  default     = 4096
+}
+
+variable "varnish_image" {
+  description = "Image of the varnish cache"
+  default     = "docker.io/library/varnish:stable"
+}
+
 variable "prefix" {
   description = "Prefix to be used in resource names"
   type        = string
@@ -163,6 +198,8 @@ variable "extra_tags" {
 locals {
   frontend_dns_alias   = "${var.frontend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
   tileserver_dns_alias = "${var.backend_subdomain}.${var.AWS_HOSTED_DOMAIN}"
+  tile_cache_dns_alias = "${var.backend_cache_subdomain}.${var.AWS_HOSTED_DOMAIN}"
+  mml_cache_dns_alias = "${var.mml_cache_subdomain}.${var.AWS_HOSTED_DOMAIN}"
   default_tags         = merge(var.extra_tags, {
     "Prefix"    = var.prefix
     "Name"      = var.prefix
