@@ -690,7 +690,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           <LayerPicker setter={setLayer} />
           <InfoButton />
           <NavigationControl />
-          <GeolocateControl trackUserLocation={true} />
+          <GeolocateControl
+            trackUserLocation={true}
+            positionOptions={{
+              enableHighAccuracy: true,
+              timeout:6000,
+              maximumAge:1000,
+            }}
+            />
           <LayerFilter zoom={zoom}/>
         </>
       )}
