@@ -84,9 +84,10 @@ resource "aws_subnet" "private" {
 
 data "aws_subnet_ids" "private" {
   vpc_id  = aws_vpc.main.id
-  tags = merge(local.default_tags, {
+
+  tags = {
     SubnetType = "private"
-  })
+  }
 }
 
 # Give lambdas access to Internet
