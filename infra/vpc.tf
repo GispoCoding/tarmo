@@ -59,16 +59,12 @@ resource "aws_route" "public" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.main.id
-
-  tags = local.default_tags
 }
 
 resource "aws_route_table_association" "public" {
   count          = var.public-subnet-count
   route_table_id = aws_route_table.public.id
   subnet_id      = aws_subnet.public[count.index].id
-
-  tags = local.default_tags
 }
 
 resource "aws_subnet" "private" {
@@ -130,8 +126,6 @@ resource "aws_route_table_association" "private" {
   count          = var.private-subnet-count
   route_table_id = aws_route_table.private.id
   subnet_id      = aws_subnet.private[count.index].id
-
-  tags = local.default_tags
 }
 
 resource "aws_db_subnet_group" "db" {
@@ -166,8 +160,6 @@ resource "aws_security_group_rule" "lb-http" {
   cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.lb.id
-
-  tags = local.default_tags
 }
 
 # Https
@@ -181,8 +173,6 @@ resource "aws_security_group_rule" "lb-https" {
   cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.lb.id
-
-  tags = local.default_tags
 }
 
 # Egress
@@ -196,8 +186,6 @@ resource "aws_security_group_rule" "lb-egress" {
   cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.lb.id
-
-  tags = local.default_tags
 }
 
 # Security group for the backends that run the application.
@@ -230,8 +218,6 @@ resource "aws_security_group_rule" "tilecache-tileserv" {
   self = true
 
   security_group_id = aws_security_group.backend.id
-
-  tags = local.default_tags
 }
 
 # Debug access to tile cache from bastion
@@ -245,8 +231,6 @@ resource "aws_security_group_rule" "tilecache-bastion" {
 
   source_security_group_id = aws_security_group.bastion.id
   security_group_id = aws_security_group.backend.id
-
-  tags = local.default_tags
 }
 
 # Access to tile server from lb
@@ -260,8 +244,6 @@ resource "aws_security_group_rule" "lb-tileserv" {
 
   source_security_group_id = aws_security_group.lb.id
   security_group_id = aws_security_group.backend.id
-
-  tags = local.default_tags
 }
 
 # Access to tile cache from lb
@@ -275,8 +257,6 @@ resource "aws_security_group_rule" "lb-varnish" {
 
   source_security_group_id = aws_security_group.lb.id
   security_group_id = aws_security_group.backend.id
-
-  tags = local.default_tags
 }
 
 # Allows traffic to db and wherever lambdas need
@@ -328,8 +308,6 @@ resource "aws_security_group_rule" "rds-tileserver" {
   #cidr_blocks       = ["10.0.0.0/16"]
   source_security_group_id = aws_security_group.backend.id
   security_group_id = aws_security_group.rds.id
-
-  tags = local.default_tags
 }
 
 resource "aws_security_group_rule" "rds-lambda" {
@@ -343,8 +321,6 @@ resource "aws_security_group_rule" "rds-lambda" {
   #cidr_blocks       = ["10.0.0.0/16"]
   source_security_group_id = aws_security_group.lambda.id
   security_group_id = aws_security_group.rds.id
-
-  tags = local.default_tags
 }
 
 # Allow traffic to bastion from the Internet
@@ -366,8 +342,6 @@ resource "aws_security_group_rule" "internet-bastion" {
   protocol          = "tcp"
   to_port           = 22
   type              = "ingress"
-
-  tags = local.default_tags
 }
 
 resource "aws_security_group_rule" "bastion-internet" {
@@ -378,8 +352,6 @@ resource "aws_security_group_rule" "bastion-internet" {
   protocol          = -1
   to_port           = 0
   type              = "egress"
-
-  tags = local.default_tags
 }
 
 resource "aws_security_group_rule" "rds-bastion" {
@@ -393,6 +365,4 @@ resource "aws_security_group_rule" "rds-bastion" {
   # cidr_blocks       = ["10.0.0.0/16"]
   source_security_group_id = aws_security_group.bastion.id
   security_group_id = aws_security_group.rds.id
-
-  tags = local.default_tags
 }
