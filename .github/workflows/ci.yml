@@ -83,6 +83,8 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: yarn run build
         env:
+          API_KEY_DIGITRANSIT: ${{ secrets.API_KEY_DIGITRANSIT }}
+          API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TILESERVER_URL }}
           NLS_TILESERVER_URL: ${{ secrets.NLS_TILESERVER_URL }}
           CITIES: "'Kangasala','Lempäälä','Nokia','Orivesi','Pirkkala','Tampere','Vesilahti','Ylöjärvi'"
@@ -103,6 +105,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/release')
         run: yarn run build
         env:
+          API_KEY_DIGITRANSIT: ${{ secrets.API_KEY_DIGITRANSIT }}
           API_KEY_NLS: ${{ secrets.API_KEY_NLS }}
           TILESERVER_URL: ${{ secrets.TAMPERE_TILESERVER_URL }}
           NLS_TILESERVER_URL: ${{ secrets.TAMPERE_NLS_TILESERVER_URL }}

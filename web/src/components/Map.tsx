@@ -107,6 +107,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitPoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        headers: {
+          "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
+        },
         tarmo_category: "Pysäkit",
         zoomThreshold: minZoomByCategory.get("Pysäkit")!,
         reload: true,
@@ -131,6 +134,9 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       LayerId.DigiTransitBikePoint,
       {
         url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        headers: {
+          "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
+        },
         tarmo_category: "Pysäkit",
         zoomThreshold: minZoomByCategory.get("Pysäkit")!,
         reload: false,
@@ -162,9 +168,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
 
   const loadExternalData = () => {
     // Load external data for the visible area
-    const requestHeaders: HeadersInit = {
-      "User-Agent": "TARMO - Tampere Mobilemap",
-    };
     externalSources.forEach((value, key) => {
       // Do not reload if data is not visible
       if (
@@ -178,10 +181,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       }
       const url = value.url;
       let query = value.gqlQuery ? value.gqlQuery : "";
+      const headers: HeadersInit = {
+        "User-Agent": "TARMO - Tampere Mobilemap",
+        ...value.headers
+      };
       if (bounds && query && zoom > value.zoomThreshold) {
         const params = new Map<string, string>(Object.entries(bounds));
         query = buildQuery(query, params);
-        rawRequest(url, query, requestHeaders).then(response => {
+        rawRequest(url, query, undefined, headers).then(response => {
           const featureCollection = parseResponse(response);
           // https://medium.com/swlh/using-es6-map-with-react-state-hooks-800b91eedd5f
           setExternalData(prevState => {

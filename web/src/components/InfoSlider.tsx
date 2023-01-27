@@ -145,11 +145,11 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   };
 
   const dataSources: {[prefix:string]: DataSource} = {
-    "lipas": {name: "LIPAS", url: "https://www.lipas.fi/"},
+    "lipas": {name: "Jyväskylän yliopisto, Lipas Liikuntapaikat.fi", url: "https://www.lipas.fi/"},
     "museovirastoarcrest": {name: "Museovirasto", url: "https://www.kyppi.fi/"},
-    "tamperewfs": {name: "Tampereen kaupunki", url: "https://data.tampere.fi/"},
-    "osm": {name: "OpenStreetMap", url: "https://www.openstreetmap.org/"},
-    "syke": {name: "Suomen ympäristökeskus", url: "https://www.syke.fi/"},
+    "tamperewfs": {name: "Tampereen kaupunki, Ympäristönsuojelu", url: "https://data.tampere.fi/"},
+    "osm": {name: "OpenStreetMapin tekijät", url: "https://www.openstreetmap.org/"},
+    "syke": {name: "Suomen ympäristökeskus/Metsähallitus", url: "https://www.syke.fi/"},
     "digitransit": {name: "Digitransit", url: "https://digitransit.fi"}
   }
 
@@ -178,7 +178,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
     return (
       <Box pb={2}>
         <Typography variant="h6">
-          Tietolähde: <Link href={url} target="_blank" color="#fbfbfb">{name}</Link>
+          © <Link href={url} target="_blank" color="#fbfbfb">{name}</Link> {new Date().getFullYear()}
         </Typography>
       </Box>
     );

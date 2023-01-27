@@ -25,6 +25,7 @@ export interface ExternalSource {
   url: string;
   tarmo_category: keyof CategoryFilters;
   zoomThreshold: number;
+  headers?: object;
   gqlQuery?: string;
   reload?: boolean;
 }

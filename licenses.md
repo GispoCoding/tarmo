@@ -7,8 +7,8 @@
 [_Tampereen kaupungin WFS-rajapinta_](https://geodata.tampere.fi/geoserver/web/)
 
 - Aineiston lisenssi [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Luontopolkurastit
-- Luonnonmuistomerkit
+- Luontopolkurastit (Tampereen kaupunki, Ympäristönsuojelu)
+- Luonnonmuistomerkit (Tampereen kaupunki, Ympäristönsuojelu)
 
 _[Jyväskylän yliopisto, Lipas Liikuntapaikat.fi](https://www.lipas.fi/etusivu)_
 
@@ -25,6 +25,13 @@ _[Digitransit](https://digitransit.fi/en/developers/apis/)_
 - Lisenssi: [Creative Commons BY 4.0 International](https://creativecommons.org/licenses/by/4.0/)
 - Hyödynnetään toteutuksessa Digitransit-APIn Waltti-reititintä
 - Joukkoliikennepysäkit
+- Kaupunkipyöräasemat
+
+-[Suomen Ympäristökeskus](https://www.syke.fi/avointieto)
+
+- Lisenssi: [Creative Commons BY 4.0 International](https://creativecommons.org/licenses/by/4.0/)
+- Valtion maiden luonnonsuojelualueet (Metsähallitus)
+- Natura 2000 -alueet (Suomen Ympäristökeskus)
 
 _[Maanmittauslaitos](https://www.maanmittauslaitos.fi/tietoa-maanmittauslaitoksesta/teemat/tutustu-rajapintapalveluiden-kayttoon/rajapintojen-kautta)_
 
