@@ -1,3 +1,4 @@
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -50,6 +51,7 @@ class LipasLoader(BaseLoader):
         **kwargs,
     ) -> None:
         super().__init__(connection_string, **kwargs)
+        self.feature_counter: int = 0  # Sorry but this had to be done :-)
 
         self.type_codes_all_year = (
             type_codes_all_year
@@ -86,7 +88,6 @@ class LipasLoader(BaseLoader):
             r = requests.get(url, params=params, headers=self.HEADERS)
             r.raise_for_status()
             data = r.json()
-
             if data:
                 ids += [item[ID_FIELD] for item in data if "location" in item]
                 current_page += 1
@@ -160,7 +161,10 @@ class LipasLoader(BaseLoader):
             "deleted": False,
             "tarmo_category": tarmo_category,
         }
-
+        #  LOGGER.info(f"Features loaded: {len(flattened)}")
+        self.feature_counter = self.feature_counter + 1
+        if self.feature_counter % 10 == 0:
+            time.sleep(1)
         return flattened
 
     def save_feature(self, sport_place: Dict[str, Any], session: Session) -> bool:
@@ -218,7 +222,7 @@ class LipasLoader(BaseLoader):
         return main_url, params
 
     def _sport_place_url(self, sports_place_id: int):
-        print(self.api_url)
+        #  print(self.api_url)
         return "/".join((self.api_url, LipasLoader.SPORT_PLACES, str(sports_place_id)))
 
 
