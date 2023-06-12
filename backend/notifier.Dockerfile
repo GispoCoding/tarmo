@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM public.ecr.aws/lambda/python:3.10
 
 # Copy function code
 COPY lambda_functions/notifier/notifier.py ${LAMBDA_TASK_ROOT}/app/notifier.py

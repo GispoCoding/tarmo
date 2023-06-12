@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM public.ecr.aws/lambda/python:3.10
 
 # common code
 COPY lambda_functions/base_loader/__init__.py ${LAMBDA_TASK_ROOT}/app/__init__.py
