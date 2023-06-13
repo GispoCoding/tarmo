@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM public.ecr.aws/lambda/python:3.10
 
 # Copy function code
 COPY lambda_functions/db_manager/db_manager.py ${LAMBDA_TASK_ROOT}/db_manager.py
