@@ -1,4 +1,3 @@
-import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -163,8 +162,6 @@ class LipasLoader(BaseLoader):
         }
         #  LOGGER.info(f"Features loaded: {len(flattened)}")
         self.feature_counter = self.feature_counter + 1
-        if self.feature_counter % 10 == 0:
-            time.sleep(1)
         return flattened
 
     def save_feature(self, sport_place: Dict[str, Any], session: Session) -> bool:
