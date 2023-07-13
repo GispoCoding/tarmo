@@ -71,7 +71,6 @@ def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
     payload = {
         "pages": [1, 2],
     }
-    print(payload["pages"][1])
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
     data = r.json()
     print(data)
