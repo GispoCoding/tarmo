@@ -40,7 +40,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: "${{github.sha}} has {status_message}"
           message_format: "{emoji} *{job}* {status_message}"
-          footer: "<{repo_url}|{repo}> | <{workflow_url}|View job>"
+          footer: "<{repo_url}|{repo}> | <{run_url}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -61,7 +61,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: "${{github.sha}} has {status_message}"
           message_format: "{emoji} *{job}* {status_message}"
-          footer: "<{repo_url}|{repo}> | <{workflow_url}|View job>"
+          footer: "<{repo_url}|{repo}> | <{run_url}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -77,7 +77,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: "${{github.sha}} has {status_message}"
           message_format: "{emoji} *{job}* {status_message}"
-          footer: "<{repo_url}|{repo}> | <{workflow_url}|View job>"
+          footer: "<{repo_url}|{repo}> | <{run_url}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
