@@ -38,7 +38,9 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          message_format: "{emoji} *{job}* {status_message} for ${{github.sha}}"
+          notification_title: "${{github.sha}} has {status_message}"
+          message_format: "{emoji} *{job}* {status_message}"
+          footer: "<{repo_url}|{repo}> | <${{ job.url }}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -56,8 +58,9 @@ jobs:
       - uses: ravsamhq/notify-slack-action@v2
         if: always()
         with:
-          status: ${{ job.status }}
-          message_format: "{emoji} *{job}* {status_message} for ${{github.sha}}"
+          notification_title: "${{github.sha}} has {status_message}"
+          message_format: "{emoji} *{job}* {status_message}"
+          footer: "<{repo_url}|{repo}> | <${{ job.url }}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -70,8 +73,9 @@ jobs:
       - uses: ravsamhq/notify-slack-action@v2
         if: always()
         with:
-          status: ${{ job.status }}
-          message_format: "{emoji} *{job}* {status_message} for ${{github.sha}}"
+          notification_title: "${{github.sha}} has {status_message}"
+          message_format: "{emoji} *{job}* {status_message}"
+          footer: "<{repo_url}|{repo}> | <${{ job.url }}|View job>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
