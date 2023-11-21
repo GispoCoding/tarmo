@@ -88,7 +88,7 @@ variable "db_instance_type" {
 variable "db_postgres_version" {
   description = "Version number of the PostgreSQL DB. DEfault: 13.7"
   type        = string
-  default     = "13.7"
+  default     = "13.10"
 }
 
 variable "tarmo_db_name" {
@@ -164,7 +164,7 @@ variable "pg_tileserv_memory" {
 
 variable "pg_tileserv_image" {
   description = "Image of the pg_tileserv"
-  default     = "docker.io/pramsey/pg_tileserv:latest"
+  default     = "docker.io/pramsey/pg_tileserv:20231005"
 }
 
 variable "varnish_cpu" {
