@@ -167,11 +167,18 @@ class ArcGisLoader(BaseLoader):
                 )
                 layer_list = r.json()["layers"]
                 for layer_name in layers:
-                    layer_id = [
+                    layer_ids = [
                         layer["id"]
                         for layer in layer_list
                         if layer["name"] == layer_name
-                    ][0]
+                    ]
+                    if not layer_ids:
+                        LOGGER.warn(
+                            f"Layer {layer_name} not found in source. Skipping "
+                            "this layer."
+                        )
+                        continue
+                    layer_id = layer_ids[0]
                     LOGGER.debug(f"Querying layer {layer_name}...")
                     r = requests.get(
                         self.get_arcgis_query_url(url, service_name, layer_id),
