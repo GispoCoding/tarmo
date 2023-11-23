@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=postgres
 
   pg_tileserv:
-    image: pramsey/pg_tileserv:latest
+    image: pramsey/pg_tileserv:20231005
     env_file:
       - .env.local
     environment:
