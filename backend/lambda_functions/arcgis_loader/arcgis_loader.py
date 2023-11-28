@@ -154,7 +154,7 @@ class ArcGisLoader(BaseLoader):
                 )
                 # Some arcgis services might be down for maintenance. Don't let this
                 # get in the way of importing other data.
-                if r.status_code == 503:
+                if r.status_code != 200:
                     LOGGER.warn(
                         f"ArcGIS service {url}/{service_name} is down at the "
                         "moment. Skipping this service."
@@ -172,12 +172,13 @@ class ArcGisLoader(BaseLoader):
                         for layer in layer_list
                         if layer["name"] == layer_name
                     ]
-                    if not layer_ids:
-                        LOGGER.warn(
-                            f"Layer {layer_name} not found in source. Skipping "
-                            "this layer."
-                        )
-                        continue
+                    # TODO: commented to cause exception in case of missing layers
+                    # if not layer_ids:
+                    #     LOGGER.warn(
+                    #         f"Layer {layer_name} not found in source. Skipping "
+                    #         "this layer."
+                    #     )
+                    #     continue
                     layer_id = layer_ids[0]
                     LOGGER.debug(f"Querying layer {layer_name}...")
                     r = requests.get(

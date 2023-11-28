@@ -3,8 +3,9 @@ import enum
 import json
 import logging
 import os
-import sys
-import traceback
+
+# import sys
+# import traceback
 from typing import Any, Dict, List, Optional, Type, TypedDict, Union
 
 import boto3
@@ -328,11 +329,17 @@ def base_handler(event: Event, loader_cls: type) -> Response:
         response["body"] = json.dumps(msg)
 
     except Exception:
-        response["statusCode"] = 500
+        raise Exception
+    #     # TODO: do something about this. Apparently lambda 500 does not mean a
+    #     # function error, so we shouldn't return 500 as response. Lambda runtime
+    #     # will still think this is a  successful run, go figure, because it didn't
+    #     # catch the error itself.
+    #     # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
+    #     response["header"] = {"X-Amz-Function-Error": ""}
 
-        exc_info = sys.exc_info()
-        exc_string = "".join(traceback.format_exception(*exc_info))
-        response["body"] = exc_string
-        LOGGER.exception(exc_string)
+    #     exc_info = sys.exc_info()
+    #     exc_string = "".join(traceback.format_exception(*exc_info))
+    #     response["body"] = exc_string
+    #     LOGGER.exception(exc_string)
 
     return response
