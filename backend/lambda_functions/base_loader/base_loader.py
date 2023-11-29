@@ -300,46 +300,28 @@ def base_handler(event: Event, loader_cls: type) -> Response:
     """Handler which is called when accessing the endpoint."""
     response: Response = {"statusCode": 200, "body": json.dumps("")}
     db_helper = DatabaseHelper()
-    try:
-        point = (
-            Point(event["close_to_lon"], event["close_to_lat"])
-            if "close_to_lon" in event and "close_to_lat" in event
-            else None
-        )
+    point = (
+        Point(event["close_to_lon"], event["close_to_lat"])
+        if "close_to_lon" in event and "close_to_lat" in event
+        else None
+    )
 
-        loader = loader_cls(
-            db_helper.get_connection_string(),
-            point_of_interest=point,
-            point_radius=event.get("radius", None),
-        )
-        features = []
-        LOGGER.info("Getting features...")
-        if "pages" in event and event["pages"] is not None:
-            for page in event["pages"]:
-                features += loader.get_features(page)
-        else:
-            features = loader.get_features()
+    loader = loader_cls(
+        db_helper.get_connection_string(),
+        point_of_interest=point,
+        point_radius=event.get("radius", None),
+    )
+    features = []
+    LOGGER.info("Getting features...")
+    if "pages" in event and event["pages"] is not None:
+        for page in event["pages"]:
+            features += loader.get_features(page)
+    else:
+        features = loader.get_features()
 
-        # Here, the features list may contain the entire features or just their ids.
-        # In case it only contains ids, the loader will know how to fetch each feature
-        # before saving.
-        msg = loader.save_features(
-            features, event.get("do_not_update_timestamp", False)
-        )
-        response["body"] = json.dumps(msg)
-
-    except Exception:
-        raise Exception
-    #     # TODO: do something about this. Apparently lambda 500 does not mean a
-    #     # function error, so we shouldn't return 500 as response. Lambda runtime
-    #     # will still think this is a  successful run, go figure, because it didn't
-    #     # catch the error itself.
-    #     # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
-    #     response["header"] = {"X-Amz-Function-Error": ""}
-
-    #     exc_info = sys.exc_info()
-    #     exc_string = "".join(traceback.format_exception(*exc_info))
-    #     response["body"] = exc_string
-    #     LOGGER.exception(exc_string)
-
+    # Here, the features list may contain the entire features or just their ids.
+    # In case it only contains ids, the loader will know how to fetch each feature
+    # before saving.
+    msg = loader.save_features(features, event.get("do_not_update_timestamp", False))
+    response["body"] = json.dumps(msg)
     return response
