@@ -3,9 +3,6 @@ import enum
 import json
 import logging
 import os
-
-# import sys
-# import traceback
 from typing import Any, Dict, List, Optional, Type, TypedDict, Union
 
 import boto3

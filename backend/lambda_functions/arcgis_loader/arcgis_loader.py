@@ -172,13 +172,12 @@ class ArcGisLoader(BaseLoader):
                         for layer in layer_list
                         if layer["name"] == layer_name
                     ]
-                    # TODO: commented to cause exception in case of missing layers
-                    # if not layer_ids:
-                    #     LOGGER.warn(
-                    #         f"Layer {layer_name} not found in source. Skipping "
-                    #         "this layer."
-                    #     )
-                    #     continue
+                    if not layer_ids:
+                        LOGGER.warn(
+                            f"Layer {layer_name} not found in source. Skipping "
+                            "this layer."
+                        )
+                        continue
                     layer_id = layer_ids[0]
                     LOGGER.debug(f"Querying layer {layer_name}...")
                     r = requests.get(
