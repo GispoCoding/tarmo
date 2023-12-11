@@ -30,11 +30,11 @@ class ArcGisLoader(BaseLoader):
     # layers to import from each service. Also, data from multiple layers might be
     # joined to the same table, if the schemas fit.
     TABLE_NAMES = {
-        "museovirastoarcrest_metadata": {
-            "WFS/MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_piste": "museovirastoarcrest_muinaisjaannokset",  # noqa
-            "WFS/MV_KulttuuriymparistoSuojellut:RKY_piste": "museovirastoarcrest_rkykohteet",  # noqa
-            "WFS/MV_KulttuuriymparistoSuojellut:RKY_alue": "museovirastoarcrest_rkyalueet",  # noqa
-        },
+        # "museovirastoarcrest_metadata": {
+        #     # "WFS/MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_piste": "museovirastoarcrest_muinaisjaannokset",  # noqa
+        #     # "WFS/MV_KulttuuriymparistoSuojellut:RKY_piste": "museovirastoarcrest_rkykohteet",  # noqa
+        #     "WFS/MV_KulttuuriymparistoSuojellut:RKY_alue": "museovirastoarcrest_rkyalueet",  # noqa
+        # },
         "syke_metadata": {
             "SYKE/SYKE_SuojellutAlueet:Natura 2000 - SAC Manner-Suomi aluemaiset": "syke_natura2000",  # noqa
             "SYKE/SYKE_SuojellutAlueet:Natura 2000 - SPA Manner-Suomi": "syke_natura2000",  # noqa

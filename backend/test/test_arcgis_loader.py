@@ -11,323 +11,323 @@ from shapely.geometry import Point
 from backend.lambda_functions.arcgis_loader.arcgis_loader import ArcGisLoader
 from backend.lambda_functions.base_loader.base_loader import DatabaseHelper
 
-kulttuuriymparisto_service_response = {
-    "currentVersion": 10.6,
-    "serviceDescription": "",
-    "mapName": "Layers",
-    "description": "",
-    "copyrightText": "Museovirasto",
-    "supportsDynamicLayers": False,
-    "layers": [
-        {
-            "id": 1,
-            "name": "Muinaisjaannokset_piste",
-            "parentLayerId": -1,
-            "defaultVisibility": True,
-            "subLayerIds": None,
-            "minScale": 0,
-            "maxScale": 0,
-        },
-        {
-            "id": 3,
-            "name": "Muinaisjaannokset_alue",
-            "parentLayerId": -1,
-            "defaultVisibility": True,
-            "subLayerIds": None,
-            "minScale": 0,
-            "maxScale": 0,
-        },
-        {
-            "id": 6,
-            "name": "RKY_alue",
-            "parentLayerId": -1,
-            "defaultVisibility": True,
-            "subLayerIds": None,
-            "minScale": 0,
-            "maxScale": 0,
-        },
-        {
-            "id": 7,
-            "name": "RKY_piste",
-            "parentLayerId": -1,
-            "defaultVisibility": True,
-            "subLayerIds": None,
-            "minScale": 0,
-            "maxScale": 0,
-        },
-    ],
-    "tables": [],
-    "spatialReference": {"wkid": 102139, "latestWkid": 3067},
-    "singleFusedMapCache": False,
-    "initialExtent": {
-        "xmin": 547219.2128453464,
-        "ymin": 7585727.946598293,
-        "xmax": 572666.8887406983,
-        "ymax": 7601491.853126107,
-        "spatialReference": {"wkid": 102139, "latestWkid": 3067},
-    },
-    "fullExtent": {
-        "xmin": 91095.35819999967,
-        "ymin": 6620936.237299999,
-        "xmax": 732593.5810000002,
-        "ymax": 7774461.389699999,
-        "spatialReference": {"wkid": 102139, "latestWkid": 3067},
-    },
-    "minScale": 0,
-    "maxScale": 0,
-    "units": "esriMeters",
-    "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
-    "documentInfo": {
-        "Title": "",
-        "Author": "",
-        "Comments": "",
-        "Subject": "Museoviraston WFS-rajapinta, Suunnittelija",
-        "Category": "",
-        "AntialiasingMode": "None",
-        "TextAntialiasingMode": "Force",
-        "Keywords": "WFS,suojellut",
-    },
-    "capabilities": "Map,Query,Data",
-    "supportedQueryFormats": "JSON, AMF, geoJSON",
-    "exportTilesAllowed": False,
-    "supportsDatumTransformation": True,
-    "maxRecordCount": 10000,
-    "maxImageHeight": 4096,
-    "maxImageWidth": 4096,
-    "supportedExtensions": "WFSServer",
-}
+# kulttuuriymparisto_service_response = {
+#     "currentVersion": 10.6,
+#     "serviceDescription": "",
+#     "mapName": "Layers",
+#     "description": "",
+#     "copyrightText": "Museovirasto",
+#     "supportsDynamicLayers": False,
+#     "layers": [
+#         # {
+#         #     "id": 1,
+#         #     "name": "Muinaisjaannokset_piste",
+#         #     "parentLayerId": -1,
+#         #     "defaultVisibility": True,
+#         #     "subLayerIds": None,
+#         #     "minScale": 0,
+#         #     "maxScale": 0,
+#         # },
+#         # {
+#         #     "id": 3,
+#         #     "name": "Muinaisjaannokset_alue",
+#         #     "parentLayerId": -1,
+#         #     "defaultVisibility": True,
+#         #     "subLayerIds": None,
+#         #     "minScale": 0,
+#         #     "maxScale": 0,
+#         # },
+#         # {
+#         #     "id": 6,
+#         #     "name": "RKY_alue",
+#         #     "parentLayerId": -1,
+#         #     "defaultVisibility": True,
+#         #     "subLayerIds": None,
+#         #     "minScale": 0,
+#         #     "maxScale": 0,
+#         # },
+#         # {
+#         #     "id": 7,
+#         #     "name": "RKY_piste",
+#         #     "parentLayerId": -1,
+#         #     "defaultVisibility": True,
+#         #     "subLayerIds": None,
+#         #     "minScale": 0,
+#         #     "maxScale": 0,
+#         # },
+#     ],
+#     "tables": [],
+#     "spatialReference": {"wkid": 102139, "latestWkid": 3067},
+#     "singleFusedMapCache": False,
+#     "initialExtent": {
+#         "xmin": 547219.2128453464,
+#         "ymin": 7585727.946598293,
+#         "xmax": 572666.8887406983,
+#         "ymax": 7601491.853126107,
+#         "spatialReference": {"wkid": 102139, "latestWkid": 3067},
+#     },
+#     "fullExtent": {
+#         "xmin": 91095.35819999967,
+#         "ymin": 6620936.237299999,
+#         "xmax": 732593.5810000002,
+#         "ymax": 7774461.389699999,
+#         "spatialReference": {"wkid": 102139, "latestWkid": 3067},
+#     },
+#     "minScale": 0,
+#     "maxScale": 0,
+#     "units": "esriMeters",
+#     "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+#     "documentInfo": {
+#         "Title": "",
+#         "Author": "",
+#         "Comments": "",
+#         "Subject": "Museoviraston WFS-rajapinta, Suunnittelija",
+#         "Category": "",
+#         "AntialiasingMode": "None",
+#         "TextAntialiasingMode": "Force",
+#         "Keywords": "WFS,suojellut",
+#     },
+#     "capabilities": "Map,Query,Data",
+#     "supportedQueryFormats": "JSON, AMF, geoJSON",
+#     "exportTilesAllowed": False,
+#     "supportsDatumTransformation": True,
+#     "maxRecordCount": 10000,
+#     "maxImageHeight": 4096,
+#     "maxImageWidth": 4096,
+#     "supportedExtensions": "WFSServer",
+# }
 
-muinaisjaannokset_query_response = {
-    "displayFieldName": "inspireID",
-    "fieldAliases": {
-        "OBJECTID": "OBJECTID",
-        "mjtunnus": "mjtunnus",
-        "inspireID": "inspireID",
-        "kohdenimi": "kohdenimi",
-        "kunta": "kunta",
-        "laji": "laji",
-        "tyyppi": "tyyppi",
-        "alatyyppi": "alatyyppi",
-        "ajoitus": "ajoitus",
-        "vedenalainen": "vedenalainen",
-        "muutospvm": "muutospvm",
-        "luontipvm": "luontipvm",
-        "paikannustapa": "paikannustapa",
-        "paikannustarkkuus": "paikannustarkkuus",
-        "selite": "selite",
-        "url": "url",
-        "x": "x",
-        "y": "y",
-    },
-    "geometryType": "esriGeometryPoint",
-    "spatialReference": {"wkid": 4326, "latestWkid": 4326},
-    "fields": [
-        {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
-        {"name": "mjtunnus", "type": "esriFieldTypeInteger", "alias": "mjtunnus"},
-        {
-            "name": "inspireID",
-            "type": "esriFieldTypeString",
-            "alias": "inspireID",
-            "length": 70,
-        },
-        {
-            "name": "kohdenimi",
-            "type": "esriFieldTypeString",
-            "alias": "kohdenimi",
-            "length": 100,
-        },
-        {
-            "name": "kunta",
-            "type": "esriFieldTypeString",
-            "alias": "kunta",
-            "length": 100,
-        },
-        {"name": "laji", "type": "esriFieldTypeString", "alias": "laji", "length": 100},
-        {
-            "name": "tyyppi",
-            "type": "esriFieldTypeString",
-            "alias": "tyyppi",
-            "length": 406,
-        },
-        {
-            "name": "alatyyppi",
-            "type": "esriFieldTypeString",
-            "alias": "alatyyppi",
-            "length": 406,
-        },
-        {
-            "name": "ajoitus",
-            "type": "esriFieldTypeString",
-            "alias": "ajoitus",
-            "length": 406,
-        },
-        {
-            "name": "vedenalainen",
-            "type": "esriFieldTypeString",
-            "alias": "vedenalainen",
-            "length": 1,
-        },
-        {
-            "name": "muutospvm",
-            "type": "esriFieldTypeDate",
-            "alias": "muutospvm",
-            "length": 8,
-        },
-        {
-            "name": "luontipvm",
-            "type": "esriFieldTypeDate",
-            "alias": "luontipvm",
-            "length": 8,
-        },
-        {
-            "name": "paikannustapa",
-            "type": "esriFieldTypeString",
-            "alias": "paikannustapa",
-            "length": 50,
-        },
-        {
-            "name": "paikannustarkkuus",
-            "type": "esriFieldTypeString",
-            "alias": "paikannustarkkuus",
-            "length": 50,
-        },
-        {
-            "name": "selite",
-            "type": "esriFieldTypeString",
-            "alias": "selite",
-            "length": 254,
-        },
-        {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 38},
-        {"name": "x", "type": "esriFieldTypeDouble", "alias": "x"},
-        {"name": "y", "type": "esriFieldTypeDouble", "alias": "y"},
-    ],
-    "features": [
-        {
-            "attributes": {
-                "OBJECTID": 51540,
-                "mjtunnus": 2133,
-                "inspireID": "http://paikkatiedot.fi/so/1000272/ps/ProtectedSite/2133_P51540",
-                "kohdenimi": "Särkänniemi 1                                                                                       ",
-                "kunta": "Tampere                                                                                             ",
-                "laji": "kiinteä muinaisjäännös                                                                              ",
-                "tyyppi": "alusten hylyt,  ,  ,  ",
-                "alatyyppi": "hylyt (puu),  ,  ,  ",
-                "ajoitus": "historiallinen,  ,  ,  ",
-                "vedenalainen": "K",
-                "muutospvm": None,
-                "luontipvm": 1390867200000,
-                "paikannustapa": None,
-                "paikannustarkkuus": None,
-                "selite": "Piste on luotu automaattisesti tietokannan koordinaattien avulla",
-                "url": "www.kyppi.fi/to.aspx?id=112.2133",
-                "x": 326847,
-                "y": 6823690,
-            },
-            "geometry": {"x": 23.745516826584094, "y": 61.507940865645104},
-        },
-    ],
-}
+# muinaisjaannokset_query_response = {
+#     "displayFieldName": "inspireID",
+#     "fieldAliases": {
+#         "OBJECTID": "OBJECTID",
+#         "mjtunnus": "mjtunnus",
+#         "inspireID": "inspireID",
+#         "kohdenimi": "kohdenimi",
+#         "kunta": "kunta",
+#         "laji": "laji",
+#         "tyyppi": "tyyppi",
+#         "alatyyppi": "alatyyppi",
+#         "ajoitus": "ajoitus",
+#         "vedenalainen": "vedenalainen",
+#         "muutospvm": "muutospvm",
+#         "luontipvm": "luontipvm",
+#         "paikannustapa": "paikannustapa",
+#         "paikannustarkkuus": "paikannustarkkuus",
+#         "selite": "selite",
+#         "url": "url",
+#         "x": "x",
+#         "y": "y",
+#     },
+#     "geometryType": "esriGeometryPoint",
+#     "spatialReference": {"wkid": 4326, "latestWkid": 4326},
+#     "fields": [
+#         {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
+#         {"name": "mjtunnus", "type": "esriFieldTypeInteger", "alias": "mjtunnus"},
+#         {
+#             "name": "inspireID",
+#             "type": "esriFieldTypeString",
+#             "alias": "inspireID",
+#             "length": 70,
+#         },
+#         {
+#             "name": "kohdenimi",
+#             "type": "esriFieldTypeString",
+#             "alias": "kohdenimi",
+#             "length": 100,
+#         },
+#         {
+#             "name": "kunta",
+#             "type": "esriFieldTypeString",
+#             "alias": "kunta",
+#             "length": 100,
+#         },
+#         {"name": "laji", "type": "esriFieldTypeString", "alias": "laji", "length": 100},
+#         {
+#             "name": "tyyppi",
+#             "type": "esriFieldTypeString",
+#             "alias": "tyyppi",
+#             "length": 406,
+#         },
+#         {
+#             "name": "alatyyppi",
+#             "type": "esriFieldTypeString",
+#             "alias": "alatyyppi",
+#             "length": 406,
+#         },
+#         {
+#             "name": "ajoitus",
+#             "type": "esriFieldTypeString",
+#             "alias": "ajoitus",
+#             "length": 406,
+#         },
+#         {
+#             "name": "vedenalainen",
+#             "type": "esriFieldTypeString",
+#             "alias": "vedenalainen",
+#             "length": 1,
+#         },
+#         {
+#             "name": "muutospvm",
+#             "type": "esriFieldTypeDate",
+#             "alias": "muutospvm",
+#             "length": 8,
+#         },
+#         {
+#             "name": "luontipvm",
+#             "type": "esriFieldTypeDate",
+#             "alias": "luontipvm",
+#             "length": 8,
+#         },
+#         {
+#             "name": "paikannustapa",
+#             "type": "esriFieldTypeString",
+#             "alias": "paikannustapa",
+#             "length": 50,
+#         },
+#         {
+#             "name": "paikannustarkkuus",
+#             "type": "esriFieldTypeString",
+#             "alias": "paikannustarkkuus",
+#             "length": 50,
+#         },
+#         {
+#             "name": "selite",
+#             "type": "esriFieldTypeString",
+#             "alias": "selite",
+#             "length": 254,
+#         },
+#         {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 38},
+#         {"name": "x", "type": "esriFieldTypeDouble", "alias": "x"},
+#         {"name": "y", "type": "esriFieldTypeDouble", "alias": "y"},
+#     ],
+#     "features": [
+#         {
+#             "attributes": {
+#                 "OBJECTID": 51540,
+#                 "mjtunnus": 2133,
+#                 "inspireID": "http://paikkatiedot.fi/so/1000272/ps/ProtectedSite/2133_P51540",
+#                 "kohdenimi": "Särkänniemi 1                                                                                       ",
+#                 "kunta": "Tampere                                                                                             ",
+#                 "laji": "kiinteä muinaisjäännös                                                                              ",
+#                 "tyyppi": "alusten hylyt,  ,  ,  ",
+#                 "alatyyppi": "hylyt (puu),  ,  ,  ",
+#                 "ajoitus": "historiallinen,  ,  ,  ",
+#                 "vedenalainen": "K",
+#                 "muutospvm": None,
+#                 "luontipvm": 1390867200000,
+#                 "paikannustapa": None,
+#                 "paikannustarkkuus": None,
+#                 "selite": "Piste on luotu automaattisesti tietokannan koordinaattien avulla",
+#                 "url": "www.kyppi.fi/to.aspx?id=112.2133",
+#                 "x": 326847,
+#                 "y": 6823690,
+#             },
+#             "geometry": {"x": 23.745516826584094, "y": 61.507940865645104},
+#         },
+#     ],
+# }
 
-rkykohteet_query_response = {
-    "displayFieldName": "inspireID",
-    "fieldAliases": {
-        "OBJECTID": "OBJECTID",
-        "ID": "ID",
-        "inspireID": "inspireID",
-        "kohdenimi": "kohdenimi",
-        "url": "url",
-    },
-    "geometryType": "esriGeometryPoint",
-    "spatialReference": {"wkid": 4326, "latestWkid": 4326},
-    "fields": [
-        {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
-        {"name": "ID", "type": "esriFieldTypeInteger", "alias": "ID"},
-        {
-            "name": "inspireID",
-            "type": "esriFieldTypeString",
-            "alias": "inspireID",
-            "length": 70,
-        },
-        {
-            "name": "kohdenimi",
-            "type": "esriFieldTypeString",
-            "alias": "kohdenimi",
-            "length": 85,
-        },
-        {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 63},
-    ],
-    "features": [
-        {
-            "attributes": {
-                "OBJECTID": 45,
-                "ID": 2218,
-                "inspireID": "http://paikkatiedot.fi/so/1000034/ps/ProtectedSite/2218_P45",
-                "kohdenimi": "Pyynikin näkötorni",
-                "url": "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2218",
-            },
-            "geometry": {"x": 23.731920589585563, "y": 61.49636537556975},
-        },
-    ],
-}
+# rkykohteet_query_response = {
+#     "displayFieldName": "inspireID",
+#     "fieldAliases": {
+#         "OBJECTID": "OBJECTID",
+#         "ID": "ID",
+#         "inspireID": "inspireID",
+#         "kohdenimi": "kohdenimi",
+#         "url": "url",
+#     },
+#     "geometryType": "esriGeometryPoint",
+#     "spatialReference": {"wkid": 4326, "latestWkid": 4326},
+#     "fields": [
+#         {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
+#         {"name": "ID", "type": "esriFieldTypeInteger", "alias": "ID"},
+#         {
+#             "name": "inspireID",
+#             "type": "esriFieldTypeString",
+#             "alias": "inspireID",
+#             "length": 70,
+#         },
+#         {
+#             "name": "kohdenimi",
+#             "type": "esriFieldTypeString",
+#             "alias": "kohdenimi",
+#             "length": 85,
+#         },
+#         {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 63},
+#     ],
+#     "features": [
+#         {
+#             "attributes": {
+#                 "OBJECTID": 45,
+#                 "ID": 2218,
+#                 "inspireID": "http://paikkatiedot.fi/so/1000034/ps/ProtectedSite/2218_P45",
+#                 "kohdenimi": "Pyynikin näkötorni",
+#                 "url": "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2218",
+#             },
+#             "geometry": {"x": 23.731920589585563, "y": 61.49636537556975},
+#         },
+#     ],
+# }
 
-rkyalueet_query_response = {
-    "displayFieldName": "inspireID",
-    "fieldAliases": {
-        "OBJECTID": "OBJECTID",
-        "ID": "ID",
-        "inspireID": "inspireID",
-        "kohdenimi": "kohdenimi",
-        "nimi": "nimi",
-        "url": "url",
-    },
-    "geometryType": "esriGeometryPolygon",
-    "spatialReference": {"wkid": 4326, "latestWkid": 4326},
-    "fields": [
-        {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
-        {"name": "ID", "type": "esriFieldTypeInteger", "alias": "ID"},
-        {
-            "name": "inspireID",
-            "type": "esriFieldTypeString",
-            "alias": "inspireID",
-            "length": 70,
-        },
-        {
-            "name": "kohdenimi",
-            "type": "esriFieldTypeString",
-            "alias": "kohdenimi",
-            "length": 90,
-        },
-        {"name": "nimi", "type": "esriFieldTypeString", "alias": "nimi", "length": 75},
-        {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 63},
-    ],
-    "features": [
-        {
-            "attributes": {
-                "OBJECTID": 525,
-                "ID": 2197,
-                "inspireID": "http://paikkatiedot.fi/so/1000034/ps/ProtectedSite/2197_A525",
-                "kohdenimi": "Tampereen rautatieasema ja veturitallit",
-                "nimi": " ",
-                "url": "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2197",
-            },
-            "geometry": {
-                "rings": [
-                    [
-                        [23.771605477687785, 61.499629700105821],
-                        [23.774766376039945, 61.499778034302437],
-                        [23.774859421590644, 61.497770099220688],
-                        [23.776322841424506, 61.497740675915068],
-                        [23.776246976400799, 61.496009478665961],
-                        [23.773448798488243, 61.495975676713634],
-                        [23.773401563942052, 61.497732351640835],
-                        [23.772212866120267, 61.497658472982174],
-                        [23.771605477687785, 61.499629700105821],
-                    ]
-                ]
-            },
-        }
-    ],
-}
+# rkyalueet_query_response = {
+#     "displayFieldName": "inspireID",
+#     "fieldAliases": {
+#         "OBJECTID": "OBJECTID",
+#         "ID": "ID",
+#         "inspireID": "inspireID",
+#         "kohdenimi": "kohdenimi",
+#         "nimi": "nimi",
+#         "url": "url",
+#     },
+#     "geometryType": "esriGeometryPolygon",
+#     "spatialReference": {"wkid": 4326, "latestWkid": 4326},
+#     "fields": [
+#         {"name": "OBJECTID", "type": "esriFieldTypeOID", "alias": "OBJECTID"},
+#         {"name": "ID", "type": "esriFieldTypeInteger", "alias": "ID"},
+#         {
+#             "name": "inspireID",
+#             "type": "esriFieldTypeString",
+#             "alias": "inspireID",
+#             "length": 70,
+#         },
+#         {
+#             "name": "kohdenimi",
+#             "type": "esriFieldTypeString",
+#             "alias": "kohdenimi",
+#             "length": 90,
+#         },
+#         {"name": "nimi", "type": "esriFieldTypeString", "alias": "nimi", "length": 75},
+#         {"name": "url", "type": "esriFieldTypeString", "alias": "url", "length": 63},
+#     ],
+#     "features": [
+#         {
+#             "attributes": {
+#                 "OBJECTID": 525,
+#                 "ID": 2197,
+#                 "inspireID": "http://paikkatiedot.fi/so/1000034/ps/ProtectedSite/2197_A525",
+#                 "kohdenimi": "Tampereen rautatieasema ja veturitallit",
+#                 "nimi": " ",
+#                 "url": "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2197",
+#             },
+#             "geometry": {
+#                 "rings": [
+#                     [
+#                         [23.771605477687785, 61.499629700105821],
+#                         [23.774766376039945, 61.499778034302437],
+#                         [23.774859421590644, 61.497770099220688],
+#                         [23.776322841424506, 61.497740675915068],
+#                         [23.776246976400799, 61.496009478665961],
+#                         [23.773448798488243, 61.495975676713634],
+#                         [23.773401563942052, 61.497732351640835],
+#                         [23.772212866120267, 61.497658472982174],
+#                         [23.771605477687785, 61.499629700105821],
+#                     ]
+#                 ]
+#             },
+#         }
+#     ],
+# }
 
 suojellutalueet_service_response = {
     "currentVersion": 10.71,
@@ -2791,14 +2791,14 @@ changed_naturasci_query_response["features"] = []
 
 
 def mock_response(request: requests.PreparedRequest, context: object) -> str:
-    if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
-        return json.dumps(kulttuuriymparisto_service_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/1/query"):  # type: ignore
-        return json.dumps(muinaisjaannokset_query_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/6/query"):  # type: ignore
-        return json.dumps(rkyalueet_query_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/7/query"):  # type: ignore
-        return json.dumps(rkykohteet_query_response)
+    # if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
+    #     return json.dumps(kulttuuriymparisto_service_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/1/query"):  # type: ignore
+    #     return json.dumps(muinaisjaannokset_query_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/6/query"):  # type: ignore
+    #     return json.dumps(rkyalueet_query_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/7/query"):  # type: ignore
+    #     return json.dumps(rkykohteet_query_response)
     if request.url == "http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer?f=json":  # type: ignore
         return json.dumps(suojellutalueet_service_response)
     if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/2/query"):  # type: ignore
@@ -2813,14 +2813,14 @@ def mock_response(request: requests.PreparedRequest, context: object) -> str:
 
 
 def changed_mock_response(request: requests.PreparedRequest, context: object) -> str:
-    if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
-        return json.dumps(kulttuuriymparisto_service_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/1/query"):  # type: ignore
-        return json.dumps(muinaisjaannokset_query_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/6/query"):  # type: ignore
-        return json.dumps(rkyalueet_query_response)
-    if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/7/query"):  # type: ignore
-        return json.dumps(rkykohteet_query_response)
+    # if request.url == "http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer?f=json":  # type: ignore
+    #     return json.dumps(kulttuuriymparisto_service_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/1/query"):  # type: ignore
+    #     return json.dumps(muinaisjaannokset_query_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/6/query"):  # type: ignore
+    #     return json.dumps(rkyalueet_query_response)
+    # if request.url.startswith("http://mock.url/arcgis/rest/services/WFS/MV_KulttuuriymparistoSuojellut/MapServer/7/query"):  # type: ignore
+    #     return json.dumps(rkykohteet_query_response)
     if request.url == "http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer?f=json":  # type: ignore
         return json.dumps(suojellutalueet_service_response)
     if request.url.startswith("http://anothermock.url/arcgis/rest/services/SYKE/SYKE_SuojellutAlueet/MapServer/2/query"):  # type: ignore
@@ -2912,49 +2912,49 @@ def test_get_geojson(loader, metadata_set):
 @pytest.fixture()
 def arcgis_data(mock_arcgis, loader, metadata_set):
     data = loader.get_features()
-    assert len(data["features"]) == 7
+    assert len(data["features"]) == 4
     return data
 
 
 @pytest.fixture()
 def changed_arcgis_data(changed_mock_arcgis, loader, metadata_set):
     data = loader.get_features()
-    assert len(data["features"]) == 6
+    assert len(data["features"]) == 3
     return data
 
 
-def test_get_muinaisjaannokset_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][0])
-    assert feature["mjtunnus"]
-    assert feature["name"] == "Särkänniemi 1"
-    assert feature["type_name"] == "Alusten hylyt: hylyt (puu)"
-    assert feature["vedenalainen"] is True
-    assert feature["cityName"] == "Tampere"
-    assert feature["www"] == "https://www.kyppi.fi/to.aspx?id=112.2133"
-    assert feature["geom"].startswith("MULTIPOINT")
-    assert feature["table"] == "museovirastoarcrest_muinaisjaannokset"
+# def test_get_muinaisjaannokset_feature(loader, arcgis_data):
+#     feature = loader.get_feature(arcgis_data["features"][0])
+#     assert feature["mjtunnus"]
+#     assert feature["name"] == "Särkänniemi 1"
+#     assert feature["type_name"] == "Alusten hylyt: hylyt (puu)"
+#     assert feature["vedenalainen"] is True
+#     assert feature["cityName"] == "Tampere"
+#     assert feature["www"] == "https://www.kyppi.fi/to.aspx?id=112.2133"
+#     assert feature["geom"].startswith("MULTIPOINT")
+#     assert feature["table"] == "museovirastoarcrest_muinaisjaannokset"
 
 
-def test_get_rkykohteet_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][1])
-    assert feature["ID"]
-    assert feature["name"] == "Pyynikin näkötorni"
-    assert feature["www"] == "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2218"
-    assert feature["geom"].startswith("MULTIPOINT")
-    assert feature["table"] == "museovirastoarcrest_rkykohteet"
+# def test_get_rkykohteet_feature(loader, arcgis_data):
+#     feature = loader.get_feature(arcgis_data["features"][1])
+#     assert feature["ID"]
+#     assert feature["name"] == "Pyynikin näkötorni"
+#     assert feature["www"] == "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2218"
+#     assert feature["geom"].startswith("MULTIPOINT")
+#     assert feature["table"] == "museovirastoarcrest_rkykohteet"
 
 
-def test_get_rkyalueet_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][2])
-    assert feature["ID"]
-    assert feature["name"] == "Tampereen rautatieasema ja veturitallit"
-    assert feature["www"] == "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2197"
-    assert feature["geom"].startswith("MULTIPOLYGON")
-    assert feature["table"] == "museovirastoarcrest_rkyalueet"
+# def test_get_rkyalueet_feature(loader, arcgis_data):
+#     feature = loader.get_feature(arcgis_data["features"][2])
+#     assert feature["ID"]
+#     assert feature["name"] == "Tampereen rautatieasema ja veturitallit"
+#     assert feature["www"] == "http://www.rky.fi/read/asp/r_kohde_det.aspx?KOHDE_ID=2197"
+#     assert feature["geom"].startswith("MULTIPOLYGON")
+#     assert feature["table"] == "museovirastoarcrest_rkyalueet"
 
 
 def test_get_naturasac_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][3])
+    feature = loader.get_feature(arcgis_data["features"][0])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Siikaneva"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2962,7 +2962,7 @@ def test_get_naturasac_feature(loader, arcgis_data):
 
 
 def test_get_naturaspa_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][4])
+    feature = loader.get_feature(arcgis_data["features"][1])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Kaakkurijärvet"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2970,7 +2970,7 @@ def test_get_naturaspa_feature(loader, arcgis_data):
 
 
 def test_get_naturasci_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][5])
+    feature = loader.get_feature(arcgis_data["features"][2])
     assert feature["naturaTunnus"]
     assert feature["name"] == "Tulliniemen linnustonsuojelualue"
     assert feature["geom"].startswith("MULTIPOLYGON")
@@ -2978,7 +2978,7 @@ def test_get_naturasci_feature(loader, arcgis_data):
 
 
 def test_get_valtion_feature(loader, arcgis_data):
-    feature = loader.get_feature(arcgis_data["features"][6])
+    feature = loader.get_feature(arcgis_data["features"][3])
     assert feature["LsAlueTunnus"]
     assert feature["name"] == "Vehoniemenharjun luonnonsuojelualue"
     assert feature["infoFi"] == "Muu luonnonsuojelualue (MH)"
@@ -2991,43 +2991,43 @@ def assert_data_is_imported(main_db_params):
     try:
         with conn.cursor() as cur:
             # museovirasto data should be present
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkyalueet WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT mjtunnus FROM kooste.museovirastoarcrest_muinaisjaannokset"
-            )
-            assert cur.fetchone()[0] == 2133
-            cur.execute(f'SELECT "OBJECTID" FROM kooste.museovirastoarcrest_rkykohteet')
-            assert cur.fetchone()[0] == 45
-            cur.execute(f'SELECT "OBJECTID" FROM kooste.museovirastoarcrest_rkyalueet')
-            assert cur.fetchone()[0] == 525
-            cur.execute("SELECT last_modified FROM kooste.museovirastoarcrest_metadata")
-            assert cur.fetchone()[0].timestamp() == pytest.approx(
-                datetime.datetime.now().timestamp(), 20
-            )
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_rkyalueet WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT mjtunnus FROM kooste.museovirastoarcrest_muinaisjaannokset"
+            # )
+            # assert cur.fetchone()[0] == 2133
+            # cur.execute(f'SELECT "OBJECTID" FROM kooste.museovirastoarcrest_rkykohteet')
+            # assert cur.fetchone()[0] == 45
+            # cur.execute(f'SELECT "OBJECTID" FROM kooste.museovirastoarcrest_rkyalueet')
+            # assert cur.fetchone()[0] == 525
+            # cur.execute("SELECT last_modified FROM kooste.museovirastoarcrest_metadata")
+            # assert cur.fetchone()[0].timestamp() == pytest.approx(
+            #     datetime.datetime.now().timestamp(), 20
+            # )
             # cluster layers should be updated
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_8")
-            assert cur.fetchone()[0] > 0
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_9")
-            assert cur.fetchone()[0] > 0
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_10")
-            assert cur.fetchone()[0] > 0
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_11")
-            assert cur.fetchone()[0] > 0
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_12")
-            assert cur.fetchone()[0] > 0
-            cur.execute(f"SELECT count(*) FROM kooste.point_clusters_13")
-            assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_8")
+            # assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_9")
+            # assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_10")
+            # assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_11")
+            # assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_12")
+            # assert cur.fetchone()[0] > 0
+            # cur.execute(f"SELECT count(*) FROM kooste.point_clusters_13")
+            # assert cur.fetchone()[0] > 0
 
             # syke data should be present
             cur.execute(
@@ -3056,18 +3056,18 @@ def assert_changed_data_is_imported(main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
-            cur.execute(
-                f"SELECT count(*) FROM kooste.museovirastoarcrest_rkyalueet WHERE NOT deleted"
-            )
-            assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_muinaisjaannokset WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_rkykohteet WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
+            # cur.execute(
+            #     f"SELECT count(*) FROM kooste.museovirastoarcrest_rkyalueet WHERE NOT deleted"
+            # )
+            # assert cur.fetchone()[0] == 1
             cur.execute(
                 f"SELECT count(*) FROM kooste.syke_natura2000 WHERE NOT deleted"
             )
