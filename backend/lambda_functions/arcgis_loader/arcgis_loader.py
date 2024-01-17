@@ -165,6 +165,10 @@ class ArcGisLoader(BaseLoader):
                 LOGGER.debug(
                     f"Service {url}/{service_name} reached, querying layers..."
                 )
+                response_json = r.json()
+                if "layers" not in response_json.keys():
+                    LOGGER.warn("Layers not found in response. Skipping this service")
+                    continue
                 layer_list = r.json()["layers"]
                 for layer_name in layers:
                     layer_ids = [
