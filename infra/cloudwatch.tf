@@ -87,10 +87,10 @@ resource "aws_cloudwatch_event_rule" "lambda_arcgis" {
   schedule_expression = "cron(45 4 * * ? *)"
   tags              = local.default_tags
 }
-
-resource "aws_cloudwatch_event_target" "lambda_arcgis" {
-  target_id = "${var.prefix}_load_arcgis"
-  rule      = aws_cloudwatch_event_rule.lambda_arcgis.name
-  arn       = aws_lambda_function.arcgis_loader.arn
-  input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 60}"
-}
+# Disabled as long as arcgis data is not available
+# resource "aws_cloudwatch_event_target" "lambda_arcgis" {
+#   target_id = "${var.prefix}_load_arcgis"
+#   rule      = aws_cloudwatch_event_rule.lambda_arcgis.name
+#   arn       = aws_lambda_function.arcgis_loader.arn
+#   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 60}"
+# }
