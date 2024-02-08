@@ -27,4 +27,5 @@ resource "aws_db_instance" "main_db" {
   skip_final_snapshot    = true
   deletion_protection    = true
   tags                   = local.default_tags
+  copy_tags_to_snapshot  = true
 }
