@@ -33,6 +33,6 @@ _[Maanmittauslaitos](https://www.maanmittauslaitos.fi/tietoa-maanmittauslaitokse
 
 _[OpenStreetMap](https://www.openstreetmap.org/)_
 
-- Kiitos OpenstreetMap-yhteisölle!
+- Kiitos OpenStreetMap-yhteisölle!
 - OpenStreetMap[®](https://www.openstreetmap.org/copyright#trademarks) on avointa dataa, jonka [OpenStreetMap Foundation](https://osmfoundation.org/) (OSMF) on lisensoinut [Open Data Commons Open Database -lisenssillä](https://opendatacommons.org/licenses/odbl/) (ODbL).
 - OpenStreetMapista palveluun tuodaan parkkipaikat sekä muita palvelutietoja.
