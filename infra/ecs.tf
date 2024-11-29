@@ -286,6 +286,7 @@ resource "aws_ecs_service" "pg_tileserv" {
   # We run containers with the Fargate launch type. The other alternative is EC2, in which case we'd provision EC2
   # instances and attach them to the cluster.
   launch_type = "FARGATE"
+  propagate_tags = "TASK_DEFINITION"
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tileserver.arn
