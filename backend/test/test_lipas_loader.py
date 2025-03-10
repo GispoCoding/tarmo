@@ -92,7 +92,7 @@ def test_get_sport_place_point(loader):
 
 
 def test_get_sport_place_line(loader):
-    sport_place = loader.get_feature(513435)
+    sport_place = loader.get_feature(603279)
     assert sport_place["geom"].startswith("MULTILINESTRING")
     assert len(sport_place["geom"]) > 2000
     assert sport_place["season"] == "Talvi"
@@ -215,7 +215,7 @@ def assert_data_is_imported(main_db_params):
 
 def test_save_lipas_features(loader, main_db_params):
     loader.save_features(
-        [76249, 513435, 528808, 73043, 92112, 500285, 72948, 72944, 510087]
+        [76249, 603279, 528808, 73043, 92112, 500285, 72948, 72944, 510087]
     )
     assert_data_is_imported(main_db_params)
 
@@ -224,7 +224,7 @@ def test_save_lipas_features(loader, main_db_params):
 def test_delete_lipas_features(connection_string, main_db_params):
     assert_data_is_imported(main_db_params)
     new_loader = LipasLoader(connection_string)
-    new_loader.save_features([76249, 513435])
+    new_loader.save_features([76249, 603279])
     assert_data_is_imported(main_db_params)
     conn = psycopg2.connect(**main_db_params)
     try:
@@ -247,7 +247,7 @@ def test_delete_lipas_features(connection_string, main_db_params):
 def test_reinstate_lipas_features(connection_string, main_db_params):
     assert_data_is_imported(main_db_params)
     new_loader = LipasLoader(connection_string)
-    new_loader.save_features([76249, 513435, 528808, 92112])
+    new_loader.save_features([76249, 603279, 528808, 92112])
     assert_data_is_imported(main_db_params)
     conn = psycopg2.connect(**main_db_params)
     try:
