@@ -106,7 +106,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     [
       LayerId.DigiTransitPoint,
       {
-        url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        url: "https://api.digitransit.fi/routing/v2/waltti/gtfs/v1",
         headers: {
           "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
         },
@@ -133,7 +133,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     [
       LayerId.DigiTransitBikePoint,
       {
-        url: "https://api.digitransit.fi/routing/v1/routers/waltti/index/graphql",
+        url: "https://api.digitransit.fi/routing/v2/waltti/gtfs/v1",
         headers: {
           "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
         },
