@@ -30,18 +30,18 @@ revision:
 		xargs -I {} mkdir databasemodel/alembic/versions/{}
 
 pytest:
-	docker-compose -f docker-compose.dev.yml down -v
-	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
+	docker compose -f docker-compose.dev.yml down -v
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
 	cd backend; pytest
 
 rebuild:
-	docker-compose -f docker-compose.dev.yml down -v
-	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
-	docker-compose -f docker-compose.dev.yml up -d
+	docker compose -f docker-compose.dev.yml down -v
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
+	docker compose -f docker-compose.dev.yml up -d
 
 build-lambda:
-	docker-compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
-	docker-compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
+	docker compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
 	cd backend/lambda_functions; \
 	for func in db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier ; do \
   	  rm -rf tmp_lambda; \
@@ -53,4 +53,4 @@ build-lambda:
 	  rm -rf tmp_lambda; \
 	done
 	cd ../..
-	docker-compose -f docker-compose.dev.yml down -v
+	docker compose -f docker-compose.dev.yml down -v
