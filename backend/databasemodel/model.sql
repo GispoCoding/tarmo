@@ -1462,7 +1462,7 @@ INSERT INTO kooste.osm_metadata (
 	"leisure": ["bird_hide", "picnic_table", "sauna"],
 	"shop": ["kiosk"],
 	"building": ["church"]}',
-    '{"access": ["private", "permit"]}'
+    '{"access": ["private", "permit"], "shelter_type": ["public_transport"]}'
 );
 
 -- object: kooste.tamperewfs_luonnonmuistomerkit | type: TABLE --
