@@ -62,7 +62,9 @@ export const parseStop = (gqlFeature: gqlStop): Feature => {
     type = stopType.Tram;
     tarmo_category = "Ratikkapysäkki";
   }
-  if (gqlFeature.gtfsId.startsWith("TampereVR")) {
+  // Nowadays, train station ids seem to have the format digitraffic:ABC_1,
+  // while bus and tram stop ids have the format tampere:xxxx.
+  if (gqlFeature.gtfsId.startsWith("digitraffic:")) {
     type = stopType.Train;
     tarmo_category = "Rautatieasema";
   }
