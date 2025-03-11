@@ -121,7 +121,7 @@
     "settings": {
       "react": {
         "pragma": "React",
-        "version": "detect"
+        "version": "17.0.2"
       },
       "import/parsers": {
         "@typescript-eslint/parser": [
