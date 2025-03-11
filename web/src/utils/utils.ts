@@ -1,6 +1,41 @@
 import { FeatureCollection, Feature } from "geojson";
 import { Category, gqlStop, gqlBikeStation, gqlResponse, stopType } from "../types";
 
+/**
+ * Compare string parts that may be strings or strigified integers. Returns integers
+ * (sorted numerically) before strings (sorted alphabetically).
+ *
+ * @param one String that may or may not represent an integer
+ * @param other String that may or may not represent an integer
+ * @returns
+ */
+export const compareParts = (one: string, other: string) => {
+  const one_number = parseInt(one)
+  const other_number = parseInt(other)
+  // compare numbers
+  if (one_number && other_number) {
+    return one_number - other_number
+  }
+  if (one_number) {
+    return -1
+  }
+  if (other_number) {
+    return 1
+  }
+  // compare strings
+  if (one && other) {
+    return one.localeCompare(other)
+  }
+  // empty strings before strings
+  if (one) {
+    return 1
+  }
+  if (other) {
+    return -1
+  }
+  return 0
+}
+
 export const buildQuery = (
   gqlQuery: string,
   params: Map<string, string>

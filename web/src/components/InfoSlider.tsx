@@ -39,7 +39,7 @@ import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { DataSource, gqlPattern, PopupInfo } from "../types";
-import { getCategoryIcon, getCategoryPlural } from "../utils/utils";
+import { compareParts, getCategoryIcon, getCategoryPlural } from "../utils/utils";
 import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
 import { LayerId } from "./style";
@@ -237,6 +237,56 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   };
 
   /**
+   * Render GraphQL patterns
+   *
+   * Only filter and sort line numbers when rendering. Most of the time,
+   * the user does not click on any stop. Makes no sense to do any of this
+   * until we are actually rendering the list for a specific stop.
+   */
+  const renderPatterns = (patterns: Array<gqlPattern>) => {
+    return <List>
+      {patterns.reduce<Array<gqlPattern>>(
+        (unique: Array<gqlPattern>, pattern: gqlPattern) =>
+          // Don't display identical lines with the same destinations
+          unique.some((other: gqlPattern) =>
+              pattern["route"]["shortName"] == other["route"]["shortName"] &&
+              pattern["headsign"] == other["headsign"]
+          ) ? unique : [...unique, pattern],
+          [] // Initial array value
+      ).sort(
+        (pattern: gqlPattern, other: gqlPattern) => {
+          // Order first by first part, second by second part
+          // Note that first and second parts may both be number *or* letter.
+          const line_parts = pattern["route"]["shortName"].match('([0-9]+|[A-Z]+)( )?([0-9]*[A-Z]*)')
+          const other_line_parts = other["route"]["shortName"].match('([0-9]+|[A-Z]+)( )?([0-9]*[A-Z]*)')
+          if (line_parts && other_line_parts) {
+            // part 0 is the whole match, parts 1 to 3 are capture groups
+            const first = line_parts[1]
+            const other_first = other_line_parts[1]
+            const second = line_parts.length == 4 ? line_parts[3] : ""
+            const other_second = other_line_parts.length == 4 ? other_line_parts[3] : ""
+            const compare_first = compareParts(first, other_first)
+            return compare_first ? compare_first : compareParts(second, other_second)
+          }
+          return line_parts ? -1 : 0
+        }
+      ).map(
+        (value: gqlPattern, index: number)  => (
+          <ListItem key={index}>
+            <ListItemAvatar sx={{ mr: 1 }}>
+              <Typography variant="h4">
+                {value["route"]["shortName"]}
+              </Typography>
+            </ListItemAvatar>
+            <ListItemText primary={value["headsign"]} />
+          </ListItem>
+        )
+      )}
+    </List>
+  };
+
+
+  /**
    * Basic information slide
    */
   const basicInfoSlide = () => {
@@ -313,20 +363,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
           {properties["patterns"] && (
             <>
               <Typography variant="h4">Linjat</Typography>
-              <List>
-                {JSON.parse(properties["patterns"]).map(
-                  (value: gqlPattern, index: number) => (
-                    <ListItem key={index}>
-                      <ListItemAvatar sx={{ mr: 1 }}>
-                        <Typography variant="h4">
-                          {value["route"]["shortName"]}
-                        </Typography>
-                      </ListItemAvatar>
-                      <ListItemText primary={value["headsign"]} />
-                    </ListItem>
-                  )
-                )}
-              </List>
+              {renderPatterns(JSON.parse(properties["patterns"]))}
             </>
           )}
         </Stack>
