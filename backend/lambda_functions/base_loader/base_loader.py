@@ -291,6 +291,7 @@ class BaseLoader:
         )
         for row in views:
             session.execute(f"refresh materialized view {row[0]}.{row[1]};")
+            LOGGER.info(f"Refreshed materialized view {row[0]}.{row[1]}")
 
 
 def base_handler(event: Event, loader_cls: type) -> Response:
