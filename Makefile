@@ -46,7 +46,7 @@ build-lambda:
 	for func in db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier ; do \
   	  rm -rf tmp_lambda; \
   	  echo $$func; \
-	  docker cp tarmo_$${func}_1:/var/task tmp_lambda; \
+	  docker cp tarmo-$${func}-1:/var/task tmp_lambda; \
 	  cd tmp_lambda; \
 	  zip -r ../"$${func}.zip" .; \
 	  cd ..; \
