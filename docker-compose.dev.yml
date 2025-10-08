@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgis/postgis:13-master
+    image: postgis/postgis:16-master
     ports:
       - "5434:5432"
     environment:
