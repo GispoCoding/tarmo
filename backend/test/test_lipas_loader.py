@@ -76,7 +76,7 @@ def test__sport_places_url_point_of_interest(connection_string, metadata_set):
 
 def test_get_sport_place_point(loader):
     sport_place = loader.get_feature(76249)
-    assert sport_place["geom"] == "MULTIPOINT (27.2258867781278 63.545014556221)"
+    assert sport_place["geom"] == "MULTIPOINT (27.22588677812779 63.545014556221)"
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "luistelukentta"
     assert sport_place["tarmo_category"] == "Luistelu"
@@ -151,7 +151,7 @@ def test_get_sport_place_laavu_kota_tai_kammi(loader):
 
 def test_get_sport_place_talviuintipaikka(loader):
     sport_place = loader.get_feature(510087)
-    assert sport_place["geom"] == "MULTIPOINT (23.7865148394527 61.5154325183404)"
+    assert sport_place["geom"] == "MULTIPOINT (23.786514839452646 61.5154325183404)"
     assert sport_place["season"] == "Talvi"
     assert sport_place["table"] == "talviuintipaikka"
     assert sport_place["tarmo_category"] == "Talviuinti"
@@ -159,7 +159,7 @@ def test_get_sport_place_talviuintipaikka(loader):
 
 def test_get_sport_place_incomplete_url_fixed(loader):
     sport_place = loader.get_feature(506521)
-    assert sport_place["geom"] == "MULTIPOINT (23.7443451904576 61.3050219780947)"
+    assert sport_place["geom"] == "MULTIPOINT (23.74434519045764 61.30502197809469)"
     assert sport_place["season"] == "Koko vuosi"
     assert sport_place["table"] == "lahiliikuntapaikka"
     assert sport_place["tarmo_category"] == "Ulkoilupaikat"
