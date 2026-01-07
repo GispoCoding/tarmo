@@ -124,7 +124,7 @@ jobs:
         run: aws s3 sync ./dist/ s3://${{ secrets.AWS_BUCKET_NAME }} --delete
       - name: Report to slack
         if: github.ref == 'refs/heads/main'
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
@@ -147,7 +147,7 @@ jobs:
         run: aws s3 sync ./dist/ s3://${{ secrets.TAMPERE_AWS_BUCKET_NAME }} --delete
       - name: Report to slack
         if: startsWith(github.ref, 'refs/tags/release')
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
@@ -178,7 +178,7 @@ jobs:
         run: make prefix=tarmo-dev update-lambda -C infra
       - name: Report to slack
         if: github.ref == 'refs/heads/main'
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
@@ -191,7 +191,7 @@ jobs:
         run: make prefix=tarmo-dev migrate-db -C infra
       - name: Report to slack
         if: github.ref == 'refs/heads/main'
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
@@ -204,7 +204,7 @@ jobs:
         run: make prefix=tarmo-tampere update-lambda -C infra
       - name: Report to slack
         if: startsWith(github.ref, 'refs/tags/release')
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
@@ -217,7 +217,7 @@ jobs:
         run: make prefix=tarmo-tampere migrate-db -C infra
       - name: Report to slack
         if: startsWith(github.ref, 'refs/tags/release')
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           payload: |
             {
