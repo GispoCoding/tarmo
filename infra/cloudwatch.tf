@@ -43,7 +43,7 @@ resource "aws_cloudwatch_log_group" "tarmo_tileserver" {
 resource "aws_cloudwatch_event_rule" "lambda_lipas" {
   name        = "${var.prefix}-lambda-lipas-update"
   description = "Run lipas import every night"
-  schedule_expression = "cron(0 4 * * ? *)"
+  schedule_expression = "cron(13 4 * * ? *)"
   tags              = local.default_tags
 }
 
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_event_target" "lambda_lipas" {
 resource "aws_cloudwatch_event_rule" "lambda_wfs" {
   name        = "${var.prefix}-lambda-wfs-update"
   description = "Run wfs import every night"
-  schedule_expression = "cron(15 4 * * ? *)"
+  schedule_expression = "cron(26 4 * * ? *)"
   tags              = local.default_tags
 }
 
@@ -70,7 +70,7 @@ resource "aws_cloudwatch_event_target" "lambda_wfs" {
 resource "aws_cloudwatch_event_rule" "lambda_osm" {
   name        = "${var.prefix}-lambda-osm-update"
   description = "Run osm import every night"
-  schedule_expression = "cron(30 4 * * ? *)"
+  schedule_expression = "cron(39 4 * * ? *)"
   tags              = local.default_tags
 }
 
