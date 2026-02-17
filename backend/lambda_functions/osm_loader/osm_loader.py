@@ -117,7 +117,15 @@ class OSMLoader(BaseLoader):
 
     def get_features(self) -> list:  # type: ignore[override]
         query = self.get_overpass_query()
-        r = requests.post(self.api_url, headers=self.HEADERS, data=query)
+        # Overpass API seems to randomly give gateway timeout (maybe our request
+        # is borderline too heavy). Try again in case of gateway timeout:
+        request_no = 1
+        while request_no <= 10:
+            r = requests.post(self.api_url, headers=self.HEADERS, data=query)
+            status_code = r.status_code
+            if not status_code == 504:
+                break
+            request_no += 1
         r.raise_for_status()
         data = r.json()
         return data["elements"]
