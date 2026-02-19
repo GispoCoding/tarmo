@@ -122,7 +122,7 @@ class OSMLoader(BaseLoader):
         # is borderline too heavy). Try again in case of gateway timeout:
         requests_session = requests.Session()
         retry_strategy = Retry(
-            total=5, backoff_factor=5, status_forcelist=[504], allowed_methods=["POST"]
+            total=20, backoff_factor=5, status_forcelist=[504], allowed_methods=["POST"]
         )
         requests_session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
         r = requests_session.post(self.api_url, headers=self.HEADERS, data=query)
