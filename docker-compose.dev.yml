@@ -1,6 +1,7 @@
 services:
   db:
     image: postgis/postgis:16-master
+    platform: linux/amd64
     ports:
       - "5434:5432"
     environment:
@@ -10,6 +11,7 @@ services:
 
   pg_tileserv:
     image: pramsey/pg_tileserv:20231005
+    platform: linux/amd64
     env_file:
       - .env.local
     environment:

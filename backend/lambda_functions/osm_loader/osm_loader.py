@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 from shapely.geometry import Point, Polygon
 
 from .base_loader import LOGGER, BaseLoader, Event, Response, base_handler
@@ -119,13 +120,12 @@ class OSMLoader(BaseLoader):
         query = self.get_overpass_query()
         # Overpass API seems to randomly give gateway timeout (maybe our request
         # is borderline too heavy). Try again in case of gateway timeout:
-        request_no = 1
-        while request_no <= 10:
-            r = requests.post(self.api_url, headers=self.HEADERS, data=query)
-            status_code = r.status_code
-            if not status_code == 504:
-                break
-            request_no += 1
+        requests_session = requests.Session()
+        retry_strategy = Retry(
+            total=5, backoff_factor=5, status_forcelist=[504], allowed_methods=["POST"]
+        )
+        requests_session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+        r = requests_session.post(self.api_url, headers=self.HEADERS, data=query)
         r.raise_for_status()
         data = r.json()
         return data["elements"]
