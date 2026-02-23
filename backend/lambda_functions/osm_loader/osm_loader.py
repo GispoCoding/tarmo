@@ -125,7 +125,9 @@ class OSMLoader(BaseLoader):
             total=20, backoff_factor=5, status_forcelist=[504], allowed_methods=["POST"]
         )
         requests_session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
-        r = requests_session.post(self.api_url, headers=self.HEADERS, data=query)
+        r = requests_session.post(
+            self.api_url, headers=self.HEADERS, data=query, timeout=None
+        )
         r.raise_for_status()
         data = r.json()
         return data["elements"]
