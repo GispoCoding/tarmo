@@ -1457,7 +1457,7 @@ INSERT INTO kooste.osm_metadata (
     tags_to_include,
     tags_to_exclude
 ) VALUES (
-    '{"amenity": ["parking", "bicycle_parking", "bbq", "cafe", "ice_cream", "recycling", "restaurant", "shelter", "toilets"],
+    '{"amenity": ["parking", "bicycle_parking", "bbq", "cafe", "ice_cream", "restaurant", "shelter", "toilets"],
 	"tourism": ["camp_site", "caravan_site", "chalet", "guest_house", "hostel", "hotel", "information", "motel", "museum", "picnic_site", "viewpoint", "wilderness_hut"],
 	"leisure": ["bird_hide", "picnic_table", "sauna"],
 	"shop": ["kiosk"],
