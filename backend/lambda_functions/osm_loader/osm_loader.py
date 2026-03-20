@@ -202,6 +202,10 @@ class OSMLoader(BaseLoader):
 
         return flattened
 
+    # Make sure the query does not get too heavy. If we have OSM categories with
+    # thousands of objects (looking at you, removed benches and waste bins),
+    # those should be fetched with a separate query or, better still, not be
+    # fetched at all :)
     def get_overpass_query(self) -> str:
         """
         Construct the overpass query. This is a bit tricky if there are multiple tags
