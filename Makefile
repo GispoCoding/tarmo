@@ -12,7 +12,7 @@ test-lipas:
 
 test-osm:
 	@echo "Loading OSM data..."
-	curl -XPOST "http://localhost:8082/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 50}'
+	curl -XPOST "http://localhost:8082/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 60}'
 
 test-wfs:
 	@echo "Loading WFS data..."
