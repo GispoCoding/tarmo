@@ -86,9 +86,9 @@ variable "db_instance_type" {
 }
 
 variable "db_postgres_version" {
-  description = "Version number of the PostgreSQL DB. Default: 16.10"
+  description = "Version number of the PostgreSQL DB. Default: 16.13"
   type        = string
-  default     = "16.10"
+  default     = "16.13"
 }
 
 variable "tarmo_db_name" {
