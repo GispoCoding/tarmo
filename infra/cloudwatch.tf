@@ -69,6 +69,7 @@ resource "aws_cloudwatch_event_target" "lambda_wfs" {
 
 resource "aws_cloudwatch_event_rule" "lambda_osm" {
   name        = "${var.prefix}-lambda-osm-update"
+  is_enabled  = false
   description = "Run osm import every night"
   schedule_expression = "cron(39 3 * * ? *)"
   tags              = local.default_tags
