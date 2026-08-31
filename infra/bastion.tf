@@ -3,7 +3,7 @@
 
 # Just the smallest arm instance available
 resource "aws_instance" "bastion-ec2-instance" {
-  ami = "ami-0854da2f8540b70a2" # Amazon Linux 2
+  ami = "ami-043e4ca164edb8bd5" # Amazon Linux 2023
   instance_type = "t4g.nano"
   subnet_id     = aws_subnet.public[0].id
   vpc_security_group_ids = [aws_security_group.bastion.id]
