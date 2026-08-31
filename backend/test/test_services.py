@@ -78,7 +78,7 @@ def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
 
 
 @pytest.fixture()
-def populate_closest_parking_lots_of_osm(create_db, main_db_params, osm_loader_url):
+def populate_closest_points_of_osm(create_db, main_db_params, osm_loader_url):
     payload = {
         "close_to_lon": 23.7634608,
         "close_to_lat": 61.4976505,
@@ -161,7 +161,7 @@ def test_populate_lipas(populate_two_pages_of_lipas, main_db_params):
         conn.close()
 
 
-def test_populate_osm(populate_closest_parking_lots_of_osm, main_db_params):
+def test_populate_osm(populate_closest_points_of_osm, main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
