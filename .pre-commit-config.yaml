@@ -19,7 +19,7 @@ repos:
           - eslint-plugin-react-hooks@4.6.0
           - eslint-webpack-plugin@4.0.1
           - "@typescript-eslint/eslint-plugin@6.12.0"
-          - "@typescript-eslint/parser@5.7.0"
+          - "@typescript-eslint/parser@6.12.0"
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
         types: [file]
   - repo: https://github.com/pre-commit/mirrors-prettier
