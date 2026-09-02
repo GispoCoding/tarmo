@@ -18,11 +18,7 @@ test-wfs:
 	@echo "Loading WFS data..."
 	curl -XPOST "http://localhost:8083/2015-03-31/functions/function/invocations" -d '{}'
 
-test-arcgis:
-	@echo "Loading ArcGIS data..."
-	curl -XPOST "http://localhost:8085/2015-03-31/functions/function/invocations" -d '{"close_to_lon": 23.7747, "close_to_lat": 61.4980, "radius": 50}'
-
-test-all-layers: test-create-db test-lipas test-osm test-wfs test-arcgis
+test-all-layers: test-create-db test-lipas test-osm test-wfs
 
 revision:
 	cd backend; \
@@ -31,19 +27,19 @@ revision:
 
 pytest:
 	docker compose -f docker-compose.dev.yml down -v
-	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader
 	cd backend; pytest
 
 rebuild:
 	docker compose -f docker-compose.dev.yml down -v
-	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader
 	docker compose -f docker-compose.dev.yml up -d
 
 build-lambda:
-	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
-	docker compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier
+	docker compose -f docker-compose.dev.yml build db_manager lipas_loader osm_loader wfs_loader notifier
+	docker compose -f docker-compose.dev.yml up -d --no-deps db_manager lipas_loader osm_loader wfs_loader notifier
 	cd backend/lambda_functions; \
-	for func in db_manager lipas_loader osm_loader wfs_loader arcgis_loader notifier ; do \
+	for func in db_manager lipas_loader osm_loader wfs_loader notifier ; do \
   	  rm -rf tmp_lambda; \
   	  echo $$func; \
 	  docker cp tarmo-$${func}-1:/var/task tmp_lambda; \

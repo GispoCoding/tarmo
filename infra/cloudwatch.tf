@@ -22,12 +22,6 @@ resource "aws_cloudwatch_log_group" "lambda_wfs" {
   tags              = local.default_tags
 }
 
-resource "aws_cloudwatch_log_group" "lambda_arcgis" {
-  name              = "/aws/lambda/${aws_lambda_function.arcgis_loader.function_name}"
-  retention_in_days = 30
-  tags              = local.default_tags
-}
-
 resource "aws_cloudwatch_log_group" "tarmo_tileserver" {
   name              = "/aws/ecs/${aws_ecs_task_definition.pg_tileserv.family}"
   retention_in_days = 30
@@ -80,17 +74,3 @@ resource "aws_cloudwatch_event_target" "lambda_osm" {
   arn       = aws_lambda_function.osm_loader.arn
   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 60}"
 }
-
-resource "aws_cloudwatch_event_rule" "lambda_arcgis" {
-  name        = "${var.prefix}-lambda-arcgis-update"
-  description = "Run arcgis import every night"
-  schedule_expression = "cron(45 4 * * ? *)"
-  tags              = local.default_tags
-}
-# Disabled as long as arcgis data is not available
-# resource "aws_cloudwatch_event_target" "lambda_arcgis" {
-#   target_id = "${var.prefix}_load_arcgis"
-#   rule      = aws_cloudwatch_event_rule.lambda_arcgis.name
-#   arn       = aws_lambda_function.arcgis_loader.arn
-#   input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 60}"
-# }

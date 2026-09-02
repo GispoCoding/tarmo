@@ -127,39 +127,6 @@ resource "aws_lambda_permission" "cloudwatch_call_wfs_loader" {
     source_arn = aws_cloudwatch_event_rule.lambda_wfs.arn
 }
 
-resource "aws_lambda_function" "arcgis_loader" {
-  function_name = "${var.prefix}-arcgis_loader"
-  filename      = "../backend/lambda_functions/arcgis_loader.zip"
-  runtime       = "python3.10"
-  handler       = "app.arcgis_loader.handler"
-  memory_size   = 256
-  timeout       = 900
-
-  role = aws_iam_role.lambda_exec.arn
-  vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
-    security_group_ids = [aws_security_group.lambda.id]
-  }
-
-  environment {
-    variables = {
-      AWS_REGION_NAME     = var.AWS_REGION_NAME
-      DB_INSTANCE_ADDRESS = aws_db_instance.main_db.address
-      DB_MAIN_NAME        = var.tarmo_db_name
-      READ_FROM_AWS       = 1
-      DB_SECRET_RW_ARN    = aws_secretsmanager_secret.tarmo-db-rw.arn
-    }
-  }
-  tags = merge(local.default_tags, { Name = "${var.prefix}-arcgis_loader" })
-}
-
-resource "aws_lambda_permission" "cloudwatch_call_arcgis_loader" {
-    action = "lambda:InvokeFunction"
-    function_name = aws_lambda_function.arcgis_loader.function_name
-    principal = "events.amazonaws.com"
-    source_arn = aws_cloudwatch_event_rule.lambda_arcgis.arn
-}
-
 resource "aws_lambda_function" "notifier" {
   count = var.SLACK_HOOK_URL == "" ? 0 : 1
   function_name = "${var.prefix}-notifier"
