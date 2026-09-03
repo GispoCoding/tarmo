@@ -46,9 +46,11 @@ const WithDebounce: React.FC<Props> = ({
   const [debounceTimer, setDebounceTimer] = React.useState<
     NodeJS.Timeout | undefined
   >(undefined);
+  const previousValue = React.useRef(value);
 
   React.useEffect(() => {
-    if (value !== inputValue) {
+    if (value !== previousValue.current) {
+      previousValue.current = value;
       setInputValue(value);
     }
   }, [value]);
