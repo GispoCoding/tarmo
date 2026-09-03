@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error Webpack config is outside the TypeScript source root.
 import CommonConfig from "./webpack.common.config.babel";
 
 module.exports = {

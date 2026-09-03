@@ -17,7 +17,6 @@
     "graphql": "^16.3.0",
     "graphql-request": "^4.0.0",
     "maplibre-gl": "^2.1.1",
-    "raw-loader": "^4.0.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-map-gl": "7.0.6",
@@ -63,12 +62,18 @@
     "prettier": "2.5.1",
     "style-loader": "^3.3.1",
     "typescript-eslint": "^0.0.1-alpha.0",
-    "webpack": "^5.65.0",
+    "webpack": "^5.104.1",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0"
   },
   "resolutions": {
-    "@types/react": "19.2.18"
+    "@babel/traverse": "^7.23.2",
+    "@types/react": "19.2.18",
+    "form-data": "^3.0.5",
+    "loader-utils": "^1.4.2",
+    "minimist": "^1.2.6",
+    "webpack": "^5.104.1",
+    "websocket-driver": "^0.7.5"
   },
   "babel": {
     "presets": [
