@@ -35,13 +35,13 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import SwipeableViews from "react-swipeable-views";
 import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { DataSource, gqlPattern, PopupInfo } from "../types";
 import { compareParts, getCategoryIcon, getCategoryPlural } from "../utils/utils";
 import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
+import MobileSwipeViews from "./MobileSwipeViews";
 import { LayerId } from "./style";
 import { GeoJsonProperties } from "geojson";
 
@@ -50,7 +50,6 @@ interface PopupProps {
 }
 
 const sliderWidth = 500;
-const sliderMobileHeight = 220;
 
 /**
  * Styled sliding drawer
@@ -159,14 +158,21 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * @returns data source to display to the user
    */
   const getDataSource = (layerId: LayerId, properties: GeoJsonProperties) => {
+    if (!properties) {
+      return null;
+    }
     let prefix: string;
     // clusters have multiple data sources combined
-    if (layerId.startsWith("point-clusters") && properties!["size"] > 1) {
+    if (layerId.startsWith("point-clusters") && properties["size"] > 1) {
       return null
     }
     if (layerId.startsWith("point") || layerId == LayerId.SearchPoint) {
       // in combined point layers, the original table name is given by the id
-      prefix = properties!["id"].split("_")[0]
+      const id = properties["id"];
+      if (typeof id !== "string") {
+        return null;
+      }
+      prefix = id.split("_")[0]
     } else if (layerId == LayerId.SearchLine) {
       // all lines are lipas
       prefix = "lipas"
@@ -584,22 +590,12 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    */
   const renderMobileViews = () => (
     <>
-      <SwipeableViews
-        style={{
-          maxHeight: sliderMobileHeight,
-          WebkitOverflowScrolling: "touch", // iOS momentum scrolling
-        }}
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+      <MobileSwipeViews
+        direction={theme.direction}
         index={activeSlide}
         onChangeIndex={handleSlideChange}
-        enableMouseEvents
-      >
-        {slides.map((slide, index) => (
-          <Box maxHeight={sliderMobileHeight} p={3} key={index}>
-            {slide}
-          </Box>
-        ))}
-      </SwipeableViews>
+        slides={slides}
+      />
       {slides.length > 1 ? (
         <MobileStepper
           steps={slides.length}
