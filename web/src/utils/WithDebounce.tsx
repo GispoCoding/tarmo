@@ -6,7 +6,6 @@ import * as React from "react";
 interface Props {
   className?: string;
   component: (props: DebounceProps) => React.ReactElement;
-  key?: string | number;
   disabled?: boolean;
   name?: string;
   label?: string;
@@ -19,7 +18,6 @@ interface Props {
  * Interface representing debounce properties given to render function
  */
 interface DebounceProps {
-  key?: string | number;
   disabled?: boolean;
   name?: string;
   label?: string;
@@ -38,7 +36,6 @@ const WithDebounce: React.FC<Props> = ({
   value,
   className,
   debounceTimeout,
-  key,
   onChange,
   component,
 }) => {
@@ -77,7 +74,6 @@ const WithDebounce: React.FC<Props> = ({
     disabled: disabled,
     value: inputValue,
     className: className,
-    key: key,
     label: label,
     onChange: onInputChange,
   });
