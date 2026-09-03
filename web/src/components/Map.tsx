@@ -88,6 +88,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
   const mapFiltersContext = useContext(MapFiltersContext);
   const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const [zoom, setZoom] = useState(10);
   const [bounds, setBounds] = useState<Bbox | null>(null);
   const [externalData, setExternalData] =
@@ -416,6 +417,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
       style={{ width: "100vw", height: "100vh" }}
       mapLib={maplibregl}
       mapStyle={mapStyle}
+      onLoad={() => setMapLoaded(true)}
       onResize={toggleNav}
       styleDiffing={false}
     >
@@ -697,10 +699,12 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
         selectedSetter={setSelected}
       />
       <FullscreenControl />
-      <ScaleControl
-        maxWidth={200}
-        style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
-      />
+      {mapLoaded && (
+        <ScaleControl
+          maxWidth={200}
+          style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
+        />
+      )}
       {showNav && (
         <>
           <LayerPicker setter={setLayer} />
