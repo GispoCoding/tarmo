@@ -701,6 +701,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
       <FullscreenControl />
       {mapLoaded && (
         <ScaleControl
+          unit="metric"
           maxWidth={200}
           style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
         />
