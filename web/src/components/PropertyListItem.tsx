@@ -11,7 +11,7 @@ interface Props {
   /**
    * For optional Material UI icon
    */
-  iconElement?: JSX.Element;
+  iconElement?: React.JSX.Element;
   /**
    * For optional avatar image source
    */

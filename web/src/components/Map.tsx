@@ -84,7 +84,7 @@ interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
 }
 
-export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
+export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Element {
   const mapFiltersContext = useContext(MapFiltersContext);
   const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
@@ -111,7 +111,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
         },
         tarmo_category: "Pysäkit",
-        zoomThreshold: minZoomByCategory.get("Pysäkit")!,
+        zoomThreshold: minZoomByCategory.get("Pysäkit") ?? 0,
         reload: true,
         gqlQuery: `{
         stopsByBbox(minLat: $minLat, minLon: $minLon, maxLat: $maxLat, maxLon: $maxLon ) {
@@ -138,7 +138,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
           "digitransit-subscription-key": `${process.env.API_KEY_DIGITRANSIT}`
         },
         tarmo_category: "Pysäkit",
-        zoomThreshold: minZoomByCategory.get("Pysäkit")!,
+        zoomThreshold: minZoomByCategory.get("Pysäkit") ?? 0,
         reload: false,
         gqlQuery: `{
           bikeRentalStations {
@@ -232,35 +232,40 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
     if (selected) {
       // the user may select a point *or* a line
       const feature = searchPoints.get(selected) || searchLines.get(selected);
+      if (!feature) {
+        return;
+      }
       let coords: Position | undefined
       let layerId: LayerId | undefined
-      if (feature!.geometry.type == "Point") {
+      if (feature.geometry.type == "Point") {
         coords = [
-          feature!.geometry.coordinates[0] as number,
-          feature!.geometry.coordinates[1] as number,
+          feature.geometry.coordinates[0] as number,
+          feature.geometry.coordinates[1] as number,
         ];
         layerId = LayerId.SearchPoint
-      } else if (feature!.geometry.type == "LineString") {
-        coords = getCenterCoords(feature!.geometry.coordinates)
+      } else if (feature.geometry.type == "LineString") {
+        coords = getCenterCoords(feature.geometry.coordinates)
         layerId = LayerId.SearchLine
-      } else if (feature!.geometry.type == "MultiLineString") {
-        coords = getCenterCoords(feature!.geometry.coordinates.flat())
+      } else if (feature.geometry.type == "MultiLineString") {
+        coords = getCenterCoords(feature.geometry.coordinates.flat())
         layerId = LayerId.SearchLine
       }
       if (layerId && coords) {
-        // for reasons unknown, [number, number] typing is not good enough
-        // @ts-ignore
-        actualMapRef!.current!.flyTo({ center: coords, speed: 0.9 });
+        const map = actualMapRef.current;
+        if (!map) {
+          return;
+        }
+        map.flyTo({ center: coords as [number, number], speed: 0.9 });
         setPopupInfo({
           layerId: layerId,
-          properties: feature!.properties,
+          properties: feature.properties,
           longitude: coords[0],
           latitude: coords[1],
           onClose: () => setPopupInfo(null),
         });
       }
     }
-  }, [selected]);
+  }, [selected, searchLines, searchPoints, setPopupInfo]);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -341,10 +346,14 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
             const uniquePoints = new Map<string, MapboxGeoJSONFeature>();
             const uniqueLines = new Map<string, MapboxGeoJSONFeature>();
             points.forEach(feature => {
-              uniquePoints.set(feature.properties!.id, feature);
+              if (feature.properties?.id) {
+                uniquePoints.set(feature.properties.id, feature);
+              }
             });
             lines.forEach(feature => {
-              uniqueLines.set(feature.properties!.sportsPlaceId, feature);
+              if (feature.properties?.sportsPlaceId) {
+                uniqueLines.set(feature.properties.sportsPlaceId, feature);
+              }
             });
             setSearchPoints(uniquePoints);
             setSearchLines(uniqueLines);
@@ -438,7 +447,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         id={LayerId.SearchPoint}
         {...{
           ...SEARCH_POINT_SOURCE,
-          tiles: [SEARCH_POINT_SOURCE.tiles![0].replaceAll('{searchString}', searchString)],
+          tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
         }}
       >
         <Layer
@@ -465,7 +474,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         id={LayerId.SearchLine}
         {...{
           ...SEARCH_LINE_SOURCE,
-          tiles: [SEARCH_LINE_SOURCE.tiles![0].replaceAll('{searchString}', searchString)],
+          tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
         }}
       >
         <Layer
@@ -634,7 +643,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
       {externalData &&
         externalData.get(LayerId.DigiTransitPoint) &&
         // eslint-disable-next-line
-        zoom > externalSources.get(LayerId.DigiTransitPoint)!.zoomThreshold && (
+        zoom > (externalSources.get(LayerId.DigiTransitPoint)?.zoomThreshold ?? Infinity) && (
           <Source
             id={LayerId.DigiTransitPoint}
             type="geojson"
@@ -655,7 +664,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): JSX.Element {
         externalData.get(LayerId.DigiTransitBikePoint) &&
         // eslint-disable-next-line
         zoom >
-          externalSources.get(LayerId.DigiTransitBikePoint)!.zoomThreshold && (
+          (externalSources.get(LayerId.DigiTransitBikePoint)?.zoomThreshold ?? Infinity) && (
           <Source
             id={LayerId.DigiTransitBikePoint}
             type="geojson"
