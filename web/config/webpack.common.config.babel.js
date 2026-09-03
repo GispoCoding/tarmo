@@ -69,7 +69,7 @@ module.exports = {
       },
       {
         test: /\.md$/,
-        use: "raw-loader",
+        type: "asset/source",
       },
     ],
   },
