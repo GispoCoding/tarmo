@@ -65,4 +65,21 @@ describe("WithDebounce", () => {
 
     expect((input as HTMLInputElement).value).toBe("from parent");
   });
+
+  it("does not access React's reserved key prop", () => {
+    const consoleError = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    render(
+      <WithDebounce
+        key="search-input"
+        component={props => <input {...props} />}
+        onChange={jest.fn()}
+      />
+    );
+
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
 });
