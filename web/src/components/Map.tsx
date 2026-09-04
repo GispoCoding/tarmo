@@ -276,7 +276,11 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
   };
 
   const setLayer = (layer: Style | undefined) => {
-    layer ? setMapStyle(layer) : setDefaultStyle();
+    if (layer) {
+      setMapStyle(layer);
+    } else {
+      setDefaultStyle();
+    }
   };
 
   const setPopupFeature = useCallback(
@@ -360,8 +364,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
           }
         });
 
-        for (const source in LayerId) {
-          const source_name = LayerId[source];
+        for (const source_name of Object.values(LayerId)) {
           mapRef.on("mouseenter", source_name, () => {
             mapRef.getCanvas().style.cursor = "pointer";
           });

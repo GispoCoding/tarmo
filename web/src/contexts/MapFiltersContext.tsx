@@ -127,10 +127,10 @@ export default function MapFiltersProvider({ children }: Props) {
     ...CATEGORY_FILTERS,
   });
   // all the state below depends on filters and needs not be set separately
-  const [serviceEntries, setServiceEntries] = React.useState(Object.keys(filters).filter(
+  const [serviceEntries, setServiceEntries] = React.useState((Object.keys(filters) as Array<keyof CategoryFilters>).filter(
     (name) => serviceCategories.some((serviceCategory) => (serviceCategory.name === name))
     ).map((name) => [name, filters[name]]));
-  const [winterEntries, setWinterEntries] = React.useState(Object.keys(filters).filter(
+  const [winterEntries, setWinterEntries] = React.useState((Object.keys(filters) as Array<keyof CategoryFilters>).filter(
     (name) => winterCategories.some((winterCategory) => (winterCategory.name === name))
     ).map((name) => [name, filters[name]]));
   const [isActive, setIsActive] = React.useState(false);
@@ -159,10 +159,10 @@ export default function MapFiltersProvider({ children }: Props) {
   useEffect(() => {
     const filterList = Object.values(filters);
     setIsActive(filterList.some(value => !value));
-    setServiceEntries(Object.keys(filters).filter(
+    setServiceEntries((Object.keys(filters) as Array<keyof CategoryFilters>).filter(
       (name) => serviceCategories.some((serviceCategory) => (serviceCategory.name === name))
       ).map((name) => [name, filters[name]]));
-    setWinterEntries(Object.keys(filters).filter(
+    setWinterEntries((Object.keys(filters) as Array<keyof CategoryFilters>).filter(
       (name) => winterCategories.some((winterCategory) => (winterCategory.name === name))
       ).map((name) => [name, filters[name]]));
   }, [filters]);

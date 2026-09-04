@@ -114,7 +114,8 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
    * Reset the active slide when info changes
    */
   useEffect(() => {
-    setActiveSlide(0), setOpen(true);
+    setActiveSlide(0);
+    setOpen(true);
   }, [popupInfo]);
 
   /**
