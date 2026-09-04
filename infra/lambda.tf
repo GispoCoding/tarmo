@@ -1,14 +1,14 @@
 resource "aws_lambda_function" "db_manager" {
   function_name = "${var.prefix}-db_manager"
   filename      = "../backend/lambda_functions/db_manager.zip"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   handler       = "db_manager.handler"
   memory_size   = 128
   timeout       = 120
 
   role = aws_iam_role.lambda_exec.arn
   vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
+    subnet_ids         = data.aws_subnets.private.ids
     security_group_ids = [aws_security_group.lambda.id]
   }
 
@@ -31,14 +31,14 @@ resource "aws_lambda_function" "db_manager" {
 resource "aws_lambda_function" "lipas_loader" {
   function_name = "${var.prefix}-lipas_loader"
   filename      = "../backend/lambda_functions/lipas_loader.zip"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   handler       = "app.lipas_loader.handler"
   memory_size   = 128
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
   vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
+    subnet_ids         = data.aws_subnets.private.ids
     security_group_ids = [aws_security_group.lambda.id]
   }
 
@@ -64,14 +64,14 @@ resource "aws_lambda_permission" "cloudwatch_call_lipas_loader" {
 resource "aws_lambda_function" "osm_loader" {
   function_name = "${var.prefix}-osm_loader"
   filename      = "../backend/lambda_functions/osm_loader.zip"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   handler       = "app.osm_loader.handler"
   memory_size   = 256
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
   vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
+    subnet_ids         = data.aws_subnets.private.ids
     security_group_ids = [aws_security_group.lambda.id]
   }
 
@@ -97,14 +97,14 @@ resource "aws_lambda_permission" "cloudwatch_call_osm_loader" {
 resource "aws_lambda_function" "wfs_loader" {
   function_name = "${var.prefix}-wfs_loader"
   filename      = "../backend/lambda_functions/wfs_loader.zip"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   handler       = "app.wfs_loader.handler"
   memory_size   = 128
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
   vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
+    subnet_ids         = data.aws_subnets.private.ids
     security_group_ids = [aws_security_group.lambda.id]
   }
 
@@ -131,14 +131,14 @@ resource "aws_lambda_function" "notifier" {
   count = var.SLACK_HOOK_URL == "" ? 0 : 1
   function_name = "${var.prefix}-notifier"
   filename      = "../backend/lambda_functions/notifier.zip"
-  runtime       = "python3.10"
+  runtime       = "python3.12"
   handler       = "app.notifier.handler"
   memory_size   = 128
   timeout       = 900
 
   role = aws_iam_role.lambda_exec.arn
   vpc_config {
-    subnet_ids         = data.aws_subnet_ids.private.ids
+    subnet_ids         = data.aws_subnets.private.ids
     security_group_ids = [aws_security_group.lambda.id]
   }
 

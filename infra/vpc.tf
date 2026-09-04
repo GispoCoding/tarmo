@@ -82,8 +82,11 @@ resource "aws_subnet" "private" {
   })
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id  = aws_vpc.main.id
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [aws_vpc.main.id]
+  }
 
   tags = {
     SubnetType = "private"
@@ -92,7 +95,7 @@ data "aws_subnet_ids" "private" {
 
 # Give lambdas access to Internet
 resource "aws_eip" "eip" {
-  vpc        = true
+  domain = "vpc"
   depends_on = [aws_internet_gateway.main]
 
   tags = merge(local.default_tags, {
@@ -132,7 +135,7 @@ resource "aws_route_table_association" "private" {
 resource "aws_db_subnet_group" "db" {
   name       = "${var.prefix}-db"
   # only list private subnets in the db subnet group
-  subnet_ids = data.aws_subnet_ids.private.ids
+  subnet_ids = data.aws_subnets.private.ids
 
   tags = merge(local.default_tags, {
     Name = "${var.prefix}-db"
