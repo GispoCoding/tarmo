@@ -72,5 +72,6 @@ resource "aws_cloudwatch_event_target" "lambda_osm" {
   target_id = "${var.prefix}_load_osm"
   rule      = aws_cloudwatch_event_rule.lambda_osm.name
   arn       = aws_lambda_function.osm_loader.arn
-  input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 60}"
+  # The default OSM bbox contains the Tampere municipalities.
+  input     = "{}"
 }

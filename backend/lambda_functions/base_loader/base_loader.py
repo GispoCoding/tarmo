@@ -34,6 +34,7 @@ class Event(TypedDict):
     close_to_lon: Optional[float]
     close_to_lat: Optional[float]
     radius: Optional[float]
+    bbox: Optional[float]
 
 
 class Response(TypedDict):
@@ -147,9 +148,14 @@ class BaseLoader:
         self,
         connection_string: str,
         url: Optional[Union[str, Dict[str, str]]] = None,
+        bbox: Optional[tuple[tuple[float, float], tuple[float, float]]] = None,
         point_of_interest: Optional[Point] = None,
         point_radius: Optional[float] = None,
     ) -> None:
+        """
+        Due to transition to OSM Postpass API, we have to support both
+        POI and radius *AND* bbox inputs to the loader.
+        """
         engine = create_engine(connection_string)
 
         LipasBase.prepare(engine, reflect=True)
@@ -159,6 +165,7 @@ class BaseLoader:
 
         self.point_of_interest = point_of_interest
         self.point_radius = point_radius
+        self.bbox = bbox
 
         if url:
             self.api_url = url
@@ -215,9 +222,9 @@ class BaseLoader:
             session.merge(self.metadata_row)
         else:
             for metadata_table in self.METADATA_TABLE_NAME:
-                self.metadata_row[
-                    metadata_table
-                ].last_modified = datetime.datetime.now()
+                self.metadata_row[metadata_table].last_modified = (
+                    datetime.datetime.now()
+                )
                 session.merge(self.metadata_row[metadata_table])
 
     def create_feature_for_object(
@@ -303,11 +310,13 @@ def base_handler(event: Event, loader_cls: type) -> Response:
         if "close_to_lon" in event and "close_to_lat" in event
         else None
     )
+    bbox = event["bbox"] if "bbox" in event else None
 
     loader = loader_cls(
         db_helper.get_connection_string(),
         point_of_interest=point,
         point_radius=event.get("radius", None),
+        bbox=bbox,
     )
     features = []
     LOGGER.info("Getting features...")

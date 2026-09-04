@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 import requests
-from shapely.geometry import Point, Polygon
+from shapely.geometry import shape
 
 from .base_loader import LOGGER, BaseLoader, Event, Response, base_handler
 
@@ -96,8 +96,12 @@ class OSMLoader(BaseLoader):
         },
     }
 
-    api_url = "https://overpass-api.de/api/interpreter"
-    default_point = Point(0, 0)
+    # Instead of overpass, use the Geofabrik Postpass API:
+    # https://wiki.openstreetmap.org/wiki/Postpass
+    api_url = "https://postpass.geofabrik.de/api/interpreter"
+    # This is the default bbox for Tampere area municipalities within the project.
+    # Can be overridden with input parameters.
+    default_bbox = (23.002660, 62.144276), (24.889812, 61.217573)
 
     def __init__(
         self,
@@ -114,37 +118,36 @@ class OSMLoader(BaseLoader):
         self.tags_to_exclude = (
             tags_to_exclude if tags_to_exclude else self.metadata_row.tags_to_exclude
         )
+        self.bbox: tuple[tuple[float, float], tuple[float, float]] = (
+            self.bbox if self.bbox else self.default_bbox
+        )
 
     def get_features(self) -> list:  # type: ignore[override]
-        query = self.get_overpass_query()
-        # Believe timeout the first time, to avoid ending up blacklisted:
-        r = requests.post(self.api_url, headers=self.HEADERS, data=query, timeout=None)
+        query = self.get_postpass_query()
+        r = requests.post(
+            self.api_url, headers=self.HEADERS, data={"data": query}, timeout=None
+        )
         r.raise_for_status()
         data = r.json()
-        return data["elements"]
+        return data["features"]
 
     def get_feature(self, element: Dict[str, Any]) -> Optional[dict]:  # type: ignore[override]  # noqa
-        osm_id = element["id"]
-        type = element["type"]
-        tags: dict = element["tags"]
+        osm_id = element["properties"]["osm_id"]
+        osm_types = {"N": "node", "W": "way", "R": "relation"}
+        type = osm_types[element["properties"]["osm_type"]]
+        tags: dict = element["properties"]["tags"]
 
         # TODO: support ways that are not polygons
         if type == "node":
             table_name = self.POINT_TABLE_NAME
         else:
             table_name = self.POLYGON_TABLE_NAME
-        if type == "node":
-            geom = Point(element["lon"], element["lat"])
-        elif type == "way":
-            geom = Polygon(self.get_polygon_ring([element]))
-        elif type == "relation":
-            # OSM multipolygons are actually polygons with multiple ways making up
-            # the whole outer ring. This makes zero sense.
-            outer_ways = [el for el in element["members"] if el["role"] == "outer"]
-            outer_ring = self.get_polygon_ring(outer_ways)
-            inner_ways = [el for el in element["members"] if el["role"] == "inner"]
-            inner_rings = [self.get_polygon_ring([way]) for way in inner_ways]
-            geom = Polygon(outer_ring, holes=inner_rings)
+        geom = shape(element["geometry"])
+        # OSM way multipolygons are actually polygons. Just take the first polygon:
+        if geom.geom_type == "MultiPolygon":
+            geom = geom.geoms[0]
+            # TODO: support relations that are actually multipolygons. Currently,
+            # we do not support multipolygons in the database.
 
         # Do not save any invalid or empty features
         if geom.is_empty:
@@ -193,44 +196,35 @@ class OSMLoader(BaseLoader):
 
         return flattened
 
-    # Make sure the query does not get too heavy. If we have OSM categories with
-    # thousands of objects (looking at you, removed benches and waste bins),
-    # those should be fetched with a separate query or, better still, not be
-    # fetched at all :)
-    def get_overpass_query(self) -> str:
+    def get_postpass_query(self) -> str:
         """
-        Construct the overpass query. This is a bit tricky if there are multiple tags
-        we want.
+        The Postpass query should be a valid SQL query:
+        https://wiki.openstreetmap.org/wiki/Postpass#Quick_Start_(60_seconds):_Developers
         """
-        # Of course, OSM uses lat,lon while we use lon,lat
-        if self.point_radius and self.point_of_interest:
-            around_string = f"around:{1000*self.point_radius},{self.point_of_interest.y},{self.point_of_interest.x}"  # noqa
-        else:
-            raise Exception("OSM queries require point and radius.")
-        include_rows = (
-            f"nwr[{tag}~\"^{'$|^'.join(values)}$\"]({around_string});"
+        include_rows = [
+            f"tags->>'{tag}'='{value}'"
             for tag, values in self.tags_to_include.items()
-        )
-        include_string = "\n   ".join(include_rows)
-        exclude_rows = (
-            f"nwr[{tag}~\"^{'$|^'.join(values)}$\"]({around_string});"
+            for value in values
+        ]  # noqa
+        include_string = " OR\n".join(include_rows)
+        # Exclude filter must also return all cases where the tag is *not* present:
+        exclude_rows = [
+            f"(NOT (tags ? '{tag}') OR ({' AND '.join([f"tags->>'{tag}'!='{value}'" for value in values])}))"  # noqa
             for tag, values in self.tags_to_exclude.items()
+        ]
+        exclude_string = " AND\n".join(exclude_rows)
+        bbox_string = (
+            f"geom && ST_SetSRID(ST_MakeBox2D(ST_MakePoint{self.bbox[0]},"
+            f"ST_MakePoint{self.bbox[1]}), 4326)"
         )
-        exclude_string = "\n   ".join(exclude_rows)
         query = (
-            "[out:json];\n"
-            "(\n"
-            "   (\n"
-            f"   {include_string}\n"
-            "   ); - (\n"
-            f"   {exclude_string}\n"
-            "   );\n"
-            ");\n"
-            "out geom;"
+            "SELECT osm_id, osm_type, tags, geom FROM postpass_pointpolygon\n"
+            f"WHERE ({include_string})\n"
+            f"AND {exclude_string}\n"
+            f"AND ({bbox_string})\n"
         )
-        LOGGER.info("Overpass query string:")
+        LOGGER.info("Postpass query string:")
         LOGGER.info(query)
-
         return query
 
     def get_polygon_ring(self, ways: List) -> list:

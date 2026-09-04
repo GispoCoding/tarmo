@@ -1,5 +1,6 @@
 import datetime
 import json
+from urllib.parse import urlencode
 
 import psycopg2
 import pytest
@@ -9,188 +10,209 @@ from shapely.geometry import Point
 from backend.lambda_functions.lipas_loader.base_loader import DatabaseHelper
 from backend.lambda_functions.osm_loader.osm_loader import OSMLoader
 
-ice_cream_query = (
-    "[out:json];\n"
-    "(\n"
-    "   (\n"
-    '   nwr[amenity~"^ice_cream$|^cafe$"](around:1000,60.1593807,24.9424875);\n'
-    '   nwr[shop~"^bakery$"](around:1000,60.1593807,24.9424875);\n'
-    "   ); - (\n"
-    '   nwr[amenity~"^fast_food$"](around:1000,60.1593807,24.9424875);\n'
-    "   );\n"
-    ");\n"
-    "out geom;"
-)
+ice_cream_query = """SELECT osm_id, osm_type, tags, geom FROM postpass_pointpolygon
+WHERE (tags->>'amenity'='ice_cream' OR
+tags->>'amenity'='cafe' OR
+tags->>'shop'='bakery')
+AND (NOT (tags ? 'amenity') OR (tags->>'amenity'!='fast_food'))
+AND (geom && ST_SetSRID(ST_MakeBox2D(ST_MakePoint(24.9509827, 60.1556206),ST_MakePoint(24.9509829, 60.1556208)), 4326))
+"""
 
 ice_cream_response = {
-    "version": 0.6,
-    "generator": "Overpass API 0.7.57.1 74a55df1",
-    "osm3s": {
-        "timestamp_osm_base": "2022-02-22T14:38:24Z",
-        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+    "postpass_properties": {
+        "generator": "Postpass API 0.2",
+        "timestamp": "2026-09-02T10:38:01Z",
     },
-    "elements": [
+    "type": "FeatureCollection",
+    "features": [
         {
-            "type": "node",
-            "id": 5020924373,
-            "lat": 60.1556207,
-            "lon": 24.9509828,
-            "tags": {
-                "amenity": "ice_cream",
-                "building": "kiosk",
-                "diet:halal": "no",
-                "diet:kosher": "no",
-                "fixme": "tiedot rakennukseen",
-                "name": "Helsingin jäätelötehdas",
-                "seasonal:summer": "yes",
-                "seasonal:winter": "no",
-                "toilets:wheelchair": "no",
-                "wheelchair": "yes",
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [24.9509828, 60.1556207]},
+            "properties": {
+                "osm_id": 5020924373,
+                "osm_type": "N",
+                "tags": {
+                    "name": "Helsingin jäätelötehdas",
+                    "amenity": "ice_cream",
+                    "building": "kiosk",
+                    "diet:halal": "no",
+                    "wheelchair": "yes",
+                    "diet:kosher": "no",
+                    "seasonal:summer": "yes",
+                    "seasonal:winter": "no",
+                    "toilets:wheelchair": "no",
+                    "payment:debit_cards": "yes",
+                    "payment:credit_cards": "yes",
+                },
             },
-        }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [24.950956, 60.155626],
+                            [24.9509752, 60.1556117],
+                            [24.9510114, 60.1556231],
+                            [24.950991, 60.1556373],
+                            [24.950956, 60.155626],
+                        ]
+                    ]
+                ],
+            },
+            "properties": {
+                "osm_id": 574203797,
+                "osm_type": "W",
+                "tags": {
+                    "name": "Helsingin jäätelötehdas",
+                    "amenity": "ice_cream",
+                    "building": "yes",
+                    "diet:halal": "no",
+                    "diet:kosher": "no",
+                    "payment:debit_cards": "yes",
+                    "payment:credit_cards": "yes",
+                },
+            },
+        },
     ],
 }
 
-parking_query = (
-    "[out:json];\n"
-    "(\n"
-    "   (\n"
-    '   nwr[amenity~"^parking$|^bicycle_parking$"](around:10000,61.498,23.7747);\n'
-    "   ); - (\n"
-    '   nwr[access~"^private$|^permit$"](around:10000,61.498,23.7747);\n'
-    "   );\n"
-    ");\n"
-    "out geom;"
-)
+parking_query = """SELECT osm_id, osm_type, tags, geom FROM postpass_pointpolygon
+WHERE (tags->>'amenity'='parking' OR
+tags->>'amenity'='bicycle_parking')
+AND (NOT (tags ? 'access') OR (tags->>'access'!='private' AND tags->>'access'!='permit'))
+AND (geom && ST_SetSRID(ST_MakeBox2D(ST_MakePoint(23.7746, 61.497),ST_MakePoint(23.7748, 61.499)), 4326))
+"""
 
-# We must check nodes, ways *and* relations. Overpass API won't reliably return
-# all three. Also, overpass API will not accept repeated test requests.
 parking_response = {
-    "version": 0.6,
-    "generator": "Overpass API 0.7.57.1 74a55df1",
-    "osm3s": {
-        "timestamp_osm_base": "2022-02-22T14:31:08Z",
-        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+    "postpass_properties": {
+        "generator": "Postpass API 0.2",
+        "timestamp": "2026-09-02T10:53:19Z",
     },
-    "elements": [
+    "type": "FeatureCollection",
+    "features": [
         {
-            "type": "node",
-            "id": 32893824,
-            "lat": 61.5078651,
-            "lon": 23.6897684,
-            "tags": {
-                "access": "customers",
-                "amenity": "parking",
-                "capacity": "5",
-                "parking": "surface",
-                "website": "www.parkkipaikka.fi",
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [23.7749741, 61.4978953]},
+            "properties": {
+                "osm_id": 13995936271,
+                "osm_type": "N",
+                "tags": {
+                    "amenity": "bicycle_parking",
+                    "covered": "no",
+                    "capacity": "8",
+                    "bicycle_parking": "wall_loops",
+                },
             },
         },
         {
-            "type": "node",
-            "id": 32893834,
-            "lat": 61.5178651,
-            "lon": 23.5797684,
-            "tags": {
-                "amenity": "bicycle_parking",
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [23.7650049, 61.4981892],
+                            [23.7651229, 61.4978001],
+                            [23.7657464, 61.4978468],
+                            [23.7681282, 61.4980257],
+                            [23.7715975, 61.4982862],
+                            [23.7717048, 61.4982839],
+                            [23.771796, 61.4982734],
+                            [23.771914, 61.4982504],
+                            [23.7727713, 61.49801],
+                            [23.7728143, 61.4979999],
+                            [23.7728148, 61.4979903],
+                            [23.7730459, 61.4979355],
+                            [23.7749355, 61.4979343],
+                            [23.775274, 61.4979337],
+                            [23.7762538, 61.4979329],
+                            [23.7762485, 61.4981307],
+                            [23.7753568, 61.4981264],
+                            [23.7732819, 61.4981198],
+                            [23.773188, 61.498134],
+                            [23.7730982, 61.4981558],
+                            [23.7713469, 61.4986137],
+                            [23.7699784, 61.4985241],
+                            [23.7697315, 61.4985052],
+                            [23.7685418, 61.4984184],
+                            [23.7674631, 61.4983447],
+                            [23.7650049, 61.4981892],
+                        ]
+                    ]
+                ],
             },
-        },
-        {
-            "type": "node",
-            "id": 32893844,
-            "lat": 61.5278651,
-            "lon": 23.5897684,
-            "tags": {"amenity": "parking", "fee": "no"},
-        },
-        {
-            "type": "way",
-            "id": 948598167,
-            "bounds": {
-                "minlat": 61.5051209,
-                "minlon": 23.6051983,
-                "maxlat": 61.5055019,
-                "maxlon": 23.6056080,
+            "properties": {
+                "osm_id": 221363074,
+                "osm_type": "W",
+                "tags": {
+                    "fee": "yes",
+                    "ref": "P-Hämppi",
+                    "area": "yes",
+                    "foot": "yes",
+                    "name": "P-Hämppi",
+                    "layer": "-3",
+                    "level": "-2",
+                    "phone": "+358 3 382 000",
+                    "access": "customers",
+                    "charge": "2.80 EUR / h",
+                    "amenity": "parking",
+                    "covered": "yes",
+                    "maxstay": "no",
+                    "name:ar": "مرآب سيارات بي-هيامبي",
+                    "name:en": "P-Hämppi Parking Garage",
+                    "name:et": "P-Hämppi parkimismaja",
+                    "name:fi": "P-Hämppi",
+                    "name:ru": "Подземная парковка П-Хямппи",
+                    "name:so": "Goobta Baabuurta la dhigto ee P-Hämppi",
+                    "name:sv": "P-Hämppi parkeringshus",
+                    "network": "P-Hämppi",
+                    "parking": "underground",
+                    "surface": "asphalt",
+                    "website": "https://www.finnpark.fi/p-hamppi/",
+                    "alt_name": "Hämeenkadun maanalainen pysäköintilaitos;P-Hämppi pysäköintihalli",
+                    "capacity": "910",
+                    "maxspeed": "20",
+                    "operator": "Finnpark",
+                    "reg_name": "FinnPark P-Hämppi",
+                    "wikidata": "Q11886192",
+                    "addr:city": "Tampere",
+                    "maxheight": "2.3",
+                    "park_ride": "no",
+                    "wikipedia": "fi:P-Hämppi",
+                    "short_name": "P-Hämppi",
+                    "supervised": "yes",
+                    "wheelchair": "yes",
+                    "addr:street": "Hämeenkatu",
+                    "payment:app": "yes",
+                    "addr:country": "FI",
+                    "payment:card": "yes",
+                    "payment:cash": "no",
+                    "addr:postcode": "33100",
+                    "motor_vehicle": "yes",
+                    "official_name": "P-Hämppi pysäköintilaitos",
+                    "opening_hours": "24/7",
+                    "operator:type": "private",
+                    "description:fi": "Tampereen keskustan alla toimiva maanalainen, kallioon louhittu maksullinen pysäköintilaitos (P-Hämppi).",
+                },
             },
-            "nodes": [8780460891, 8780460890, 8780460889, 8780460888, 8780460891],
-            "geometry": [
-                {"lat": 61.5054804, "lon": 23.6051983},
-                {"lat": 61.5051209, "lon": 23.6052897},
-                {"lat": 61.5051394, "lon": 23.6056080},
-                {"lat": 61.5055019, "lon": 23.6055158},
-                {"lat": 61.5054804, "lon": 23.6051983},
-            ],
-            "tags": {"amenity": "parking", "fee": "yes"},
-        },
-        {
-            "type": "relation",
-            "id": 13750222,
-            "bounds": {
-                "minlat": 61.4759667,
-                "minlon": 23.8727522,
-                "maxlat": 61.4769348,
-                "maxlon": 23.8738219,
-            },
-            "members": [
-                {
-                    "type": "way",
-                    "ref": 1026950784,
-                    "role": "outer",
-                    "geometry": [
-                        {"lat": 61.4769348, "lon": 23.8731763},
-                        {"lat": 61.4768999, "lon": 23.8734940},
-                        {"lat": 61.4767476, "lon": 23.8734233},
-                        {"lat": 61.4766983, "lon": 23.8738219},
-                    ],
-                },
-                {
-                    "type": "way",
-                    "ref": 116380614,
-                    "role": "outer",
-                    "geometry": [
-                        {"lat": 61.4766983, "lon": 23.8738219},
-                        {"lat": 61.4760167, "lon": 23.8734918},
-                        {"lat": 61.4760490, "lon": 23.8732539},
-                        {"lat": 61.4759667, "lon": 23.8732160},
-                    ],
-                },
-                {
-                    "type": "way",
-                    "ref": 1026950783,
-                    "role": "outer",
-                    "geometry": [
-                        {"lat": 61.4759667, "lon": 23.8732160},
-                        {"lat": 61.4760265, "lon": 23.8727522},
-                        {"lat": 61.4769348, "lon": 23.8731763},
-                    ],
-                },
-                {
-                    "type": "way",
-                    "ref": 450184332,
-                    "role": "inner",
-                    "geometry": [
-                        {"lat": 61.476, "lon": 23.8735},
-                        {"lat": 61.476, "lon": 23.87351},
-                        {"lat": 61.4761, "lon": 23.87351},
-                        {"lat": 61.476, "lon": 23.8735},
-                    ],
-                },
-            ],
-            "tags": {"amenity": "parking", "type": "multipolygon", "access": "yes"},
         },
     ],
 }
 
 
 def mock_response(request: requests.PreparedRequest, context: object) -> str:
-    if request.body == ice_cream_query:
+    if request.body == urlencode({"data": ice_cream_query}):
         return json.dumps(ice_cream_response)
-    if request.body == parking_query:
+    if request.body == urlencode({"data": parking_query}):
         return json.dumps(parking_response)
     raise NotImplementedError
 
 
 @pytest.fixture()
-def mock_overpass(requests_mock):
+def mock_postpass(requests_mock):
     requests_mock.post("http://mock.url", text=mock_response)
 
 
@@ -205,8 +227,7 @@ def ice_cream_loader(connection_string):
         connection_string,
         tags_to_include={"amenity": ["ice_cream", "cafe"], "shop": ["bakery"]},
         tags_to_exclude={"amenity": ["fast_food"]},
-        point_of_interest=Point(24.9424875, 60.1593807),
-        point_radius=1,
+        bbox=((24.9509827, 60.1556206), (24.9509829, 60.1556208)),
         url="http://mock.url",
     )
 
@@ -217,8 +238,7 @@ def parking_loader(connection_string):
         connection_string,
         tags_to_include={"amenity": ["parking", "bicycle_parking"]},
         tags_to_exclude={"access": ["private", "permit"]},
-        point_of_interest=Point(23.7747, 61.4980),
-        point_radius=10,
+        bbox=((23.7746, 61.497), (23.7748, 61.499)),
         url="http://mock.url",
     )
 
@@ -239,22 +259,22 @@ def metadata_set(main_db_params):
 
 
 def test_get_ice_cream_query(ice_cream_loader, metadata_set):
-    assert ice_cream_loader.get_overpass_query() == ice_cream_query
+    assert ice_cream_loader.get_postpass_query() == ice_cream_query
 
 
 def test_get_parking_query(parking_loader, metadata_set):
-    assert parking_loader.get_overpass_query() == parking_query
+    assert parking_loader.get_postpass_query() == parking_query
 
 
 @pytest.fixture()
-def ice_cream_data(mock_overpass, ice_cream_loader, metadata_set):
+def ice_cream_data(mock_postpass, ice_cream_loader, metadata_set):
     data = ice_cream_loader.get_features()
     assert data
     return data
 
 
 @pytest.fixture()
-def parking_data(mock_overpass, parking_loader, metadata_set):
+def parking_data(mock_postpass, parking_loader, metadata_set):
     data = parking_loader.get_features()
     assert data
     return data
@@ -268,18 +288,16 @@ def test_get_ice_cream_feature(ice_cream_loader, ice_cream_data):
     assert feature["tags"]
 
 
-def test_get_customer_parking_feature(parking_loader, parking_data):
-    customer_parking = parking_loader.get_feature(parking_data[0])
-    assert customer_parking["osm_id"]
-    assert customer_parking["osm_type"] == "node"
-    assert customer_parking["geom"].startswith("POINT")
-    assert customer_parking["tags"]
-    assert customer_parking["tags"]["www"] == "https://www.parkkipaikka.fi"
-    assert customer_parking["type_name"] == "Asiakaspysäköinti"
+def test_get_polygon_ice_cream_feature(ice_cream_loader, ice_cream_data):
+    feature = ice_cream_loader.get_feature(ice_cream_data[1])
+    assert feature["osm_id"]
+    assert feature["osm_type"] == "way"
+    assert feature["geom"].startswith("POLYGON")
+    assert feature["tags"]
 
 
 def test_get_bike_parking_feature(parking_loader, parking_data):
-    customer_parking = parking_loader.get_feature(parking_data[1])
+    customer_parking = parking_loader.get_feature(parking_data[0])
     assert customer_parking["osm_id"]
     assert customer_parking["osm_type"] == "node"
     assert customer_parking["geom"].startswith("POINT")
@@ -288,31 +306,13 @@ def test_get_bike_parking_feature(parking_loader, parking_data):
     assert customer_parking["type_name"] == "Pyöräpysäköinti"
 
 
-def test_get_free_parking_feature(parking_loader, parking_data):
-    customer_parking = parking_loader.get_feature(parking_data[2])
-    assert customer_parking["osm_id"]
-    assert customer_parking["osm_type"] == "node"
-    assert customer_parking["geom"].startswith("POINT")
-    assert customer_parking["tags"]
-    assert customer_parking["type_name"] == "Maksuton pysäköinti"
-
-
-def test_get_way_parking_feature(parking_loader, parking_data):
-    customer_parking = parking_loader.get_feature(parking_data[3])
+def test_get_polygon_parking_feature(parking_loader, parking_data):
+    customer_parking = parking_loader.get_feature(parking_data[1])
     assert customer_parking["osm_id"]
     assert customer_parking["osm_type"] == "way"
     assert customer_parking["geom"].startswith("POLYGON")
     assert customer_parking["tags"]
-    assert customer_parking["type_name"] == "Maksullinen pysäköinti"
-
-
-def test_get_relation_parking_feature(parking_loader, parking_data):
-    customer_parking = parking_loader.get_feature(parking_data[4])
-    assert customer_parking["osm_id"]
-    assert customer_parking["osm_type"] == "relation"
-    assert customer_parking["geom"].startswith("POLYGON")
-    assert customer_parking["tags"]
-    assert customer_parking["type_name"] == "Yleinen pysäköinti"
+    assert customer_parking["type_name"] == "Asiakaspysäköinti"
 
 
 def assert_parking_data(main_db_params):
@@ -320,9 +320,9 @@ def assert_parking_data(main_db_params):
     try:
         with conn.cursor() as cur:
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
-            assert cur.fetchone()[0] == 3
+            assert cur.fetchone()[0] == 1
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
-            assert cur.fetchone()[0] == 2
+            assert cur.fetchone()[0] == 1
             cur.execute(f"SELECT id FROM kooste.osm_pisteet")
             assert all("-" in id for id in cur.fetchone())
             cur.execute(f"SELECT id FROM kooste.osm_alueet")
@@ -347,7 +347,7 @@ def assert_ice_cream_and_parking_data(main_db_params):
         with conn.cursor() as cur:
             # we should have both parking and ice cream here
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet")
-            assert cur.fetchone()[0] == 4
+            assert cur.fetchone()[0] == 2
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet")
             assert cur.fetchone()[0] == 2
             cur.execute(f"SELECT id FROM kooste.osm_pisteet")
@@ -381,9 +381,8 @@ def test_delete_parking_features(ice_cream_data, connection_string, main_db_para
             # parking points should be deleted by the new loader
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
             assert cur.fetchone()[0] == 1
-            # ice cream loader won't touch a table it didn't import anything to
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet WHERE NOT deleted")
-            assert cur.fetchone()[0] == 2
+            assert cur.fetchone()[0] == 1
     finally:
         conn.close()
 
@@ -399,8 +398,8 @@ def test_reinstate_parking_features(parking_data, connection_string, main_db_par
         with conn.cursor() as cur:
             # ice cream point should be deleted by the new loader
             cur.execute(f"SELECT count(*) FROM kooste.osm_pisteet WHERE NOT deleted")
-            assert cur.fetchone()[0] == 3
+            assert cur.fetchone()[0] == 1
             cur.execute(f"SELECT count(*) FROM kooste.osm_alueet WHERE NOT deleted")
-            assert cur.fetchone()[0] == 2
+            assert cur.fetchone()[0] == 1
     finally:
         conn.close()

@@ -193,22 +193,8 @@ const possibleServiceCategories: Category[] = [
     category: "Leirintä ja majoitus",
   },
   {
-    name: "Kahvilat ja kioskit",
-    category: "Kahvilat ja kioskit",
-  },
-  {
     name: "Vessat",
     category: "Vessat",
-    zoomThreshold: 14,
-  },
-  {
-    name: "Roskikset",
-    category: "Roskikset",
-    zoomThreshold: 14,
-  },
-  {
-    name: "Penkit ja pöydät",
-    category: "Penkit ja pöydät",
     zoomThreshold: 14,
   },
   {
