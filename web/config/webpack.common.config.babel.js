@@ -6,7 +6,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const BABEL_CONFIG = {
   presets: ["@babel/env", "@babel/react", "@babel/preset-typescript"],
-  plugins: ["@babel/proposal-class-properties"],
+  plugins: ["@babel/plugin-transform-class-properties"],
 };
 
 module.exports = {
