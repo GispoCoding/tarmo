@@ -58,7 +58,9 @@ const WithDebounce: React.FC<Props> = ({
    * @param event react change event
    */
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debounceTimer && clearTimeout(debounceTimer);
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
 
     const newDebounceTimer = setTimeout(
       () => onChange(event),
