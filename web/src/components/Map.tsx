@@ -183,7 +183,6 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
       const url = value.url;
       let query = value.gqlQuery ? value.gqlQuery : "";
       const headers: HeadersInit = {
-        "User-Agent": "TARMO - Tampere Mobilemap",
         ...value.headers
       };
       if (bounds && query && zoom > value.zoomThreshold) {
