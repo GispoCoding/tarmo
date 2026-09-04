@@ -5,6 +5,7 @@ Revises: 73a4b14c26ab
 Create Date: 2026-03-20 17:58:56.648333
 
 """
+
 import os
 
 from alembic import op
