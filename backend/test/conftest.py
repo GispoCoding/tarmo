@@ -77,7 +77,7 @@ if os.environ.get("MANAGE_DOCKER", USE_DOCKER):
         def is_responsive(params):
             succeeds = False
             try:
-                with (psycopg2.connect(**root_db_params)):
+                with psycopg2.connect(**root_db_params):
                     succeeds = True
             except psycopg2.OperationalError:
                 pass
@@ -229,7 +229,7 @@ def wait_until_responsive(check, timeout, pause, clock=timeit.default_timer):
 def is_responsive(params):
     succeeds = False
     try:
-        with (psycopg2.connect(**params)):
+        with psycopg2.connect(**params):
             succeeds = True
     except psycopg2.OperationalError:
         pass
