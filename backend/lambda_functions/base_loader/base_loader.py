@@ -282,7 +282,11 @@ class BaseLoader:
             # lipas syncher is only used by lipas loader to update extra tables
             self.lipas_syncher.finish(session)
             deleted_items = self.syncher.finish(session)
-            # the data may be included in views that have to be updated
+            # Before updating materialized views, we have to commit the changes to
+            # the database. Materialized views are apparently updated in a separate
+            # transaction, so they will not see uncommitted data:
+            session.commit()
+            # Update materialized views that rely on the data:
             self.refresh_views(session)
             session.commit()
         msg = f"{succesful_actions} inserted or updated. {deleted_items} deleted."
