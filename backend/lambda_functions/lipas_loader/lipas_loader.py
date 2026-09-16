@@ -11,28 +11,15 @@ from shapely.geometry import (
     shape,
 )
 from shapely.geometry.base import BaseGeometry
-
-# mypy doesn't find types-python-slugify for reasons unknown :(
-from slugify import slugify  # type: ignore
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from .base_loader import (
-    LOGGER,
-    BaseLoader,
-    Event,
-    LipasBase,
-    Response,
-    Season,
-    base_handler,
-)
+from .base_loader import BaseLoader, Event, Response, Season, base_handler
 
 ID_FIELD = "lipas-id"
 
 
 class LipasLoader(BaseLoader):
-    METADATA_BASE = LipasBase
-    METADATA_TABLE_NAME = "metadata"
+    METADATA_TABLE_NAME = "lipas_metadata"
     PAGE_SIZE = 100
     SPORT_SITES = "sports-sites"
     POINT_TABLE_NAME = "lipas_pisteet"
@@ -51,7 +38,6 @@ class LipasLoader(BaseLoader):
         type_codes_summer: Optional[List[int]] = None,
         type_codes_winter: Optional[List[int]] = None,
         tarmo_category_by_code: Optional[Dict] = None,
-        city_codes: Optional[List[int]] = None,
         **kwargs,
     ) -> None:
         super().__init__(connection_string, **kwargs)
@@ -76,8 +62,6 @@ class LipasLoader(BaseLoader):
             if tarmo_category_by_code
             else self.metadata_row.tarmo_category_by_code
         )
-        # city_codes are National municipality codes.
-        self.city_codes = city_codes
         # the dict in the database is the other way around for easy update
         self.category_from_code = {}
         for category, code_list in self.tarmo_category_by_code.items():
@@ -121,9 +105,6 @@ class LipasLoader(BaseLoader):
         type_code = type_["type-code"]
         type_name_fi = search_meta.get("type", {}).get("name", {}).get("fi")
 
-        # Fall back, probably done need this
-        table_name = slugify(type_name_fi or str(type_code), separator="_")
-
         # location will be flattened for the kooste table
         location_data = {
             key: val for key, val in location.items() if key != "geometries"
@@ -152,6 +133,10 @@ class LipasLoader(BaseLoader):
         for feature in features:
             geometries.append(shape(feature["geometry"]))
 
+        # TODO: Currently we only use the first geometry. GeometryCollections would
+        # not require database changes. We don't know how common those actually are
+        # in Lipas data, as it depends on the input data.
+        # https://github.com/lipas-liikuntapaikat/lipas/blob/master/docs/api-v2.md#location-and-geometry
         if isinstance(geometries[0], Point):
             geom = MultiPoint(geometries)
         elif isinstance(geometries[0], LineString):
@@ -184,7 +169,6 @@ class LipasLoader(BaseLoader):
             **location_data,
             **type_data,
             "geom": geom.wkt,
-            "table": table_name,
             "season": season,
             "deleted": False,
             "tarmo_category": tarmo_category,
@@ -202,30 +186,6 @@ class LipasLoader(BaseLoader):
         return first + "".join(part.capitalize() for part in rest)
 
     def save_feature(self, sport_site: Dict[str, Any], session: Session) -> bool:
-        """
-        For now, we create extra lipas feature in a specific lipas table,
-        in addition to standard kooste feature.
-        """
-        try:
-            table_cls = getattr(LipasBase.classes, sport_site["table"])
-        except Exception:
-            print(
-                "Unsupported type:",
-                sport_site.get("type_typeCode"),
-                "table name:",
-                sport_site.get("table"),
-            )
-            return False
-        new_obj = self.create_feature_for_object(table_cls, sport_site)
-        self.lipas_syncher.mark(new_obj)
-        try:
-            session.merge(new_obj)
-        except SQLAlchemyError:
-            LOGGER.exception(
-                f"Error occurred while saving feature {sport_site['sportsPlaceId']}"
-            )
-
-        # move on to creating the standard kooste feature
         if sport_site["geom"].startswith("MULTILINE"):
             sport_site["table"] = self.LINESTRING_TABLE_NAME
         else:

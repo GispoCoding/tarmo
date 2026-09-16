@@ -45,7 +45,7 @@ resource "aws_cloudwatch_event_target" "lambda_lipas" {
   target_id = "${var.prefix}_load_lipas"
   rule      = aws_cloudwatch_event_rule.lambda_lipas.name
   arn       = aws_lambda_function.lipas_loader.arn
-  input     = "{\"close_to_lon\": 23.7634608, \"close_to_lat\": 61.4976505, \"radius\": 80}"
+  input     = "{\"city_codes\": [211, 418, 536, 562, 604, 837, 922, 980]}"
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_wfs" {

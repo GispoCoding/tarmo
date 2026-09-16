@@ -60,9 +60,9 @@ def migrate_db(create_db):
 
 
 @pytest.fixture()
-def populate_two_pages_of_lipas(create_db, main_db_params, lipas_loader_url):
+def populate_all_points_from_lipas(create_db, main_db_params, lipas_loader_url):
     payload = {
-        "pages": [1, 2],
+        "city_codes": [211, 418, 536, 562, 604, 837, 922, 980],
     }
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
     data = r.json()
@@ -91,9 +91,9 @@ def test_db_created(create_db, main_db_params_with_root_user):
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
+                "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('kooste') ORDER BY schema_name DESC"
             )
-            assert cur.fetchall() == [("lipas",), ("kooste",)]
+            assert cur.fetchall() == [("kooste",)]
 
             cur.execute(
                 "SELECT table_name FROM information_schema.tables WHERE table_name='alembic_version'"
@@ -109,9 +109,9 @@ def test_db_migrated(create_db, main_db_params_with_root_user):
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
+                "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('kooste') ORDER BY schema_name DESC"
             )
-            assert cur.fetchall() == [("lipas",), ("kooste",)]
+            assert cur.fetchall() == [("kooste",)]
 
             cur.execute(
                 "SELECT table_name FROM information_schema.tables WHERE table_name='alembic_version'"
@@ -121,7 +121,7 @@ def test_db_migrated(create_db, main_db_params_with_root_user):
         conn.close()
 
 
-def test_populate_lipas(populate_two_pages_of_lipas, main_db_params):
+def test_populate_lipas(populate_all_points_from_lipas, main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
@@ -131,7 +131,9 @@ def test_populate_lipas(populate_two_pages_of_lipas, main_db_params):
                 f"SELECT count(*) FROM kooste.{LipasLoader.LINESTRING_TABLE_NAME}"
             )
             line_count = cur.fetchone()[0]
-            assert point_count + line_count == 199 or 200
+            print(f"Points: {point_count}, Lines: {line_count}")
+            assert point_count > 900
+            assert line_count > 300
     finally:
         conn.close()
 

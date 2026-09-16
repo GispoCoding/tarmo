@@ -12,7 +12,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.automap import AutomapBase, automap_base
 from sqlalchemy.orm import Session, sessionmaker
 
-LipasBase = automap_base(metadata=MetaData(schema="lipas"))
 KoosteBase = automap_base(metadata=(MetaData(schema="kooste")))
 
 LOGGER = logging.getLogger()
@@ -35,6 +34,7 @@ class Event(TypedDict):
     close_to_lat: Optional[float]
     radius: Optional[float]
     bbox: Optional[float]
+    city_codes: Optional[List[int]]
 
 
 class Response(TypedDict):
@@ -151,14 +151,17 @@ class BaseLoader:
         bbox: Optional[tuple[tuple[float, float], tuple[float, float]]] = None,
         point_of_interest: Optional[Point] = None,
         point_radius: Optional[float] = None,
+        city_codes: Optional[List[int]] = None,
     ) -> None:
         """
         Due to transition to OSM Postpass API, we have to support both
         POI and radius *AND* bbox inputs to the loader.
+
+        Due to transition to v2 lipas API, we have to support also city
+        codes as an alternative input.
         """
         engine = create_engine(connection_string)
 
-        LipasBase.prepare(engine, reflect=True)
         KoosteBase.prepare(engine, reflect=True)
 
         self.Session = sessionmaker(bind=engine)
@@ -166,12 +169,11 @@ class BaseLoader:
         self.point_of_interest = point_of_interest
         self.point_radius = point_radius
         self.bbox = bbox
+        self.city_codes = city_codes
 
         if url:
             self.api_url = url
         with self.Session() as session:
-            # lipas syncher is only used by lipas loader to update extra tables
-            self.lipas_syncher = Syncher(LipasBase, session)
             self.syncher = Syncher(KoosteBase, session)
 
             # we want to support importers with multiple urls and metadata tables
@@ -229,9 +231,9 @@ class BaseLoader:
 
     def create_feature_for_object(
         self,
-        table_cls: Union[Type[LipasBase], Type[KoosteBase]],  # type: ignore
+        table_cls: Type[KoosteBase],  # type: ignore
         incoming: Dict[str, Any],  # type: ignore # noqa E501
-    ) -> Union[LipasBase, KoosteBase]:  # type: ignore
+    ) -> KoosteBase:  # type: ignore
         column_keys = set(table_cls.__table__.columns.keys())  # type: ignore
         vals = {
             key: incoming[key] for key in set(incoming.keys()).intersection(column_keys)
@@ -279,8 +281,6 @@ class BaseLoader:
 
             if not do_not_update_timestamp:
                 self.save_timestamp(session)
-            # lipas syncher is only used by lipas loader to update extra tables
-            self.lipas_syncher.finish(session)
             deleted_items = self.syncher.finish(session)
             # Before updating materialized views, we have to commit the changes to
             # the database. Materialized views are apparently updated in a separate
@@ -315,12 +315,14 @@ def base_handler(event: Event, loader_cls: type) -> Response:
         else None
     )
     bbox = event["bbox"] if "bbox" in event else None
+    city_codes = event["city_codes"] if "city_codes" in event else None
 
     loader = loader_cls(
         db_helper.get_connection_string(),
         point_of_interest=point,
         point_radius=event.get("radius", None),
         bbox=bbox,
+        city_codes=city_codes,
     )
     features = []
     LOGGER.info("Getting features...")
