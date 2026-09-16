@@ -5,13 +5,13 @@ import psycopg2
 
 def assert_database_is_alright(
     cur: psycopg2.extensions.cursor,
-    expected_kooste_count: int = 17,
+    expected_kooste_count: int = 18,
     expected_matview_count: int = 7,
 ):
     cur.execute(
-        "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('lipas', 'kooste') ORDER BY schema_name DESC"
+        "SELECT schema_name FROM information_schema.schemata WHERE schema_name IN ('kooste') ORDER BY schema_name DESC"
     )
-    assert cur.fetchall() == [("lipas",), ("kooste",)]
+    assert cur.fetchall() == [("kooste",)]
 
     cur.execute("SELECT rolname FROM pg_roles")
     assert set(os.environ.get("DB_USERS", "").split(",")).issubset(
@@ -145,7 +145,7 @@ def test_database_upgrade(main_db_params_with_root_user, tarmo_database_upgraded
     try:
         with conn.cursor() as cur:
             # we added an extra table
-            assert_database_is_alright(cur, expected_kooste_count=18)
+            assert_database_is_alright(cur, expected_kooste_count=19)
 
             cur.execute("SELECT version_num FROM alembic_version")
             assert cur.fetchall() == [(tarmo_database_upgraded,)]
