@@ -33,45 +33,65 @@ def metadata_set(main_db_params):
         conn.close()
 
 
-def test__sport_places_url(connection_string, metadata_set):
+def test__sport_sites_url(connection_string, metadata_set):
     loader = LipasLoader(
         connection_string,
         type_codes_all_year=[1],
         type_codes_summer=[2],
         type_codes_winter=[3],
     )
-    assert loader._sport_places_url_and_params(1) == (
-        "http://lipas.cc.jyu.fi/api/sports-places",
+    assert loader._sport_sites_url_and_params(1) == (
+        "https://api.lipas.fi/v2/sports-sites",
         {
-            "fields": "location.geometries",
             "page": 1,
-            "pageSize": 100,
-            "typeCodes": [1, 2, 3],
+            "page-size": 100,
+            "statuses": "active,out-of-service-temporarily",
+            "type-codes": "1,2,3",
         },
     )
 
 
-def test__sport_places_url_point_of_interest(connection_string, metadata_set):
+def test__sport_sites_url_city_codes(connection_string, metadata_set):
     loader = LipasLoader(
         connection_string,
         type_codes_all_year=[1],
         type_codes_summer=[2],
         type_codes_winter=[3],
-        point_of_interest=Point(1, 2),
-        point_radius=10,
+        city_codes=[837, 211, 418],
     )
-    assert loader._sport_places_url_and_params(1) == (
-        "http://lipas.cc.jyu.fi/api/sports-places",
+    assert loader._sport_sites_url_and_params(1) == (
+        "https://api.lipas.fi/v2/sports-sites",
         {
-            "closeToDistanceKm": 10,
-            "closeToLat": 2.0,
-            "closeToLon": 1.0,
-            "fields": "location.geometries",
             "page": 1,
-            "pageSize": 100,
-            "typeCodes": [1, 2, 3],
+            "page-size": 100,
+            "statuses": "active,out-of-service-temporarily",
+            "type-codes": "1,2,3",
+            "city-codes": "211,418,837",
         },
     )
+
+
+# def test__sport_places_url_point_of_interest(connection_string, metadata_set):
+# loader = LipasLoader(
+# connection_string,
+# type_codes_all_year=[1],
+# type_codes_summer=[2],
+# type_codes_winter=[3],
+# point_of_interest=Point(1, 2),
+# point_radius=10,
+# )
+# assert loader._sport_places_url_and_params(1) == (
+# "http://lipas.cc.jyu.fi/api/sports-places",
+# {
+# "closeToDistanceKm": 10,
+# "closeToLat": 2.0,
+# "closeToLon": 1.0,
+# "fields": "location.geometries",
+# "page": 1,
+# "pageSize": 100,
+# "typeCodes": [1, 2, 3],
+# },
+# )
 
 
 def test_get_sport_place_point(loader):
@@ -82,10 +102,10 @@ def test_get_sport_place_point(loader):
     assert sport_place["tarmo_category"] == "Luistelu"
     assert sport_place["name"] == "Kangaslammin koulun luistelukenttä"
     assert sport_place["address"] == "Pajukatu 1"
-    assert sport_place["postalCode"] == "74130"
-    assert sport_place["postalOffice"] == "Iisalmi"
+    assert sport_place["postal-code"] == "74130"
+    assert sport_place["postal-office"] == "Iisalmi"
     assert sport_place["cityName"] == "Iisalmi"
-    assert sport_place["infoFi"]
+    assert sport_place["sportsPlaceId"] == 76249
     assert sport_place["changingRooms"] == True
     assert sport_place["toilet"] == True
     assert sport_place["ligthing"] == True
@@ -214,12 +234,11 @@ def assert_data_is_imported(main_db_params):
         conn.close()
 
 
-# TODO: Fix with Lipas v2.0
-# def test_save_lipas_features(loader, main_db_params):
-#     loader.save_features(
-#         [76249, 603279, 528808, 73043, 92112, 500285, 72948, 72944, 510087]
-#     )
-#     assert_data_is_imported(main_db_params)
+def test_save_lipas_features(loader, main_db_params):
+    loader.save_features(
+        [76249, 603279, 528808, 73043, 92112, 500285, 72948, 72944, 510087]
+    )
+    assert_data_is_imported(main_db_params)
 
 
 # TODO: Fix with Lipas v2.0
