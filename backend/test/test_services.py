@@ -60,9 +60,10 @@ def migrate_db(create_db):
 
 
 @pytest.fixture()
-def populate_all_points_from_lipas(create_db, main_db_params, lipas_loader_url):
+def populate_tampere_from_lipas(create_db, main_db_params, lipas_loader_url):
+    # Only test Tampere. All lipas data is too slow to load in CI.
     payload = {
-        "city_codes": [211, 418, 536, 562, 604, 837, 922, 980],
+        "city_codes": [837],
     }
     r = requests.post(lipas_loader_url, data=json.dumps(payload))
     data = r.json()
@@ -121,7 +122,7 @@ def test_db_migrated(create_db, main_db_params_with_root_user):
         conn.close()
 
 
-def test_populate_lipas(populate_all_points_from_lipas, main_db_params):
+def test_populate_tampere_from_lipas(populate_tampere_from_lipas, main_db_params):
     conn = psycopg2.connect(**main_db_params)
     try:
         with conn.cursor() as cur:
@@ -132,8 +133,8 @@ def test_populate_lipas(populate_all_points_from_lipas, main_db_params):
             )
             line_count = cur.fetchone()[0]
             print(f"Points: {point_count}, Lines: {line_count}")
-            assert point_count > 900
-            assert line_count > 300
+            assert point_count > 400
+            assert line_count > 50
     finally:
         conn.close()
 
