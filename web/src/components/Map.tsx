@@ -406,326 +406,335 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
 
   const categoryFilter = mapFiltersContext.getCategoryFilter();
 
+  // Do not create the map before the basemap style has loaded. Otherwise our
+  // sources are added to a placeholder style, which is then replaced while
+  // their TileJSON requests are pending. MapLibre 2.x does not cancel those
+  // requests and crashes in VectorTileSource.load (sourceCaches[id] undefined).
+  // The splash screen stays open until then.
   return (
-    <MapGL
-      ref={mapReference as Ref<MapRef>}
-      initialViewState={{
-        latitude: 61.498,
-        longitude: 23.7747,
-        zoom: zoom,
-        bearing: 0,
-        pitch: 0,
-      }}
-      style={{ width: "100vw", height: "100vh" }}
-      mapLib={maplibregl}
-      mapStyle={mapStyle}
-      onLoad={() => setMapLoaded(true)}
-      onResize={toggleNav}
-      styleDiffing={false}
-    >
-      {/* Area polygons */}
-      <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
-        <Layer {...{ ...OSM_AREA_STYLE, filter: categoryFilter }} />
-      </Source>
-      <Source id={LayerId.MuseovirastoArea} {...MUSEOVIRASTO_AREA_SOURCE}>
-        <Layer {...{ ...MUSEOVIRASTO_AREA_STYLE, filter: categoryFilter }} />
-      </Source>
-      <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
-        <Layer {...SYKE_NATURA_STYLE} />
-      </Source>
-      <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
-        <Layer {...SYKE_VALTION_STYLE} />
-      </Source>
-
-      {/* Linestrings */}
-      <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
-        <Layer {...{ ...LIPAS_LINE_STYLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            }, }} />
-      </Source>
-
-      {/* Dynamic search layer*/}
-      <Source
-        id={LayerId.SearchPoint}
-        {...{
-          ...SEARCH_POINT_SOURCE,
-          tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
-        }}
-      >
-        <Layer
-          {...{
-            ...SEARCH_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "none" : "visible",
-            },
+    <>
+      <SplashScreen ready={!!mapStyle} />
+      {mapStyle && (
+        <MapGL
+          ref={mapReference as Ref<MapRef>}
+          initialViewState={{
+            latitude: 61.498,
+            longitude: 23.7747,
+            zoom: zoom,
+            bearing: 0,
+            pitch: 0,
           }}
-        />
-        <Layer
-          {...{
-            ...SEARCH_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(SEARCH_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "none" : "visible",
-            },
-          }}
-        />
-      </Source>
-      <Source
-        id={LayerId.SearchLine}
-        {...{
-          ...SEARCH_LINE_SOURCE,
-          tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
-        }}
-      >
-        <Layer
-          {...{
-            ...SEARCH_LINE_STYLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "none" : "visible",
-            },
-          }}
-        />
-      </Source>
-
-      {/* Clusters below zoom level 14 */}
-      <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_8_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_8_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_8_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.PointCluster9} {...POINT_CLUSTER_9_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_9_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_9_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_9_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.PointCluster10} {...POINT_CLUSTER_10_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_10_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_10_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_10_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.PointCluster11} {...POINT_CLUSTER_11_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_11_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_11_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_11_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.PointCluster12} {...POINT_CLUSTER_12_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_12_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_12_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_12_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-      <Source id={LayerId.PointCluster13} {...POINT_CLUSTER_13_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_CLUSTER_13_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_CLUSTER_13_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_CLUSTER_13_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-
-      {/* Points at zoom level 14 and above */}
-      <Source id={LayerId.Point} {...POINT_SOURCE}>
-        <Layer
-          {...{
-            ...POINT_STYLE_CIRCLE,
-            filter: categoryFilter,
-            layout: {
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-        <Layer
-          {...{
-            ...POINT_STYLE_SYMBOL,
-            filter: categoryFilter,
-            layout: {
-              ...(POINT_STYLE_SYMBOL as SymbolLayer).layout,
-              visibility: searchString === "" ? "visible" : "none",
-            },
-          }}
-        />
-      </Source>
-
-      {/* External data layers */}
-      {externalData &&
-        externalData.get(LayerId.DigiTransitPoint) &&
-        // eslint-disable-next-line
-        zoom > (externalSources.get(LayerId.DigiTransitPoint)?.zoomThreshold ?? Infinity) && (
-          <Source
-            id={LayerId.DigiTransitPoint}
-            type="geojson"
-            data={externalData.get(LayerId.DigiTransitPoint)}
-          >
-            <Layer
-              {...{
-                ...DIGITRANSIT_POINT_STYLE,
-                layout: {
-                  ...(DIGITRANSIT_POINT_STYLE as SymbolLayer).layout,
-                  visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
-                },
-              }}
-            />
+          style={{ width: "100vw", height: "100vh" }}
+          mapLib={maplibregl}
+          mapStyle={mapStyle}
+          onLoad={() => setMapLoaded(true)}
+          onResize={toggleNav}
+          styleDiffing={false}
+        >
+          {/* Area polygons */}
+          <Source id={LayerId.OsmArea} {...OSM_AREA_SOURCE}>
+            <Layer {...{ ...OSM_AREA_STYLE, filter: categoryFilter }} />
           </Source>
-        )}
-      {externalData &&
-        externalData.get(LayerId.DigiTransitBikePoint) &&
-        // eslint-disable-next-line
-        zoom >
-          (externalSources.get(LayerId.DigiTransitBikePoint)?.zoomThreshold ?? Infinity) && (
-          <Source
-            id={LayerId.DigiTransitBikePoint}
-            type="geojson"
-            data={externalData.get(LayerId.DigiTransitBikePoint)}
-          >
-            <Layer
-              {...{
-                ...DIGITRANSIT_BIKE_POINT_STYLE,
-                layout: {
-                  ...(DIGITRANSIT_BIKE_POINT_STYLE as SymbolLayer).layout,
-                  visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
-                },
-              }}
-            />
+          <Source id={LayerId.MuseovirastoArea} {...MUSEOVIRASTO_AREA_SOURCE}>
+            <Layer {...{ ...MUSEOVIRASTO_AREA_STYLE, filter: categoryFilter }} />
           </Source>
-        )}
+          <Source id={LayerId.SykeNatura} {...SYKE_NATURA_SOURCE}>
+            <Layer {...SYKE_NATURA_STYLE} />
+          </Source>
+          <Source id={LayerId.SykeValtion} {...SYKE_VALTION_SOURCE}>
+            <Layer {...SYKE_VALTION_STYLE} />
+          </Source>
 
-      {/* Map labels */}
-      <Layer {...NLS_LABEL_STYLE} />
-      <Layer {...NLS_KUNNAT_LABEL_STYLE} />
-      <Layer {...NLS_MAASTO_VEDET_LABEL_STYLE} />
-      <Layer {...NLS_LUONNONPUISTOT_LABEL_STYLE} />
-      <Layer {...NLS_TIET_LABEL_STYLE} />
+          {/* Linestrings */}
+          <Source id={LayerId.LipasLine} {...LIPAS_LINE_SOURCE}>
+            <Layer {...{ ...LIPAS_LINE_STYLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                }, }} />
+          </Source>
 
-      <SearchMenu
-        searchString={searchString}
-        searchPoints={searchPoints}
-        searchLines={searchLines}
-        stringSetter={setSearchString}
-        selectedSetter={setSelected}
-      />
-      <FullscreenControl />
-      {mapLoaded && (
-        <ScaleControl
-          unit="metric"
-          maxWidth={200}
-          style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
-        />
-      )}
-      {showNav && (
-        <>
-          <LayerPicker setter={setLayer} />
-          <InfoButton />
-          <NavigationControl />
-          <GeolocateControl
-            trackUserLocation={true}
-            positionOptions={{
-              enableHighAccuracy: true,
-              timeout:6000,
-              maximumAge:1000,
+          {/* Dynamic search layer*/}
+          <Source
+            id={LayerId.SearchPoint}
+            {...{
+              ...SEARCH_POINT_SOURCE,
+              tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
             }}
+          >
+            <Layer
+              {...{
+                ...SEARCH_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "none" : "visible",
+                },
+              }}
             />
-          <LayerFilter zoom={zoom}/>
-        </>
+            <Layer
+              {...{
+                ...SEARCH_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(SEARCH_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "none" : "visible",
+                },
+              }}
+            />
+          </Source>
+          <Source
+            id={LayerId.SearchLine}
+            {...{
+              ...SEARCH_LINE_SOURCE,
+              tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
+            }}
+          >
+            <Layer
+              {...{
+                ...SEARCH_LINE_STYLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "none" : "visible",
+                },
+              }}
+            />
+          </Source>
+
+          {/* Clusters below zoom level 14 */}
+          <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_8_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_8_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_8_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+          <Source id={LayerId.PointCluster9} {...POINT_CLUSTER_9_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_9_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_9_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_9_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+          <Source id={LayerId.PointCluster10} {...POINT_CLUSTER_10_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_10_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_10_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_10_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+          <Source id={LayerId.PointCluster11} {...POINT_CLUSTER_11_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_11_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_11_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_11_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+          <Source id={LayerId.PointCluster12} {...POINT_CLUSTER_12_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_12_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_12_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_12_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+          <Source id={LayerId.PointCluster13} {...POINT_CLUSTER_13_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_CLUSTER_13_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_CLUSTER_13_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_CLUSTER_13_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+
+          {/* Points at zoom level 14 and above */}
+          <Source id={LayerId.Point} {...POINT_SOURCE}>
+            <Layer
+              {...{
+                ...POINT_STYLE_CIRCLE,
+                filter: categoryFilter,
+                layout: {
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+            <Layer
+              {...{
+                ...POINT_STYLE_SYMBOL,
+                filter: categoryFilter,
+                layout: {
+                  ...(POINT_STYLE_SYMBOL as SymbolLayer).layout,
+                  visibility: searchString === "" ? "visible" : "none",
+                },
+              }}
+            />
+          </Source>
+
+          {/* External data layers */}
+          {externalData &&
+            externalData.get(LayerId.DigiTransitPoint) &&
+            // eslint-disable-next-line
+            zoom > (externalSources.get(LayerId.DigiTransitPoint)?.zoomThreshold ?? Infinity) && (
+              <Source
+                id={LayerId.DigiTransitPoint}
+                type="geojson"
+                data={externalData.get(LayerId.DigiTransitPoint)}
+              >
+                <Layer
+                  {...{
+                    ...DIGITRANSIT_POINT_STYLE,
+                    layout: {
+                      ...(DIGITRANSIT_POINT_STYLE as SymbolLayer).layout,
+                      visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
+                    },
+                  }}
+                />
+              </Source>
+            )}
+          {externalData &&
+            externalData.get(LayerId.DigiTransitBikePoint) &&
+            // eslint-disable-next-line
+            zoom >
+              (externalSources.get(LayerId.DigiTransitBikePoint)?.zoomThreshold ?? Infinity) && (
+              <Source
+                id={LayerId.DigiTransitBikePoint}
+                type="geojson"
+                data={externalData.get(LayerId.DigiTransitBikePoint)}
+              >
+                <Layer
+                  {...{
+                    ...DIGITRANSIT_BIKE_POINT_STYLE,
+                    layout: {
+                      ...(DIGITRANSIT_BIKE_POINT_STYLE as SymbolLayer).layout,
+                      visibility: mapFiltersContext.getVisibilityValue("Pysäkit"),
+                    },
+                  }}
+                />
+              </Source>
+            )}
+
+          {/* Map labels */}
+          <Layer {...NLS_LABEL_STYLE} />
+          <Layer {...NLS_KUNNAT_LABEL_STYLE} />
+          <Layer {...NLS_MAASTO_VEDET_LABEL_STYLE} />
+          <Layer {...NLS_LUONNONPUISTOT_LABEL_STYLE} />
+          <Layer {...NLS_TIET_LABEL_STYLE} />
+
+          <SearchMenu
+            searchString={searchString}
+            searchPoints={searchPoints}
+            searchLines={searchLines}
+            stringSetter={setSearchString}
+            selectedSetter={setSelected}
+          />
+          <FullscreenControl />
+          {mapLoaded && (
+            <ScaleControl
+              unit="metric"
+              maxWidth={200}
+              style={{ borderRadius: "0px", backgroundColor: "#ffffff20" }}
+            />
+          )}
+          {showNav && (
+            <>
+              <LayerPicker setter={setLayer} />
+              <InfoButton />
+              <NavigationControl />
+              <GeolocateControl
+                trackUserLocation={true}
+                positionOptions={{
+                  enableHighAccuracy: true,
+                  timeout:6000,
+                  maximumAge:1000,
+                }}
+                />
+              <LayerFilter zoom={zoom}/>
+            </>
+          )}
+          <SetupDialog zoom={zoom} />
+        </MapGL>
       )}
-      <SplashScreen />
-      <SetupDialog zoom={zoom} />
-    </MapGL>
+    </>
   );
 }

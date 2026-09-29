@@ -3,80 +3,85 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import shadows from "../theme/shadows";
 
-export default function SplashScreen() {
-  const [showSplash, setShowSplash] = useState(true);
+interface SplashScreenProps {
+  // Keep the splash screen open until this is true
+  ready: boolean;
+}
 
-  /**
-   * Styled  container
-   */
-  const Container = styled(Box)(() => ({
-    position: "absolute",
-    height: "100vh",
-    width: "100vw",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    zIndex: 5000,
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0
-  }));
+/**
+ * Styled  container
+ */
+const Container = styled(Box)(() => ({
+  position: "absolute",
+  height: "100vh",
+  width: "100vw",
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
+  zIndex: 5000,
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0
+}));
 
-  /**
-   * Styled overlay
-   */
-  const Overlay = styled(Box)(() => ({
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  }));
+/**
+ * Styled overlay
+ */
+const Overlay = styled(Box)(() => ({
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  backgroundColor: "rgba(0,0,0,0.5)",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+}));
 
-  /**
-   * Styled  hero header
-   */
-  const HeroHeader = styled(Box)(({theme}) => ({
-    "textAlign": "center",
-    "textShadow": shadows[10],
-    "& h1": {
-      fontSize: "18px",
-      color: "#fbfbfb",
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      [theme.breakpoints.up("sm")]: {
-        fontSize: "2em",
-      },
-      [theme.breakpoints.up("md")]: {
-        fontSize: "3em",
-      },
+/**
+ * Styled  hero header
+ */
+const HeroHeader = styled(Box)(({theme}) => ({
+  "textAlign": "center",
+  "textShadow": shadows[10],
+  "& h1": {
+    fontSize: "18px",
+    color: "#fbfbfb",
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "2em",
     },
-  }));
-
-  /**
-   * Styled copyright container
-   */
-  const Copyright = styled(Box)(({ theme }) => ({
-    position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: theme.spacing(2),
-    bottom: 0,
-    right: 0,
-    left: 0,
     [theme.breakpoints.up("md")]: {
-      flexDirection: "row",
-      justifyContent: "space-between",
+      fontSize: "3em",
     },
-  }));
+  },
+}));
+
+/**
+ * Styled copyright container
+ */
+const Copyright = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: theme.spacing(2),
+  bottom: 0,
+  right: 0,
+  left: 0,
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+}));
+
+export default function SplashScreen({ ready }: SplashScreenProps) {
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
   /**
    * Render background image based on time of year
@@ -110,7 +115,7 @@ export default function SplashScreen() {
   useEffect(() => {
     const timer = setTimeout(
       () => {
-        setShowSplash(false);
+        setMinTimeElapsed(true);
       },
       process.env.SPLASH_MS ? +process.env.SPLASH_MS : 3000
     );
@@ -118,7 +123,7 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <Fade in={showSplash}>
+    <Fade in={!minTimeElapsed || !ready}>
       <Container style={{ backgroundImage: src }}>
         <Overlay>
           <HeroHeader>
