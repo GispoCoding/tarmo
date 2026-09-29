@@ -3,7 +3,11 @@
 import { describe, expect, it } from "@jest/globals";
 import { GeoJsonProperties } from "geojson";
 import { LayerId } from "../src/components/style";
-import { getFeatureId, getFeaturePath } from "../src/utils/featureId";
+import {
+  getFeatureId,
+  getFeaturePath,
+  parseFeaturePath,
+} from "../src/utils/featureId";
 
 const popup = (layerId: LayerId, properties: GeoJsonProperties) => ({
   layerId,
@@ -63,5 +67,31 @@ describe("getFeaturePath", () => {
     ).toBe("/lipas_pisteet-123");
     expect(getFeaturePath(popup(LayerId.PointCluster8, { size: 2 }))).toBe("/");
     expect(getFeaturePath(null)).toBe("/");
+  });
+});
+
+describe("parseFeaturePath", () => {
+  it("returns the feature id in the path", () => {
+    expect(parseFeaturePath("/lipas_pisteet-123")).toBe("lipas_pisteet-123");
+    expect(parseFeaturePath("/osm_alueet-way-99889700")).toBe(
+      "osm_alueet-way-99889700"
+    );
+    expect(parseFeaturePath("/lipas_viivat-789")).toBe("lipas_viivat-789");
+  });
+
+  it("returns the same id that the path was created from", () => {
+    const featureId = "osm_pisteet-node-10047309749";
+    expect(
+      parseFeaturePath(getFeaturePath(popup(LayerId.Point, { id: featureId })))
+    ).toBe(featureId);
+  });
+
+  it("returns null for paths without a valid feature id", () => {
+    expect(parseFeaturePath("/")).toBeNull();
+    expect(parseFeaturePath("/index.html")).toBeNull();
+    expect(parseFeaturePath("/lipas_pisteet")).toBeNull();
+    expect(parseFeaturePath("/lipas_viivat-abc")).toBeNull();
+    expect(parseFeaturePath("/lipas_pisteet-1'%20OR%20'1'='1")).toBeNull();
+    expect(parseFeaturePath("/%E0%A4%A")).toBeNull();
   });
 });

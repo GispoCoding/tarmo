@@ -8,5 +8,7 @@ module.exports = {
     port: 3000,
     open: true,
     hot: true,
+    // serve index.html for feature paths such as /lipas_pisteet-123
+    historyApiFallback: true,
   },
 };

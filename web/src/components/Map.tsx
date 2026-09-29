@@ -66,10 +66,19 @@ import {
   NLS_MAASTO_VEDET_LABEL_STYLE,
   NLS_LUONNONPUISTOT_LABEL_STYLE,
   NLS_TIET_LABEL_STYLE,
+  LINKED_FEATURE_ID,
+  getLinkedFeatureSource,
+  getLinkedFeatureSourceLayer,
+  getLinkedFeatureStyle,
 } from "./style";
 import maplibregl from "maplibre-gl";
 import { PopupInfo, ExternalSource, Bbox } from "../types";
-import { LngLat, MapboxGeoJSONFeature, Style } from "mapbox-gl";
+import {
+  LngLat,
+  MapboxGeoJSONFeature,
+  MapSourceDataEvent,
+  Style,
+} from "mapbox-gl";
 import SearchMenu from "./SearchMenu";
 import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
@@ -82,9 +91,14 @@ import SplashScreen from "./SplashScreen";
 
 interface TarmoMapProps {
   setPopupInfo: (popupInfo: PopupInfo | null) => void;
+  // Feature to find and show, e.g. when opening a link to the feature
+  linkedFeatureId: string | null;
 }
 
-export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Element {
+export default function TarmoMap({
+  setPopupInfo,
+  linkedFeatureId,
+}: TarmoMapProps): React.JSX.Element {
   const mapFiltersContext = useContext(MapFiltersContext);
   const [mapStyle, setMapStyle] = useState<Style | undefined>(undefined);
   const [showNav, setShowNav] = useState(true);
@@ -226,15 +240,11 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
     ]
   }
 
-  // Another way of implementing this would be to zoom in when selected, and
-  // then looking for the corresponding id in the all_points or lines layer?
-  useEffect(() => {
-    if (selected) {
-      // the user may select a point *or* a line
-      const feature = searchPoints.get(selected) || searchLines.get(selected);
-      if (!feature) {
-        return;
-      }
+  /**
+   * Fly to a point or line from all_points or lipas_viivat and show its info
+   */
+  const showFeature = useCallback(
+    (feature: MapboxGeoJSONFeature, zoom?: number) => {
       let coords: Position | undefined
       let layerId: LayerId | undefined
       if (feature.geometry.type == "Point") {
@@ -255,7 +265,7 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
         if (!map) {
           return;
         }
-        map.flyTo({ center: coords as [number, number], speed: 0.9 });
+        map.flyTo({ center: coords as [number, number], zoom, speed: 0.9 });
         setPopupInfo({
           layerId: layerId,
           properties: feature.properties,
@@ -264,8 +274,51 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
           onClose: () => setPopupInfo(null),
         });
       }
+    },
+    [setPopupInfo]
+  );
+
+  // Another way of implementing this would be to zoom in when selected, and
+  // then looking for the corresponding id in the all_points or lines layer?
+  useEffect(() => {
+    if (selected) {
+      // the user may select a point *or* a line
+      const feature = searchPoints.get(selected) || searchLines.get(selected);
+      if (feature) {
+        showFeature(feature);
+      }
     }
-  }, [selected, searchLines, searchPoints, setPopupInfo]);
+  }, [selected, searchLines, searchPoints, showFeature]);
+
+  /**
+   * Show the linked feature once its tile has loaded
+   */
+  useEffect(() => {
+    const map = actualMapRef.current;
+    if (!mapLoaded || !linkedFeatureId || !map) {
+      return;
+    }
+    const onSourceData = (ev: MapSourceDataEvent) => {
+      // Only react to the tile load. The source also fires events before
+      // the tile is requested.
+      if (ev.sourceId !== LINKED_FEATURE_ID || !ev.tile || !ev.isSourceLoaded) {
+        return;
+      }
+      const feature = map.querySourceFeatures(LINKED_FEATURE_ID, {
+        sourceLayer: getLinkedFeatureSourceLayer(linkedFeatureId),
+      })[0];
+      if (feature) {
+        showFeature(feature, 14);
+      } else {
+        // the feature does not exist (anymore)
+        setPopupInfo(null);
+      }
+    };
+    map.on("sourcedata", onSourceData);
+    return () => {
+      map.off("sourcedata", onSourceData);
+    };
+  }, [mapLoaded, linkedFeatureId, showFeature, setPopupInfo]);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -499,6 +552,16 @@ export default function TarmoMap({ setPopupInfo }: TarmoMapProps): React.JSX.Ele
               }}
             />
           </Source>
+
+          {/* Invisible layer for finding the linked feature */}
+          {mapLoaded && linkedFeatureId && (
+            <Source
+              id={LINKED_FEATURE_ID}
+              {...getLinkedFeatureSource(linkedFeatureId)}
+            >
+              <Layer {...getLinkedFeatureStyle(linkedFeatureId)} />
+            </Source>
+          )}
 
           {/* Clusters below zoom level 14 */}
           <Source id={LayerId.PointCluster8} {...POINT_CLUSTER_8_SOURCE}>
