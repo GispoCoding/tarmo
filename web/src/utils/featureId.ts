@@ -50,6 +50,35 @@ export const getFeatureId = ({
 };
 
 /**
+ * Get the feature id from a browser path such as "/lipas_pisteet-123".
+ *
+ * The id ends up in a tile server filter, so only allow the characters used
+ * in feature ids.
+ *
+ * @param pathname Browser path
+ * @returns feature id, or null if the path does not contain a valid feature id
+ */
+export const parseFeaturePath = (pathname: string): string | null => {
+  let featureId: string;
+  try {
+    featureId = decodeURIComponent(pathname.slice(1));
+  } catch {
+    return null;
+  }
+  if (!/^[a-z_]+-[\w-]+$/.test(featureId)) {
+    return null;
+  }
+  // line ids are numeric
+  if (
+    featureId.startsWith("lipas_viivat-") &&
+    !/^lipas_viivat-\d+$/.test(featureId)
+  ) {
+    return null;
+  }
+  return featureId;
+};
+
+/**
  * Get the browser path for the feature shown in the info panel.
  *
  * @param popupInfo Info of the clicked feature, or null if the panel is closed

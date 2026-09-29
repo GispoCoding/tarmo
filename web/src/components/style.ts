@@ -514,6 +514,42 @@ export const SEARCH_LINE_STYLE: LayerProps = {
 };
 
 /**
+ * Layer for finding a single feature by its id, e.g. when opening a link to the
+ * feature. The area is split between two tiles at zoom level 6, so use zoom level
+ * 4 where a single tile covers the whole area regardless of the map view. The
+ * high tile resolution keeps short lines in the tile and makes the coordinates
+ * accurate to a couple of meters.
+ */
+export const LINKED_FEATURE_ID = "linked-feature";
+
+export const getLinkedFeatureSourceLayer = (featureId: string) =>
+  featureId.startsWith("lipas_viivat-") ? "kooste.lipas_viivat" : "kooste.all_points";
+
+export const getLinkedFeatureSource = (featureId: string): VectorSource => {
+  // lines are not in all_points, so they must be found by their own id column
+  const idFilter = featureId.startsWith("lipas_viivat-")
+    ? `sportsPlaceId%20%3D%20${featureId.split("-")[1]}`
+    : `id%20%3D%20'${featureId}'`;
+  return {
+    type: "vector",
+    tiles: [
+      `${process.env.TILESERVER_URL}/${getLinkedFeatureSourceLayer(featureId)}/{z}/{x}/{y}.pbf?resolution=262144&filter=${cityFilterParam}%20AND%20${idFilter}`,
+    ],
+    minzoom: 0,
+    maxzoom: 4,
+  };
+};
+
+// Tiles are only loaded for visible layers, so the feature is drawn transparent
+export const getLinkedFeatureStyle = (featureId: string): LayerProps => ({
+  "id": LINKED_FEATURE_ID,
+  "source": LINKED_FEATURE_ID,
+  "source-layer": getLinkedFeatureSourceLayer(featureId),
+  "type": "circle",
+  "paint": { "circle-opacity": 0 },
+});
+
+/**
  * Point cluster layers at zoom levels below 14
  */
 const CLUSTER_CIRCLE_PAINT: CirclePaint = {
