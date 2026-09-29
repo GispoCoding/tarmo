@@ -93,6 +93,15 @@ export default function SearchMenu(props: SearchMenuProps) {
   };
 
   /**
+   * Search panel close handler, also clears the search input
+   * @param event
+   */
+  const handleClose = (event: React.KeyboardEvent | React.MouseEvent) => {
+    toggleDrawer(false)(event);
+    handleClear();
+  };
+
+  /**
    * Search result click handler
    * @param result
    * @param index
@@ -188,7 +197,7 @@ export default function SearchMenu(props: SearchMenuProps) {
         }}
         anchor="right"
         variant={mobile ? "temporary" : "persistent"}
-        onClose={toggleDrawer(false)}
+        onClose={handleClose}
         onOpen={toggleDrawer(true)}
         open={showSearch}
         PaperProps={{
@@ -199,11 +208,7 @@ export default function SearchMenu(props: SearchMenuProps) {
           },
         }}
       >
-        <RightSidePanel
-          title="Haku"
-          onClose={toggleDrawer(false)}
-          disablePadding
-        >
+        <RightSidePanel title="Haku" onClose={handleClose} disablePadding>
           <Box pl={3} pr={3}>
             <WithDebounce
               debounceTimeout={1000}
