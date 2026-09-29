@@ -91,6 +91,23 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
+  # Serve the React app for feature paths such as /lipas_pisteet-123. S3 returns
+  # 403 instead of 404 for missing files, because CloudFront may not list the bucket.
+  # Don't cache the responses to always get the newest index.html, like above.
+  custom_error_response {
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = 0
+  }
+
+  custom_error_response {
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = 0
+  }
+
 
   price_class = "PriceClass_100"
 
