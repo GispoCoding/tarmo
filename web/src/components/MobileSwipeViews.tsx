@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 const sliderMobileHeight = 220;
@@ -10,6 +10,72 @@ const SwipeViewport = styled(Box)({
   touchAction: "pan-y",
   width: "100%",
 });
+
+// Fade out the bottom edge of a slide that can be scrolled further down
+const scrollFadeHeight = 40;
+const scrollFadeMask = `linear-gradient(to bottom, black calc(100% - ${scrollFadeHeight}px), transparent)`;
+
+interface ScrollSlideProps {
+  width: string;
+  children: React.ReactNode;
+}
+
+/**
+ * Slide that scrolls vertically if its content does not fit, and fades out
+ * at the bottom edge to show that there is more content below
+ */
+function ScrollSlide({ width, children }: ScrollSlideProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [canScrollDown, setCanScrollDown] = useState(false);
+
+  const updateCanScrollDown = useCallback(() => {
+    const element = ref.current;
+    if (element) {
+      setCanScrollDown(
+        element.scrollHeight - element.scrollTop - element.clientHeight > 1
+      );
+    }
+  }, []);
+
+  /**
+   * Update the fade when the slide or its content changes size
+   */
+  useEffect(() => {
+    const element = ref.current;
+    updateCanScrollDown();
+    if (!element || typeof ResizeObserver === "undefined") {
+      return;
+    }
+    const observer = new ResizeObserver(updateCanScrollDown);
+    observer.observe(element);
+    Array.from(element.children).forEach(child => observer.observe(child));
+    return () => observer.disconnect();
+  }, [children, updateCanScrollDown]);
+
+  return (
+    <Box
+      ref={ref}
+      maxHeight={sliderMobileHeight}
+      p={3}
+      onScroll={updateCanScrollDown}
+      sx={{
+        flex: `0 0 ${width}`,
+        minWidth: 0,
+        // scroll slides that don't fit, e.g. contact info with many buttons
+        overflowY: "auto",
+        overscrollBehavior: "contain",
+        touchAction: "pan-y",
+      }}
+      style={
+        canScrollDown
+          ? { maskImage: scrollFadeMask, WebkitMaskImage: scrollFadeMask }
+          : undefined
+      }
+    >
+      {children}
+    </Box>
+  );
+}
 
 interface MobileSwipeViewsProps {
   direction: "ltr" | "rtl";
@@ -33,7 +99,11 @@ export default function MobileSwipeViews({
   };
 
   const handlers = useSwipeable({
-    onSwiping: ({ deltaX }) => {
+    onSwiping: ({ deltaX, dir }) => {
+      // vertical swipes scroll the slide
+      if (dir === "Up" || dir === "Down") {
+        return;
+      }
       const atBoundary =
         (deltaX > 0 &&
           ((direction === "ltr" && index === 0) ||
@@ -55,7 +125,8 @@ export default function MobileSwipeViews({
         changeIndex(direction === "rtl" ? 1 : -1);
       }
     },
-    preventScrollOnSwipe: true,
+    // Don't prevent scrolling, so that long slides can be scrolled vertically.
+    // touch-action: pan-y already keeps the page from moving on horizontal swipes.
     trackMouse: true,
   });
 
@@ -76,14 +147,9 @@ export default function MobileSwipeViews({
         }}
       >
         {slides.map((slide, slideIndex) => (
-          <Box
-            key={slideIndex}
-            maxHeight={sliderMobileHeight}
-            p={3}
-            sx={{ flex: `0 0 ${slideWidth}%`, minWidth: 0 }}
-          >
+          <ScrollSlide key={slideIndex} width={`${slideWidth}%`}>
             {slide}
-          </Box>
+          </ScrollSlide>
         ))}
       </Box>
     </SwipeViewport>

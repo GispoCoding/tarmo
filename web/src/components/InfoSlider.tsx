@@ -3,6 +3,8 @@ import {
   ArrowBackRounded,
   ArrowForwardRounded,
   ChairOutlined,
+  CheckRounded,
+  ContentCopyOutlined,
   EmailOutlined,
   ExpandLess,
   ExpandMore,
@@ -39,6 +41,7 @@ import palette from "../theme/palette";
 import shadows from "../theme/shadows";
 import { DataSource, gqlPattern, PopupInfo } from "../types";
 import { compareParts, getCategoryIcon, getCategoryPlural } from "../utils/utils";
+import { getFeaturePath } from "../utils/featureId";
 import { useElementSize } from "../utils/UseElementSize";
 import PropertyListItem from "./PropertyListItem";
 import MobileSwipeViews from "./MobileSwipeViews";
@@ -108,6 +111,7 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   const { ref, height } = useElementSize();
   const [activeSlide, setActiveSlide] = useState(0);
   const [open, setOpen] = useState(true);
+  const [linkCopied, setLinkCopied] = useState(false);
   const mobile = useMediaQuery(theme.breakpoints.down("md"));
 
   /**
@@ -116,7 +120,42 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
   useEffect(() => {
     setActiveSlide(0);
     setOpen(true);
+    setLinkCopied(false);
   }, [popupInfo]);
+
+  /**
+   * Show the copied message only for a while
+   */
+  useEffect(() => {
+    if (!linkCopied) {
+      return;
+    }
+    const timeout = setTimeout(() => setLinkCopied(false), 3000);
+    return () => clearTimeout(timeout);
+  }, [linkCopied]);
+
+  /**
+   * Link to this feature, or null if the feature cannot be linked to
+   */
+  const featurePath = getFeaturePath(popupInfo);
+  const featureUrl =
+    featurePath !== "/" ? `${window.location.origin}${featurePath}` : null;
+
+  /**
+   * Copy link to this feature to the clipboard
+   */
+  const handleCopyLink = async () => {
+    if (!featureUrl) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(featureUrl);
+      setLinkCopied(true);
+    } catch (error) {
+      // e.g. the user denied clipboard access, the link is still in the URL
+      console.error("Could not copy link", error);
+    }
+  };
 
   /**
    * Toggle drawer extended
@@ -459,10 +498,17 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
         ? `${addressString}${postalCodeString}${cityString}`
         : "";
 
-    if (locationString || properties["www"] || properties["phoneNumber"]) {
+    if (
+      locationString ||
+      properties["www"] ||
+      properties["phoneNumber"] ||
+      featureUrl
+    ) {
       return (
         <Stack direction="column" spacing={2}>
-          <Typography variant="h5">Yhteystiedot</Typography>
+          {(locationString || properties["www"] || properties["phoneNumber"]) && (
+            <Typography variant="h5">Yhteystiedot</Typography>
+          )}
           <List>
             {locationString && (
               <PropertyListItem
@@ -500,6 +546,22 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
                   Siirry verkkosivuille
                 </Button>
               </Link>
+            </Box>
+          )}
+          {featureUrl && (
+            <Box sx={{ mb: 2 }}>
+              <Button
+                size="medium"
+                sx={{ width: { xs: "100%", sm: "initial" } }}
+                variant="contained"
+                startIcon={
+                  linkCopied ? <CheckRounded /> : <ContentCopyOutlined />
+                }
+                color="secondary"
+                onClick={handleCopyLink}
+              >
+                {linkCopied ? "Linkki kopioitu" : "Kopioi kohteen linkki"}
+              </Button>
             </Box>
           )}
           {getDataSource(layerId, properties)}
