@@ -468,6 +468,35 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
 };
 
 /**
+ * Zoom level and resolutions for the search and linked feature sources, which
+ * fetch the whole service area at once.
+ *
+ * Zoom level: a single tile at zoom level 4 (x=9, y=4) covers longitudes 22.5-45°
+ * and latitudes 55.8-66.5°, which contains the whole Tampere region. At higher
+ * zoom levels tile edges cross the region (e.g. at 61.6°N at zoom level 6), and
+ * the map only loads the tiles in view, so features outside the view would not
+ * be found. Every tile also contains features near its edges, so features near
+ * tile edges would be sent several times. If the service area grows outside this
+ * tile, use a lower zoom level, and double the resolutions for every zoom level
+ * down to keep the same precision.
+ *
+ * Resolution: the tile server snaps coordinates to a grid of resolution x
+ * resolution cells in each tile (default 4096). A zoom level 4 tile is
+ * 40 075 km / 2^4 = 2 505 km wide at the equator. At the latitude of the region
+ * (61.5°N) this is multiplied by cos(61.5°) = 0.477, so the tile is 1 195 km wide,
+ * and the grid cell size is 1 195 km / resolution. Lines shorter than a cell may
+ * be dropped from the tile, and points may move by up to half a cell.
+ * - 65 536: 18 m cells, enough for flying to search results. This is the same
+ *   precision that the default 4096 gives at zoom level 8. Higher resolutions
+ *   make search tiles with lines considerably bigger.
+ * - 262 144: 4.6 m cells for the linked feature. The tile contains only one
+ *   feature, so a high resolution costs nothing.
+ */
+const AREA_TILE_ZOOM = 4;
+const SEARCH_TILE_RESOLUTION = 65536;
+const LINKED_FEATURE_TILE_RESOLUTION = 262144;
+
+/**
  * Tile server filter for features whose name, type or category contains the
  * search string
  */
@@ -477,17 +506,17 @@ const getSearchFilter = (searchString: string) => {
 };
 
 /**
- * Dynamic search point layer. Maxzoom defines the size of the tile
- * used to search for the input string when zoomed in.
+ * Dynamic search point layer. A single tile covers the whole service area, so
+ * all matching points are found regardless of the map view.
  */
 
 export const getSearchPointSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${getSearchFilter(searchString)}`,
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?resolution=${SEARCH_TILE_RESOLUTION}&filter=${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
-  maxzoom: 6,
+  maxzoom: AREA_TILE_ZOOM,
 });
 
 export const SEARCH_STYLE_SYMBOL: LayerProps = {
@@ -507,17 +536,18 @@ export const SEARCH_STYLE_CIRCLE: LayerProps = {
 };
 
 /**
- * Dynamic search line layer. Maxzoom defines the size of the tile
- * used to search for the input string when zoomed in.
+ * Dynamic search line layer. A single tile covers the whole service area, so
+ * all matching lines are found regardless of the map view.
  */
 
 export const getSearchLineSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=${getSearchFilter(searchString)}`,
+    // unlike all_points, lipas_viivat also contains deleted lines
+    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?resolution=${SEARCH_TILE_RESOLUTION}&filter=deleted=false%20AND%20${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
-  maxzoom: 8,
+  maxzoom: AREA_TILE_ZOOM,
 });
 
 export const SEARCH_LINE_STYLE: LayerProps = {
@@ -530,10 +560,9 @@ export const SEARCH_LINE_STYLE: LayerProps = {
 
 /**
  * Layer for finding a single feature by its id, e.g. when opening a link to the
- * feature. The area is split between two tiles at zoom level 6, so use zoom level
- * 4 where a single tile covers the whole area regardless of the map view. The
- * high tile resolution keeps short lines in the tile and makes the coordinates
- * accurate to a couple of meters.
+ * feature. A single tile covers the whole service area, so the feature is found
+ * regardless of the map view. See AREA_TILE_ZOOM for the zoom level and
+ * resolution.
  */
 export const LINKED_FEATURE_ID = "linked-feature";
 
@@ -556,10 +585,10 @@ export const getLinkedFeatureSource = (featureId: string): VectorSource | null =
   return {
     type: "vector",
     tiles: [
-      `${process.env.TILESERVER_URL}/${getLinkedFeatureSourceLayer(featureId)}/{z}/{x}/{y}.pbf?resolution=262144&filter=${cityFilterParam}%20AND%20${idFilter}`,
+      `${process.env.TILESERVER_URL}/${getLinkedFeatureSourceLayer(featureId)}/{z}/{x}/{y}.pbf?resolution=${LINKED_FEATURE_TILE_RESOLUTION}&filter=${cityFilterParam}%20AND%20${idFilter}`,
     ],
     minzoom: 0,
-    maxzoom: 4,
+    maxzoom: AREA_TILE_ZOOM,
   };
 };
 
