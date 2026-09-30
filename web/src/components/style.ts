@@ -468,7 +468,7 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
 };
 
 /**
- * Zoom level and resolutions for the search and linked feature sources, which
+ * Zoom level and resolution for the search and linked feature sources, which
  * fetch the whole service area at once.
  *
  * Zoom level: a single tile at zoom level 4 (x=9, y=4) covers longitudes 22.5-45°
@@ -477,24 +477,32 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
  * the map only loads the tiles in view, so features outside the view would not
  * be found. Every tile also contains features near its edges, so features near
  * tile edges would be sent several times. If the service area grows outside this
- * tile, use a lower zoom level, and double the resolutions for every zoom level
+ * tile, use a lower zoom level, and double the resolution for every zoom level
  * down to keep the same precision.
  *
  * Resolution: the tile server snaps coordinates to a grid of resolution x
  * resolution cells in each tile (default 4096). A zoom level 4 tile is
  * 40 075 km / 2^4 = 2 505 km wide at the equator. At the latitude of the region
  * (61.5°N) this is multiplied by cos(61.5°) = 0.477, so the tile is 1 195 km wide,
- * and the grid cell size is 1 195 km / resolution. Lines shorter than a cell may
- * be dropped from the tile, and points may move by up to half a cell.
- * - 65 536: 18 m cells, enough for flying to search results. This is the same
- *   precision that the default 4096 gives at zoom level 8. Higher resolutions
- *   make search tiles with lines considerably bigger.
- * - 262 144: 4.6 m cells for the linked feature. The tile contains only one
- *   feature, so a high resolution costs nothing.
+ * and the grid cell size is 1 195 km / resolution. Points may move by up to half
+ * a cell. A line is dropped from the tile if all its points snap to the same
+ * cell, so only lines longer than the cell diagonal (sqrt(2) x cell size) are
+ * guaranteed to be included.
+ *
+ * Lines shorter than a few meters are not valid data, but all longer lines must
+ * be found. 1 048 576 gives 1.1 m cells, so all lines longer than 1.6 m are
+ * included. For comparison, 262 144 would include lines longer than 6.4 m and
+ * 65 536 lines longer than 26 m. Higher resolutions make tiles with many lines
+ * bigger: searching for "a" in 2026 data (about 5 000 points and 300 lines)
+ * returned 150 KB of points and 105 KB of lines gzipped at 1 048 576, compared
+ * to 48 KB of lines at 65 536. Points are not dropped at any resolution, and
+ * their tile size hardly depends on it.
+ *
+ * The linked feature source uses the same resolution, so every line that can
+ * be found by search can also be linked to.
  */
 const AREA_TILE_ZOOM = 4;
-const SEARCH_TILE_RESOLUTION = 65536;
-const LINKED_FEATURE_TILE_RESOLUTION = 262144;
+const AREA_TILE_RESOLUTION = 1048576;
 
 /**
  * Tile server filter for features whose name, type or category contains the
@@ -513,7 +521,7 @@ const getSearchFilter = (searchString: string) => {
 export const getSearchPointSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?resolution=${SEARCH_TILE_RESOLUTION}&filter=${getSearchFilter(searchString)}`,
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?resolution=${AREA_TILE_RESOLUTION}&filter=${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
   maxzoom: AREA_TILE_ZOOM,
@@ -544,7 +552,7 @@ export const getSearchLineSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
     // unlike all_points, lipas_viivat also contains deleted lines
-    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?resolution=${SEARCH_TILE_RESOLUTION}&filter=deleted=false%20AND%20${getSearchFilter(searchString)}`,
+    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?resolution=${AREA_TILE_RESOLUTION}&filter=deleted=false%20AND%20${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
   maxzoom: AREA_TILE_ZOOM,
@@ -585,7 +593,7 @@ export const getLinkedFeatureSource = (featureId: string): VectorSource | null =
   return {
     type: "vector",
     tiles: [
-      `${process.env.TILESERVER_URL}/${getLinkedFeatureSourceLayer(featureId)}/{z}/{x}/{y}.pbf?resolution=${LINKED_FEATURE_TILE_RESOLUTION}&filter=${cityFilterParam}%20AND%20${idFilter}`,
+      `${process.env.TILESERVER_URL}/${getLinkedFeatureSourceLayer(featureId)}/{z}/{x}/{y}.pbf?resolution=${AREA_TILE_RESOLUTION}&filter=${cityFilterParam}%20AND%20${idFilter}`,
     ],
     minzoom: 0,
     maxzoom: AREA_TILE_ZOOM,

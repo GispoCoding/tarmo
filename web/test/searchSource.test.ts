@@ -14,13 +14,13 @@ describe("search sources", () => {
   it("search the name, type and category", () => {
     const url = getSearchPointSource("Takamaan").tiles?.[0];
     expect(url).toContain(
-      "/kooste.all_points/{z}/{x}/{y}.pbf?resolution=65536&filter="
+      "/kooste.all_points/{z}/{x}/{y}.pbf?resolution=1048576&filter="
     );
     expect(url).toContain(
       "(name%20ILIKE%20'%25Takamaan%25'%20OR%20type_name%20ILIKE%20'%25Takamaan%25'%20OR%20tarmo_category%20ILIKE%20'%25Takamaan%25')"
     );
     expect(getSearchLineSource("Takamaan").tiles?.[0]).toContain(
-      "/kooste.lipas_viivat/{z}/{x}/{y}.pbf?resolution=65536&filter="
+      "/kooste.lipas_viivat/{z}/{x}/{y}.pbf?resolution=1048576&filter="
     );
   });
 
