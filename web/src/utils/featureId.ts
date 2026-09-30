@@ -1,5 +1,6 @@
 import { LayerId } from "../components/style";
 import { PopupInfo } from "../types";
+import { isValidFeatureId } from "./utils";
 
 /**
  * Get a unique, linkable id for the feature shown in the info panel. The id has the
@@ -52,8 +53,8 @@ export const getFeatureId = ({
 /**
  * Get the feature id from a browser path such as "/lipas_pisteet-123".
  *
- * The id ends up in a tile server filter, so only allow the characters used
- * in feature ids.
+ * The path can come from a link made by anyone, so only valid feature ids are
+ * accepted.
  *
  * @param pathname Browser path
  * @returns feature id, or null if the path does not contain a valid feature id
@@ -65,14 +66,7 @@ export const parseFeaturePath = (pathname: string): string | null => {
   } catch {
     return null;
   }
-  if (!/^[a-z_]+-[\w-]+$/.test(featureId)) {
-    return null;
-  }
-  // line ids are numeric
-  if (
-    featureId.startsWith("lipas_viivat-") &&
-    !/^lipas_viivat-\d+$/.test(featureId)
-  ) {
+  if (!isValidFeatureId(featureId)) {
     return null;
   }
   return featureId;

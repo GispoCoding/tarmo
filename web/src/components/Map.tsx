@@ -84,7 +84,12 @@ import LayerPicker from "./LayerPicker";
 import InfoButton from "./InfoButton";
 import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
-import { buildQuery, parseResponse, minZoomByCategory } from "../utils/utils";
+import {
+  buildQuery,
+  encodeCqlString,
+  parseResponse,
+  minZoomByCategory,
+} from "../utils/utils";
 import LayerFilter from "./LayerFilter";
 import SetupDialog from "./SetupDialog";
 import SplashScreen from "./SplashScreen";
@@ -290,12 +295,27 @@ export default function TarmoMap({
     }
   }, [selected, searchLines, searchPoints, showFeature]);
 
+  const linkedFeatureSource = linkedFeatureId
+    ? getLinkedFeatureSource(linkedFeatureId)
+    : null;
+  const linkedFeatureIdInvalid = !!linkedFeatureId && !linkedFeatureSource;
+
+  /**
+   * Treat an invalid linked feature id like a missing feature, so that the
+   * main page is shown instead
+   */
+  useEffect(() => {
+    if (linkedFeatureIdInvalid) {
+      setPopupInfo(null);
+    }
+  }, [linkedFeatureIdInvalid, setPopupInfo]);
+
   /**
    * Show the linked feature once its tile has loaded
    */
   useEffect(() => {
     const map = actualMapRef.current;
-    if (!mapLoaded || !linkedFeatureId || !map) {
+    if (!mapLoaded || !linkedFeatureId || linkedFeatureIdInvalid || !map) {
       return;
     }
     const onSourceData = (ev: MapSourceDataEvent) => {
@@ -318,7 +338,7 @@ export default function TarmoMap({
     return () => {
       map.off("sourcedata", onSourceData);
     };
-  }, [mapLoaded, linkedFeatureId, showFeature, setPopupInfo]);
+  }, [mapLoaded, linkedFeatureId, linkedFeatureIdInvalid, showFeature, setPopupInfo]);
 
   const toggleNav = () => {
     if (document.fullscreenElement) {
@@ -512,7 +532,7 @@ export default function TarmoMap({
             id={LayerId.SearchPoint}
             {...{
               ...SEARCH_POINT_SOURCE,
-              tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
+              tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', encodeCqlString(searchString)) ?? ""],
             }}
           >
             <Layer
@@ -539,7 +559,7 @@ export default function TarmoMap({
             id={LayerId.SearchLine}
             {...{
               ...SEARCH_LINE_SOURCE,
-              tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', searchString) ?? ""],
+              tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', encodeCqlString(searchString)) ?? ""],
             }}
           >
             <Layer
@@ -554,11 +574,8 @@ export default function TarmoMap({
           </Source>
 
           {/* Invisible layer for finding the linked feature */}
-          {mapLoaded && linkedFeatureId && (
-            <Source
-              id={LINKED_FEATURE_ID}
-              {...getLinkedFeatureSource(linkedFeatureId)}
-            >
+          {mapLoaded && linkedFeatureId && linkedFeatureSource && (
+            <Source id={LINKED_FEATURE_ID} {...linkedFeatureSource}>
               <Layer {...getLinkedFeatureStyle(linkedFeatureId)} />
             </Source>
           )}
