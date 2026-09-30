@@ -8,7 +8,12 @@ import {
   SymbolLayout,
   VectorSource,
 } from "mapbox-gl";
-import { getCategoryColor, getCategoryIcon, minZoomByCategory } from "../utils/utils";
+import {
+  getCategoryColor,
+  getCategoryIcon,
+  isValidFeatureId,
+  minZoomByCategory,
+} from "../utils/utils";
 import palette from "../theme/palette";
 import { stopType } from "../types";
 
@@ -525,7 +530,15 @@ export const LINKED_FEATURE_ID = "linked-feature";
 export const getLinkedFeatureSourceLayer = (featureId: string) =>
   featureId.startsWith("lipas_viivat-") ? "kooste.lipas_viivat" : "kooste.all_points";
 
-export const getLinkedFeatureSource = (featureId: string): VectorSource => {
+/**
+ * @param featureId Feature id, such as "lipas_pisteet-123"
+ * @returns source for finding the feature, or null if the feature id is invalid
+ */
+export const getLinkedFeatureSource = (featureId: string): VectorSource | null => {
+  // the id goes directly into the filter, so never accept an unchecked id
+  if (!isValidFeatureId(featureId)) {
+    return null;
+  }
   // lines are not in all_points, so they must be found by their own id column
   const idFilter = featureId.startsWith("lipas_viivat-")
     ? `sportsPlaceId%20%3D%20${featureId.split("-")[1]}`

@@ -315,3 +315,30 @@ export const getCategoryPlural = (category: string) =>
     "Roskikset": "roskista",
     "Penkit ja pöydät": "penkkiä ja pöytää"
   }[category]);
+
+/**
+ * Check that a feature id, such as "lipas_pisteet-123", only contains the
+ * characters used in feature ids. Feature ids are used in tile server filters,
+ * so this prevents a crafted id from changing the filter or the tile URL.
+ *
+ * @param featureId Feature id
+ * @returns true if the feature id is valid
+ */
+export const isValidFeatureId = (featureId: string): boolean => {
+  if (!/^[a-z_]+-[\w-]+$/.test(featureId)) {
+    return false;
+  }
+  // line ids are numeric
+  return !featureId.startsWith("lipas_viivat-") || /^lipas_viivat-\d+$/.test(featureId);
+};
+
+/**
+ * Encode user input for use inside a quoted string in a tile server CQL filter.
+ * Doubles single quotes so that the input cannot end the string, and URL-encodes
+ * the result so that the input cannot add or change URL parameters.
+ *
+ * @param value String to use inside '...' in a CQL filter
+ * @returns string that can be put between the quotes in the tile URL
+ */
+export const encodeCqlString = (value: string): string =>
+  encodeURIComponent(value.replaceAll("'", "''"));
