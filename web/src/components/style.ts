@@ -11,6 +11,7 @@ import {
 import {
   getCategoryColor,
   getCategoryIcon,
+  encodeCqlString,
   isValidFeatureId,
   minZoomByCategory,
 } from "../utils/utils";
@@ -467,18 +468,27 @@ export const POINT_STYLE_CIRCLE: LayerProps = {
 };
 
 /**
+ * Tile server filter for features whose name, type or category contains the
+ * search string
+ */
+const getSearchFilter = (searchString: string) => {
+  const term = `'%25${encodeCqlString(searchString)}%25'`;
+  return `${cityFilterParam}%20AND%20(name%20ILIKE%20${term}%20OR%20type_name%20ILIKE%20${term}%20OR%20tarmo_category%20ILIKE%20${term})`;
+};
+
+/**
  * Dynamic search point layer. Maxzoom defines the size of the tile
  * used to search for the input string when zoomed in.
  */
 
-export const SEARCH_POINT_SOURCE: VectorSource = {
+export const getSearchPointSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20(name%20ILIKE%20'%25{searchString}%25'%20OR%20type_name%20ILIKE%20'%25{searchString}%25'%20OR%20tarmo_category%20ILIKE%20'%25{searchString}%25')`,
+    `${process.env.TILESERVER_URL}/kooste.all_points/{z}/{x}/{y}.pbf?filter=${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
   maxzoom: 6,
-};
+});
 
 export const SEARCH_STYLE_SYMBOL: LayerProps = {
   "id": LayerId.SearchPoint,
@@ -501,14 +511,14 @@ export const SEARCH_STYLE_CIRCLE: LayerProps = {
  * used to search for the input string when zoomed in.
  */
 
-export const SEARCH_LINE_SOURCE: VectorSource = {
+export const getSearchLineSource = (searchString: string): VectorSource => ({
   type: "vector",
   tiles: [
-    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=${cityFilterParam}%20AND%20(name%20ILIKE%20'%25{searchString}%25'%20OR%20type_name%20ILIKE%20'%25{searchString}%25'%20OR%20tarmo_category%20ILIKE%20'%25{searchString}%25')`,
+    `${process.env.TILESERVER_URL}/kooste.lipas_viivat/{z}/{x}/{y}.pbf?filter=${getSearchFilter(searchString)}`,
   ],
   minzoom: 0,
   maxzoom: 8,
-};
+});
 
 export const SEARCH_LINE_STYLE: LayerProps = {
   "id": LayerId.SearchLine,

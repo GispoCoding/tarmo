@@ -34,10 +34,10 @@ import {
   DIGITRANSIT_BIKE_POINT_STYLE,
   DIGITRANSIT_IMAGES,
   POINT_IMAGES,
-  SEARCH_POINT_SOURCE,
+  getSearchPointSource,
   SEARCH_STYLE_SYMBOL,
   SEARCH_STYLE_CIRCLE,
-  SEARCH_LINE_SOURCE,
+  getSearchLineSource,
   SEARCH_LINE_STYLE,
   POINT_SOURCE,
   POINT_STYLE_SYMBOL,
@@ -86,7 +86,6 @@ import { FeatureCollection, Position } from "geojson";
 import { MapFiltersContext } from "../contexts/MapFiltersContext";
 import {
   buildQuery,
-  encodeCqlString,
   parseResponse,
   minZoomByCategory,
 } from "../utils/utils";
@@ -530,10 +529,7 @@ export default function TarmoMap({
           {/* Dynamic search layer*/}
           <Source
             id={LayerId.SearchPoint}
-            {...{
-              ...SEARCH_POINT_SOURCE,
-              tiles: [SEARCH_POINT_SOURCE.tiles?.[0]?.replaceAll('{searchString}', encodeCqlString(searchString)) ?? ""],
-            }}
+            {...getSearchPointSource(searchString)}
           >
             <Layer
               {...{
@@ -557,10 +553,7 @@ export default function TarmoMap({
           </Source>
           <Source
             id={LayerId.SearchLine}
-            {...{
-              ...SEARCH_LINE_SOURCE,
-              tiles: [SEARCH_LINE_SOURCE.tiles?.[0]?.replaceAll('{searchString}', encodeCqlString(searchString)) ?? ""],
-            }}
+            {...getSearchLineSource(searchString)}
           >
             <Layer
               {...{
