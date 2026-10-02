@@ -24,7 +24,7 @@ Tarmo - Tampere Mobilemap
 
 ### Frontend
 
-Use Node>=v16.
+Use Node>=v20.
 See [instructions](https://www.maanmittauslaitos.fi/rajapinnat/api-avaimen-ohje)
 for acquiring an NLS API key (in Finnish). Optionally, see [instructions](https://digitransit.fi/en/developers/api-registration/) for acquiring a Digitransit API key if you want bus stops on your map.
 
