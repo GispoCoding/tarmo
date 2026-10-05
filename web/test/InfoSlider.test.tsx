@@ -54,9 +54,7 @@ describe("InfoSlider copy link button", () => {
       fireEvent.click(screen.getByText("Kopioi kohteen linkki"));
     });
 
-    expect(writeText).toHaveBeenCalledWith(
-      `${window.location.origin}/lipas_pisteet-123`
-    );
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/lp-123`);
     expect(screen.getByText("Linkki kopioitu")).toBeInTheDocument();
   });
 

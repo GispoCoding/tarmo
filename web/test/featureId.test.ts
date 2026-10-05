@@ -65,19 +65,61 @@ describe("getFeaturePath", () => {
   it("returns the feature path or the root path", () => {
     expect(
       getFeaturePath(popup(LayerId.Point, { id: "lipas_pisteet-123" }))
-    ).toBe("/lipas_pisteet-123");
+    ).toBe("/lp-123");
     expect(getFeaturePath(popup(LayerId.PointCluster8, { size: 2 }))).toBe("/");
     expect(getFeaturePath(null)).toBe("/");
+  });
+
+  it("uses a short code for every table", () => {
+    expect(
+      [
+        ["lipas_pisteet-1", LayerId.Point],
+        ["lipas_viivat-1", LayerId.LipasLine],
+        ["osm_pisteet-node-1", LayerId.Point],
+        ["osm_alueet-way-1", LayerId.Point],
+        ["tamperewfs_luonnonmuistomerkit-1", LayerId.Point],
+        ["tamperewfs_luontopolkurastit-1", LayerId.Point],
+        ["museovirastoarcrest_rkykohteet-1", LayerId.Point],
+        ["museovirastoarcrest_muinaisjaannokset-1", LayerId.Point],
+        ["museovirastoarcrest_rkyalueet-1", LayerId.Point],
+      ].map(([id, layerId]) =>
+        getFeaturePath(
+          popup(
+            layerId as LayerId,
+            layerId === LayerId.LipasLine ? { sportsPlaceId: 1 } : { id }
+          )
+        )
+      )
+    ).toEqual([
+      "/lp-1",
+      "/lv-1",
+      "/op-node-1",
+      "/oa-way-1",
+      "/tl-1",
+      "/tr-1",
+      "/mk-1",
+      "/mm-1",
+      "/ma-1",
+    ]);
+  });
+
+  it("returns the root path for tables without a code", () => {
+    expect(
+      getFeaturePath(popup(LayerId.Point, { id: "unknown_table-1" }))
+    ).toBe("/");
   });
 });
 
 describe("parseFeaturePath", () => {
   it("returns the feature id in the path", () => {
-    expect(parseFeaturePath("/lipas_pisteet-123")).toBe("lipas_pisteet-123");
-    expect(parseFeaturePath("/osm_alueet-way-99889700")).toBe(
+    expect(parseFeaturePath("/lp-123")).toBe("lipas_pisteet-123");
+    expect(parseFeaturePath("/oa-way-99889700")).toBe(
       "osm_alueet-way-99889700"
     );
-    expect(parseFeaturePath("/lipas_viivat-789")).toBe("lipas_viivat-789");
+    expect(parseFeaturePath("/lv-789")).toBe("lipas_viivat-789");
+    expect(parseFeaturePath("/mm-1000012345")).toBe(
+      "museovirastoarcrest_muinaisjaannokset-1000012345"
+    );
   });
 
   it("returns the same id that the path was created from", () => {
@@ -90,31 +132,36 @@ describe("parseFeaturePath", () => {
   it("returns null for paths without a valid feature id", () => {
     expect(parseFeaturePath("/")).toBeNull();
     expect(parseFeaturePath("/index.html")).toBeNull();
-    expect(parseFeaturePath("/lipas_pisteet")).toBeNull();
-    expect(parseFeaturePath("/lipas_viivat-abc")).toBeNull();
-    expect(parseFeaturePath("/lipas_pisteet-1'%20OR%20'1'='1")).toBeNull();
+    expect(parseFeaturePath("/lp")).toBeNull();
+    expect(parseFeaturePath("/lp-")).toBeNull();
+    expect(parseFeaturePath("/lv-abc")).toBeNull();
+    expect(parseFeaturePath("/lp-1'%20OR%20'1'='1")).toBeNull();
     expect(parseFeaturePath("/%E0%A4%A")).toBeNull();
+  });
+
+  it("returns null for unknown table codes and full table names", () => {
+    expect(parseFeaturePath("/xx-123")).toBeNull();
+    expect(parseFeaturePath("/LP-123")).toBeNull();
+    expect(parseFeaturePath("/constructor-1")).toBeNull();
+    expect(parseFeaturePath("/lipas_pisteet-123")).toBeNull();
   });
 });
 
 describe("parseFeaturePath with crafted links", () => {
   it.each([
-    ["CQL string breakout", "/lipas_pisteet-1'%20OR%20'1'='1"],
-    [
-      "encoded CQL string breakout",
-      "/lipas_pisteet-1%27%20OR%20%271%27%3D%271",
-    ],
-    ["extra encoded query parameter", "/lipas_pisteet-1%26limit%3D100000"],
-    ["extra query parameter", "/lipas_pisteet-1&resolution=1"],
-    ["encoded fragment", "/lipas_pisteet-1%23"],
-    ["encoded query string", "/lipas_pisteet-1%3Ffilter%3Dx"],
-    ["trailing newline", "/lipas_pisteet-1%0A"],
-    ["double encoding", "/lipas_pisteet-1%252527"],
-    ["path traversal", "/lipas_pisteet-1%2F..%2Fkooste.x"],
-    ["numeric breakout", "/lipas_viivat-1%20OR%20true"],
-    ["tile URL placeholder", "/lipas_pisteet-%7Bz%7D"],
-    ["fullwidth apostrophe", "/lipas_pisteet-%EF%BC%87"],
-    ["non-ASCII digit", "/lipas_pisteet-１"],
+    ["CQL string breakout", "/lp-1'%20OR%20'1'='1"],
+    ["encoded CQL string breakout", "/lp-1%27%20OR%20%271%27%3D%271"],
+    ["extra encoded query parameter", "/lp-1%26limit%3D100000"],
+    ["extra query parameter", "/lp-1&resolution=1"],
+    ["encoded fragment", "/lp-1%23"],
+    ["encoded query string", "/lp-1%3Ffilter%3Dx"],
+    ["trailing newline", "/lp-1%0A"],
+    ["double encoding", "/lp-1%252527"],
+    ["path traversal", "/lp-1%2F..%2Fkooste.x"],
+    ["numeric breakout", "/lv-1%20OR%20true"],
+    ["tile URL placeholder", "/lp-%7Bz%7D"],
+    ["fullwidth apostrophe", "/lp-%EF%BC%87"],
+    ["non-ASCII digit", "/lp-１"],
   ])("rejects %s", (_, path) => {
     expect(parseFeaturePath(path)).toBeNull();
   });

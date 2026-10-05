@@ -51,34 +51,76 @@ export const getFeatureId = ({
 };
 
 /**
- * Get the feature id from a browser path such as "/lipas_pisteet-123".
+ * Short codes for the tables in browser paths, e.g. "/lp-123" for the feature
+ * "lipas_pisteet-123". Changing a code breaks the links that users have shared,
+ * so only add new codes.
+ */
+const TABLE_CODES = new Map<string, string>([
+  ["lipas_pisteet", "lp"],
+  ["lipas_viivat", "lv"],
+  ["osm_pisteet", "op"],
+  ["osm_alueet", "oa"],
+  ["tamperewfs_luonnonmuistomerkit", "tl"],
+  ["tamperewfs_luontopolkurastit", "tr"],
+  ["museovirastoarcrest_rkykohteet", "mk"],
+  ["museovirastoarcrest_muinaisjaannokset", "mm"],
+  ["museovirastoarcrest_rkyalueet", "ma"],
+]);
+
+const CODE_TABLES = new Map<string, string>(
+  Array.from(TABLE_CODES, ([table, code]) => [code, table])
+);
+
+/**
+ * Split a feature id such as "osm_pisteet-node-123" at the first hyphen
  *
- * The path can come from a link made by anyone, so only valid feature ids are
- * accepted.
+ * @returns table (or table code) and id in table
+ */
+const splitFeatureId = (featureId: string): [string, string] => {
+  const index = featureId.indexOf("-");
+  return index < 0
+    ? [featureId, ""]
+    : [featureId.slice(0, index), featureId.slice(index + 1)];
+};
+
+/**
+ * Get the feature id from a browser path such as "/lp-123".
+ *
+ * The path can come from a link made by anyone, so only known table codes and
+ * valid feature ids are accepted.
  *
  * @param pathname Browser path
- * @returns feature id, or null if the path does not contain a valid feature id
+ * @returns feature id such as "lipas_pisteet-123", or null if the path does not
+ * contain a valid feature id
  */
 export const parseFeaturePath = (pathname: string): string | null => {
-  let featureId: string;
+  let path: string;
   try {
-    featureId = decodeURIComponent(pathname.slice(1));
+    path = decodeURIComponent(pathname.slice(1));
   } catch {
     return null;
   }
-  if (!isValidFeatureId(featureId)) {
+  const [code, idInTable] = splitFeatureId(path);
+  const table = CODE_TABLES.get(code);
+  if (!table) {
     return null;
   }
-  return featureId;
+  const featureId = `${table}-${idInTable}`;
+  return isValidFeatureId(featureId) ? featureId : null;
 };
 
 /**
  * Get the browser path for the feature shown in the info panel.
  *
  * @param popupInfo Info of the clicked feature, or null if the panel is closed
- * @returns "/<feature id>", or "/" if the feature cannot be linked to
+ * @returns "/<table code>-<id in table>", or "/" if the feature cannot be linked to
  */
 export const getFeaturePath = (popupInfo: PopupInfo | null): string => {
   const featureId = popupInfo ? getFeatureId(popupInfo) : null;
-  return featureId ? `/${encodeURIComponent(featureId)}` : "/";
+  if (!featureId) {
+    return "/";
+  }
+  const [table, idInTable] = splitFeatureId(featureId);
+  const code = TABLE_CODES.get(table);
+  return code ? `/${code}-${encodeURIComponent(idInTable)}` : "/";
 };
