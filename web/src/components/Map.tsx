@@ -269,7 +269,12 @@ export default function TarmoMap({
         if (!map) {
           return;
         }
-        map.flyTo({ center: coords as [number, number], zoom, speed: 0.9 });
+        // Only pass zoom if given. MapLibre turns zoom: undefined into NaN.
+        map.flyTo({
+          center: coords as [number, number],
+          speed: 0.9,
+          ...(zoom !== undefined && { zoom }),
+        });
         setPopupInfo({
           layerId: layerId,
           properties: feature.properties,
