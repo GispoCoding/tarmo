@@ -132,9 +132,12 @@ def test_populate_tampere_from_lipas(populate_tampere_from_lipas, main_db_params
                 f"SELECT count(*) FROM kooste.{LipasLoader.LINESTRING_TABLE_NAME}"
             )
             line_count = cur.fetchone()[0]
-            print(f"Points: {point_count}, Lines: {line_count}")
+            cur.execute(f"SELECT count(*) FROM kooste.{LipasLoader.LOI_TABLE_NAME}")
+            loi_count = cur.fetchone()[0]
+            print(f"Points: {point_count}, Lines: {line_count}, LOIs: {loi_count}")
             assert point_count > 400
             assert line_count > 50
+            assert loi_count > 50
     finally:
         conn.close()
 

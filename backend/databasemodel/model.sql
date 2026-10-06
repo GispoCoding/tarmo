@@ -64,6 +64,7 @@ CREATE TABLE kooste.lipas_metadata (
 	type_codes_winter jsonb,
 	type_codes_all_year jsonb,
 	tarmo_category_by_code jsonb,
+	loi_types jsonb,
 	CONSTRAINT lipas_metadata_pk PRIMARY KEY (update_id)
 );
 -- ddl-end --
@@ -78,13 +79,35 @@ INSERT INTO kooste.lipas_metadata (
 	type_codes_summer,
 	type_codes_winter,
 	type_codes_all_year,
+	loi_types,
 	tarmo_category_by_code
 ) VALUES (
 	'[203,201,5150,3220,3230,4451,4452]', -- checked, alright (only name changes)
 	'[4640,4630,1520,1530,1550,1510,3240,4402,4440]', -- checked, alright (only name changes)
 	'[206,301,304,302,202,1120,1130,6210,1180,4710,4720,204,207,4412,4411,4403,4405,4401,4404,4430,101,1110]', -- checked, alright (only name changes)
-	'{"Hiihto": [4402,4440,4630,4640], "Luistelu": [1510,1520,1530,1550], "Uinti": [3220,3230], "Talviuinti": [3240], "Vesillä ulkoilu": [201,203,5150,4451,4452], "Laavut, majat, ruokailu": [202,206,301,302,304], "Ulkoilupaikat": [101,1110,1120], "Ulkoiluaktiviteetit": [1130,1180,4710,4720,6210], "Ulkoilureitit": [207,4401,4403,4404,4405,4430], "Pyöräily": [4411,4412], "Nähtävyydet": [204]}'
+	'["cooking-shelter","canopy","fire-pit"]',
+	'{"Hiihto": [4402,4440,4630,4640], "Luistelu": [1510,1520,1530,1550], "Uinti": [3220,3230], "Talviuinti": [3240], "Vesillä ulkoilu": [201,203,5150,4451,4452], "Laavut, majat, ruokailu": [202,206,301,302,304,"cooking-shelter","canopy","fire-pit"], "Ulkoilupaikat": [101,1110,1120], "Ulkoiluaktiviteetit": [1130,1180,4710,4720,6210], "Ulkoilureitit": [207,4401,4403,4404,4405,4430], "Pyöräily": [4411,4412], "Nähtävyydet": [204]}'
 );
+-- ddl-end --
+
+-- object: kooste.lipas_lois | type: TABLE --
+-- DROP TABLE IF EXISTS kooste.lipas_lois CASCADE;
+CREATE TABLE kooste.lipas_lois (
+	id uuid NOT NULL,
+	geom geometry(MULTIPOINT, 4326) NOT NULL,
+	"loi-category" text NOT NULL,
+	"loi-type" text NOT NULL,
+	name text,
+	description text,
+	status text,
+	deleted boolean NOT NULL DEFAULT false,
+	tarmo_category text,
+	CONSTRAINT lipas_lois_pk PRIMARY KEY (id)
+);
+CREATE INDEX ON kooste.lipas_lois (deleted);
+CREATE INDEX ON kooste.lipas_lois (tarmo_category);
+-- ddl-end --
+ALTER TABLE kooste.lipas_lois OWNER TO tarmo_admin;
 -- ddl-end --
 
 -- object: kooste.lipas_pisteet | type: TABLE --
@@ -537,6 +560,16 @@ GRANT SELECT,INSERT,UPDATE,DELETE
    TO tarmo_read_write;
 -- ddl-end --
 
+GRANT SELECT
+   ON TABLE kooste.lipas_lois
+   TO tarmo_read;
+-- ddl-end --
+
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE kooste.lipas_lois
+   TO tarmo_read_write;
+-- ddl-end --
+
 -- object: grant_r_a4eb7cf4b1 | type: PERMISSION --
 GRANT SELECT
    ON TABLE kooste.lipas_pisteet
@@ -674,6 +707,9 @@ GRANT USAGE
 -- For this reason, we may not store name or type_name *both* as a column and inside props json.
 create materialized view kooste.all_points as
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_pisteet-', "sportsPlaceId") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.lipas_pisteet as points where deleted=false union all
+-- Sadly, the Lipas LOI API has no city or bounding box filter, and LOIs have no city field.
+-- Therefore, 'Tampere' must be hard-coded as the city of all LOIs, no matter where they are.
+select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('lipas_lois-', "id") as id, "name", 'Tampere' as "cityName", "tarmo_category", "loi-type" as "type_name", row_to_json(points)::jsonb - 'id' - 'name' as props from kooste.lipas_lois as points where deleted=false union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_rkykohteet-', "OBJECTID") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.museovirastoarcrest_rkykohteet as points where deleted=false and visibility=true union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('museovirastoarcrest_muinaisjaannokset-', "mjtunnus") as id, "name", "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'name' as props from kooste.museovirastoarcrest_muinaisjaannokset as points where deleted=false and visibility=true union all
 select ST_GeometryN(geom,1)::geometry(point,4326) as geom, CONCAT('tamperewfs_luonnonmuistomerkit-', "id") as id, "name", 'Tampere' as "cityName", "tarmo_category", "type_name", row_to_json(points)::jsonb - 'id' - 'name' as props from kooste.tamperewfs_luonnonmuistomerkit as points where deleted=false and visibility=true union all

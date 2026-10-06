@@ -7,6 +7,29 @@ from shapely.geometry import Point
 from backend.lambda_functions.lipas_loader.base_loader import DatabaseHelper
 from backend.lambda_functions.lipas_loader.lipas_loader import LipasLoader
 
+LOI = {
+    "description": {"fi": "Iso grillikatos retkeilijöiden yhteiskäytössä."},
+    "name": {"fi": "Huuhanrannan grillikatos"},
+    "accessible?": True,
+    "loi-type": "fire-pit",
+    "status": "active",
+    "id": "f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae",
+    "event-date": "2024-11-16T08:21:47.866Z",
+    "geometries": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [28.400015451164034, 61.3357749594027],
+                },
+            }
+        ],
+    },
+    "loi-category": "outdoor-recreation-facilities",
+}
+
 
 @pytest.fixture(scope="module")
 def connection_string(tarmo_database_created):
@@ -69,6 +92,55 @@ def test__sport_sites_url_city_codes(connection_string, metadata_set):
             "city-codes": "211,418,837",
         },
     )
+
+
+def test__lois_url(connection_string, metadata_set):
+    loader = LipasLoader(connection_string, loi_types=["fire-pit", "canopy"])
+    assert loader._lois_url_and_params(1) == (
+        "https://api.lipas.fi/v2/lois",
+        {
+            "page": 1,
+            "page-size": 100,
+            "statuses": "active,out-of-service-temporarily",
+            "types": "canopy,fire-pit",
+        },
+    )
+
+
+def test_get_features_includes_lois(connection_string, metadata_set):
+    loader = LipasLoader(
+        connection_string,
+        type_codes_all_year=[1180],
+        type_codes_summer=[1180],
+        type_codes_winter=[1180],
+        city_codes=[837],
+        loi_types=["canopy"],
+    )
+    features = loader.get_features(only_page=1)
+    sport_site_ids = [f for f in features if isinstance(f, int)]
+    lois = [f for f in features if isinstance(f, dict)]
+    assert len(sport_site_ids) > 0
+    assert len(lois) > 0
+    assert all(loi["loi-type"] == "canopy" for loi in lois)
+
+
+def test_get_loi(loader):
+    loi = loader.get_feature(LOI)
+    assert loi["table"] == "lipas_lois"
+    assert loi["id"] == "f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae"
+    assert loi["geom"] == "MULTIPOINT ((28.400015451164034 61.3357749594027))"
+    assert loi["loi-category"] == "outdoor-recreation-facilities"
+    assert loi["loi-type"] == "fire-pit"
+    assert loi["name"] == "Huuhanrannan grillikatos"
+    assert loi["description"] == "Iso grillikatos retkeilijöiden yhteiskäytössä."
+    assert loi["status"] == "active"
+    assert loi["deleted"] == False
+    assert loi["tarmo_category"] == "Laavut, majat, ruokailu"
+
+
+def test_get_loi_without_name(loader):
+    loi = loader.get_feature({key: val for key, val in LOI.items() if key != "name"})
+    assert loi["name"] is None
 
 
 def test_get_sport_place_point(loader):
@@ -237,5 +309,40 @@ def test_reinstate_lipas_features(connection_string, main_db_params):
             assert cur.fetchone()[0].timestamp() == pytest.approx(
                 datetime.datetime.now().timestamp(), 20
             )
+    finally:
+        conn.close()
+
+
+def test_save_lipas_lois(loader, main_db_params):
+    nameless_loi = {key: val for key, val in LOI.items() if key != "name"}
+    nameless_loi["id"] = "17f71e8b-2627-434a-9796-e889d921de7c"
+    loader.save_features([LOI, nameless_loi])
+    conn = psycopg2.connect(**main_db_params)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                'SELECT name, "loi-type", tarmo_category FROM kooste.lipas_lois '
+                "WHERE NOT deleted ORDER BY name"
+            )
+            assert cur.fetchall() == [
+                ("Huuhanrannan grillikatos", "fire-pit", "Laavut, majat, ruokailu"),
+                (None, "fire-pit", "Laavut, majat, ruokailu"),
+            ]
+            cur.execute(
+                "SELECT id, name, type_name, props FROM kooste.all_points "
+                "WHERE id LIKE 'lipas_lois-%' ORDER BY id"
+            )
+            points = cur.fetchall()
+            assert [point[:3] for point in points] == [
+                ("lipas_lois-17f71e8b-2627-434a-9796-e889d921de7c", None, "fire-pit"),
+                (
+                    "lipas_lois-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae",
+                    "Huuhanrannan grillikatos",
+                    "fire-pit",
+                ),
+            ]
+            # pg_tileserv merges props into the feature properties, so props must
+            # not contain an id that would overwrite the combined id
+            assert all("id" not in point[3] for point in points)
     finally:
         conn.close()

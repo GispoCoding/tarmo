@@ -220,7 +220,11 @@ export default function InfoSlider({ popupInfo }: PopupProps) {
       // other layers come from a single data source
       prefix = layerId.split("-")[0]
     }
-    const {name, url} = dataSources[prefix];
+    const dataSource = dataSources[prefix];
+    if (!dataSource) {
+      return null;
+    }
+    const {name, url} = dataSource;
     return (
       <Box pb={2}>
         <Typography variant="h6">

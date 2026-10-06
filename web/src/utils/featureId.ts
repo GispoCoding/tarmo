@@ -58,6 +58,7 @@ export const getFeatureId = ({
 const TABLE_CODES = new Map<string, string>([
   ["lipas_pisteet", "lp"],
   ["lipas_viivat", "lv"],
+  ["lipas_lois", "ll"],
   ["osm_pisteet", "op"],
   ["osm_alueet", "oa"],
   ["tamperewfs_luonnonmuistomerkit", "tl"],

@@ -70,4 +70,34 @@ describe("InfoSlider copy link button", () => {
 
     expect(screen.queryByText("Kopioi kohteen linkki")).not.toBeInTheDocument();
   });
+
+
+  it("shows LOIs without a name", () => {
+    render(
+      <InfoSlider
+        popupInfo={popup(LayerId.Point, {
+          id: "lipas_lois-17f71e8b-2627-434a-9796-e889d921de7c",
+          type_name: "fire-pit",
+          tarmo_category: "Laavut, majat, ruokailu",
+        })}
+      />
+    );
+
+    expect(screen.getAllByText("fire-pit").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Lipas Liikuntapaikat.fi/)).toBeInTheDocument();
+  });
+
+  it("does not crash on ids without a known data source", () => {
+    render(
+      <InfoSlider
+        popupInfo={popup(LayerId.Point, {
+          id: "17f71e8b-2627-434a-9796-e889d921de7c",
+          type_name: "fire-pit",
+          tarmo_category: "Laavut, majat, ruokailu",
+        })}
+      />
+    );
+
+    expect(screen.getAllByText("fire-pit").length).toBeGreaterThan(0);
+  });
 });

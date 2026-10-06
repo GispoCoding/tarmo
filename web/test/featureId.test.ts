@@ -75,6 +75,7 @@ describe("getFeaturePath", () => {
       [
         ["lipas_pisteet-1", LayerId.Point],
         ["lipas_viivat-1", LayerId.LipasLine],
+        ["lipas_lois-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae", LayerId.Point],
         ["osm_pisteet-node-1", LayerId.Point],
         ["osm_alueet-way-1", LayerId.Point],
         ["tamperewfs_luonnonmuistomerkit-1", LayerId.Point],
@@ -93,6 +94,7 @@ describe("getFeaturePath", () => {
     ).toEqual([
       "/lp-1",
       "/lv-1",
+      "/ll-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae",
       "/op-node-1",
       "/oa-way-1",
       "/tl-1",
@@ -117,6 +119,9 @@ describe("parseFeaturePath", () => {
       "osm_alueet-way-99889700"
     );
     expect(parseFeaturePath("/lv-789")).toBe("lipas_viivat-789");
+    expect(parseFeaturePath("/ll-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae")).toBe(
+      "lipas_lois-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae"
+    );
     expect(parseFeaturePath("/mm-1000012345")).toBe(
       "museovirastoarcrest_muinaisjaannokset-1000012345"
     );

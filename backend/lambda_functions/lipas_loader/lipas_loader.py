@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 from shapely import force_2d
@@ -22,8 +22,10 @@ class LipasLoader(BaseLoader):
     METADATA_TABLE_NAME = "lipas_metadata"
     PAGE_SIZE = 100
     SPORT_SITES = "sports-sites"
+    LOIS = "lois"
     POINT_TABLE_NAME = "lipas_pisteet"
     LINESTRING_TABLE_NAME = "lipas_viivat"
+    LOI_TABLE_NAME = "lipas_lois"
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
     api_url = "https://api.lipas.fi/v2"
@@ -38,6 +40,7 @@ class LipasLoader(BaseLoader):
         type_codes_summer: Optional[List[int]] = None,
         type_codes_winter: Optional[List[int]] = None,
         tarmo_category_by_code: Optional[Dict] = None,
+        loi_types: Optional[List[str]] = None,
         **kwargs,
     ) -> None:
         super().__init__(connection_string, **kwargs)
@@ -62,16 +65,17 @@ class LipasLoader(BaseLoader):
             if tarmo_category_by_code
             else self.metadata_row.tarmo_category_by_code
         )
+        self.loi_types = loi_types if loi_types else self.metadata_row.loi_types
         # the dict in the database is the other way around for easy update
         self.category_from_code = {}
         for category, code_list in self.tarmo_category_by_code.items():
             for code in code_list:
                 self.category_from_code[code] = category
 
-    def get_features(self, only_page: Optional[int] = None) -> List[int]:  # type: ignore[override]  # noqa
+    def get_features(self, only_page: Optional[int] = None) -> List[Union[int, Dict[str, Any]]]:  # type: ignore[override]  # noqa
         results_left = only_page is None
         current_page = only_page or 1
-        ids: List[int] = []
+        ids: List[Union[int, Dict[str, Any]]] = []
         while (results_left and only_page is None) or current_page == only_page:
             url, params = self._sport_sites_url_and_params(current_page)
             r = requests.get(url, params=params, headers=self.HEADERS)
@@ -83,9 +87,56 @@ class LipasLoader(BaseLoader):
             current_page += 1
             results_left = current_page <= body["pagination"]["total-pages"]
 
+        # LOIs are returned in full by the list endpoint, so we return the
+        # dicts themselves instead of ids.
+        # Sadly, the LOI API has no city or bounding box filter, so we import LOIs
+        # from all over Finland. 'Tampere' must be hard-coded as the city of all
+        # LOIs in kooste.all_points, no matter where they are.
+        results_left = only_page is None
+        current_page = only_page or 1
+        while (results_left and only_page is None) or current_page == only_page:
+            url, params = self._lois_url_and_params(current_page)
+            r = requests.get(url, params=params, headers=self.HEADERS)
+            r.raise_for_status()
+            body = r.json()
+            data = body["items"]
+
+            ids += [item for item in data if "geometries" in item]
+            current_page += 1
+            results_left = current_page <= body["pagination"]["total-pages"]
+
         return ids
 
-    def get_feature(self, lipas_id: int):  # type: ignore[override]
+    def get_feature(self, element: Union[int, Dict[str, Any]]):  # type: ignore[override]  # noqa
+        # This is a bit iffy, but currently we know integers refer to lipas-ids
+        # and dicts refer to LOIs:
+        if isinstance(element, dict):
+            return self._get_loi(element)
+        return self._get_sport_site(element)
+
+    def _get_loi(self, loi: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        geometries = [
+            shape(feature["geometry"]) for feature in loi["geometries"]["features"]
+        ]
+        if not geometries or not all(isinstance(g, Point) for g in geometries):
+            # Unsupported geometry type
+            return None
+        geom = force_2d(MultiPoint(geometries))
+
+        return {
+            "table": self.LOI_TABLE_NAME,
+            "id": loi["id"],
+            "geom": geom.wkt,
+            "loi-category": loi["loi-category"],
+            "loi-type": loi["loi-type"],
+            "name": loi.get("name", {}).get("fi"),
+            "description": loi.get("description", {}).get("fi"),
+            "status": loi["status"],
+            "deleted": False,
+            "tarmo_category": self.category_from_code[loi["loi-type"]],
+        }
+
+    def _get_sport_site(self, lipas_id: int) -> Optional[Dict[str, Any]]:
         r = requests.get(self._sport_site_url(lipas_id), headers=self.HEADERS)
         r.raise_for_status()
         data = r.json()
@@ -185,12 +236,14 @@ class LipasLoader(BaseLoader):
         first, *rest = key.split("-")
         return first + "".join(part.capitalize() for part in rest)
 
-    def save_feature(self, sport_site: Dict[str, Any], session: Session) -> bool:
-        if sport_site["geom"].startswith("MULTILINE"):
-            sport_site["table"] = self.LINESTRING_TABLE_NAME
-        else:
-            sport_site["table"] = self.POINT_TABLE_NAME
-        return super().save_feature(sport_site, session)
+    def save_feature(self, feature: Dict[str, Any], session: Session) -> bool:
+        # LOIs already have their table set
+        if "table" not in feature:
+            if feature["geom"].startswith("MULTILINE"):
+                feature["table"] = self.LINESTRING_TABLE_NAME
+            else:
+                feature["table"] = self.POINT_TABLE_NAME
+        return super().save_feature(feature, session)
 
     def _sport_sites_url_and_params(self, page: int) -> Tuple[str, Dict[str, Any]]:
         main_url = "/".join((self.api_url, LipasLoader.SPORT_SITES))
@@ -210,6 +263,18 @@ class LipasLoader(BaseLoader):
 
         if self.city_codes:
             params["city-codes"] = ",".join(str(c) for c in sorted(self.city_codes))
+
+        return main_url, params
+
+    def _lois_url_and_params(self, page: int) -> Tuple[str, Dict[str, Any]]:
+        main_url = "/".join((self.api_url, LipasLoader.LOIS))
+        params: Dict[str, Any] = {
+            "page-size": LipasLoader.PAGE_SIZE,
+            "page": page,
+            "statuses": self.DEFAULT_STATUSES,
+        }
+        if self.loi_types:
+            params["types"] = ",".join(sorted(self.loi_types))
 
         return main_url, params
 
