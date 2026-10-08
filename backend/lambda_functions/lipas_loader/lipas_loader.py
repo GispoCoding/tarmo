@@ -40,7 +40,7 @@ class LipasLoader(BaseLoader):
         type_codes_summer: Optional[List[int]] = None,
         type_codes_winter: Optional[List[int]] = None,
         tarmo_category_by_code: Optional[Dict] = None,
-        loi_types: Optional[List[str]] = None,
+        loi_types: Optional[Dict[str, str]] = None,
         **kwargs,
     ) -> None:
         super().__init__(connection_string, **kwargs)
@@ -65,6 +65,7 @@ class LipasLoader(BaseLoader):
             if tarmo_category_by_code
             else self.metadata_row.tarmo_category_by_code
         )
+        # LOI types to import, and their Finnish names
         self.loi_types = loi_types if loi_types else self.metadata_row.loi_types
         # the dict in the database is the other way around for easy update
         self.category_from_code = {}
@@ -122,18 +123,21 @@ class LipasLoader(BaseLoader):
             # Unsupported geometry type
             return None
         geom = force_2d(MultiPoint(geometries))
+        loi_type = loi["loi-type"]
 
         return {
             "table": self.LOI_TABLE_NAME,
             "id": loi["id"],
             "geom": geom.wkt,
             "loi-category": loi["loi-category"],
-            "loi-type": loi["loi-type"],
+            "loi-type": loi_type,
+            # Finnish name of the type, or the type itself if it has no translation
+            "type_name": self.loi_types.get(loi_type, loi_type),
             "name": loi.get("name", {}).get("fi"),
             "description": loi.get("description", {}).get("fi"),
             "status": loi["status"],
             "deleted": False,
-            "tarmo_category": self.category_from_code[loi["loi-type"]],
+            "tarmo_category": self.category_from_code[loi_type],
         }
 
     def _get_sport_site(self, lipas_id: int) -> Optional[Dict[str, Any]]:

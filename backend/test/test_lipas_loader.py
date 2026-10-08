@@ -95,7 +95,9 @@ def test__sport_sites_url_city_codes(connection_string, metadata_set):
 
 
 def test__lois_url(connection_string, metadata_set):
-    loader = LipasLoader(connection_string, loi_types=["fire-pit", "canopy"])
+    loader = LipasLoader(
+        connection_string, loi_types={"fire-pit": "Nuotiopaikka", "canopy": "Laavu"}
+    )
     assert loader._lois_url_and_params(1) == (
         "https://api.lipas.fi/v2/lois",
         {
@@ -114,7 +116,7 @@ def test_get_features_includes_lois(connection_string, metadata_set):
         type_codes_summer=[1180],
         type_codes_winter=[1180],
         city_codes=[837],
-        loi_types=["canopy"],
+        loi_types={"canopy": "Laavu"},
     )
     features = loader.get_features(only_page=1)
     sport_site_ids = [f for f in features if isinstance(f, int)]
@@ -131,11 +133,22 @@ def test_get_loi(loader):
     assert loi["geom"] == "MULTIPOINT ((28.400015451164034 61.3357749594027))"
     assert loi["loi-category"] == "outdoor-recreation-facilities"
     assert loi["loi-type"] == "fire-pit"
+    assert loi["type_name"] == "Nuotiopaikka"
     assert loi["name"] == "Huuhanrannan grillikatos"
     assert loi["description"] == "Iso grillikatos retkeilijöiden yhteiskäytössä."
     assert loi["status"] == "active"
     assert loi["deleted"] == False
     assert loi["tarmo_category"] == "Laavut, majat, ruokailu"
+
+
+def test_get_loi_without_translation(connection_string, metadata_set):
+    loader = LipasLoader(
+        connection_string,
+        tarmo_category_by_code={"Laavut, majat, ruokailu": ["fire-pit"]},
+        loi_types={"canopy": "Laavu"},
+    )
+    loi = loader.get_feature(LOI)
+    assert loi["type_name"] == "fire-pit"
 
 
 def test_get_loi_without_name(loader):
@@ -334,11 +347,15 @@ def test_save_lipas_lois(loader, main_db_params):
             )
             points = cur.fetchall()
             assert [point[:3] for point in points] == [
-                ("lipas_lois-17f71e8b-2627-434a-9796-e889d921de7c", None, "fire-pit"),
+                (
+                    "lipas_lois-17f71e8b-2627-434a-9796-e889d921de7c",
+                    None,
+                    "Nuotiopaikka",
+                ),
                 (
                     "lipas_lois-f8c7bf1d-f0d7-489b-9b64-f3f52c05b8ae",
                     "Huuhanrannan grillikatos",
-                    "fire-pit",
+                    "Nuotiopaikka",
                 ),
             ]
             # pg_tileserv merges props into the feature properties, so props must
