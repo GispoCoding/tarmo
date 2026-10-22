@@ -79,7 +79,7 @@
     "browserslist": "^4.28.7",
     "express": "^4.20.0",
     "form-data": "^3.0.5",
-    "follow-redirects": "^1.16.0",
+    "follow-redirects": "^1.16.1",
     "flatted": "^3.4.2",
     "http-proxy-middleware": "^2.0.10",
     "js-yaml": "^4.3.1",
