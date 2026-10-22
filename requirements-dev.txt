@@ -70,7 +70,7 @@ six==1.17.0
     # via python-dateutil
 types-python-slugify==8.0.2.20240310
     # via -r requirements-dev.in
-urllib3==2.7.0
+urllib3==2.8.0
     # via
     #   botocore
     #   requests
